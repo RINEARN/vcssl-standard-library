@@ -1,21 +1,32 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.data.List 1.0.3
- * リストデータ構造ライブラリ
- *
- * Spec: ---
- * Note: ---
- *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
 
+/**
+ * <p>
+ * このモジュール open.data.List は、
+ * リスト型のデータ構造を提供します。	
+ * </p>
+ *
+ * <p>
+ * このモジュールでは、リストのデータを保持する
+ * ジェネリック構造体 <a href="#List">List</a> と、
+ * それに対してデータを出し入れするジェネリック関数 
+ * <a href="#add">add</a>, <a href="#remove">remove</a> 
+ * などが提供されます。
+ * </p>
+ *
+ * <p>
+ * なお、この open.data.List では、
+ * 配列を要素として扱う事はできません。配列を要素にしたい場合は、
+ * open.data.<a href="WrappedList.html">WrappedList</a> 
+ * を使用して下さい。
+ * </p>
+ */
 
 
 /**
- * リストとして扱う構造体です。
+ * リスト構造体です。リストのデータを保持します。
+ *
  * @author 松井文宏
  */
 public struct List<Type>{
@@ -24,9 +35,10 @@ public struct List<Type>{
 }
 
 
-
 /**
  * 要素を全て削除します。
+ *
+ * @param list 対象のリスト構造体
  * @author 松井文宏
  */
 public void clear<Type>( List<Type> &list ){
@@ -36,9 +48,10 @@ public void clear<Type>( List<Type> &list ){
 }
 
 
-
 /**
  * 使用中のサイズを返します。
+ *
+ * @param list 対象のリスト構造体
  * @author 松井文宏
  */
 public int size<Type>( List<Type> &list ){
@@ -46,9 +59,11 @@ public int size<Type>( List<Type> &list ){
 }
 
 
-
 /**
  * リストの末尾に要素を追加します。
+ *
+ * @param list 対象のリスト構造体
+ * @param value 追加する要素
  * @author 松井文宏
  */
 public void add<Type>( List<Type> &list, Type value ){
@@ -57,9 +72,12 @@ public void add<Type>( List<Type> &list, Type value ){
 }
 
 
-
 /**
  * 特定インデックスの要素を取得します。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 取得したい要素のインデックス
+ * @return 指定されたインデックスの要素
  * @author 松井文宏
  */
 public Type get<Type>( List<Type> &list, int index ){
@@ -71,9 +89,13 @@ public Type get<Type>( List<Type> &list, int index ){
 }
 
 
-
 /**
  * 特定インデックスの要素を代入します。
+ * そのインデックスの位置にあった要素は上書きされます。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 代入したい要素のインデックス
+ * @param element 代入する要素
  * @author 松井文宏
  */
 public void set<Type>( List<Type> &list, int index, Type element ){
@@ -85,9 +107,16 @@ public void set<Type>( List<Type> &list, int index, Type element ){
 }
 
 
-
 /**
  * 特定インデックスに要素を挿入します。
+ * そのインデックスの位置にあった要素は、
+ * 次のインデックスの位置に移動します。
+ * また、それ以降の全ての要素も、
+ * インデックスが後方に 1 ずつ移動します。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 挿入したい要素のインデックス
+ * @param element 挿入する要素
  * @author 松井文宏
  */
 public Type insert<Type>( List<Type> &list, int index, Type value ){
@@ -105,9 +134,11 @@ public Type insert<Type>( List<Type> &list, int index, Type value ){
 }
 
 
-
 /**
- * 指定された要素を含んでいるか判定します。
+ * リストが指定された要素を含んでいるか判定します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 含まれるか判定したい要素
  * @author 松井文宏
  */
 public bool contains<Type>( List<Type> &list, Type element ){
@@ -121,9 +152,11 @@ public bool contains<Type>( List<Type> &list, Type element ){
 }
 
 
-
 /**
  * 特定インデックスの要素を削除します。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 削除したい要素のインデックス
  * @author 松井文宏
  */
 public Type removeAt<Type>( List<Type> &list, int index ){
@@ -140,9 +173,12 @@ public Type removeAt<Type>( List<Type> &list, int index ){
 }
 
 
-
 /**
  * 指定された要素を削除します。
+ * 複数存在する場合は、最初のものだけが削除されます。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
  * @author 松井文宏
  */
 public void remove<Type>( List<Type> &list, Type element ){
@@ -153,9 +189,11 @@ public void remove<Type>( List<Type> &list, Type element ){
 }
 
 
-
 /**
  * 指定された要素を全て削除します。
+ * 
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
  * @author 松井文宏
  */
 public void removeAll<Type>( List<Type> &list, Type element ){
@@ -166,9 +204,14 @@ public void removeAll<Type>( List<Type> &list, Type element ){
 }
 
 
-
 /**
- * 指定された要素を検索し、存在すればそのインデックスを、存在しなければ-1を返します。
+ * 指定された要素を、
+ * 先頭から後方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 検索したい要素
  * @author 松井文宏
  */
 public int indexOf<Type>( List<Type> &list, Type element ){
@@ -182,9 +225,15 @@ public int indexOf<Type>( List<Type> &list, Type element ){
 }
 
 
-
 /**
- * 指定された要素を検索し、存在すればそのインデックスを、存在しなければ-1を返します。
+ * 指定された要素を、
+ * 指定インデックスの位置から後方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @param from 検索開始インデックス
  * @author 松井文宏
  */
 public int indexOf<Type>( List<Type> &list, Type element, int from ){
@@ -201,9 +250,14 @@ public int indexOf<Type>( List<Type> &list, Type element, int from ){
 }
 
 
-
 /**
- * 指定された要素を後方から検索し、存在すればそのインデックスを、存在しなければ-1を返します。
+ * 指定された要素を、
+ * 末尾から前方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
  * @author 松井文宏
  */
 public int lastIndexOf<Type>( List<Type> &list, Type element ){
@@ -217,9 +271,15 @@ public int lastIndexOf<Type>( List<Type> &list, Type element ){
 }
 
 
-
 /**
- * 指定された要素を後方から検索し、存在すればそのインデックスを、存在しなければ-1を返します。
+ * 指定された要素を、
+ * 指定インデックスの位置から後方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @param from 検索開始インデックス
  * @author 松井文宏
  */
 public int lastIndexOf<Type>( List<Type> &list, Type element, int from ){
@@ -236,9 +296,10 @@ public int lastIndexOf<Type>( List<Type> &list, Type element, int from ){
 }
 
 
-
 /**
- * 全要素の順序を反転させます。
+ * リストが保持する全要素の順序を反転させます。
+ *
+ * @param list 対象のリスト構造体
  * @author 松井文宏
  */
 public void reverse<Type>( List<Type> &list ){
@@ -252,9 +313,11 @@ public void reverse<Type>( List<Type> &list ){
 }
 
 
-
 /**
- * 全要素を格納する配列を返します。
+ * リストが保持する全要素を、1次元の配列に格納して返します。
+ *
+ * @param list 対象のリスト構造体
+ * @return リストの全要素をまとめた1次元配列
  * @author 松井文宏
  */
 public Type[] toArray<Type>( List<Type> &list ){
@@ -264,9 +327,10 @@ public Type[] toArray<Type>( List<Type> &list ){
 }
 
 
-
 /**
  * 使用中のサイズに適切な配列バッファ長を設定します。
+ *
+ * @param list 対象のリスト構造体
  * @author 松井文宏
  */
 private void setProperLength<Type>( List<Type> &list ){
@@ -282,6 +346,9 @@ private void setProperLength<Type>( List<Type> &list ){
 
 /**
  * 使用中の要素数に最適なリストバッファ長を返します。
+ *
+ * @param length 現在のリストバッファ長
+ * @param size 現在使用中の要素数
  * @author 松井文宏
  */
 private int getProperLength(int length, int size){
