@@ -255,11 +255,61 @@ public int indexOf<Type>( WrappedList<Type> &list, Type element ){
  */
 public int indexOf<Type>( WrappedList<Type> &list, Type element, int from ){
 	int n = list.size;
+	DataWrapper<Type> wrappedElement = wrap<Type>(element);
 	if(n <= from){
 		error("WrappedListの検索開始インデックスが領域外を指定しました。");
 	}
 	for(int i=from; i<n; i++){
-		if( list.data[i] == wrap<Type>(element) ){
+		if( list.data[i] == wrappedElement ){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * 指定された要素を、
+ * 末尾から前方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @author 松井文宏
+ */
+public int lastIndexOf<Type>( WrappedList<Type> &list, Type element ){
+	int n = list.size;
+//	DataWrapper<Type> wrappedElement = wrap<Type>(element);
+	for(int i=n-1; 0<=i; i--){
+//		if(list.data[i] == wrappedElement ){
+		if(list.data[i] == wrap<Type>(element) ){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * 指定された要素を、
+ * 指定インデックスの位置から後方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @param from 検索開始インデックス
+ * @author 松井文宏
+ */
+public int lastIndexOf<Type>( WrappedList<Type> &list, Type element, int from ){
+	int n = list.size;
+	if(from <= 0){
+		error("Listの検索開始インデックスが領域外を指定しました。");
+	}
+	DataWrapper<Type> wrappedElement = wrap<Type>(element);
+	for(int i=from; 0<=i; i--){
+		if(list.data[i] == wrappedElement ){
 			return i;
 		}
 	}
