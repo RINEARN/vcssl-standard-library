@@ -1,24 +1,48 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.data.WrappedQueue 1.0.0
- * 内部ラッピング保持式キューデータ構造ライブラリ
+
+/**
+ * <p>
+ * このモジュール open.data.WrappedQueue は、
+ * スタック型のデータ構造を提供します。	
+ * </p>
  *
- * Spec: ---
- * Note: ---
+ * <p>
+ * このモジュールでは、スタックのデータを保持する
+ * ジェネリック構造体 <a href="#WrappedQueue">WrappedQueue</a> と、
+ * それに対してデータを出し入れするジェネリック関数 
+ * <a href="#enqueue">enqueue</a>, <a href="#dequeue">dequeue</a> 
+ * などが提供されます。 
+ * </p>
  *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
+ * <p>
+ * なお、この open.data.WrappedQueue では、
+ * 要素を <a href="DataWrapper.html">DataWrapper</a> 構造体で
+ * ラッピングして保持する実装になっています。
+ * <br />
+ * そのため WrappedQueueでは、 
+ * open.data.<a href="Queue.html">Queue</a> とは異なり、
+ * 配列を要素として扱う事ができます。
+ * </p>
+ *
+ * <p>
+ * 反面、要素の出し入れの際に DataWrapper 構造体への
+ * ラッピング処理を伴うため、そのオーバーヘッドの分だけ、
+ * Queue よりも処理が重くなります。
+ * <br />
+ * 従って、要素が配列でない場合には、
+ * WrappedQueue よりも Queue の使用が推奨されます。
+ * </p>
+ */
 
 
 import open.data.DataWrapper;
 
 
 /**
- * キューとして扱う構造体です。
- * @author 松井文宏/Fumihiro-Matsui(RINEARN)
+ * キュー構造体です。キューのデータを保持します。
+ *
+ * @author 松井文宏
  */
 public struct WrappedQueue<Type>{
 	int first = 0;
@@ -28,9 +52,10 @@ public struct WrappedQueue<Type>{
 }
 
 
-
 /**
  * 要素を全て削除します。
+ *
+ * @param queue 対象のキュー構造体
  * @author 松井文宏
  */
 public void clear<Type>( WrappedQueue<Type> &queue ){
@@ -42,9 +67,10 @@ public void clear<Type>( WrappedQueue<Type> &queue ){
 }
 
 
-
 /**
  * 使用中のサイズを返します。
+ *
+ * @param queue 対象のキュー構造体
  * @author 松井文宏
  */
 public int size<Type>( WrappedQueue<Type> &queue ){
@@ -52,9 +78,11 @@ public int size<Type>( WrappedQueue<Type> &queue ){
 }
 
 
-
 /**
- * キューに値をエンキュー（入力）します。
+ * キューに要素を追加します。
+ *
+ * @param queue 対象のキュー構造体
+ * @param value 追加する要素
  * @author 松井文宏
  */
 public void enqueue<Type>( WrappedQueue<Type> &queue, Type value ){
@@ -65,9 +93,11 @@ public void enqueue<Type>( WrappedQueue<Type> &queue, Type value ){
 }
 
 
-
 /**
- * キューから値をデキュー（出力）します。
+ * キューから要素を取り出します。取り出した要素は、キューから削除されます。
+ *
+ * @param queue 対象のキュー構造体
+ * @return 取り出した要素
  * @author 松井文宏
  */
 public Type dequeue<Type>( WrappedQueue<Type> &queue ){
@@ -80,9 +110,11 @@ public Type dequeue<Type>( WrappedQueue<Type> &queue ){
 }
 
 
-
 /**
- * キューからデキューしたのと同じ値を、削除せずに返します。
+ * キューから要素を削除せずに取り出します。
+ *
+ * @param queue 対象のキュー構造体
+ * @return 取り出した要素
  * @author 松井文宏
  */
 public Type peek<Type>( WrappedQueue<Type> &queue ){
@@ -90,9 +122,11 @@ public Type peek<Type>( WrappedQueue<Type> &queue ){
 }
 
 
-
 /**
- * 指定された要素を含んでいるか判定します。
+ * キューが指定された要素を含んでいるか判定します。
+ *
+ * @param queue 対象のキュー構造体
+ * @param 含まれるか判定したい要素
  * @author 松井文宏
  */
 public bool contains<Type>( WrappedQueue<Type> &queue, Type element ){
@@ -107,9 +141,10 @@ public bool contains<Type>( WrappedQueue<Type> &queue, Type element ){
 }
 
 
-
 /**
- * 全要素の順序を反転させます。
+ * キューが保持する全要素の順序を反転させます。
+ *
+ * @param queue 対象のキュー構造体
  * @author 松井文宏
  */
 public void reverse<Type>( WrappedQueue<Type> &queue ){
@@ -126,9 +161,10 @@ public void reverse<Type>( WrappedQueue<Type> &queue ){
 }
 
 
-
 /**
  * キューバッファを、必要に応じて最適な容量に再確保します。
+ *
+ * @param queue 対象のキュー構造体
  * @author 松井文宏
  */
 private int setProperLength<Type>( WrappedQueue<Type> &queue ){
@@ -154,9 +190,10 @@ private int setProperLength<Type>( WrappedQueue<Type> &queue ){
 }
 
 
-
 /**
  * キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。
+ *
+ * @param size キューのサイズ
  * @author 松井文宏
  */
 private int checksize(int size){
@@ -166,9 +203,11 @@ private int checksize(int size){
 }
 
 
-
 /**
- * キューバッファ（リングバッファ）をシフトし、先頭をインデックス 0 に合わせます。
+ * キューバッファ（リングバッファ）をシフトし、
+ * 先頭をインデックス 0 に合わせます。
+ *
+ * @param queue 対象のキュー構造体
  * @author 松井文宏
  */
 private void shiftData<Type>( WrappedQueue<Type> &queue ){
@@ -191,9 +230,11 @@ private void shiftData<Type>( WrappedQueue<Type> &queue ){
 }
 
 
-
 /**
  * 現在のキューバッファ長と、その中の使用量から、最適なキューバッファ長を返します。
+ *
+ * @param length 現在のキューバッファ長
+ * @param usage 現在のキューバッファ使用量
  * @author 松井文宏
  */
 private int getProperLength(int length, int usage){
@@ -209,9 +250,12 @@ private int getProperLength(int length, int usage){
 }
 
 
-
 /**
- * キューのバッファ内で、実際に使用している長さを返します。
+ * キューのリングバッファ内で、実際に使用している長さを返します。
+ *
+ * @param first 先頭インデックス
+ * @param last 終端インデックス
+ * @param length バッファ長
  * @author 松井文宏
  */
 private int getUsage(int first, int last, int length){
