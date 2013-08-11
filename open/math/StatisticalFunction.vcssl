@@ -1,0 +1,141 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.math.StatisticalFunction 1.0.1
+ * 統計関数ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+
+
+import Math;
+
+
+
+/**
+ * 和を計算します。
+ * @author 松井文宏
+ */
+float sum( ... float args[] ){
+	int n = length( args, 0 );
+	float value = 0.0;
+	for( int i=0; i<n; i++ ){
+		value += args[i];
+	}
+	return value;
+}
+varfloat sum( ... varfloat args[] ){
+	int n = length( args, (int)0v );
+	varfloat value = 0.0vf;
+	for( int i=0; i<n; i++ ){
+		value += args[i];
+	}
+	return value;
+}
+
+
+
+/**
+ * 平均値を計算します。
+ * @author 松井文宏
+ */
+float mean( ... float args[] ){
+	int n = length( args, 0 );
+	float value = sum( args ) / n;
+	return value;
+}
+varfloat mean( ... varfloat args[] ){
+	int n = length( args, (int)0v );
+	varfloat value = sum( args ) / n;
+	return value;
+}
+
+
+
+/**
+ * 不偏分散を計算します。
+ * @author 松井文宏
+ */
+float va( ... float args[] ){
+	int n = length( args, 0 );
+	float mean = mean( args );
+	float value = 0.0;
+	for( int i=0; i<n; i++ ){
+		value += (mean-args[i])*(mean-args[i]);
+	}
+	value /= n-1;
+	return value;
+}
+varfloat va( ... varfloat args[] ){
+	int n = length( args, (int)0v );
+	varfloat mean = mean( args );
+	varfloat value = 0.0vf;
+	for( int i=0; i<n; i++ ){
+		value += (mean-args[i])*(mean-args[i]);
+	}
+	value /= n - 1v;
+	return value;
+}
+
+
+
+/**
+ * 標本分散を計算します。
+ * @author 松井文宏
+ */
+float van( ... float args[] ){
+	int n = length( args, 0 );
+	float mean = mean( args );
+	float value = 0.0;
+	for( int i=0; i<n; i++ ){
+		value += (mean-args[i])*(mean-args[i]);
+	}
+	value /= n;
+	return value;
+}
+varfloat van( ... varfloat args[] ){
+	int n = length( args, (int)0v );
+	varfloat mean = mean( args );
+	varfloat value = 0.0vf;
+	for( int i=0; i<n; i++ ){
+		value += (mean-args[i])*(mean-args[i]);
+	}
+	value /= n;
+	return value;
+}
+
+
+
+/**
+ * 不偏標準偏差を計算します。
+ * @author 松井文宏
+ */
+float sd( ... float args[] ){
+	float value = sqrt( va(args) );
+	return value;
+}
+varfloat sd( ... varfloat args[] ){
+	varfloat value = sqrt( va(args) );
+	return value;
+}
+
+
+/**
+ * 標本標準偏差を計算します。
+ * @author 松井文宏
+ */
+float sdn( ... float args[] ){
+	float value = sqrt( van(args) );
+	return value;
+}
+varfloat sdn( ... varfloat args[] ){
+	varfloat value = sqrt( van(args) );
+	return value;
+}
+

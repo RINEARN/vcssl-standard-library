@@ -1,0 +1,90 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.math.FourierTransform 1.0.0
+ * フーリエ変換ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+
+import Math;
+import System;
+
+
+/**
+ * 順変換となるフーリエ変換の指数部符号です。
+ */
+public const int FORWARD = -1;
+
+/**
+ * 逆変換となるフーリエ変換の指数部符号です。
+ */
+public const int INVERSE = 1;
+
+
+
+/**
+ * 離散フーリエ変換を行います。
+ * 定義域は 0～2π で、変換後の規格化は行いません。
+ *
+ * @param arg 離散フーリエ変換したいデータを入力します。
+ * @param sgn フーリエ変換の指数部符号です。-1で順変換、1で逆変換となります。
+ * @return 引数を離散フーリエ変換した値です。
+ * @author 松井文宏
+ */
+public complex[] dft(complex arg[], int sgn){
+
+	int n = length(arg, 0);
+	complex coeff = sgn * 2.0 * PI * I / n;
+	complex value[n];
+
+	for(int j=0; j<n; j++){
+
+		complex sum = 0.0 + 0.0 * I;
+
+		for(int k=0; k<n; k++){
+			sum += arg[k] * exp(coeff * j * k);
+		}
+
+		value[j] = sum;
+	}
+	return value;
+}
+
+
+/**
+ * 離散フーリエ変換を行います。
+ * 定義域は 0～2π で、変換後の規格化は行いません。
+ *
+ * @param arg 離散フーリエ変換したいデータを入力します。
+ * @param sgn フーリエ変換の指数部符号です。-1で順変換、1で逆変換となります。
+ * @return 引数を離散フーリエ変換した値です。
+ * @author 松井文宏
+ */
+public varcomplex[] dft(varcomplex arg[], int sgn){
+
+	varfloat varpi = pi();
+
+	varint n = length(arg, 0v);
+	varcomplex coeff = sgn * 2.0vf * varpi * VCI / n;
+	varcomplex value[n];
+
+	for(varint j=0v; j<n; j++){
+
+		varcomplex sum = 0.0vf + 0.0vf * VCI;
+
+		for(varint k=0v; k<n; k++){
+			sum += arg[k] * exp(coeff * j * k);
+		}
+
+		value[j] = sum;
+	}
+	return value;
+}
+

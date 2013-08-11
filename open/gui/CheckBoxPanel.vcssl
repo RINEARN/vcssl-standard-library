@@ -1,0 +1,337 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.gui.CheckBoxPanel 1.0.0
+ * チェックボックスパネル生成ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+
+import GUI;
+
+
+private const string DEFAULT_PANEL_TITLE = "CheckBoxPanel";
+private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しません：";
+
+
+/**
+ * チェックボックスパネルの構造体です。
+ *
+ * @author 松井文宏
+ */
+public struct CheckBoxPanel{
+	int panel = NULL;
+	int checkBoxGridPanel = NULL;
+	int checkBox[0];
+	string textLabelString[0];
+}
+
+
+
+/**
+ * チェックボックスパネルを生成します。
+ *
+ * @param x パネルのX座標
+ * @param y パネルのY座標
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @param labelText ラベル文字列を格納する配列
+ * @param defaultText チェックボックスの初期値文字列を格納する配列
+ * @return 生成したチェックボックスパネル構造体
+ * @author 松井文宏
+ */
+public CheckBoxPanel newCheckBoxPanel(int x, int y, int width, int height, string labelText[], bool defaultValue[]){
+
+	int n = length(labelText, 0);
+	CheckBoxPanel panelInstance;
+
+	panelInstance.panel = newPanel(
+		x, y, width, height, DEFAULT_PANEL_TITLE
+	);
+
+	panelInstance.textLabelString = labelText;
+
+	panelInstance.checkBoxGridPanel = newGridPanel(
+		0, 0, width, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	alloc[n] panelInstance.checkBox;
+
+	for(int i=0; i<n; i++){
+		panelInstance.checkBox[i] = newCheckBox(0, 0, 0, 0, labelText[i], defaultValue[i]);
+		mountComponent(panelInstance.checkBox[i], panelInstance.checkBoxGridPanel);
+	}
+
+	mountComponent(panelInstance.checkBoxGridPanel, panelInstance.panel);
+
+	return panelInstance;
+}
+
+
+
+/**
+ * チェックボックスパネルを破棄します。
+ *
+ * @param panelInstance 破棄するチェックボックスパネル
+ * @author 松井文宏
+ */
+public void deleteComponent(CheckBoxPanel &panelInstance){
+	int n = length(panelInstance.checkBox, 0);
+	for(int i=0; i<n; i++){
+		demountComponent(panelInstance.checkBox[i], panelInstance.checkBoxGridPanel);
+		deleteComponent(panelInstance.checkBox[i]);
+	}
+	demountComponent(panelInstance.checkBoxGridPanel, panelInstance.panel);
+	deleteComponent(panelInstance.checkBoxGridPanel);
+	deleteComponent(panelInstance.panel);
+	panelInstance = NULL;
+}
+
+
+
+/**
+ * チェックボックスパネルを再描画します。
+ *
+ * @param panelInstance 再描画するチェックボックスパネル
+ * @author 松井文宏
+ */
+public void paintComponent(CheckBoxPanel &panelInstance){
+	int n = length(panelInstance.checkBox, 0);
+	for(int i=0; i<n; i++){
+		paintComponent(panelInstance.checkBox[i]);
+	}
+	paintComponent(panelInstance.checkBoxGridPanel);
+	paintComponent(panelInstance.panel);
+}
+
+
+
+/**
+ * チェックボックスパネルを、別のGUIコンポーネント上に配置します。
+ *
+ * @param panelInstance 配置するチェックボックスパネル
+ * @param componentID 配置先GUIコンポーネントID
+ * @author 松井文宏
+ */
+public void mountComponent(CheckBoxPanel &panelInstance, int componentID){
+	mountComponent(panelInstance.panel, componentID);
+}
+
+
+
+/**
+ * チェックボックスパネルを、別のGUIコンポーネントから配置解除します。
+ *
+ * @param panelInstance 配置解除するチェックボックスパネル
+ * @param componentID 配置先GUIコンポーネントID
+ * @author 松井文宏
+ */
+public void demountComponent(CheckBoxPanel &panelInstance, int componentID){
+	demountComponent(panelInstance.panel, componentID);
+}
+
+
+
+/**
+ * パネルのコンポーネントIDを返します。
+ *
+ * @param panelInstance 取得対象のチェックボックスパネル
+ * @return パネルのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getPanel(CheckBoxPanel &panelInstance){
+	return panelInstance.panel;
+}
+
+
+
+/**
+ * 指定されたラベルに対応するチェックボックスを取得します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param labelText 取得対象のチェックボックスに対応するラベル文字列
+ * @return チェックボックスのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getCheckBox(CheckBoxPanel &panelInstance, string labelText){
+	int index = labelIndexOf(panelInstance, labelText);
+	if(index < 0){
+		error(ERROR_LABEL_NOT_FOUND + labelText);
+	}
+	return panelInstance.checkBox[index];
+}
+
+
+
+/**
+ * 指定されたインデックスのチェックボックスを取得します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param index チェックボックスのインデックス
+ * @return チェックボックスのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getCheckBox(CheckBoxPanel &panelInstance, int index){
+	return panelInstance.checkBox[index];
+}
+
+
+
+/**
+ * 指定されたインデックスのチェックボックスに、bool値を設定します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param index チェックボックスのインデックス
+ * @param value 設定するbool値
+ * @author 松井文宏
+ */
+public void setComponentBool(CheckBoxPanel &panelInstance, int index, bool value){
+	setComponentBool(panelInstance.checkBox[index], value);
+}
+
+
+
+/**
+ * 指定されたインデックスのチェックボックスから、bool値を取得します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param index チェックボックスのインデックス
+ * @return テキストフィールドの保持するbool値
+ * @author 松井文宏
+ */
+public bool getComponentBool(CheckBoxPanel &panelInstance, int index){
+	return getComponentBool(panelInstance.checkBox[index]);
+}
+
+
+
+/**
+ * 指定されたラベルに対応するチェックボックスに、bool値を設定します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param labelText 設定対象のテキストフィールドに対応するラベル文字列
+ * @param value 設定するbool値
+ * @author 松井文宏
+ */
+public void setComponentBool(CheckBoxPanel &panelInstance, string labelText, bool value){
+	int index = labelIndexOf(panelInstance, labelText);
+	if(index < 0){
+		error(ERROR_LABEL_NOT_FOUND + labelText);
+	}
+	setComponentBool(panelInstance.checkBox[index], value);
+}
+
+
+
+/**
+ * 指定されたラベルに対応するチェックボックスから、bool値を取得します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param labelText 取得対象のチェックボックスに対応するラベル文字列
+ * @return テキストフィールドの保持するbool値
+ * @author 松井文宏
+ */
+public bool getComponentBool(CheckBoxPanel &panelInstance, string labelText){
+	int index = labelIndexOf(panelInstance, labelText);
+	if(index < 0){
+		error(ERROR_LABEL_NOT_FOUND + labelText);
+	}
+	return getComponentBool(panelInstance.checkBox[index]);
+}
+
+
+
+/**
+ * ラベル文字列に対応する、チェックボックスのインデックスを返します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param labelText 検索するラベル文字列
+ * @author 松井文宏
+ */
+private int labelIndexOf(CheckBoxPanel &panelInstance, string labelText){
+	int n = length(panelInstance.textLabelString, 0);
+	for(int i=0; i<n; i++){
+		if(panelInstance.textLabelString[i] == labelText){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+
+/**
+ * パネルのサイズを返します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @return パネルのサイズを格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentSize(CheckBoxPanel &panelInstance){
+	return getComponentSize(panelInstance.panel);
+}
+
+
+
+/**
+ * パネルのサイズを設定します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @author 松井文宏
+ */
+public void setComponentSize(CheckBoxPanel &panelInstance, int width, int height){
+	setComponentSize(panelInstance.panel, width, height);
+	setComponentSize(panelInstance);
+}
+
+
+
+/**
+ * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @author 松井文宏
+ */
+public void setComponentSize(CheckBoxPanel &panelInstance){
+	int panelSize[] = getComponentSize(panelInstance.panel);
+	setComponentSize(panelInstance.checkBoxGridPanel, panelSize[0], panelSize[1]);
+}
+
+
+
+/**
+ * パネルの位置を返します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @return パネルの位置を格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentLocation(CheckBoxPanel &panelInstance){
+	return getComponentLocation(panelInstance.panel);
+}
+
+
+
+/**
+ * パネルの位置を設定します。
+ *
+ * @param panelInstance 対象のチェックボックスパネル
+ * @param x ウィンドウのX座標
+ * @param y ウィンドウのY座標
+ * @author 松井文宏
+ */
+public void setComponentLocation(CheckBoxPanel &panelInstance, int x, int y){
+	setComponentLocation(panelInstance.panel, x, y);
+}
+
+
+

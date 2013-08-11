@@ -1,0 +1,197 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.system.Int 1.0.0
+ * int型補助ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+
+
+import Text;
+
+
+
+/**
+ * 文字列の中身がint型に変換可能か判定します。
+ * @author 松井文宏
+ */
+public bool isInt(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	if(startsWith(s,"0x") || startsWith(s,"0X")){
+
+		// 16進数の場合
+		return isHex(s);
+
+	}else if(startsWith(s,"0b") || startsWith(s,"0B")){
+
+		// 2進数の場合
+		return isBin(s);
+
+	}else if(startsWith(s,"0") || startsWith(s,"0")){
+
+		// 8進数の場合
+		return isOct(s);
+
+	}else{
+
+		// 10進数の場合
+		return isDec(s);
+
+	}
+
+}
+
+
+
+/**
+ * 文字列の中身が10進数表記であり、かつint型に変換可能か判定します。
+ * つまるところ、中身が符号を除いて全部数字なら true が返されます。
+ * @author 松井文宏
+ */
+public bool isDec(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	if(lengthOf(s) == 0){
+		return false;
+	}
+
+	// 数字を全部削除
+	s = replace(s, "0", "");
+	s = replace(s, "1", "");
+	s = replace(s, "2", "");
+	s = replace(s, "3", "");
+	s = replace(s, "4", "");
+	s = replace(s, "5", "");
+	s = replace(s, "6", "");
+	s = replace(s, "7", "");
+	s = replace(s, "8", "");
+	s = replace(s, "9", "");
+
+	if(lengthOf(s) == 0){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+/**
+ * 文字列の中身が16進数表記であり、かつint型に変換可能か判定します。
+ * @author 松井文宏
+ */
+public bool isHex(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	if(!startsWith(s,"0x") && !startsWith(s,"0X")){
+		return false;
+	}
+
+	// 先頭の 0x を削除
+	s = substring(s, 2, lengthOf(s));
+
+	if(lengthOf(s) == 0){
+		return false;
+	}
+
+	// a～fを削除
+	s = replace(s, "a", "");
+	s = replace(s, "b", "");
+	s = replace(s, "c", "");
+	s = replace(s, "d", "");
+	s = replace(s, "e", "");
+	s = replace(s, "f", "");
+	s = replace(s, "A", "");
+	s = replace(s, "B", "");
+	s = replace(s, "C", "");
+	s = replace(s, "D", "");
+	s = replace(s, "E", "");
+	s = replace(s, "F", "");
+
+	// この時点で長さが 0 ならa～fだけの内容なのでOK
+	if(lengthOf(s) == 0){
+		return true;
+	}
+
+	// 残りが全部数字ならOK
+	return isDec(s);
+}
+
+
+
+/**
+ * 文字列の中身が8進数表記であり、かつint型に変換可能か判定します。
+ * @author 松井文宏
+ */
+public bool isOct(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	if(startsWith(s,"0") || startsWith(s,"0")){
+
+		// 全部数字ならOK
+		return isDec(s);
+
+	}else{
+
+		return false;
+
+	}
+}
+
+
+
+/**
+ * 文字列の中身が2進数表記であり、かつint型に変換可能か判定します。
+ * @author 松井文宏
+ */
+public bool isBin(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	if(!startsWith(s,"0b") && !startsWith(s,"0B")){
+		return false;
+	}
+
+	// 先頭の 0b を削除
+	s = substring(s, 2, lengthOf(s));
+
+	if(lengthOf(s) == 0){
+		return false;
+	}
+
+	s = replace(s, "0", "");
+	s = replace(s, "1", "");
+
+	if(lengthOf(s) == 0){
+		return true;
+	}else{
+		return false;
+	}
+}
+

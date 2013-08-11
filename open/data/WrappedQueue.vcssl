@@ -1,0 +1,228 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.data.WrappedQueue 1.0.0
+ * 内部ラッピング保持式キューデータ構造ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+
+import open.data.DataWrapper;
+
+
+/**
+ * キューとして扱う構造体です。
+ * @author 松井文宏/Fumihiro-Matsui(RINEARN)
+ */
+public struct WrappedQueue<Type>{
+	int first = 0;
+	int last = 0;
+	int size = 0;
+	DataWrapper<Type> data[1];
+}
+
+
+
+/**
+ * 要素を全て削除します。
+ * @author 松井文宏
+ */
+public void clear<Type>( WrappedQueue<Type> &queue ){
+	alloc[0] queue.data;
+	alloc[1] queue.data;
+	queue.first = 0;
+	queue.last = 0;
+	queue.size = 0;
+}
+
+
+
+/**
+ * 使用中のサイズを返します。
+ * @author 松井文宏
+ */
+public int size<Type>( WrappedQueue<Type> &queue ){
+	return queue.size;
+}
+
+
+
+/**
+ * キューに値をエンキュー（入力）します。
+ * @author 松井文宏
+ */
+public void enqueue<Type>( WrappedQueue<Type> &queue, Type value ){
+	queue.size++;
+	queue.data[ queue.last++ ] = wrap<Type>(value);
+	setProperLength<Type>(queue);
+	queue.last %= length(queue.data, 0);
+}
+
+
+
+/**
+ * キューから値をデキュー（出力）します。
+ * @author 松井文宏
+ */
+public Type dequeue<Type>( WrappedQueue<Type> &queue ){
+	queue.size--;
+	checksize(queue.size);
+	Type value = unwrap<Type>(queue.data[ queue.first++ ]);
+	queue.first %= length(queue.data, 0);
+	setProperLength<Type>(queue);
+	return value;
+}
+
+
+
+/**
+ * キューからデキューしたのと同じ値を、削除せずに返します。
+ * @author 松井文宏
+ */
+public Type peek<Type>( WrappedQueue<Type> &queue ){
+	return unwrap<Type>(queue.data[ queue.first ]);
+}
+
+
+
+/**
+ * 指定された要素を含んでいるか判定します。
+ * @author 松井文宏
+ */
+public bool contains<Type>( WrappedQueue<Type> &queue, Type element ){
+	int n = queue.size;
+	DataWrapper<Type> wrappedElement = wrap<Type>(element);
+	for(int i=0; i<n; i++){
+		if(queue.data[i] == wrappedElement){
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
+/**
+ * 全要素の順序を反転させます。
+ * @author 松井文宏
+ */
+public void reverse<Type>( WrappedQueue<Type> &queue ){
+
+	// queue.dataはリングバッファなので、内容をシフトして先頭をインデックス 0 に移動
+	shiftData<Type>( queue );
+
+	int n = queue.size;
+	DataWrapper<Type> rev[n];
+	for(int i=0; i<n; i++){
+		rev[i] = queue.data[n-1-i];
+	}
+	queue.data = rev;
+}
+
+
+
+/**
+ * キューバッファを、必要に応じて最適な容量に再確保します。
+ * @author 松井文宏
+ */
+private int setProperLength<Type>( WrappedQueue<Type> &queue ){
+
+	//<varint>や<varfloat>の場合、式中でintやfloatのリテラルを使うと精度警告が出るので、変数化して回避
+	int zero = 0;
+
+	//現在のバッファ長と、適切なバッファ長を取得
+	int currentLength = length(queue.data, zero);
+	int currentUsage = getUsage(queue.first, queue.last, currentLength);
+	int properLength = getProperLength(currentLength, currentUsage);
+
+	//現在のバッファサイズが適切でない場合は容量変更
+	if(currentLength != properLength){
+
+		//リングバッファをシフトして先頭をインデックス 0 に移動
+		shiftData<Type>( queue );
+
+		//バッファ容量変更
+		alloc[properLength] queue.data;
+	}
+
+}
+
+
+
+/**
+ * キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。
+ * @author 松井文宏
+ */
+private int checksize(int size){
+	if(size < 0){
+		error("キューの容量が負になりました。");
+	}
+}
+
+
+
+/**
+ * キューバッファ（リングバッファ）をシフトし、先頭をインデックス 0 に合わせます。
+ * @author 松井文宏
+ */
+private void shiftData<Type>( WrappedQueue<Type> &queue ){
+	int zero = 0;
+	int currentLength = length(queue.data, zero);
+
+	DataWrapper<Type> shiftedData[] = queue.data;
+	int f = queue.first;
+	for(int i=0; i<currentLength; i++){
+		shiftedData[i] = queue.data[ (i+f) % currentLength ];
+	}
+	queue.data = shiftedData;
+
+	// 位置情報を変更して再登録
+	if(queue.last < queue.first){
+		queue.last += currentLength;
+	}
+	queue.last -= queue.first;
+	queue.first = 0;
+}
+
+
+
+/**
+ * 現在のキューバッファ長と、その中の使用量から、最適なキューバッファ長を返します。
+ * @author 松井文宏
+ */
+private int getProperLength(int length, int usage){
+	if( length == 0 ){
+		return 1;
+	}else if( length <= usage+1 ){
+		return length * 2;
+	}else if( usage < length/2 ){
+		return length / 2;
+	}else{
+		return length;
+	}
+}
+
+
+
+/**
+ * キューのバッファ内で、実際に使用している長さを返します。
+ * @author 松井文宏
+ */
+private int getUsage(int first, int last, int length){
+	if(first <= last){
+		return last - first;
+	}else{
+		return last - first + length;
+	}
+}
+
+
+
+
+

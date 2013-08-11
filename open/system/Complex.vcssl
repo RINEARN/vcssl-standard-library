@@ -1,0 +1,208 @@
+encode UTF-8;
+
+import Math;
+import System;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.data.Complex 1.1.1
+ * 複素数ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+
+
+/**
+ * float[2]を複素数として扱う場合の実部インデックスを表します。
+ * @author 松井文宏
+ */
+public const int RE = 0;
+
+/**
+ * float[2]を複素数として扱う場合の虚部インデックスを表します。
+ * @author 松井文宏
+ */
+public const int IM = 1;
+
+
+
+/**
+ * float[2] を complex に変換します。
+ * @author 松井文宏
+ */
+complex toComplex(float arg[]){
+	return arg[RE] + arg[IM] * I;
+}
+
+/**
+ * complex を float[2] に変換します。
+ * @author 松井文宏
+ */
+float[] toFloatArray(complex arg){
+	float value[2];
+	value[RE] = System.re(arg);
+	value[IM] = System.im(arg);
+	return value;
+}
+
+
+
+/**
+ * varfloat[2] を varcomplex に変換します。
+ * @author 松井文宏
+ */
+complex toVarcomplex(varfloat arg[]){
+	return arg[RE] + arg[IM] * VCI;
+}
+
+/**
+ * complex を float[2] に変換します。
+ * @author 松井文宏
+ */
+float[] toVarfloatArray(varcomplex arg){
+	varfloat value[2v];
+	value[RE] = System.re(arg);
+	value[IM] = System.im(arg);
+	return value;
+}
+
+
+
+/**
+ * 実部を返します。
+ * @author 松井文宏
+ */
+public macro creal(complex arg){
+	return System.re(arg);
+}
+public macro creal(varcomplex arg){
+	return System.re(arg);
+}
+public macro creal(float arg[]){
+	return arg[RE];
+}
+public macro creal(varfloat arg[]){
+	return arg[RE];
+}
+
+/**
+ * 虚部を返します。
+ * @author 松井文宏
+ */
+public macro cimag(complex arg){
+	return System.im(arg);
+}
+public macro cimag(varcomplex arg){
+	return System.im(arg);
+}
+public macro cimag(float arg[]){
+	return arg[IM];
+}
+public macro cimag(varfloat arg[]){
+	return arg[IM];
+}
+
+
+
+/**
+ * float[2]/varfloat[2]を複素数と見なし、加算値を返します。
+ * @author 松井文宏
+ */
+macro cadd(float operandA[], float operandB[]){
+	return (operandA + operandB);
+}
+macro cadd(varfloat operandA[], varfloat operandB[]){
+	return (operandA + operandB);
+}
+
+/**
+ * float[2]/varfloat[2]を複素数と見なし減算値を返します。
+ * @author 松井文宏
+ */
+macro csub(float operandA[], float operandB[]){
+	return (operandA - operandB);
+}
+macro csub(varfloat operandA[], varfloat operandB[]){
+	return (operandA - operandB);
+}
+
+/**
+ * float[2]/varfloat[2]を複素数と見なし、乗算値を返します。
+ * @author 松井文宏
+ */
+float[] cmul(float a[], float b[]){
+	float value[ 2 ];
+	value[RE] = a[RE] * b[RE] - a[IM] * b[IM];
+	value[IM] = a[RE] * b[IM] + a[IM] * b[RE];
+	return value;
+}
+float[] cmul(varfloat a[], varfloat b[]){
+	float value[ 2 ];
+	value[RE] = a[RE] * b[RE] - a[IM] * b[IM];
+	value[IM] = a[RE] * b[IM] + a[IM] * b[RE];
+	return value;
+}
+
+/**
+ * float[2]/varfloat[2]を複素数と見なし、除算値を返します。
+ * @author 松井文宏
+ */
+float[] cdiv(float a[], float b[]){
+	float value[ 2 ];
+	float r = ( b[RE] * b[RE] + b[IM] * b[IM] );
+	value[RE] = ( a[RE] * b[RE] + a[IM] * b[IM] ) / r;
+	value[IM] = ( a[IM] * b[RE] - a[RE] * b[IM] ) / r;
+	return value;
+}
+float[] cdiv(varfloat a[], varfloat b[]){
+	float value[ 2 ];
+	float r = ( b[RE] * b[RE] + b[IM] * b[IM] );
+	value[RE] = ( a[RE] * b[RE] + a[IM] * b[IM] ) / r;
+	value[IM] = ( a[IM] * b[RE] - a[RE] * b[IM] ) / r;
+	return value;
+}
+
+
+
+/**
+ * 指数関数です。
+ * @author 松井文宏
+ */
+complex cexp(complex arg){
+	float re = System.re(arg);
+	float im = System.im(arg);
+	return exp(re)*cos(im) + exp(re)*sin(im)*I;
+}
+varcomplex cexp(varcomplex arg){
+  int digitStock = getdigit();
+  digit( digitStock * 2.34 );
+  varfloat re = System.re(arg);
+  varfloat im = System.im(arg);
+  varcomplex value = exp(re)*cos(im) + exp(re)*sin(im)*System.VCI;
+  digit(digitStock);
+  return value;
+}
+float[] cexp(float arg[]){
+	float value[2];
+	value[RE] = exp(arg[RE]) * cos(arg[IM]);
+	value[IM] = exp(arg[RE]) * sin(arg[IM]);
+	return value;
+}
+varfloat[] cexp(varfloat arg[]){
+	varfloat value[2];
+    int digitStock = getdigit();
+    digit( digitStock * 2.34 );
+	value[RE] = exp(arg[RE]) * cos(arg[IM]);
+	value[IM] = exp(arg[RE]) * sin(arg[IM]);
+    digit(digitStock);
+	return value;
+}
+
+
+
+

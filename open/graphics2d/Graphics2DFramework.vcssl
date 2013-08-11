@@ -1,0 +1,732 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library
+ * open.framework.Graphics2DFramework 1.0.2
+ *
+ * Spec: http://www.vcssl.org/api/open/framework/Graphics2DFramework.html
+ * Note: http://www.rinearn.com/code/spec/20120807_graphics2d_framework/
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+import GUI;
+import Graphics;
+import Graphics2D;
+import Time;
+
+
+
+/**
+ * 2DCGのグラフィックスIDです。
+ */
+private int graphics = -1;
+
+/**
+ * 2DCGのグラフィックスIDを返します。
+ * @author 松井文宏
+ */
+public int getGraphics(){
+	return graphics;
+}
+
+
+/**
+ * 2DCGのレンダラーIDです。
+ */
+private int renderer = -1;
+
+/**
+ * 2DCGのレンダラーIDを返します。
+ * @author 松井文宏
+ */
+public int getRenderer(){
+	return renderer;
+}
+
+
+/**
+ * 表示ラベルのGUIコンポーネントIDです。
+ */
+private int graphicsLabel = -1;
+
+/**
+ * 描画ラベルのGUIコンポーネントIDです。
+ * @author 松井文宏
+ */
+public int getGraphicsLabel(){
+	return graphicsLabel;
+}
+
+
+/**
+ * ウィンドウのGUIコンポーネントIDです。
+ */
+private int window = -1;
+
+/**
+ * ウィンドウのGUIコンポーネントIDを取得します。
+ * @author 松井文宏
+ */
+public int getWindow(){
+	return window;
+}
+
+
+
+/**
+ * アニメーションのON/OFFを制御する変数です。
+ */
+private bool animation = true;
+
+
+/**
+ * アニメーションの ON / OFF を設定します。
+ * @author 松井文宏
+ */
+public void setAnimationState(bool b){
+	animation = b;
+}
+
+/**
+ * アニメーションの ON / OFF を取得します。
+ * @author 松井文宏
+ */
+public bool getAnimationState(){
+	return animation;
+}
+
+
+
+/**
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値です。
+ */
+private float frameRate = 30;
+
+/**
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。
+ * @author 松井文宏
+ */
+public void setFrameRate(float f){
+	frameRate = f;
+}
+
+/**
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。
+ * @author 松井文宏
+ */
+public float getFrameRate(){
+	return frameRate;
+}
+
+
+
+/**
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値です。
+ */
+private float currentFrameRate = frameRate;
+
+/**
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。
+ * @author 松井文宏
+ */
+public float getCurrentFrameRate(){
+	return currentFrameRate;
+}
+
+
+
+/**
+ * アニメーションの最終画面更新時刻です。
+ */
+private int lastFrameTime = 0;
+
+/**
+ * アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。
+ * @author 松井文宏
+ */
+public int getLastFrameTime(){
+	return lastFrameTime;
+}
+
+
+
+/**
+ * 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを制御する変数です。
+ */
+private bool paintGraphics2DState = true;
+
+/**
+ * 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。
+ * @author 松井文宏
+ */
+public void setPaintGraphics2DState(bool b){
+	paintGraphics2DState = b;
+}
+
+/**
+ * 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。
+ * @author 松井文宏
+ */
+public bool getPaintGraphics2DState(){
+	return paintGraphics2DState;
+}
+
+
+
+/**
+ * 背景色の赤成分です。
+ */
+private int backgroundRed = 255;
+
+/**
+ * 背景色の緑成分です。
+ */
+private int backgroundGreen = 255;
+
+
+/**
+ * 背景色の青成分です。
+ */
+private int backgroundBlue = 255;
+
+/**
+ * 背景色のα成分です。
+ */
+private int backgroundAlpha = 255;
+
+/**
+ * 背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。
+ * @author 松井文宏
+ */
+public void setBackgroundColor(int r, int g, int b, int a){
+	backgroundRed = r;
+	backgroundGreen = g;
+	backgroundBlue = b;
+	backgroundAlpha = a;
+	if(0 <= graphics){
+		setGraphics2DColor(graphics, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha);
+	}
+}
+
+/**
+ * 背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。
+ * @author 松井文宏
+ */
+public void setBackgroundColor(int color[]){
+	backgroundRed = color[0];
+	backgroundGreen = color[1];
+	backgroundBlue = color[2];
+	backgroundAlpha = color[3];
+	if(0 <= graphics){
+		setGraphics2DColor(graphics, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha);
+	}
+}
+
+/**
+ * 背景色を設定します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。
+ * @author 松井文宏
+ */
+public int[] getBackgroundColor(){
+	int color[] = {backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha};
+	return color;
+}
+
+
+
+/**
+ * ウィンドウタイトルです。
+ */
+private string windowTitle = "Graphics2D Window";
+
+/**
+ * ウィンドウタイトルを設定します。
+ * @author 松井文宏
+ */
+public void setWindowTitle(string title){
+	windowTitle = title;
+	if(0 <= window){
+		setComponentText(window, title);
+	}
+}
+
+/**
+ * ウィンドウタイトルを取得します。
+ * @author 松井文宏
+ */
+public string getWindowTitle(){
+	return windowTitle;
+}
+
+
+
+/**
+ * ウィンドウの幅です。
+ */
+private int windowWidth = 800;
+
+/**
+ * ウィンドウの高さです。
+ */
+private int windowHeight = 600;
+
+/**
+ * ウィンドウのヘッダ部の高さ（環境依存値）の設定値です。
+ */
+private int windowHeaderHeight = 20;
+
+/**
+ * ウィンドウのX位置です。
+ */
+private int windowX = 0;
+
+/**
+ * ウィンドウのY位置です。
+ */
+private int windowY = 0;
+
+/**
+ * ウィンドウサイズを指定します。
+ * @author 松井文宏
+ */
+public void setWindowSize(int w, int h){
+	windowWidth = w;
+	windowHeight = h;
+	if(0 <= window){
+		setComponentSize(window, windowWidth, windowHeight);
+	}
+}
+
+/**
+ * ウィンドウサイズを指定します。
+ * @author 松井文宏
+ */
+public void setWindowSize(int size[]){
+	windowWidth = size[0];
+	windowHeight = size[1];
+	if(0 <= window){
+		setComponentSize(window, windowWidth, windowHeight);
+	}
+}
+
+/**
+ * ウィンドウサイズを取得します。
+ * @author 松井文宏
+ */
+public int[] getWindowSize(){
+	int size[] = {windowWidth, windowHeight};
+	return size;
+}
+
+/**
+ * ウィンドウヘッダ部の高さ（環境依存値）を設定します。
+ * @author 松井文宏
+ */
+public void setWindowHeaderHeight(int h){
+	windowHeaderHeight = h;
+}
+
+/**
+ * ウィンドウヘッダ部の高さ（環境依存値）を取得します。
+ * @author 松井文宏
+ */
+public void getWindowHeaderHeight(){
+	return windowHeaderHeight;
+}
+
+
+
+/**
+ * ウィンドウ右側の余白です。
+ */
+private int marginRight = 0;
+
+/**
+ * ウィンドウ左側の余白です。
+ */
+private int marginLeft = 0;
+
+/**
+ * ウィンドウ上側の余白です。
+ */
+private int marginTop = 0;
+
+/**
+ * ウィンドウ下側の余白です。
+ */
+private int marginBottom = 0;
+
+/**
+ * ウィンドウ右側の余白を設定します。
+ * @author 松井文宏
+ */
+public void setMarginRight(float m){
+	marginRight = m;
+	if(0 <= window){
+		setLayout();
+	}
+}
+
+/**
+ * ウィンドウ右側の余白を取得します。
+ * @author 松井文宏
+ */
+public float getMarginRight(){
+	return marginRight;
+}
+
+/**
+ * ウィンドウ左側の余白を設定します。
+ * @author 松井文宏
+ */
+public void setMarginLeft(float m){
+	marginLeft = m;
+	if(0 <= window){
+		setLayout();
+	}
+}
+
+/**
+ * ウィンドウ左側の余白を取得します。
+ * @author 松井文宏
+ */
+public float getMarginLeft(){
+	return marginLeft;
+}
+
+/**
+ * ウィンドウ上側の余白を設定します。
+ * @author 松井文宏
+ */
+public void setMarginTop(float m){
+	marginTop = m;
+	if(0 <= window){
+		setLayout();
+	}
+}
+
+/**
+ * ウィンドウ上側の余白を取得します。
+ * @author 松井文宏
+ */
+public float getMarginTop(){
+	return marginTop;
+}
+
+/**
+ * ウィンドウ下側の余白を設定します。
+ * @author 松井文宏
+ */
+public void setMarginBottom(float m){
+	marginBottom = m;
+	if(0 <= window){
+		setLayout();
+	}
+}
+
+/**
+ * ウィンドウ下側の余白を取得します。
+ * @author 松井文宏
+ */
+public float getMarginBottom(){
+	return marginBottom;
+}
+
+
+
+/**
+ * メインループの ON / OFF を制御する変数です。
+ */
+private bool mainLoopState = true;
+
+/**
+ * メインループウェイトです。
+ */
+private int mainLoopWait;
+
+/**
+ * メインループウェイトの下限値です。
+ */
+private int mainLoopWaitMin = 10;
+
+/**
+ * メインループウェイトの上限値です。
+ */
+private int mainLoopWaitMax;
+
+/**
+ * メインループの ON / OFF を設定します。false（ OFF ）に設定するとアニメーションのメインループを脱出し、プログラムを終了します。
+ * @author 松井文宏
+ */
+public void setMainLoopState(bool b){
+	mainLoopState = b;
+}
+
+/**
+ * メインループの ON / OFF を取得します。
+ * @author 松井文宏
+ */
+public bool getMainLoopState(){
+	return mainLoopState;
+}
+
+
+
+/**
+ * main関数の引数を保持する変数です。
+ */
+private string mainArguments[];
+
+/**
+ * main関数の引数を取得します。
+ * @author 松井文宏
+ */
+public string[] getMainArgument(){
+	return mainArguments;
+}
+
+
+
+/**
+ * 現在の描画ラベルの内容を、画像ファイルに出力します。
+ * @author 松井文宏
+ * @param filePath 出力ファイル名またはファイルパス
+ * @param format ファイル形式（"PNG"または"JPEG"）
+ * @param quality 品質
+ */
+public void export( string filePath, string format, float quality ){
+	exportGraphics( graphics, filePath, format, quality );
+}
+
+
+
+
+
+/**
+ * main関数です。
+ * メインプログラムでmain関数を定義する場合は、こちらは呼ばれなくなるので、
+ * 下記のframeworkMainを明示的に呼ぶ必要があります。
+ * @author 松井文宏
+ */
+public void main( string args[] ){
+
+	frameworkMain( args );
+
+}
+
+
+
+/**
+ * 最も外側のフローです。
+ * @author 松井文宏
+ */
+public void frameworkMain( string args[] ){
+
+	mainArguments = args;
+
+	initializeGraphics();
+	initializeComponent();
+
+	eval( "initialize( renderer )" );
+
+	if( paintGraphics2DState ){
+		paintGraphics2D( renderer );
+	}
+	eval( "paint( renderer )" );
+	paintWindow();
+
+	mainLoopWait = 1000.0 / frameRate;
+	mainLoopWaitMax = 1000.0 / frameRate;
+
+	mainLoop();
+
+	eval( "finalize( renderer )" );
+	exit();
+
+}
+
+
+
+/**
+ * メインループです。
+ * @author 松井文宏
+ */
+private void mainLoop(){
+
+	while( mainLoopState ){
+
+		if( animation ){
+
+			lastFrameTime = time();
+
+			sleep( mainLoopWait );
+
+			eval( "update( renderer )" );
+
+			if( paintGraphics2DState ){
+				paintGraphics2D( renderer );
+			}
+
+			eval( "paint( renderer )" );
+
+			paintWindow();
+
+			currentFrameRate = 1000.0 / millisecond( time() - (lastFrameTime) );
+
+			mainLoopWait = getLoopWait( frameRate, currentFrameRate, mainLoopWait, mainLoopWaitMin, mainLoopWaitMax );
+
+		}
+
+	}
+
+}
+
+
+
+/**
+ * ウィンドウの再描画を行います。
+ * アニメーションの画面更新タイミングで自動的にコールされるが、
+ * 任意のタイミングで明示的に呼び出して再描画させる事も可能
+ * @author 松井文宏
+ */
+public void paintWindow(){
+
+	paintComponent( graphicsLabel );
+	paintComponent( window );
+
+}
+
+
+
+/**
+ * 目標フレームレート、実測フレームレート、現在のループウェイトなどから、次フレームでの最適なループウェイトを計算して返します。
+ * @author 松井文宏
+ */
+private int getLoopWait( float targetFrameRate, float currentFrameRate, int currentLoopWait, int limitMin, int limitMax ){
+	if( targetFrameRate > currentFrameRate ){
+		if( limitMin < currentLoopWait ){
+			currentLoopWait--;
+		}
+	}else{
+		if( limitMax > currentLoopWait ){
+			currentLoopWait++;
+		}
+	}
+	return currentLoopWait;
+}
+
+
+
+/**
+ * グラフィックスリソース関連の確保と初期化を行います。
+ * @author 松井文宏
+ */
+private void initializeGraphics(){
+
+	int labelWidth = getGraphicsLabelWidth(
+		windowWidth, marginRight, marginLeft
+	);
+	int labelHeight = getGraphicsLabelHeight(
+		windowHeight, windowHeaderHeight, marginTop, marginBottom
+	);
+
+	graphics = newGraphics();
+
+	renderer = newGraphics2DRenderer( labelWidth, labelHeight, graphics );
+
+	setGraphics2DColor( graphics, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha );
+
+}
+
+
+
+/**
+ * GUIコンポーネント関連の確保と初期化を行います。
+ * @author 松井文宏
+ */
+private void initializeComponent(){
+
+	int labelWidth = getGraphicsLabelWidth(
+		windowWidth, marginRight, marginLeft
+	);
+	int labelHeight = getGraphicsLabelHeight(
+		windowHeight, windowHeaderHeight, marginTop, marginBottom
+	);
+
+	window = newWindow( windowX, windowY, windowWidth, windowHeight, windowTitle );
+	graphicsLabel = newGraphicsLabel( marginLeft, marginTop, labelWidth, labelHeight, graphics );
+
+	mountComponent( graphicsLabel, window );
+
+}
+
+
+
+/**
+ * ウィンドウが閉じられた際にコールされるイベントハンドラです。
+ * @author 松井文宏
+ */
+public void onWindowClose( int id ){
+
+	if( id == window ){
+		mainLoopState = false;
+	}
+
+}
+
+
+
+/**
+ * ウィンドウがリサイズされた際にコールされるイベントハンドラです。
+ * @author 松井文宏
+ */
+public void onWindowResize( int id, int width, int height ){
+
+	if( id == window ){
+		if( width!=windowWidth || height!=windowHeight ){
+			windowWidth = width;
+			windowHeight = height;
+			setLayout();
+		}
+	}
+
+}
+
+
+
+/**
+ * レイアウトを再計算してGUI配置を調整します。
+ * @author 松井文宏
+ */
+private void setLayout(){
+	int labelWidth = getGraphicsLabelWidth(
+		windowWidth, marginRight, marginLeft
+	);
+	int labelHeight = getGraphicsLabelHeight(
+		windowHeight, windowHeaderHeight, marginTop, marginBottom
+	);
+
+	setComponentSize( graphicsLabel, labelWidth, labelHeight );
+	setGraphics2DSize( renderer, labelWidth, labelHeight );
+
+	eval( "resize( renderer )" );
+}
+
+
+
+/**
+ * ウィンドウサイズとmargin値から、適切な画面ラベルの幅を計算して返します。
+ * @author 松井文宏
+ */
+private void getGraphicsLabelWidth( int width, int marginR, int marginL ){
+	return width - marginR - marginL;
+}
+
+/**
+ * ウィンドウサイズとmargin値から、適切な画面ラベルの高さを計算して返します。
+ * @author 松井文宏
+ */
+private void getGraphicsLabelHeight( int height, int headerHeight, int marginT, int marginB ){
+	return height - windowHeaderHeight - marginT - marginB;
+}
+

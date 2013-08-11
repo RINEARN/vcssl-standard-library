@@ -1,0 +1,166 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.data.WrappedStack 1.0.0
+ * 内部ラッピング保持式スタックデータ構造ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+
+import open.data.DataWrapper;
+
+
+
+/**
+ * スタックとして扱う構造体です。
+ * @author 松井文宏
+ */
+public struct WrappedStack<Type>{
+	int size = 0;
+	DataWrapper<Type> data[1];
+}
+
+
+
+/**
+ * 要素を全て削除します。
+ * @author 松井文宏
+ */
+public void clear<Type>( WrappedStack<Type> &stack ){
+	alloc[0] stack.data;
+	alloc[1] stack.data;
+	stack.size = 0;
+}
+
+
+
+/**
+ * 使用中のサイズを返します。
+ * @author 松井文宏
+ */
+public int size<Type>( WrappedStack<Type> &stack ){
+	return stack.size;
+}
+
+
+
+/**
+ * スタックに値をプッシュします。
+ * @author 松井文宏
+ */
+public void push<Type>( WrappedStack<Type> &stack, Type value ){
+	setProperLength<Type>(stack);
+	stack.data[ stack.size++ ] = wrap<Type>(value);
+}
+
+
+
+/**
+ * スタックから値をポップします。
+ * @author 松井文宏
+ */
+public Type pop<Type>( WrappedStack<Type> &stack ){
+	setProperLength<Type>(stack);
+	checksize( --stack.size );
+	return unwrap<Type>(stack.data[ stack.size ]);
+}
+
+
+
+
+/**
+ * スタックからポップしたのと同じ値を、削除せずに返します。
+ * @author 松井文宏
+ */
+public Type peek<Type>( WrappedStack<Type> &stack ){
+	checksize( stack.size-1 );
+	return unwrap<Type>(stack.data[ stack.size-1 ]);
+}
+
+
+
+/**
+ * 指定された要素を含んでいるか判定します。
+ * @author 松井文宏
+ */
+public bool contains<Type>( WrappedStack<Type> &stack, Type element ){
+	int n = stack.size;
+	DataWrapper<Type> wrappedElement = wrap<Type>(element);
+	for(int i=0; i<n; i++){
+		if(stack.data[i] == wrappedElement){
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
+/**
+ * 全要素の順序を反転させます。
+ * @author 松井文宏
+ */
+public void reverse<Type>( WrappedStack<Type> &stack ){
+	int n = stack.size;
+	DataWrapper<Type> rev[n];
+	for(int i=0; i<n; i++){
+		rev[i] = stack.data[n-1-i];
+	}
+	stack.data = rev;
+}
+
+
+
+/**
+ * 使用中のサイズに適切な配列バッファ長を設定します。
+ * @author 松井文宏
+ */
+private void setProperLength<Type>( WrappedStack<Type> &stack ){
+	int zero = 0;
+	int length = length( stack.data, zero );
+	int properLength = getProperLength(length, stack.size);
+	if(properLength != length){
+		alloc[ properLength ] stack.data;
+	}
+}
+
+
+
+/**
+ * スタックポインタの値が適正かどうかを確認し、不正ならエラーを出力します。
+ * @author 松井文宏
+ */
+private int checksize(int size){
+	if(size < 0){
+		error("スタックポインタが負の値にアクセスしました。");
+	}
+}
+
+
+
+/**
+ * 現在のスタックバッファ長と、スタックポインタの値から、最適なスタックバッファ長を返します。
+ * @author 松井文宏
+ */
+private int getProperLength(int length, int size){
+	if( length == 0 ){
+		return 1;
+	}else if( length <= size ){
+		return length * 2;
+	}else if( size < length/2 ){
+		return length / 2;
+	}else{
+		return length;
+	}
+}
+
+
+
+
+

@@ -1,0 +1,266 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.gui.ButtonWindow 1.0.0
+ * ボタンウィンドウ生成ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+import GUI;
+import open.gui.ButtonPanel;
+
+
+
+private const string DEFAULT_WINDOW_TITLE = "ButtonWindow";
+
+private const int DEFAULT_WINDOW_WIDTH_OFFSET = 16;
+private const int DEFAULT_WINDOW_HEIGHT_OFFSET = 38;
+private const int DEFAULT_WINDOW_X = 0;
+private const int DEFAULT_WINDOW_Y = 0;
+
+private const int DEFAULT_WINDOW_WIDTH = 300;
+private const int DEFAULT_GRID_HEIGHT = 30;
+
+private const int DEFAULT_WINDOW_MARGIN_LEFT = 10;
+private const int DEFAULT_WINDOW_MARGIN_RIGHT = 10;
+private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
+private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
+
+
+
+/**
+ * ボタンウィンドウの構造体です。
+ *
+ * @author 松井文宏
+ */
+public struct ButtonWindow{
+	int window = NULL;
+	ButtonPanel buttonPanel = NULL;
+}
+
+
+
+/**
+ * 自動でウィンドウサイズを決定し、ボタンウィンドウを生成します。
+ *
+ * @param x ウィンドウ左上頂点のX座標
+ * @param y ウィンドウ左上頂点のY座標
+ * @param width ウィンドウの幅
+ * @param height ウィンドウの高さ
+ * @param title ウィンドウのタイトル
+ * @param labelText 全ボタンのラベル文字列を格納する配列
+ * @return 生成したボタンウィンドウ
+ * @author 松井文宏
+ */
+public ButtonWindow newButtonWindow(int x, int y, int width, int height, string title, string labelText[]){
+	ButtonWindow windowInstance;
+
+	windowInstance.buttonPanel = newButtonPanel(
+		DEFAULT_WINDOW_MARGIN_LEFT,
+		DEFAULT_WINDOW_MARGIN_TOP,
+		width - DEFAULT_WINDOW_MARGIN_LEFT - DEFAULT_WINDOW_MARGIN_RIGHT - DEFAULT_WINDOW_WIDTH_OFFSET,
+		height - DEFAULT_WINDOW_MARGIN_TOP - DEFAULT_WINDOW_MARGIN_BOTTOM - DEFAULT_WINDOW_HEIGHT_OFFSET,
+		labelText
+	);
+	windowInstance.window = newWindow(x, y, width, height, title);
+	mountComponent(windowInstance.buttonPanel, windowInstance.window);
+	paintComponent(windowInstance.buttonPanel);
+	paintComponent(windowInstance.window);
+	return windowInstance;
+}
+
+
+
+/**
+ * 自動でウィンドウサイズを決定し、ボタンウィンドウを生成します。
+ *
+ * @param labelText 全ボタンのラベル文字列を格納する配列
+ * @return 生成したボタンウィンドウ
+ * @author 松井文宏
+ */
+public ButtonWindow newButtonWindow(string labelText[]){
+	int n = length(labelText, 0);
+	int windowHeight = DEFAULT_GRID_HEIGHT*n + DEFAULT_WINDOW_MARGIN_TOP + DEFAULT_WINDOW_MARGIN_BOTTOM + DEFAULT_WINDOW_HEIGHT_OFFSET;
+	ButtonWindow windowInstance = newButtonWindow(
+		DEFAULT_WINDOW_X,
+		DEFAULT_WINDOW_Y,
+		DEFAULT_WINDOW_WIDTH,
+		windowHeight,
+		DEFAULT_WINDOW_TITLE,
+		labelText
+	);
+	return windowInstance;
+}
+
+
+
+/**
+ * ボタンウィンドウを破棄します。
+ *
+ * @param windowInstance 破棄するウィンドウ
+ * @author 松井文宏
+ */
+public void deleteComponent(ButtonWindow &windowInstance){
+	demountComponent(windowInstance.buttonPanel, windowInstance.window);
+	deleteComponent(windowInstance.buttonPanel);
+	deleteComponent(windowInstance.window);
+	windowInstance = NULL;
+}
+
+
+
+/**
+ * ウィンドウのGUIコンポーネントIDを取得します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @return ウィンドウのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getWindow(ButtonWindow &windowInstance){
+	return windowInstance.window;
+}
+
+
+
+/**
+ * 指定されたラベルに対応するボタンを取得します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ * @param labelText 取得対象のボタンに対応するラベル文字列
+ * @return ボタンのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getButton(ButtonWindow &windowInstance, string labelText){
+	return getButton(windowInstance.buttonPanel, labelText);
+}
+
+
+
+/**
+ * 指定されたインデックスのボタンを取得します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ * @param index ボタンのインデックス
+ * @return ボタンのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getButton(ButtonWindow &windowInstance, int index){
+	return getButton(windowInstance.buttonPanel, index);
+}
+
+
+/**
+ * ウィンドウのサイズを設定します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ * @param width 幅
+ * @param width 高さ
+ * @return ウィンドウのサイズを格納する配列
+ * @author 松井文宏
+ */
+public void setComponentSize(ButtonWindow &windowInstance, int width, int height){
+	setComponentSize(windowInstance.window, width, height);
+	setComponentSize(windowInstance);
+}
+
+
+/**
+ * ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @author 松井文宏
+ */
+public void setComponentSize(ButtonWindow &windowInstance){
+	int windowSize[] = getComponentSize(windowInstance.window);
+
+	int panelWidth = windowSize[0]
+		 - DEFAULT_WINDOW_WIDTH_OFFSET - DEFAULT_WINDOW_MARGIN_RIGHT - DEFAULT_WINDOW_MARGIN_LEFT;
+
+	int panelHeight = windowSize[1]
+		 - DEFAULT_WINDOW_HEIGHT_OFFSET - DEFAULT_WINDOW_MARGIN_TOP - DEFAULT_WINDOW_MARGIN_BOTTOM;
+
+	setComponentSize(windowInstance.buttonPanel, panelWidth, panelHeight);
+}
+
+
+
+/**
+ * ウィンドウのサイズを返します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ * @return ウィンドウのサイズを格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentSize(ButtonWindow &windowInstance){
+	return getComponentSize(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウの位置を返します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ * @return ウィンドウの位置を格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentLocation(ButtonWindow &windowInstance){
+	return getComponentLocation(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウの位置を設定します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ * @param x ウィンドウのX座標
+ * @param y ウィンドウのY座標
+ * @author 松井文宏
+ */
+public void setComponentLocation(ButtonWindow &windowInstance, int x, int y){
+	setComponentLocation(windowInstance.window, x, y);
+}
+
+
+
+/**
+ * ウィンドウを再描画します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ */
+public void paintComponent(ButtonWindow &windowInstance){
+	paintComponent(windowInstance.buttonPanel);
+	paintComponent(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウを不可視化します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ */
+public void hideComponent(ButtonWindow &windowInstance){
+	hideComponent(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウを可視化します。
+ *
+ * @param windowInstance 対象のボタンウィンドウ
+ */
+public void showComponent(ButtonWindow &windowInstance){
+	showComponent(windowInstance.window);
+}
+
+
+

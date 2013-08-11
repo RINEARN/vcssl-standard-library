@@ -1,0 +1,386 @@
+encode UTF-8;
+
+/* --------------------------------------------------
+ * Open VCSSL API Library ( www.vcssl.org/api/open )
+ * --------------------------------------------------
+ * open.gui.ButtonWindow 1.0.0
+ * ボタンウィンドウ生成ライブラリ
+ *
+ * Spec: ---
+ * Note: ---
+ *
+ * License: --- ( Public Domain )
+ * -------------------------------------------------- */
+
+import GUI;
+import open.gui.CheckBoxPanel;
+
+
+
+private const string DEFAULT_WINDOW_TITLE = "CheckBoxWindow";
+
+private const int DEFAULT_WINDOW_WIDTH_OFFSET = 16;
+private const int DEFAULT_WINDOW_HEIGHT_OFFSET = 38;
+private const int DEFAULT_WINDOW_X = 0;
+private const int DEFAULT_WINDOW_Y = 0;
+
+private const int DEFAULT_WINDOW_WIDTH = 300;
+private const int DEFAULT_GRID_HEIGHT = 25;
+
+private const int DEFAULT_BUTTON_HEIGHT = 30;
+private const int DEFAULT_BUTTON_MARGIN_TOP = 5;
+
+private const int DEFAULT_WINDOW_MARGIN_LEFT = 10;
+private const int DEFAULT_WINDOW_MARGIN_RIGHT = 10;
+private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
+private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
+
+
+
+/**
+ * チェックボックスウィンドウの構造体です。
+ *
+ * @author 松井文宏
+ */
+public struct CheckBoxWindow{
+	int window = NULL;
+	int button = NULL;
+	CheckBoxPanel checkBoxPanel = NULL;
+}
+
+
+
+/**
+ * 自動でウィンドウサイズを決定し、チェックボックスウィンドウを生成します。
+ *
+ * @param x ウィンドウ左上頂点のX座標
+ * @param y ウィンドウ左上頂点のY座標
+ * @param width ウィンドウの幅
+ * @param height ウィンドウの高さ
+ * @param title ウィンドウのタイトル
+ * @param labelText 全チェックボックスのラベル文字列を格納する配列
+ * @param defaultText 全チェックボックスのデフォルト値を格納する配列
+ * @return 生成したチェックボックスウィンドウ
+ * @author 松井文宏
+ */
+public CheckBoxWindow newCheckBoxWindow(int x, int y, int width, int height, string title, string labelText[], bool[] defaultValue){
+	CheckBoxWindow windowInstance;
+
+	windowInstance.checkBoxPanel = newCheckBoxPanel(
+		DEFAULT_WINDOW_MARGIN_LEFT,
+		DEFAULT_WINDOW_MARGIN_TOP,
+		width - DEFAULT_WINDOW_MARGIN_LEFT - DEFAULT_WINDOW_MARGIN_RIGHT - DEFAULT_WINDOW_WIDTH_OFFSET,
+		height - DEFAULT_WINDOW_MARGIN_TOP - DEFAULT_WINDOW_MARGIN_BOTTOM - DEFAULT_WINDOW_HEIGHT_OFFSET,
+		labelText,
+		defaultValue
+	);
+
+	windowInstance.window = newWindow(x, y, width, height, title);
+	mountComponent(windowInstance.checkBoxPanel, windowInstance.window);
+	paintComponent(windowInstance.checkBoxPanel);
+	paintComponent(windowInstance.window);
+
+	return windowInstance;
+}
+
+
+
+/**
+ * 自動でウィンドウサイズを決定し、チェックボックスウィンドウを生成します。
+ *
+ * @param labelText 全チェックボックスのラベル文字列を格納する配列
+ * @param defaultText 全チェックボックスのデフォルト値を格納する配列
+ * @return 生成したチェックボックスウィンドウ
+ * @author 松井文宏
+ */
+public CheckBoxWindow newCheckBoxWindow(string labelText[], bool[] defaultValue){
+	int n = length(labelText, 0);
+	int windowHeight = DEFAULT_GRID_HEIGHT*n + DEFAULT_WINDOW_MARGIN_TOP + DEFAULT_WINDOW_MARGIN_BOTTOM + DEFAULT_WINDOW_HEIGHT_OFFSET;
+	CheckBoxWindow windowInstance = newCheckBoxWindow(
+		DEFAULT_WINDOW_X,
+		DEFAULT_WINDOW_Y,
+		DEFAULT_WINDOW_WIDTH,
+		windowHeight,
+		DEFAULT_WINDOW_TITLE,
+		labelText,
+		defaultValue
+	);
+	return windowInstance;
+}
+
+
+
+/**
+ * チェックボックスウィンドウを破棄します。
+ *
+ * @param windowInstance 破棄するウィンドウ
+ * @author 松井文宏
+ */
+public void deleteComponent(CheckBoxWindow &windowInstance){
+	demountComponent(windowInstance.checkBoxPanel, windowInstance.window);
+	deleteComponent(windowInstance.checkBoxPanel);
+	deleteComponent(windowInstance.window);
+	windowInstance = NULL;
+}
+
+
+
+/**
+ * ウィンドウ下部に、決定ボタンを出現させます。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param 決定ボタンのラベル文字列
+ * @author 松井文宏
+ */
+public void setButton(CheckBoxWindow &windowInstance, string label){
+	if(windowInstance.button == NULL){
+		int windowSize[] = getComponentSize(windowInstance.window);
+		int panelSize[] = getComponentSize(windowInstance.checkBoxPanel);
+		int panelLocation[] = getComponentLocation(windowInstance.checkBoxPanel);
+		int buttonX = panelLocation[0];
+		int buttonY = panelLocation[1] + panelSize[1] + DEFAULT_BUTTON_MARGIN_TOP;
+		int buttonWidth = panelSize[0];
+		int buttonHeight = DEFAULT_BUTTON_HEIGHT;
+		windowInstance.button = newButton(
+			buttonX, buttonY, buttonWidth, buttonHeight, label
+		);
+		mountComponent(windowInstance.button, windowInstance.window);
+		setComponentSize(windowInstance.window, windowSize[0], windowSize[1] + buttonHeight + DEFAULT_BUTTON_MARGIN_TOP);
+	}else{
+		setComponentText(windowInstance.button, label);
+	}
+}
+
+
+
+/**
+ * 決定ボタンのコンポーネントIDを取得します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @return 決定ボタンのコンポーネントID
+ * @author 松井文宏
+ */
+public int getButton(CheckBoxWindow &windowInstance){
+	return windowInstance.button;
+}
+
+
+
+/**
+ * ウィンドウのGUIコンポーネントIDを取得します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @return ウィンドウのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getWindow(CheckBoxWindow &windowInstance){
+	return windowInstance.window;
+}
+
+
+
+/**
+ * 指定されたラベルに対応するチェックボックスを取得します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param labelText 取得対象のチェックボックスに対応するラベル文字列
+ * @return チェックボックスのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getCheckBox(CheckBoxWindow &windowInstance, string labelText){
+	return getCheckBox(windowInstance.checkBoxPanel, labelText);
+}
+
+
+
+/**
+ * 指定されたインデックスのチェックボックスを取得します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param index チェックボックスのインデックス
+ * @return チェックボックスのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getCheckBox(CheckBoxWindow &windowInstance, int index){
+	return getCheckBox(windowInstance.checkBoxPanel, index);
+}
+
+
+
+/**
+ * 指定されたインデックスのチェックボックスに、bool値を設定します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param index チェックボックスのインデックス
+ * @param value 設定するbool値
+ * @author 松井文宏
+ */
+public void setComponentBool(CheckBoxWindow &windowInstance, int index, bool value){
+	setComponentBool(windowInstance.checkBoxPanel, index, value);
+}
+
+
+
+/**
+ * 指定されたインデックスのチェックボックスから、bool値を取得します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param index チェックボックスのインデックス
+ * @return テキストフィールドの保持するbool値
+ * @author 松井文宏
+ */
+public bool getComponentBool(CheckBoxWindow &windowInstance, int index){
+	return getComponentBool(windowInstance.checkBoxPanel, index);
+}
+
+
+
+/**
+ * 指定されたラベルに対応するチェックボックスに、bool値を設定します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param labelText 設定対象のテキストフィールドに対応するラベル文字列
+ * @param value 設定するbool値
+ * @author 松井文宏
+ */
+public void setComponentBool(CheckBoxWindow &windowInstance, string labelText, bool value){
+	setComponentBool(windowInstance.checkBoxPanel, labelText, value);
+}
+
+
+
+/**
+ * 指定されたラベルに対応するチェックボックスから、bool値を取得します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param labelText 取得対象のチェックボックスに対応するラベル文字列
+ * @return テキストフィールドの保持するbool値
+ * @author 松井文宏
+ */
+public string getComponentBool(CheckBoxWindow &windowInstance, string labelText){
+	return getComponentBool(windowInstance.checkBoxPanel, labelText);
+}
+
+
+
+/**
+ * ウィンドウのサイズを返します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @return ウィンドウのサイズを格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentSize(CheckBoxWindow &windowInstance){
+	return getComponentSize(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウのサイズを設定します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param width 幅
+ * @param width 高さ
+ * @return ウィンドウのサイズを格納する配列
+ * @author 松井文宏
+ */
+public void setComponentSize(CheckBoxWindow &windowInstance, int width, int height){
+	setComponentSize(windowInstance.window, width, height);
+	setComponentSize(windowInstance);
+}
+
+
+
+/**
+ * ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @author 松井文宏
+ */
+public void setComponentSize(CheckBoxWindow &windowInstance){
+	int windowSize[] = getComponentSize(windowInstance.window);
+
+	int panelWidth = windowSize[0]
+		 - DEFAULT_WINDOW_WIDTH_OFFSET - DEFAULT_WINDOW_MARGIN_RIGHT - DEFAULT_WINDOW_MARGIN_LEFT;
+
+	int panelHeight = windowSize[1]
+		 - DEFAULT_WINDOW_HEIGHT_OFFSET - DEFAULT_WINDOW_MARGIN_TOP - DEFAULT_WINDOW_MARGIN_BOTTOM;
+
+	if(windowInstance.button != NULL){
+		panelHeight -= DEFAULT_BUTTON_HEIGHT + DEFAULT_BUTTON_MARGIN_TOP;
+
+		int buttonWidth = panelWidth;
+		setComponentSize(windowInstance.button, buttonWidth, DEFAULT_BUTTON_HEIGHT);
+
+		int buttonHeight = panelHeight + DEFAULT_WINDOW_MARGIN_TOP + DEFAULT_BUTTON_MARGIN_TOP;
+		setComponentLocation(windowInstance.button, DEFAULT_WINDOW_MARGIN_LEFT, buttonHeight);
+	}
+
+	setComponentSize(windowInstance.checkBoxPanel, panelWidth, panelHeight);
+}
+
+
+
+/**
+ * ウィンドウの位置を返します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @return ウィンドウの位置を格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentLocation(CheckBoxWindow &windowInstance){
+	return getComponentLocation(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウの位置を設定します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param x ウィンドウのX座標
+ * @param y ウィンドウのY座標
+ * @author 松井文宏
+ */
+public void setComponentLocation(CheckBoxWindow &windowInstance, int x, int y){
+	setComponentLocation(windowInstance.window, x, y);
+}
+
+
+
+/**
+ * ウィンドウを再描画します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ */
+public void paintComponent(CheckBoxWindow &windowInstance){
+	paintComponent(windowInstance.checkBoxPanel);
+	paintComponent(windowInstance.button);
+	paintComponent(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウを不可視化します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ */
+public void hideComponent(CheckBoxWindow &windowInstance){
+	hideComponent(windowInstance.window);
+}
+
+
+
+/**
+ * ウィンドウを可視化します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ */
+public void showComponent(CheckBoxWindow &windowInstance){
+	showComponent(windowInstance.window);
+}
+
+
+
