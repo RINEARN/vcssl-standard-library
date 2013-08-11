@@ -1,24 +1,46 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.data.WrappedStack 1.0.0
- * 内部ラッピング保持式スタックデータ構造ライブラリ
- *
- * Spec: ---
- * Note: ---
- *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
-
-
 import open.data.DataWrapper;
 
 
+/**
+ * <p>
+ * このモジュール open.data.WrappedStack は、
+ * スタック型のデータ構造を提供します。	
+ * </p>
+ *
+ * <p>
+ * このモジュールでは、スタックのデータを保持する
+ * ジェネリック構造体 <a href="#WrappedStack">WrappedStack</a> と、
+ * それに対してデータを出し入れするジェネリック関数 
+ * <a href="#push">push</a>, <a href="#pop">pop</a> 
+ * などが提供されます。 
+ * </p>
+ *
+ * <p>
+ * なお、この open.data.WrappedStack では、
+ * 要素を <a href="DataWrapper.html">DataWrapper</a> 構造体で
+ * ラッピングして保持する実装になっています。
+ * <br />
+ * そのため WrappedStackでは、 
+ * open.data.<a href="Stack.html">Stack</a> とは異なり、
+ * 配列を要素として扱う事ができます。
+ * </p>
+ *
+ * <p>
+ * 反面、要素の出し入れの際に DataWrapper 構造体への
+ * ラッピング処理を伴うため、そのオーバーヘッドの分だけ、
+ * Stack よりも処理が重くなります。
+ * <br />
+ * 従って、要素が配列でない場合には、
+ * WrappedStack よりも Stack の使用が推奨されます。
+ * </p>
+ */
+
 
 /**
- * スタックとして扱う構造体です。
+ * スタック構造体です。スタックのデータを保持します。
+ *
  * @author 松井文宏
  */
 public struct WrappedStack<Type>{
@@ -27,9 +49,10 @@ public struct WrappedStack<Type>{
 }
 
 
-
 /**
  * 要素を全て削除します。
+ *
+ * @param stack 対象のスタック構造体
  * @author 松井文宏
  */
 public void clear<Type>( WrappedStack<Type> &stack ){
@@ -39,9 +62,10 @@ public void clear<Type>( WrappedStack<Type> &stack ){
 }
 
 
-
 /**
  * 使用中のサイズを返します。
+ *
+ * @param stack 対象のスタック構造体
  * @author 松井文宏
  */
 public int size<Type>( WrappedStack<Type> &stack ){
@@ -49,9 +73,11 @@ public int size<Type>( WrappedStack<Type> &stack ){
 }
 
 
-
 /**
- * スタックに値をプッシュします。
+ * スタックに要素を追加します。
+ *
+ * @param stack 対象のスタック構造体
+ * @param value 追加する要素
  * @author 松井文宏
  */
 public void push<Type>( WrappedStack<Type> &stack, Type value ){
@@ -60,9 +86,12 @@ public void push<Type>( WrappedStack<Type> &stack, Type value ){
 }
 
 
-
 /**
- * スタックから値をポップします。
+ * スタックから要素を取り出します。
+ * 取り出した要素は、スタックから削除されます。
+ *
+ * @param stack 対象のスタック構造体
+ * @return 取り出した要素
  * @author 松井文宏
  */
 public Type pop<Type>( WrappedStack<Type> &stack ){
@@ -72,10 +101,11 @@ public Type pop<Type>( WrappedStack<Type> &stack ){
 }
 
 
-
-
 /**
- * スタックからポップしたのと同じ値を、削除せずに返します。
+ * スタックから要素を削除せずに取り出します。
+ *
+ * @param stack 対象のスタック構造体
+ * @return 取り出した要素
  * @author 松井文宏
  */
 public Type peek<Type>( WrappedStack<Type> &stack ){
@@ -84,9 +114,11 @@ public Type peek<Type>( WrappedStack<Type> &stack ){
 }
 
 
-
 /**
- * 指定された要素を含んでいるか判定します。
+ * スタックが指定された要素を含んでいるか判定します。
+ *
+ * @param stack 対象のスタック構造体
+ * @param element 含まれるか判定したい要素
  * @author 松井文宏
  */
 public bool contains<Type>( WrappedStack<Type> &stack, Type element ){
@@ -101,9 +133,10 @@ public bool contains<Type>( WrappedStack<Type> &stack, Type element ){
 }
 
 
-
 /**
- * 全要素の順序を反転させます。
+ * スタックが保持する全要素の順序を反転させます。
+ *
+ * @param stack 対象のスタック構造体
  * @author 松井文宏
  */
 public void reverse<Type>( WrappedStack<Type> &stack ){
@@ -116,9 +149,10 @@ public void reverse<Type>( WrappedStack<Type> &stack ){
 }
 
 
-
 /**
  * 使用中のサイズに適切な配列バッファ長を設定します。
+ *
+ * @param stack 対象のスタック構造体
  * @author 松井文宏
  */
 private void setProperLength<Type>( WrappedStack<Type> &stack ){
@@ -131,9 +165,10 @@ private void setProperLength<Type>( WrappedStack<Type> &stack ){
 }
 
 
-
 /**
  * スタックポインタの値が適正かどうかを確認し、不正ならエラーを出力します。
+ *
+ * @param size スタックポインタの値
  * @author 松井文宏
  */
 private int checksize(int size){
@@ -143,9 +178,12 @@ private int checksize(int size){
 }
 
 
-
 /**
- * 現在のスタックバッファ長と、スタックポインタの値から、最適なスタックバッファ長を返します。
+ * 現在のスタックバッファ長と、スタックポインタの値から、
+ * 最適なスタックバッファ長を返します。
+ *
+ * @param length 現在のスタックバッファ長
+ * @param size 現在のスタックポインタの値
  * @author 松井文宏
  */
 private int getProperLength(int length, int size){
@@ -159,8 +197,4 @@ private int getProperLength(int length, int size){
 		return length;
 	}
 }
-
-
-
-
 
