@@ -1,0 +1,304 @@
+encode UTF-8;
+
+
+import open.data.Queue;
+
+
+/**
+ * <p>open.data.Queue モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint配列です。*/
+private const int A = 1;
+
+/** テストで要素として使用するint配列です。*/
+private const int B = 2;
+
+/** テストで要素として使用するint配列です。*/
+private const int C = 3;
+
+
+// テスト関数を実行
+test();
+
+
+/**
+ * テスト関数です。
+ *
+ * @author 松井文宏
+ */
+private void test(){
+	clearTest();
+	sizeTest();
+	enqueueTest();
+	dequeueTest();
+	peekTest();
+	containsTest();
+	reverseTest();
+	toArrayTest();
+
+	println("open.data.QueueTest: OK.");
+}
+
+
+/**
+ * clear のテストです。
+ *
+ * @author 松井文宏
+ */
+private void clearTest(){
+	Queue<int> queue;
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 2);
+	clear<int>(queue);
+	assert(size<int>(queue) == 0);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 3);
+	assert(dequeue<int>(queue) == A
+}
+
+
+/**
+ * size のテストです。
+ *
+ * @author 松井文宏
+ */
+private void sizeTest(){
+	Queue<int> queue;
+	assert(size<int>(queue) == 0);
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 1);
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 2);
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 3);
+}
+
+
+/**
+ * enqueue のテストです。
+ *
+ * @author 松井文宏
+ */
+private void enqueueTest(){
+	Queue<int> queue;
+	assert(size<int>(queue) == 0);
+
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 1);
+	assert(peek<int>(queue) == A);
+
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 2);
+	assert(peek<int>(queue) == A);
+
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 3);
+	assert(peek<int>(queue) == A);
+
+	dequeue<int>(queue);
+
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 3);
+	assert(peek<int>(queue) == B);
+
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 4);
+	assert(peek<int>(queue) == B);
+
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 5);
+	assert(peek<int>(queue) == B);
+
+	dequeue<int>(queue);
+
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 5);
+	assert(peek<int>(queue) == C);
+
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 6);
+	assert(peek<int>(queue) == C);
+
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+}
+
+
+/**
+ * dequeue のテストです。
+ *
+ * @author 松井文宏
+ */
+private void dequeueTest(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+
+	assert(size<int>(queue) == 9);
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 8);
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 7);
+	assert(dequeue<int>(queue) == C);
+
+	assert(size<int>(queue) == 6);
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 5);
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 4);
+	assert(dequeue<int>(queue) == C);
+
+	assert(size<int>(queue) == 3);
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 2);
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 1);
+	assert(dequeue<int>(queue) == C);
+
+	assert(size<int>(queue) == 0);
+}
+
+
+/**
+ * peek のテストです。
+ *
+ * @author 松井文宏
+ */
+private void peekTest(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+
+	assert(size<int>(queue) == 9);
+	assert(peek<int>(queue) == A);
+
+	assert(size<int>(queue) == 9);
+	assert(peek<int>(queue) == A);
+
+	assert(size<int>(queue) == 9);
+	assert(peek<int>(queue) == A);
+
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 8);
+	assert(peek<int>(queue) == B);
+
+	assert(size<int>(queue) == 8);
+	assert(peek<int>(queue) == B);
+
+	assert(size<int>(queue) == 8);
+	assert(peek<int>(queue) == B);
+
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+
+	assert(dequeue<int>(queue) == C);
+}
+
+
+/**
+ * contains のテストです。
+ *
+ * @author 松井文宏
+ */
+private void containsTest(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+
+	assert(contains<int>(queue, A);
+	assert(contains<int>(queue, B);
+	assert(!(contains<int>(queue, C));
+}
+
+
+/**
+ * reverse のテストです。
+ *
+ * @author 松井文宏
+ */
+private void reverseTest(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, C);
+
+	reverse<int>(queue);
+
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == B);
+	assert(dequeue<int>(queue) == A);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == B);
+	assert(dequeue<int>(queue) == A);
+}
+
+
+/**
+ * reverse のテストです。
+ *
+ * @author 松井文宏
+ */
+private void toArrayTest(){
+	Queue<int> queue;
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	int[] w = toArray<int>(queue);
+	assert(w[0] == A);
+	assert(w[1] == B);
+	assert(w[2] == C);
+}
+
+
