@@ -1,0 +1,329 @@
+encode UTF-8;
+
+
+import open.data.List;
+
+
+/**
+ * <p>open.data.List モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint配列です。*/
+private const int A = 1;
+
+/** テストで要素として使用するint配列です。*/
+private const int B = 2;
+
+/** テストで要素として使用するint配列です。*/
+private const int C = 3;
+
+
+// テスト関数を実行
+test();
+
+
+/**
+ * テスト関数です。
+ *
+ * @author 松井文宏
+ */
+private void test(){
+	clearTest();
+	sizeTest();
+	addTest();
+	getTest();
+	insertTest();
+	containsTest();
+	removeAtTest();
+	removeTest();
+	removeAllTest();
+	indexOfTest();
+	lastIndexOfTest();
+	reverseTest();
+	toArrayTest();
+
+	println("open.data.ListTest: OK.");
+}
+
+
+/**
+ * clear のテストです。
+ *
+ * @author 松井文宏
+ */
+private void clearTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	assert(size<int>(list) == 2);
+	clear<int>(list);
+	assert(size<int>(list) == 0);
+	add<int>(list, C);
+	add<int>(list, B);
+	add<int>(list, A);
+	assert(size<int>(list) == 3);
+	int v = get<int>(list, 0);
+	assert(v == C);
+}
+
+
+/**
+ * size のテストです。
+ *
+ * @author 松井文宏
+ */
+private void sizeTest(){
+	List<int> list;
+	assert(size<int>(list) == 0);
+	add<int>(list, A);
+	assert(size<int>(list) == 1);
+	add<int>(list, B);
+	assert(size<int>(list) == 2);
+	add<int>(list, C);
+	assert(size<int>(list) == 3);
+}
+
+
+/**
+ * add のテストです。
+ *
+ * @author 松井文宏
+ */
+private void addTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == C);
+}
+
+
+/**
+ * get のテストです。
+ *
+ * @author 松井文宏
+ */
+private void getTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == C);
+}
+
+
+/**
+ * insert のテストです。
+ *
+ * @author 松井文宏
+ */
+private void insertTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	insert<int>(list, 1, C);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == C);
+	assert(get<int>(list, 2) == B);
+}
+
+
+/**
+ * containes のテストです。
+ *
+ * @author 松井文宏
+ */
+private void containsTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	assert(contains<int>(list, A));
+	assert(contains<int>(list, B));
+	assert(!(contains<int>(list, C)));
+}
+
+
+/**
+ * removeAt のテストです。
+ *
+ * @author 松井文宏
+ */
+private void removeAtTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	removeAt<int>(list, 1);
+	removeAt<int>(list, 5);
+	assert(size<int>(list) == 7);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == C);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == B);
+	assert(get<int>(list, 4) == C);
+	assert(get<int>(list, 5) == B);
+	assert(get<int>(list, 6) == C);
+}
+
+
+/**
+ * remove のテストです。
+ *
+ * @author 松井文宏
+ */
+private void removeTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	remove<int>(list, C);
+	assert(size<int>(list) == 8);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == B);
+	assert(get<int>(list, 4) == C);
+	assert(get<int>(list, 5) == A);
+	assert(get<int>(list, 6) == B);
+	assert(get<int>(list, 7) == C);
+}
+
+
+/**
+ * removeAll のテストです。
+ *
+ * @author 松井文宏
+ */
+private void removeAllTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	removeAll<int>(list, C);
+	assert(size<int>(list) == 6);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == B);
+	assert(get<int>(list, 4) == A);
+	assert(get<int>(list, 5) == B);
+}
+
+
+/**
+ * indexOf のテストです。
+ *
+ * @author 松井文宏
+ */
+private void indexOfTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(indexOf<int>(list, B) == 1);
+	assert(indexOf<int>(list, B, 3) == 4);
+	assert(indexOf<int>(list, B, 6) == 7);
+}
+
+
+/**
+ * lastIindexOf のテストです。
+ *
+ * @author 松井文宏
+ */
+private void lastIndexOfTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(lastIndexOf<int>(list, B) == 7);
+	assert(lastIndexOf<int>(list, B, 6) == 4);
+	assert(lastIndexOf<int>(list, B, 3) == 1);
+}
+
+
+/**
+ * reverse のテストです。
+ *
+ * @author 松井文宏
+ */
+private void reverseTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, B);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	reverse<int>(list);
+	assert(get<int>(list, 0) == C);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == A);
+	assert(get<int>(list, 4) == C);
+	assert(get<int>(list, 5) == B);
+	assert(get<int>(list, 6) == A);
+	assert(get<int>(list, 7) == B);
+	assert(get<int>(list, 8) == B);
+	assert(get<int>(list, 9) == A);
+}
+
+
+/**
+ * toDataWrapperArray のテストです。
+ *
+ * @author 松井文宏
+ */
+private void toArrayTest(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	int[] w = toArray<int>(list);
+	assert(w[0] == A);
+	assert(w[1] == B);
+	assert(w[2] == C);
+}
+
+
+
+
