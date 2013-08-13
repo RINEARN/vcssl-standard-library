@@ -150,6 +150,27 @@ public void reverse<Type>( WrappedStack<Type> &stack ){
 
 
 /**
+ * スタックが保持する全要素を、DataWrapper配列に格納して返します。
+ * なお、順序は pop や peek で
+ * 最初に得られる要素を格納するものが [ 0 ] になります。
+ *
+ * @param stack 対象のスタック構造体
+ * @return スタックの全要素をまとめたDataWrapper配列
+ * @author 松井文宏
+ */
+public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedStack<Type> &stack ){
+	DataWrapper<Type> array[] = stack.data;
+	int n = stack.size;
+	alloc[n] array;
+	DataWrapper<Type> rev[n];
+	for(int i=0; i<n; i++){
+		rev[i] = array[n-1-i];
+	}
+	return rev;
+}
+
+
+/**
  * 使用中のサイズに適切な配列バッファ長を設定します。
  *
  * @param stack 対象のスタック構造体

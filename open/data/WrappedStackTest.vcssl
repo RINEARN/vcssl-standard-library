@@ -1,0 +1,318 @@
+encode UTF-8;
+
+
+import open.data.WrappedStack;
+import open.data.DataWrapper;
+
+
+/**
+ * <p>open.data.WrappedStack モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint配列です。*/
+private const int[] A = {1, 2, 3};
+
+/** テストで要素として使用するint配列です。*/
+private const int[] B = {4, 5, 6, 7};
+
+/** テストで要素として使用するint配列です。*/
+private const int[] C = {8, 9, 10, 11, 12};
+
+
+// テスト関数を実行
+test();
+
+
+/**
+ * テスト関数です。
+ *
+ * @author 松井文宏
+ */
+private void test(){
+	clearTest();
+	sizeTest();
+	pushTest();
+	popTest();
+	peekTest();
+	containsTest();
+	reverseTest();
+	toDataWrapperArrayTest();
+
+	println("open.data.WrappedStackTest: OK.");
+}
+
+
+/**
+ * bool型配列の内容が、全てtrueであった場合のみ、trueを返します。
+ * 配列の等値検証に使用します。
+ *
+ * @author 松井文宏
+ */
+private bool isEquivalentArray(bool[] b){
+	int n = length(b, 0);
+	for(int i=0; i<n; i++){
+		if(!b[i]){
+			return false;
+		}
+	}
+	return true;
+}
+
+
+/**
+ * clear のテストです。
+ *
+ * @author 松井文宏
+ */
+private void clearTest(){
+	WrappedStack<int[]> stack;
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 2);
+	clear<int[]>(stack);
+	assert(size<int[]>(stack) == 0);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 3);
+	assert(isEquivalentArray( pop<int[]>(stack) == C ));
+}
+
+
+/**
+ * size のテストです。
+ *
+ * @author 松井文宏
+ */
+private void sizeTest(){
+	WrappedStack<int[]> stack;
+	assert(size<int[]>(stack) == 0);
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 1);
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 2);
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 3);
+}
+
+
+/**
+ * push のテストです。
+ *
+ * @author 松井文宏
+ */
+private void pushTest(){
+	WrappedStack<int[]> stack;
+	assert(size<int[]>(stack) == 0);
+
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 1);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 2);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 3);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 4);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 5);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 6);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+}
+
+
+/**
+ * pop のテストです。
+ *
+ * @author 松井文宏
+ */
+private void popTest(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 6);
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 5);
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 4);
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 3);
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 2);
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 1);
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 0);
+}
+
+
+/**
+ * peek のテストです。
+ *
+ * @author 松井文宏
+ */
+private void peekTest(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+}
+
+
+/**
+ * contains のテストです。
+ *
+ * @author 松井文宏
+ */
+private void containsTest(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+
+	assert(contains<int[]>(stack, A));
+	assert(contains<int[]>(stack, B));
+	assert(!(contains<int[]>(stack, C)));
+}
+
+
+/**
+ * reverse のテストです。
+ *
+ * @author 松井文宏
+ */
+private void reverseTest(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, C);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, C);
+
+	reverse<int[]>(stack);
+
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+}
+
+
+/**
+ * reverse のテストです。
+ *
+ * @author 松井文宏
+ */
+private void toDataWrapperArrayTest(){
+	WrappedStack<int[]> stack;
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	DataWrapper<int[]>[] w = toDataWrapperArray<int[]>(stack);
+	assert(isEquivalentArray( unwrap<int[]>(w[0]) == C ));
+	assert(isEquivalentArray( unwrap<int[]>(w[1]) == B ));
+	assert(isEquivalentArray( unwrap<int[]>(w[2]) == A ));
+}
+
+
