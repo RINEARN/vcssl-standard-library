@@ -162,6 +162,25 @@ public void reverse<Type>( WrappedQueue<Type> &queue ){
 
 
 /**
+ * キューが保持する全要素を、DataWrapper配列に変換して返します。
+ *
+ * @param queue 対象のキュー構造体
+ * @return スタックの全要素をまとめたDataWrapper配列
+ * @author 松井文宏
+ */
+public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedQueue<Type> &queue ){
+
+	// queue.dataはリングバッファなので、内容をシフトして先頭をインデックス 0 に移動
+	shiftData<Type>( queue );
+
+	// バッファの余剰領域を削除して返す
+	DataWrapper<Type> array[] = queue.data;
+	alloc[ queue.size ] array;
+	return array;
+}
+
+
+/**
  * キューバッファを、必要に応じて最適な容量に再確保します。
  *
  * @param queue 対象のキュー構造体
