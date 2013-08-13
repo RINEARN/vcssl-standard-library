@@ -214,8 +214,9 @@ public void remove<Type>( WrappedList<Type> &list, Type element ){
  */
 public void removeAll<Type>( WrappedList<Type> &list, Type element ){
 	int index = indexOf<Type>(list, element);
-	while( 0 <= (index = indexOf<Type>(list, element)) ){
+	while( 0 <= index ){
 		removeAt<Type>(list, index);
+		index = indexOf<Type>(list, element);
 	}
 }
 
@@ -333,6 +334,20 @@ public void reverse<Type>( WrappedList<Type> &list ){
 
 
 /**
+ * リストが保持する全要素を、DataWrapper配列に格納して返します。
+ *
+ * @param list 対象のリスト構造体
+ * @return リストの全要素をまとめたDataWrapper配列
+ * @author 松井文宏
+ */
+public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedList<Type> &list ){
+	DataWrapper<Type> array[] = list.data;
+	alloc[ list.size ] array;
+	return array;
+}
+
+
+/**
  * 使用中のサイズに適切な配列バッファ長を設定します。
  *
  * @param list 対象のリスト構造体
@@ -364,7 +379,7 @@ private int getProperLength(int length, int size){
 		}
 		return length;
 	}else if( size < length/2 ){
-		while( size < length ){
+		while( size < length/2 ){
 			length /= 2;
 		}
 		return length;
