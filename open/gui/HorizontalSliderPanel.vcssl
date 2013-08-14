@@ -1,22 +1,45 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.gui.HorizontalSliderPanel 1.0.0
- * 水平スライダーパネル生成ライブラリ
- *
- * Spec: ---
- * Note: ---
- *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
-
-
 import GUI;
 
+/**
+ * <p>
+ * このモジュール open.gui.HorizontalSliderPanel は、
+ * GUI部品として、水平スライダーが並ぶパネル ―― スライダーパネル ―― を提供します。	
+ * </p>
+ *
+ * <p>
+ * VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、
+ * このモジュールで提供されるGUI部品は、
+ * <a href="#HorizontalSliderPanel">HorizontalSliderPanel</a> 構造体として扱います。
+ * </p>
+ *
+ * <p>
+ * HorizontalSliderPanel 構造体は、内部にリソースのID等を保持していますが、
+ * <br />
+ * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
+ * <br />
+ * 具体的には、 <a href="#newHorizontalSliderPanel">newHorizontalSliderPanel</a> 関数で生成し、 
+ * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
+ * </p>
+ *
+ * <p>
+ * またこのモジュールでは、
+ * HorizontalSliderPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、
+ * 標準GUIライブラリ関数のオーバーロードも提供されます。
+ * <br />
+ * 例えば、 
+ * <a href="#mountComponent">mountComponent</a> 関数や、
+ * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
+ * </p>
+ */
 
+
+/** デフォルトのパネルタイトルです。 */
 private const string DEFAULT_PANEL_TITLE = "CheckBoxPanel";
+
+/** 指定されたラベルが見つからなかった場合のエラーメッセージです。 */
 private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しません：";
 
 
@@ -26,14 +49,19 @@ private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しませ�
  * @author 松井文宏
  */
 public struct HorizontalSliderPanel{
+	// パネルのGUI部品ID
 	int panel = NULL;
+	// テキストラベルを並べるグリッドパネルのGUI部品ID
 	int textLabelGridPanel = NULL;
+	// 水平スライダーを並べるグリッドパネルのGUI部品ID
 	int horizontalSliderGridPanel = NULL;
+	// テキストラベルのGUI部品ID
 	int textLabel[0];
+	// 水平スライダーのGUI部品ID
 	int horizontalSlider[0];
+	// テキストラベルの文字列を保持する
 	string textLabelString[0];
 }
-
 
 
 /**
@@ -91,7 +119,6 @@ public HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, i
 }
 
 
-
 /**
  * スライダーパネルを破棄します。
  *
@@ -115,7 +142,6 @@ public void deleteComponent(HorizontalSliderPanel &panelInstance){
 }
 
 
-
 /**
  * スライダーパネルを破棄します。
  *
@@ -134,7 +160,6 @@ public void paintComponent(HorizontalSliderPanel &panelInstance){
 }
 
 
-
 /**
  * スライダーパネルを、別のGUIコンポーネント上に配置します。
  *
@@ -147,7 +172,6 @@ public void mountComponent(HorizontalSliderPanel &panelInstance, int componentID
 }
 
 
-
 /**
  * スライダーパネルを、別のGUIコンポーネントから配置解除します。
  *
@@ -158,7 +182,6 @@ public void mountComponent(HorizontalSliderPanel &panelInstance, int componentID
 public void demountComponent(HorizontalSliderPanel &panelInstance, int componentID){
 	demountComponent(panelInstance.panel, componentID);
 }
-
 
 
 /**
@@ -180,7 +203,6 @@ public void setLabelWidth(HorizontalSliderPanel &panelInstance, int labelWidth){
 }
 
 
-
 /**
  * パネルのコンポーネントIDを返します。
  *
@@ -191,9 +213,6 @@ public void setLabelWidth(HorizontalSliderPanel &panelInstance, int labelWidth){
 public int getPanel(HorizontalSliderPanel &panelInstance){
 	return panelInstance.panel;
 }
-
-
-
 
 
 /**
@@ -209,7 +228,6 @@ public void setComponentFloat(HorizontalSliderPanel &panelInstance, int index, f
 }
 
 
-
 /**
  * 指定されたインデックスのテキストフィールドから、テキストを取得します。
  *
@@ -221,7 +239,6 @@ public void setComponentFloat(HorizontalSliderPanel &panelInstance, int index, f
 public float getComponentFloat(HorizontalSliderPanel &panelInstance, int index){
 	return getComponentFloat(panelInstance.horizontalSlider[index]);
 }
-
 
 
 /**
@@ -241,7 +258,6 @@ public void setComponentFloat(HorizontalSliderPanel &panelInstance, string label
 }
 
 
-
 /**
  * 指定されたラベルに対応するテキストフィールドから、テキストを取得します。
  *
@@ -257,7 +273,6 @@ public float getComponentFloat(HorizontalSliderPanel &panelInstance, string labe
 	}
 	return getComponentFloat(panelInstance.horizontalSlider[index]);
 }
-
 
 
 /**
@@ -277,7 +292,6 @@ public int getHorizontalSlider(HorizontalSliderPanel &panelInstance, string labe
 }
 
 
-
 /**
  * 指定されたインデックスのスライダーを取得します。
  *
@@ -289,7 +303,6 @@ public int getHorizontalSlider(HorizontalSliderPanel &panelInstance, string labe
 public int getHorizontalSlider(HorizontalSliderPanel &panelInstance, int index){
 	return panelInstance.horizontalSlider[index];
 }
-
 
 
 /**
@@ -311,7 +324,6 @@ private int labelIndexOf(HorizontalSliderPanel &panelInstance, string labelText)
 }
 
 
-
 /**
  * パネルのサイズを返します。
  *
@@ -322,7 +334,6 @@ private int labelIndexOf(HorizontalSliderPanel &panelInstance, string labelText)
 public int[] getComponentSize(HorizontalSliderPanel &panelInstance){
 	return getComponentSize(panelInstance.panel);
 }
-
 
 
 /**
@@ -339,7 +350,6 @@ public void setComponentSize(HorizontalSliderPanel &panelInstance, int width, in
 }
 
 
-
 /**
  * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
  *
@@ -354,7 +364,6 @@ public void setComponentSize(HorizontalSliderPanel &panelInstance){
 }
 
 
-
 /**
  * パネルの位置を返します。
  *
@@ -365,7 +374,6 @@ public void setComponentSize(HorizontalSliderPanel &panelInstance){
 public int[] getComponentLocation(HorizontalSliderPanel &panelInstance){
 	return getComponentLocation(panelInstance.panel);
 }
-
 
 
 /**
@@ -379,6 +387,5 @@ public int[] getComponentLocation(HorizontalSliderPanel &panelInstance){
 public void setComponentLocation(HorizontalSliderPanel &panelInstance, int x, int y){
 	setComponentLocation(panelInstance.panel, x, y);
 }
-
 
 
