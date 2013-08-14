@@ -1,33 +1,26 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.system.Float 1.0.0
- * float型補助ライブラリ
- *
- * Spec: ---
- * Note: ---
- *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
-
-
 
 import Text;
 import open.system.Int;
 
 
-
 /**
- * float型のリテラルとして許されるサフィックスの一覧です。
+ * <p>
+ * このモジュール open.system.Float は、float型の補助機能を提供します。
+ * </p>
  */
-private const string FLOAT_SUFFIX[] = { "f", "F" }
 
+
+/** float型のリテラルとして許されるサフィックスの一覧です。 */
+private const string FLOAT_SUFFIX[] = { "f", "F" }
 
 
 /**
  * 文字列の中身がfloat型に変換可能か判定します。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば変換可能)
  * @author 松井文宏
  */
 public bool isFloat(string s){
@@ -68,9 +61,11 @@ public bool isFloat(string s){
 }
 
 
-
 /**
  * 文字列の含む少数点が正しいかどうかを判定します。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば正しい)
  * @author 松井文宏
  */
 private bool checkPoint(string s){
@@ -90,6 +85,9 @@ private bool checkPoint(string s){
 /**
  * 文字列の含む指数部表記が正しいかどうかを判定します。
  * 指数部表記が無い場合にも true が返されます。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば正しい)
  * @author 松井文宏
  */
 private bool checkExponentPart(string s){
@@ -119,6 +117,9 @@ private bool checkExponentPart(string s){
 
 /**
  * 文字列の含む指数部を削除して返します。
+ *
+ * @param s 指数部を削除したい文字列
+ * @return 指数部を削除した文字列
  * @author 松井文宏
  */
 private string removeExponentPart(string s){
@@ -141,11 +142,13 @@ private string removeExponentPart(string s){
 }
 
 
-
 /**
  * 文字列の末尾がサフィックスとして許されるかどうかを判定します。
  * サフィックスが無い場合にも true が返されます。
  * 末尾に複数の文字が続く場合でも、最終文字だけで判定されます。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば正しい)
  * @author 松井文宏
  */
 private bool checkSuffix(string s){
@@ -171,9 +174,11 @@ private bool checkSuffix(string s){
 }
 
 
-
 /**
  * 文字列の含むサフィックスを削除して返します。
+ *
+ * @param s サフィックスを削除したい文字列
+ * @return サフィックスを削除した文字列
  * @author 松井文宏
  */
 private string removeSuffix(string s){
