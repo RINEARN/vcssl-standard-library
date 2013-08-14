@@ -1,40 +1,82 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.gui.ButtonWindow 1.0.0
- * ボタンウィンドウ生成ライブラリ
- *
- * Spec: ---
- * Note: ---
- *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
 
 import GUI;
 import open.gui.CheckBoxPanel;
 
 
+/**
+ * <p>
+ * このモジュール open.gui.CheckBoxWindow は、
+ * GUI部品として、チェックボックスが並ぶウィンドウ ―― チェックボックスウィンドウ ―― を提供します。	
+ * </p>
+ *
+ * <p>
+ * VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、
+ * このモジュールで提供されるGUI部品は、
+ * <a href="#CheckBoxWindow">CheckBoxWindow</a> 構造体として扱います。
+ * </p>
+ *
+ * <p>
+ * CheckBoxWindow 構造体は、内部にリソースのID等を保持していますが、
+ * <br />
+ * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
+ * <br />
+ * 具体的には、 <a href="#newCheckBoxWindow">newCheckBoxWindow</a> 関数で生成し、 
+ * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
+ * </p>
+ *
+ * <p>
+ * またこのモジュールでは、
+ * CheckBoxWindow 構造体を標準ライブラリ「 GUI 」と同様の感覚でそのまま扱えるように、
+ * 標準GUIライブラリ関数のオーバーロードも提供されます。
+ * <br />
+ * 例えば、 
+ * <a href="#mountComponent">mountComponent</a> 関数や、
+ * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
+ * </p>
+ */
 
+
+/** デフォルトのウィンドウタイトルです。 */
 private const string DEFAULT_WINDOW_TITLE = "CheckBoxWindow";
 
+/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
 private const int DEFAULT_WINDOW_WIDTH_OFFSET = 16;
+
+/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
 private const int DEFAULT_WINDOW_HEIGHT_OFFSET = 38;
+
+/** デフォルトのウィンドウ位置(X)です。 */
 private const int DEFAULT_WINDOW_X = 0;
+
+/** デフォルトのウィンドウ位置(Y)です。 */
 private const int DEFAULT_WINDOW_Y = 0;
 
+/** デフォルトのウィンドウ幅です。 */
 private const int DEFAULT_WINDOW_WIDTH = 300;
+
+/** デフォルトのウィンドウ高さです。 */
 private const int DEFAULT_GRID_HEIGHT = 25;
 
+/** デフォルトのボタン高さです。 */
 private const int DEFAULT_BUTTON_HEIGHT = 30;
+
+/** デフォルトのボタン間余白です。 */
 private const int DEFAULT_BUTTON_MARGIN_TOP = 5;
 
+/** デフォルトのウィンドウ内余白領域です(左)。 */
 private const int DEFAULT_WINDOW_MARGIN_LEFT = 10;
-private const int DEFAULT_WINDOW_MARGIN_RIGHT = 10;
-private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
-private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
 
+/** デフォルトのウィンドウ内余白領域です(右)。 */
+private const int DEFAULT_WINDOW_MARGIN_RIGHT = 10;
+
+/** デフォルトのウィンドウ内余白領域です(上)。 */
+private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
+
+/** デフォルトのウィンドウ内余白領域です(下)。 */
+private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
 
 
 /**
@@ -47,7 +89,6 @@ public struct CheckBoxWindow{
 	int button = NULL;
 	CheckBoxPanel checkBoxPanel = NULL;
 }
-
 
 
 /**
@@ -84,7 +125,6 @@ public CheckBoxWindow newCheckBoxWindow(int x, int y, int width, int height, str
 }
 
 
-
 /**
  * 自動でウィンドウサイズを決定し、チェックボックスウィンドウを生成します。
  *
@@ -109,7 +149,6 @@ public CheckBoxWindow newCheckBoxWindow(string labelText[], bool[] defaultValue)
 }
 
 
-
 /**
  * チェックボックスウィンドウを破棄します。
  *
@@ -122,7 +161,6 @@ public void deleteComponent(CheckBoxWindow &windowInstance){
 	deleteComponent(windowInstance.window);
 	windowInstance = NULL;
 }
-
 
 
 /**
@@ -152,7 +190,6 @@ public void setButton(CheckBoxWindow &windowInstance, string label){
 }
 
 
-
 /**
  * 決定ボタンのコンポーネントIDを取得します。
  *
@@ -165,7 +202,6 @@ public int getButton(CheckBoxWindow &windowInstance){
 }
 
 
-
 /**
  * ウィンドウのGUIコンポーネントIDを取得します。
  *
@@ -176,7 +212,6 @@ public int getButton(CheckBoxWindow &windowInstance){
 public int getWindow(CheckBoxWindow &windowInstance){
 	return windowInstance.window;
 }
-
 
 
 /**
@@ -192,7 +227,6 @@ public int getCheckBox(CheckBoxWindow &windowInstance, string labelText){
 }
 
 
-
 /**
  * 指定されたインデックスのチェックボックスを取得します。
  *
@@ -204,7 +238,6 @@ public int getCheckBox(CheckBoxWindow &windowInstance, string labelText){
 public int getCheckBox(CheckBoxWindow &windowInstance, int index){
 	return getCheckBox(windowInstance.checkBoxPanel, index);
 }
-
 
 
 /**
@@ -220,7 +253,6 @@ public void setComponentBool(CheckBoxWindow &windowInstance, int index, bool val
 }
 
 
-
 /**
  * 指定されたインデックスのチェックボックスから、bool値を取得します。
  *
@@ -232,7 +264,6 @@ public void setComponentBool(CheckBoxWindow &windowInstance, int index, bool val
 public bool getComponentBool(CheckBoxWindow &windowInstance, int index){
 	return getComponentBool(windowInstance.checkBoxPanel, index);
 }
-
 
 
 /**
@@ -248,7 +279,6 @@ public void setComponentBool(CheckBoxWindow &windowInstance, string labelText, b
 }
 
 
-
 /**
  * 指定されたラベルに対応するチェックボックスから、bool値を取得します。
  *
@@ -262,7 +292,6 @@ public string getComponentBool(CheckBoxWindow &windowInstance, string labelText)
 }
 
 
-
 /**
  * ウィンドウのサイズを返します。
  *
@@ -273,7 +302,6 @@ public string getComponentBool(CheckBoxWindow &windowInstance, string labelText)
 public int[] getComponentSize(CheckBoxWindow &windowInstance){
 	return getComponentSize(windowInstance.window);
 }
-
 
 
 /**
@@ -289,7 +317,6 @@ public void setComponentSize(CheckBoxWindow &windowInstance, int width, int heig
 	setComponentSize(windowInstance.window, width, height);
 	setComponentSize(windowInstance);
 }
-
 
 
 /**
@@ -321,7 +348,6 @@ public void setComponentSize(CheckBoxWindow &windowInstance){
 }
 
 
-
 /**
  * ウィンドウの位置を返します。
  *
@@ -332,7 +358,6 @@ public void setComponentSize(CheckBoxWindow &windowInstance){
 public int[] getComponentLocation(CheckBoxWindow &windowInstance){
 	return getComponentLocation(windowInstance.window);
 }
-
 
 
 /**
@@ -348,7 +373,6 @@ public void setComponentLocation(CheckBoxWindow &windowInstance, int x, int y){
 }
 
 
-
 /**
  * ウィンドウを再描画します。
  *
@@ -361,7 +385,6 @@ public void paintComponent(CheckBoxWindow &windowInstance){
 }
 
 
-
 /**
  * ウィンドウを不可視化します。
  *
@@ -372,7 +395,6 @@ public void hideComponent(CheckBoxWindow &windowInstance){
 }
 
 
-
 /**
  * ウィンドウを可視化します。
  *
@@ -381,6 +403,5 @@ public void hideComponent(CheckBoxWindow &windowInstance){
 public void showComponent(CheckBoxWindow &windowInstance){
 	showComponent(windowInstance.window);
 }
-
 
 
