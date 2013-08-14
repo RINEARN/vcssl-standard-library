@@ -1,39 +1,63 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.gui.TextFieldPanel 1.0.0
- * テキストフィールドパネル生成ライブラリ
- *
- * Spec: ---
- * Note: ---
- *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
-
-
 import GUI;
 
+/**
+ * <p>
+ * このモジュール open.gui.TextFieldPanel は、
+ * GUI部品として、テキストフィールドが並ぶパネル ―― テキストフィールドパネル ―― を提供します。	
+ * </p>
+ *
+ * <p>
+ * VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、
+ * このモジュールで提供されるGUI部品は、
+ * <a href="#TextFieldPanel">TextFieldPanel</a> 構造体として扱います。
+ * </p>
+ *
+ * <p>
+ * TextFieldPanel 構造体は、内部にリソースのID等を保持していますが、
+ * <br />
+ * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
+ * <br />
+ * 具体的には、 <a href="#newTextFieldPanel">newTextFieldPanel</a> 関数で生成し、 
+ * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
+ * </p>
+ *
+ * <p>
+ * またこのモジュールでは、
+ * TextFieldPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、
+ * 標準GUIライブラリ関数のオーバーロードも提供されます。
+ * <br />
+ * 例えば、 
+ * <a href="#mountComponent">mountComponent</a> 関数や、
+ * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
+ * </p>
+ */
 
+
+/** デフォルトのパネルタイトルです。 */
 private const string DEFAULT_PANEL_TITLE = "TextFieldPanel";
+
+/** 指定されたラベルが見つからなかった場合のエラーメッセージです。 */
 private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しません：";
 
 
-/**
- * テキストフィールドパネルの構造体です。
- *
- * @author 松井文宏
- */
+/** テキストフィールドパネルの構造体です。 */
 public struct TextFieldPanel{
+	// パネルのGUI部品IDです。
 	int panel = NULL;
+	// テキストラベルが並ぶグリッドパネルのGUI部品IDです。
 	int textLabelGridPanel = NULL;
+	// テキストフィールドが並ぶグリッドパネルのGUI部品IDです。
 	int textFieldGridPanel = NULL;
+	// テキストラベルのGUI部品IDです。
 	int textLabel[0];
+	// テキストフィールドのGUI部品IDです。
 	int textField[0];
+	// テキストラベルの文字列を保持します。
 	string textLabelString[0];
 }
-
 
 
 /**
@@ -89,7 +113,6 @@ public TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, str
 }
 
 
-
 /**
  * テキストフィールドパネルを破棄します。
  *
@@ -113,7 +136,6 @@ public void deleteComponent(TextFieldPanel &panelInstance){
 }
 
 
-
 /**
  * テキストフィールドパネルを再描画します。
  *
@@ -132,7 +154,6 @@ public void paintComponent(TextFieldPanel &panelInstance){
 }
 
 
-
 /**
  * テキストフィールドパネルを、別のGUIコンポーネント上に配置します。
  *
@@ -145,7 +166,6 @@ public void mountComponent(TextFieldPanel &panelInstance, int componentID){
 }
 
 
-
 /**
  * テキストパネルを、別のGUIコンポーネントから配置解除します。
  *
@@ -156,7 +176,6 @@ public void mountComponent(TextFieldPanel &panelInstance, int componentID){
 public void demountComponent(TextFieldPanel &panelInstance, int componentID){
 	demountComponent(panelInstance.panel, componentID);
 }
-
 
 
 /**
@@ -178,7 +197,6 @@ public void setLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 }
 
 
-
 /**
  * パネルのコンポーネントIDを返します。
  *
@@ -189,7 +207,6 @@ public void setLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 public int getPanel(TextFieldPanel &panelInstance){
 	return panelInstance.panel;
 }
-
 
 
 /**
@@ -209,7 +226,6 @@ public int getTextField(TextFieldPanel &panelInstance, string labelText){
 }
 
 
-
 /**
  * 指定されたインデックスのテキストフィールドを取得します。
  *
@@ -221,7 +237,6 @@ public int getTextField(TextFieldPanel &panelInstance, string labelText){
 public int getTextField(TextFieldPanel &panelInstance, int index){
 	return panelInstance.textField[index];
 }
-
 
 
 /**
@@ -237,7 +252,6 @@ public void setComponentString(TextFieldPanel &panelInstance, int index, string 
 }
 
 
-
 /**
  * 指定されたインデックスのテキストフィールドから、テキストを取得します。
  *
@@ -249,7 +263,6 @@ public void setComponentString(TextFieldPanel &panelInstance, int index, string 
 public string getComponentString(TextFieldPanel &panelInstance, int index){
 	return getComponentString(panelInstance.textField[index]);
 }
-
 
 
 /**
@@ -269,7 +282,6 @@ public void setComponentString(TextFieldPanel &panelInstance, string labelText, 
 }
 
 
-
 /**
  * 指定されたラベルに対応するテキストフィールドから、テキストを取得します。
  *
@@ -285,7 +297,6 @@ public string getComponentString(TextFieldPanel &panelInstance, string labelText
 	}
 	return getComponentString(panelInstance.textField[index]);
 }
-
 
 
 /**
@@ -307,7 +318,6 @@ private int labelIndexOf(TextFieldPanel &panelInstance, string labelText){
 }
 
 
-
 /**
  * パネルのサイズを返します。
  *
@@ -318,7 +328,6 @@ private int labelIndexOf(TextFieldPanel &panelInstance, string labelText){
 public int[] getComponentSize(TextFieldPanel &panelInstance){
 	return getComponentSize(panelInstance.panel);
 }
-
 
 
 /**
@@ -335,7 +344,6 @@ public void setComponentSize(TextFieldPanel &panelInstance, int width, int heigh
 }
 
 
-
 /**
  * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
  *
@@ -350,7 +358,6 @@ public void setComponentSize(TextFieldPanel &panelInstance){
 }
 
 
-
 /**
  * パネルの位置を返します。
  *
@@ -361,7 +368,6 @@ public void setComponentSize(TextFieldPanel &panelInstance){
 public int[] getComponentLocation(TextFieldPanel &panelInstance){
 	return getComponentLocation(panelInstance.panel);
 }
-
 
 
 /**
@@ -375,6 +381,5 @@ public int[] getComponentLocation(TextFieldPanel &panelInstance){
 public void setComponentLocation(TextFieldPanel &panelInstance, int x, int y){
 	setComponentLocation(panelInstance.panel, x, y);
 }
-
 
 
