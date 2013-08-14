@@ -1,22 +1,47 @@
 encode UTF-8;
 
-/* --------------------------------------------------
- * Open VCSSL API Library ( www.vcssl.org/api/open )
- * --------------------------------------------------
- * open.gui.CheckBoxPanel 1.0.0
- * チェックボックスパネル生成ライブラリ
- *
- * Spec: ---
- * Note: ---
- *
- * License: --- ( Public Domain )
- * -------------------------------------------------- */
-
 
 import GUI;
 
 
+/**
+ * <p>
+ * このモジュール open.gui.CheckBoxPanel は、
+ * GUI部品として、チェックボックスが並ぶパネル ―― チェックボックスパネル ―― を提供します。	
+ * </p>
+ *
+ * <p>
+ * VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、
+ * このモジュールで提供されるGUI部品は、
+ * <a href="#CheckBoxPanel">CheckBoxPanel</a> 構造体として扱います。
+ * </p>
+ *
+ * <p>
+ * CheckBoxPanel 構造体は、内部にリソースのID等を保持していますが、
+ * <br />
+ * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
+ * <br />
+ * 具体的には、 <a href="#newCheckBoxPanel">newCheckBoxPanel</a> 関数で生成し、 
+ * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
+ * </p>
+ *
+ * <p>
+ * またこのモジュールでは、
+ * CheckBoxPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、
+ * 標準GUIライブラリ関数のオーバーロードも提供されます。
+ * <br />
+ * 例えば、 
+ * <a href="#mountComponent">mountComponent</a> 関数や、
+ * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
+ * </p>
+ */
+
+
+/** デフォルトのパネルタイトルです。 */
 private const string DEFAULT_PANEL_TITLE = "CheckBoxPanel";
+
+/** 指定されたラベルが見つからなかった場合のエラーメッセージです */
 private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しません：";
 
 
@@ -26,12 +51,15 @@ private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しませ�
  * @author 松井文宏
  */
 public struct CheckBoxPanel{
+	// パネルのGUI部品IDです。
 	int panel = NULL;
+	// パネルのGUI部品IDです。
 	int checkBoxGridPanel = NULL;
+	// チェックボックスのGUI部品IDです。
 	int checkBox[0];
+	// チェックボックスのラベル文字列を保持します。
 	string textLabelString[0];
 }
-
 
 
 /**
@@ -75,7 +103,6 @@ public CheckBoxPanel newCheckBoxPanel(int x, int y, int width, int height, strin
 }
 
 
-
 /**
  * チェックボックスパネルを破棄します。
  *
@@ -95,7 +122,6 @@ public void deleteComponent(CheckBoxPanel &panelInstance){
 }
 
 
-
 /**
  * チェックボックスパネルを再描画します。
  *
@@ -112,7 +138,6 @@ public void paintComponent(CheckBoxPanel &panelInstance){
 }
 
 
-
 /**
  * チェックボックスパネルを、別のGUIコンポーネント上に配置します。
  *
@@ -123,7 +148,6 @@ public void paintComponent(CheckBoxPanel &panelInstance){
 public void mountComponent(CheckBoxPanel &panelInstance, int componentID){
 	mountComponent(panelInstance.panel, componentID);
 }
-
 
 
 /**
@@ -138,7 +162,6 @@ public void demountComponent(CheckBoxPanel &panelInstance, int componentID){
 }
 
 
-
 /**
  * パネルのコンポーネントIDを返します。
  *
@@ -149,7 +172,6 @@ public void demountComponent(CheckBoxPanel &panelInstance, int componentID){
 public int getPanel(CheckBoxPanel &panelInstance){
 	return panelInstance.panel;
 }
-
 
 
 /**
@@ -169,7 +191,6 @@ public int getCheckBox(CheckBoxPanel &panelInstance, string labelText){
 }
 
 
-
 /**
  * 指定されたインデックスのチェックボックスを取得します。
  *
@@ -181,7 +202,6 @@ public int getCheckBox(CheckBoxPanel &panelInstance, string labelText){
 public int getCheckBox(CheckBoxPanel &panelInstance, int index){
 	return panelInstance.checkBox[index];
 }
-
 
 
 /**
@@ -197,7 +217,6 @@ public void setComponentBool(CheckBoxPanel &panelInstance, int index, bool value
 }
 
 
-
 /**
  * 指定されたインデックスのチェックボックスから、bool値を取得します。
  *
@@ -209,7 +228,6 @@ public void setComponentBool(CheckBoxPanel &panelInstance, int index, bool value
 public bool getComponentBool(CheckBoxPanel &panelInstance, int index){
 	return getComponentBool(panelInstance.checkBox[index]);
 }
-
 
 
 /**
@@ -229,7 +247,6 @@ public void setComponentBool(CheckBoxPanel &panelInstance, string labelText, boo
 }
 
 
-
 /**
  * 指定されたラベルに対応するチェックボックスから、bool値を取得します。
  *
@@ -245,7 +262,6 @@ public bool getComponentBool(CheckBoxPanel &panelInstance, string labelText){
 	}
 	return getComponentBool(panelInstance.checkBox[index]);
 }
-
 
 
 /**
@@ -266,7 +282,6 @@ private int labelIndexOf(CheckBoxPanel &panelInstance, string labelText){
 }
 
 
-
 /**
  * パネルのサイズを返します。
  *
@@ -277,7 +292,6 @@ private int labelIndexOf(CheckBoxPanel &panelInstance, string labelText){
 public int[] getComponentSize(CheckBoxPanel &panelInstance){
 	return getComponentSize(panelInstance.panel);
 }
-
 
 
 /**
@@ -294,7 +308,6 @@ public void setComponentSize(CheckBoxPanel &panelInstance, int width, int height
 }
 
 
-
 /**
  * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
  *
@@ -305,7 +318,6 @@ public void setComponentSize(CheckBoxPanel &panelInstance){
 	int panelSize[] = getComponentSize(panelInstance.panel);
 	setComponentSize(panelInstance.checkBoxGridPanel, panelSize[0], panelSize[1]);
 }
-
 
 
 /**
@@ -320,7 +332,6 @@ public int[] getComponentLocation(CheckBoxPanel &panelInstance){
 }
 
 
-
 /**
  * パネルの位置を設定します。
  *
@@ -332,6 +343,5 @@ public int[] getComponentLocation(CheckBoxPanel &panelInstance){
 public void setComponentLocation(CheckBoxPanel &panelInstance, int x, int y){
 	setComponentLocation(panelInstance.panel, x, y);
 }
-
 
 
