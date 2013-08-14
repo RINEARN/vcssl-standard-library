@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 encode UTF-8;
 
 
@@ -280,3 +281,287 @@ public void setComponentLocation(ButtonPanel &panelInstance, int x, int y){
 }
 
 
+=======
+encode UTF-8;
+
+
+import GUI;
+
+
+/**
+ * <p>
+ * このモジュール open.gui.ButtonPanel は、
+ * GUI部品として、ボタンが並ぶパネル ―― ボタンパネル ―― を提供します。	
+ * </p>
+ *
+ * <p>
+ * VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、
+ * このモジュールで提供されるGUI部品は、
+ * <a href="#ButtonPanel">ButtonPanel</a> 構造体として扱います。
+ * </p>
+ *
+ * <p>
+ * ButtonPanel 構造体は、内部にリソースのID等を保持していますが、
+ * <br />
+ * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
+ * <br />
+ * 具体的には、 <a href="#newButtonPanel">newButtonPanel</a> 関数で生成し、 
+ * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
+ * </p>
+ *
+ * <p>
+ * またこのモジュールでは、
+ * ButtonPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、
+ * 標準GUIライブラリ関数のオーバーロードも提供されます。
+ * <br />
+ * 例えば、 
+ * <a href="#mountComponent">mountComponent</a> 関数や、
+ * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
+ * </p>
+ */
+
+
+/** デフォルトのパネルタイトルです */
+private const string DEFAULT_PANEL_TITLE = "TextFieldPanel";
+
+
+/** 指定されたラベルが見つからなかった場合のエラーメッセージです */
+private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しません：";
+
+
+/** ボタンパネルの構造体です。 */
+public struct ButtonPanel{
+	//パネルのGUI部品ID
+	int panel = NULL;
+	//ボタンを配置するグリッドパネルのGUI部品ID
+	int buttonGridPanel = NULL;
+	//ボタンのGUI部品ID
+	int button[0];
+}
+
+
+/**
+ * ボタンパネルを生成します。
+ *
+ * @param x パネルのX座標
+ * @param y パネルのY座標
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @param labelText ラベル文字列を格納する配列
+ * @param buttonWidth ボタンの幅
+ * @param buttonText ボタンの文字列を格納する配列
+ * @return 生成したボタンパネル構造体
+ * @author 松井文宏
+ */
+public ButtonPanel newButtonPanel(int x, int y, int width, int height, string labelText[]){
+
+	int n = length(labelText, 0);
+	ButtonPanel panelInstance;
+
+	panelInstance.panel = newPanel(
+		x, y, width, height, DEFAULT_PANEL_TITLE
+	);
+
+	panelInstance.buttonGridPanel = newGridPanel(
+		0, 0, width, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	alloc[n] panelInstance.button;
+
+	for(int i=0; i<n; i++){
+		panelInstance.button[i] = newButton(0, 0, 0, 0, labelText[i]);
+		mountComponent(panelInstance.button[i], panelInstance.buttonGridPanel);
+	}
+
+	mountComponent(panelInstance.buttonGridPanel, panelInstance.panel);
+
+	return panelInstance;
+}
+
+
+/**
+ * ボタンパネルを破棄します。
+ *
+ * @param panelInstance 破棄するボタンパネル
+ * @author 松井文宏
+ */
+public void deleteComponent(ButtonPanel &panelInstance){
+	int n = length(panelInstance.button, 0);
+	for(int i=0; i<n; i++){
+		demountComponent(panelInstance.button[i], panelInstance.buttonGridPanel);
+		deleteComponent(panelInstance.button[i]);
+	}
+	demountComponent(panelInstance.buttonGridPanel, panelInstance.panel);
+	deleteComponent(panelInstance.buttonGridPanel);
+	deleteComponent(panelInstance.panel);
+	panelInstance = NULL;
+}
+
+
+/**
+ * ボタンパネルを再描画します。
+ *
+ * @param panelInstance 再描画するボタンパネル
+ * @author 松井文宏
+ */
+public void paintComponent(ButtonPanel &panelInstance){
+	int n = length(panelInstance.button, 0);
+	for(int i=0; i<n; i++){
+		paintComponent(panelInstance.button[i]);
+	}
+	paintComponent(panelInstance.buttonGridPanel);
+	paintComponent(panelInstance.panel);
+}
+
+
+/**
+ * ボタンパネルを、別のGUIコンポーネント上に配置します。
+ *
+ * @param panelInstance 配置するボタンパネル
+ * @param componentID 配置先GUIコンポーネントID
+ * @author 松井文宏
+ */
+public void mountComponent(ButtonPanel &panelInstance, int componentID){
+	mountComponent(panelInstance.panel, componentID);
+}
+
+
+/**
+ * ボタンパネルを、別のGUIコンポーネントから配置解除します。
+ *
+ * @param panelInstance 配置解除するボタンパネル
+ * @param componentID 配置先GUIコンポーネントID
+ * @author 松井文宏
+ */
+public void demountComponent(ButtonPanel &panelInstance, int componentID){
+	demountComponent(panelInstance.panel, componentID);
+}
+
+
+/**
+ * パネルのコンポーネントIDを返します。
+ *
+ * @param panelInstance 取得対象のボタンパネル
+ * @return パネルのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getPanel(ButtonPanel &panelInstance){
+	return panelInstance.panel;
+}
+
+
+/**
+ * 指定されたラベルに対応するボタンを取得します。
+ *
+ * @param panelInstance 対象のボタンパネル
+ * @param labelText 取得対象のボタンに対応するラベル文字列
+ * @return ボタンのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getButton(ButtonPanel &panelInstance, string labelText){
+	int index = labelIndexOf(panelInstance, labelText);
+	if(index < 0){
+		error(ERROR_LABEL_NOT_FOUND + labelText);
+	}
+	return panelInstance.button[index];
+}
+
+
+/**
+ * 指定されたインデックスのボタンを取得します。
+ *
+ * @param panelInstance 対象のボタンパネル
+ * @param index ボタンのインデックス
+ * @return ボタンのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getButton(ButtonPanel &panelInstance, int index){
+	return panelInstance.button[index];
+}
+
+
+/**
+ * ラベル文字列に対応する、ボタンのインデックスを返します。
+ *
+ * @param panelInstance 取得対象のボタンパネル
+ * @param labelText 検索するラベル文字列
+ * @return ボタンのインデックス
+ * @author 松井文宏
+ */
+private int labelIndexOf(ButtonPanel &panelInstance, string labelText){
+	int n = length(panelInstance.button, 0);
+	for(int i=0; i<n; i++){
+		if(getComponentText(panelInstance.button[i]) == labelText){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * パネルのサイズを返します。
+ *
+ * @param panelInstance 対象のボタンパネル
+ * @return パネルのサイズを格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentSize(ButtonPanel &panelInstance){
+	return getComponentSize(panelInstance.panel);
+}
+
+
+/**
+ * パネルのサイズを設定します。
+ *
+ * @param panelInstance 対象のボタンパネル
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @author 松井文宏
+ */
+public void setComponentSize(ButtonPanel &panelInstance, int width, int height){
+	setComponentSize(panelInstance.panel, width, height);
+	setComponentSize(panelInstance);
+}
+
+
+/**
+ * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
+ *
+ * @param panelInstance 対象のボタンパネル
+ * @author 松井文宏
+ */
+public void setComponentSize(ButtonPanel &panelInstance){
+	int panelSize[] = getComponentSize(panelInstance.panel);
+	setComponentSize(panelInstance.buttonGridPanel, panelSize[0], panelSize[1]);
+}
+
+
+/**
+ * パネルの位置を返します。
+ *
+ * @param panelInstance 対象のボタンパネル
+ * @return パネルの位置を格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentLocation(ButtonPanel &panelInstance){
+	return getComponentLocation(panelInstance.panel);
+}
+
+
+/**
+ * パネルの位置を設定します。
+ *
+ * @param panelInstance 対象のボタンパネル
+ * @param x ウィンドウのX座標
+ * @param y ウィンドウのY座標
+ * @author 松井文宏
+ */
+public void setComponentLocation(ButtonPanel &panelInstance, int x, int y){
+	setComponentLocation(panelInstance.panel, x, y);
+}
+
+
+>>>>>>> c27053680368660ef2f63eece80d7b6cfb035052
