@@ -27,159 +27,32 @@ test();
 private void test(){
 
 	// スカラのラッピング/アンラッピングテスト
-	intTest();
-	floatTest();
-	complexTest();
-	varintTest();
-	varfloatTest();
-	varcomplexTest();
-	boolTest();
-	stringTest();
-	structTest();
+	testInt();
+	testFloat();
+	testComplex();
+	testVarint();
+	testVarfloat();
+	testVarcomplex();
+	testBool();
+	testString();
+	testStruct();
 
 	// 配列のラッピング/アンラッピングテスト
-	intArrayTest();
-	floatArrayTest();
-	complexArrayTest();
-	varintArrayTest();
-	varfloatArrayTest();
-	varcomplexArrayTest();
-	boolArrayTest();
-	stringArrayTest();
-	structArrayTest();
+	testIntArray();
+	testFloatArray();
+	testComplexArray();
+	testVarintArray();
+	testVarfloatArray();
+	testVarcomplexArray();
+	testBoolArray();
+	testStringArray();
+	testStructArray();
 
 	// ジャグ配列のテスト実装
-	jaggedArrayTest2D();
-	jaggedArrayTest3D();
+	testJaggedArray2D();
+	testJaggedArray3D();
 
 	println("open.data.DataWrapperTest: OK.");
-}
-
-
-/**
- * int型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void intTest(){
-	int v1 = 1;
-	DataWrapper<int> w1 = wrap<int>(v1);
-	DataWrapper<int> w2 = w1;
-	int v2 = unwrap<int>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * float型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void floatTest(){
-	float v1 = 1.1;
-	DataWrapper<float> w1 = wrap<float>(v1);
-	DataWrapper<float> w2 = w1;
-	float v2 = unwrap<float>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * complex型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void complexTest(){
-	complex v1 = 1.1 + 2.2*I;
-	DataWrapper<complex> w1 = wrap<complex>(v1);
-	DataWrapper<complex> w2 = w1;
-	complex v2 = unwrap<complex>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * varint型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void varintTest(){
-	varint v1 = 1v;
-	DataWrapper<varint> w1 = wrap<varint>(v1);
-	DataWrapper<varint> w2 = w1;
-	varint v2 = unwrap<varint>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * varfloat型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void varfloatTest(){
-	varfloat v1 = 1.1vf;
-	DataWrapper<varfloat> w1 = wrap<varfloat>(v1);
-	DataWrapper<varfloat> w2 = w1;
-	varfloat v2 = unwrap<varfloat>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * varcomplex型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void varcomplexTest(){
-	varcomplex v1 = 1.1vf + 2.2vf*VCI;
-	DataWrapper<varcomplex> w1 = wrap<varcomplex>(v1);
-	DataWrapper<varcomplex> w2 = w1;
-	varcomplex v2 = unwrap<varcomplex>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * bool型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void boolTest(){
-	bool v1 = true;
-	DataWrapper<bool> w1 = wrap<bool>(v1);
-	DataWrapper<bool> w2 = w1;
-	bool v2 = unwrap<bool>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * string型のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void stringTest(){
-	string v1 = "abc";
-	DataWrapper<string> w1 = wrap<string>(v1);
-	DataWrapper<string> w2 = w1;
-	string v2 = unwrap<string>(w2);
-	assert(v1 == v2);
-}
-
-
-/**
- * 構造体のラッピング/アンラッピングをテストします。
- *
- * @author 松井文宏
- */
-private void structTest(){
-	DataWrapperTestStruct v1;
-	v1.x = 1;
-	DataWrapper<DataWrapperTestStruct> w1 = wrap<DataWrapperTestStruct>(v1);
-	DataWrapper<DataWrapperTestStruct> w2 = w1;
-	DataWrapperTestStruct v2 = unwrap<DataWrapperTestStruct>(w2);
-	assert(v1.x == v2.x);
 }
 
 
@@ -201,11 +74,138 @@ private bool isEquivalentArray(bool[] b){
 
 
 /**
+ * int型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testInt(){
+	int v1 = 1;
+	DataWrapper<int> w1 = wrap<int>(v1);
+	DataWrapper<int> w2 = w1;
+	int v2 = unwrap<int>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * float型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testFloat(){
+	float v1 = 1.1;
+	DataWrapper<float> w1 = wrap<float>(v1);
+	DataWrapper<float> w2 = w1;
+	float v2 = unwrap<float>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * complex型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testComplex(){
+	complex v1 = 1.1 + 2.2*I;
+	DataWrapper<complex> w1 = wrap<complex>(v1);
+	DataWrapper<complex> w2 = w1;
+	complex v2 = unwrap<complex>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * varint型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testVarint(){
+	varint v1 = 1v;
+	DataWrapper<varint> w1 = wrap<varint>(v1);
+	DataWrapper<varint> w2 = w1;
+	varint v2 = unwrap<varint>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * varfloat型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testVarfloat(){
+	varfloat v1 = 1.1vf;
+	DataWrapper<varfloat> w1 = wrap<varfloat>(v1);
+	DataWrapper<varfloat> w2 = w1;
+	varfloat v2 = unwrap<varfloat>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * varcomplex型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testVarcomplex(){
+	varcomplex v1 = 1.1vf + 2.2vf*VCI;
+	DataWrapper<varcomplex> w1 = wrap<varcomplex>(v1);
+	DataWrapper<varcomplex> w2 = w1;
+	varcomplex v2 = unwrap<varcomplex>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * bool型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testBool(){
+	bool v1 = true;
+	DataWrapper<bool> w1 = wrap<bool>(v1);
+	DataWrapper<bool> w2 = w1;
+	bool v2 = unwrap<bool>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * string型のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testString(){
+	string v1 = "abc";
+	DataWrapper<string> w1 = wrap<string>(v1);
+	DataWrapper<string> w2 = w1;
+	string v2 = unwrap<string>(w2);
+	assert(v1 == v2);
+}
+
+
+/**
+ * 構造体のラッピング/アンラッピングをテストします。
+ *
+ * @author 松井文宏
+ */
+private void testStruct(){
+	DataWrapperTestStruct v1;
+	v1.x = 1;
+	DataWrapper<DataWrapperTestStruct> w1 = wrap<DataWrapperTestStruct>(v1);
+	DataWrapper<DataWrapperTestStruct> w2 = w1;
+	DataWrapperTestStruct v2 = unwrap<DataWrapperTestStruct>(w2);
+	assert(v1.x == v2.x);
+}
+
+
+/**
  * int型配列のラッピング/アンラッピングをテストします。
  *
  * @author 松井文宏
  */
-private void intArrayTest(){
+private void testIntArray(){
 	int v1[] = {1, 2, 3};
 	DataWrapper<int[]> w1 = wrap<int[]>(v1);
 	DataWrapper<int[]> w2 = w1;
@@ -219,7 +219,7 @@ private void intArrayTest(){
  *
  * @author 松井文宏
  */
-private void floatArrayTest(){
+private void testFloatArray(){
 	float v1[] = {1.1, 2.2, 3.3};
 	DataWrapper<float[]> w1 = wrap<float[]>(v1);
 	DataWrapper<float[]> w2 = w1;
@@ -233,7 +233,7 @@ private void floatArrayTest(){
  *
  * @author 松井文宏
  */
-private void complexArrayTest(){
+private void testComplexArray(){
 	complex v1[] = {1.1+1.2*I, 2.2+2.3*I, 3.3+3.4*I};
 	DataWrapper<complex[]> w1 = wrap<complex[]>(v1);
 	DataWrapper<complex[]> w2 = w1;
@@ -247,7 +247,7 @@ private void complexArrayTest(){
  *
  * @author 松井文宏
  */
-private void varintArrayTest(){
+private void testVarintArray(){
 	varint v1[3v];
 	v1[0v] = 1v;
 	v1[1v] = 2v;
@@ -264,7 +264,7 @@ private void varintArrayTest(){
  *
  * @author 松井文宏
  */
-private void varfloatArrayTest(){
+private void testVarfloatArray(){
 	varfloat v1[3v];
 	v1[0v] = 1.1vf;
 	v1[1v] = 2.2vf;
@@ -281,7 +281,7 @@ private void varfloatArrayTest(){
  *
  * @author 松井文宏
  */
-private void varcomplexArrayTest(){
+private void testVarcomplexArray(){
 	varcomplex v1[3v];
 	v1[0v] = 1.1vf + 1.2vf*VCI;
 	v1[1v] = 2.2vf + 2.3vf*VCI;
@@ -298,7 +298,7 @@ private void varcomplexArrayTest(){
  *
  * @author 松井文宏
  */
-private void boolArrayTest(){
+private void testBoolArray(){
 	bool v1[] = {true, false, true};
 	DataWrapper<bool[]> w1 = wrap<bool[]>(v1);
 	DataWrapper<bool[]> w2 = w1;
@@ -312,7 +312,7 @@ private void boolArrayTest(){
  *
  * @author 松井文宏
  */
-private void stringArrayTest(){
+private void testStringArray(){
 	string v1[] = {"abc", "ABC", "123"};
 	DataWrapper<string[]> w1 = wrap<string[]>(v1);
 	DataWrapper<string[]> w2 = w1;
@@ -326,7 +326,7 @@ private void stringArrayTest(){
  *
  * @author 松井文宏
  */
-private void structArrayTest(){
+private void testStructArray(){
 	DataWrapperTestStruct v1[3];
 	v1[0].x = 1;
 	v1[1].x = 2;
@@ -343,7 +343,7 @@ private void structArrayTest(){
  *
  * @author 松井文宏
  */
-private void jaggedArrayTest2D(){
+private void testJaggedArray2D(){
 
 	// int[] を 3 つ保持するジャグ配列
 	DataWrapper<int[]> jaggedArray[3];
@@ -374,7 +374,7 @@ private void jaggedArrayTest2D(){
  *
  * @author 松井文宏
  */
-private void jaggedArrayTest3D(){
+private void testJaggedArray3D(){
 
 	// 2次元ジャグ配列 ( DataWrapper<int[]>[] ) を2つ保持する3次元ジャグ配列
 	DataWrapper<DataWrapper<int[]>[]> jaggedArray3D[2];
