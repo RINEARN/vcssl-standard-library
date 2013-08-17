@@ -14,14 +14,18 @@ import Graphics2D;
 /** テストで用いる球モデルのIDです。 */
 int sphere = NULL;
 
+/** 背景及び前景2D描画をテストするかどうかを選択します。 */
+const bool TEST_2D_RENDERING = true;
 
 /**
  * この関数はフレームワーク側から、
  * 起動後のタイミングで一度だけ実行されます。
  */
 void initialize(int renderer){
-	testSetBackgroundRendererState();
-	testSetForegroundRendererState();
+	if(TEST_2D_RENDERING){
+		testSetBackgroundRendererState();
+		testSetForegroundRendererState();
+	}
 	testSetBackgroundColor();
 	testGetBackgroundColor();
 	testSetWindowSize();
@@ -83,17 +87,19 @@ void update(int renderer){
  * 画面更新タイミングで毎回実行されます。
  */
 void paint(int renderer){
-	// 背景2DCG描画テスト
-	testGetBackgroundRenderer();
-	testBackgroundRenderer();
+	if(TEST_2D_RENDERING){
+		// 背景2DCG描画テスト
+		testGetBackgroundRenderer();
+		testBackgroundRenderer();
 
-	// 前景2DCG描画テスト
-	testGetForegroundRenderer();
-	testForegroundRenderer();
+		// 前景2DCG描画テスト
+		testGetForegroundRenderer();
+		testForegroundRenderer();
 
-	testGetFrameRate();
-	testGetCurrentFrameRate();
-	testGetLastFrameTime();
+		testGetFrameRate();
+		testGetCurrentFrameRate();
+		testGetLastFrameTime();
+	}
 }
 
 

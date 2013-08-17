@@ -365,13 +365,34 @@ public int getLastFrameTime(){
 /** 画面描画時（paintコール前）に、自動でGraphics3D.paintGraphics3Dをコールするかどうかを制御する変数です。 */
 private bool paintGraphics3DState = true;
 
-/**
- * 画面描画時（paintコール前）に、自動でGraphics3D.paintGraphics3Dをコールするかどうかを設定します。
- * trueを指定すると自動でコールされます。
- * falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。
+/** アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値です。 */
+private float currentFrameRate = frameRate;
+
+/** 
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。
  *
- * @param state 設定した状態
+ * @return 画面更新頻度(実測値)
  */
+public float getCurrentFrameRate(){
+	return currentFrameRate;
+}
+
+
+/** アニメーションの最終画面更新時刻です。 */
+private int lastFrameTime = 0;
+
+/**
+ * アニメーションの最終画面更新時刻を取得します。
+ * 時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。
+ * ただし単位は処理系によって異なる可能性があります。
+ * 処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。
+ *
+ * @return 最終画面更新時刻(通常はミリ秒単位)
+ */
+public int getLastFrameTime(){
+	return lastFrameTime;
+}
+
 public void setPaintGraphics3DState(bool state){
 	paintGraphics3DState = state;
 }
@@ -390,7 +411,6 @@ private bool paintGraphics2DState = true;
 public void setPaintGraphics2DState(bool state){
 	paintGraphics2DState = state;
 }
-
 
 /**
  * 画面描画時（paintコール前）に、自動でGraphics3D.paintGraphics3Dをコールするかどうかを取得します。
@@ -452,6 +472,7 @@ public void setBackgroundColor(int r, int g, int b, int a){
 	backgroundGreen = g;
 	backgroundBlue = b;
 	backgroundAlpha = a;
+	setRendererBackgroundColor();
 }
 
 /**
@@ -464,6 +485,7 @@ public void setBackgroundColor(int color[]){
 	backgroundGreen = color[1];
 	backgroundBlue = color[2];
 	backgroundAlpha = color[3];
+	setRendererBackgroundColor();
 }
 
 /**
@@ -475,6 +497,24 @@ public int[] getBackgroundColor(){
 	int color[] = {backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha};
 	return color;
 }
+
+/**
+ * 背景及び前景2DCGレンダラーの有効/無効を考慮し、各レンダラーに適切な背景色を設定します。
+ */
+private void setRendererBackgroundColor(){
+	if(renderer != NULL){
+		if(backgroundRendererState){
+			setGraphics2DColor(backgroundRenderer, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha);
+			setGraphics3DColor(renderer, 0, 0, 0, 0);
+		}else{
+			setGraphics3DColor(renderer, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha);
+		}
+		if(foregroundRendererState){
+			setGraphics2DColor(foregroundRenderer, 0, 0, 0, 0);
+		}
+	}
+}
+
 
 
 /** 平行光源のIDです。 */
@@ -915,11 +955,12 @@ public void frameworkMain( string args[] ){
 
 	mainArguments = args;
 
+	checkCallback();
 	initializeWindow();
 	initializeGraphics();
 	initializeComponent();
 
-	if( evaluable( "initialize( renderer )" ) ){
+	if( existsInitialize ){
 		eval( "initialize( renderer )" );
 	}
 
@@ -927,7 +968,7 @@ public void frameworkMain( string args[] ){
 		paintGraphics3D( renderer );
 	}
 
-	if( evaluable( "paint( renderer )" ) ){
+	if( existsPaint ){
 		eval( "paint( renderer )" );
 	}
 
@@ -938,7 +979,7 @@ public void frameworkMain( string args[] ){
 
 	mainLoop();
 
-	if( evaluable( "finalize( renderer )" ) ){
+	if( existsFinalize ){
 		eval( "finalize( renderer )" );
 	}
 
@@ -947,18 +988,32 @@ public void frameworkMain( string args[] ){
 }
 
 
+/** paint関数が定義されているかどうかを保持します。 */
+private bool existsPaint = false;
+
+/** update関数が定義されているかどうかを保持します。 */
+private bool existsUpdate = false;
+
+/** initialize関数が定義されているかどうかを保持します。 */
+private bool existsInitialize = false;
+
+/** initialize関数が定義されているかどうかを保持します。 */
+private bool existsFinalize = false;
+
+/** resize関数が定義されているかどうかを保持します。 */
+private bool existsResize = false;
+
 /**
- * ウィンドウの再描画を行います。
- * アニメーションの画面更新タイミングで自動的にコールされますが、
- * 任意のタイミングで明示的に呼び出して再描画させる事も可能です。
+ * 各種コールバック関数が定義されているかを検証します。
  *
  * @author 松井文宏
  */
-public void paintWindow(){
-
-	paintComponent( graphicsLabel );
-	paintComponent( window );
-
+private void checkCallback(){
+	existsPaint = evaluable("paint(renderer)");
+	existsUpdate = evaluable("update(renderer)");
+	existsInitialize = evaluable("initialize(renderer)");
+	existsFinalize = evaluable("finalize(renderer)");
+	existsResize = evaluable("resize(renderer)");
 }
 
 
@@ -969,11 +1024,9 @@ public void paintWindow(){
  * @author 松井文宏
  */
 public void onWindowClose( int id ){
-
 	if( id == window ){
 		mainLoopState = false;
 	}
-
 }
 
 
@@ -1010,9 +1063,6 @@ public void onWindowResize( int id, int width, int height ){
  */
 private void mainLoop(){
 
-	bool existsPaint = evaluable( "paint( renderer )" );
-	bool existsUpdate = evaluable( "update( renderer )" );
-
 	setComponentColor(graphicsLabel, 0,0,0,255, 0,0,0,255);
 
 	while( mainLoopState ){
@@ -1033,15 +1083,7 @@ private void mainLoop(){
 			}
 
 			// レンダリング
-			if(backgroundRendererState){
-				if(foregroundRendererState){
-					rend3DAndBackgroundAndForeground(existsPaint);
-				}else{
-					rend3DAndBackground(existsPaint);
-				}
-			}else{
-				rend3D(existsPaint);
-			}
+			render();
 
 			// ファイル出力要求があればここで実行
 			if(exportRequested){
@@ -1068,13 +1110,48 @@ private void mainLoop(){
 
 
 /**
+ * ウィンドウの再描画を行います。
+ * 通常は自動で実行されますが、
+ * 通常は自動で実行されますが、アニメーションを無効にしている場合などは、
+ * 画面更新時に明示的に呼び出す必要があります。
+ *
+ * @author 松井文宏
+ */
+public void paintWindow(){
+	paintComponent( graphicsLabel );
+	paintComponent( window );
+}
+
+
+/**
+ * paint関数などをコールし、画面表示内容を描画します。
+ * 3DCGと、背景及び前景2DCGの合成も行います。
+ * 通常は自動で実行されますが、アニメーションを無効にしている場合などは、
+ * 画面更新時に明示的に呼び出す必要があります。
+ *
+ * @author 松井文宏
+ */
+public void render(){
+	if(backgroundRendererState){
+		if(foregroundRendererState){
+			render3DAndBackgroundAndForeground();
+		}else{
+			render3DAndBackground();
+		}
+	}else{
+		render3D();
+	}
+}
+
+
+/**
  * 3DCGのみを描画します。（背景及び前景2DCG無効時）
  *
  * @param existsPaint paint関数の有無
  * @author 松井文宏
  */
-private void rend3D(bool existsPaint){
-	setGraphics3DColor(renderer, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha);
+private void render3D(){
+	setRendererBackgroundColor();
 	if( paintGraphics3DState ){
 		paintGraphics3D( renderer );
 	}
@@ -1089,9 +1166,8 @@ private void rend3D(bool existsPaint){
  *
  * @author 松井文宏
  */
-private void rend3DAndBackground(bool existsPaint){
-	setGraphics3DColor(renderer, 0, 0, 0, 0);
-	setGraphics2DColor(backgroundRenderer, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha);
+private void render3DAndBackground(){
+	setRendererBackgroundColor();
 	if( paintGraphics2DState ){
 		paintGraphics2D( backgroundRenderer );
 	}
@@ -1109,10 +1185,8 @@ private void rend3DAndBackground(bool existsPaint){
  *
  * @author 松井文宏
  */
-private void rend3DAndBackgroundAndForeground(bool existsPaint){
-	setGraphics3DColor(renderer, 0, 0, 0, 0);
-	setGraphics2DColor(foregroundRenderer, 0, 0, 0, 0);
-	setGraphics2DColor(backgroundRenderer, backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha);
+private void render3DAndBackgroundAndForeground(){
+	setRendererBackgroundColor();
 	if( paintGraphics2DState ){
 		paintGraphics2D( foregroundRenderer );
 		paintGraphics2D( backgroundRenderer );
@@ -1230,7 +1304,7 @@ private void setLayout(){
 		setGraphics2DSize( foregroundRenderer, labelWidth, labelHeight );
 	}
 
-	if( evaluable( "resize( renderer )" ) ){
+	if( existsResize ){
 		eval( "resize( renderer )" );
 	}
 }
