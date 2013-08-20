@@ -1,0 +1,408 @@
+encode UTF-8;
+
+import open.system.Complex;
+import open.math.ElementaryFunction;
+import System;
+
+/**
+ * <p>
+ * open.system.Complex モジュールのテストです。
+ * </p>
+ */
+
+
+/** テストでのvarfloatの設定桁数です。 */
+const int VARFLOAT_DIGIT = 50;
+
+/** テストでのvarfloat値比較で、合格と見なす一致桁数です。 */
+const int VARFLOAT_EQUALITY_PRECISION = 47;
+
+/** テストでのfloat値比較で、合格と見なす一致桁数です。 */
+const int FLOAT_EQUALITY_PRECISION = 14;
+
+
+test();
+
+void test(){
+	testToComplex();
+	testToVarcomplex();
+	testToFloatArray();
+	testToVarfloatArray();
+
+	testCrealFloatArray();
+	testCrealVarfloatArray();
+	testCrealComplex();
+	testCrealVarcomplex();
+
+	testCimagFloatArray();
+	testCimagVarfloatArray();
+	testCimagComplex();
+	testCimagVarcomplex();
+
+	testCaddFloatArray();
+	testCaddVarfloatArray();
+	testCsubFloatArray();
+	testCsubVarfloatArray();
+	testCmulFloatArray();
+	testCmulVarfloatArray();
+	testCdivFloatArray();
+	testCdivVarfloatArray();
+
+	testCexpFloatArray();
+	testCexpVarfloatArray();
+	testCexpComplex();
+	testCexpVarcomplex();
+
+	println("open.system.Complex: OK.");
+}
+
+
+/**
+ * toComplex のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testToComplex(){
+	float v1[] = {1.2, 3.4};
+	complex v2 = toComplex(v1);
+	complex v3 = 1.2 + 3.4*I;
+	assert( v2 == v3 );
+}
+
+
+/**
+ * toVaromplex のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testToVarcomplex(){
+	digit(VARFLOAT_DIGIT);
+	varfloat v1[2];
+	v1[RE] = 1.2vf;
+	v1[IM] = 3.4vf;
+	varcomplex v2 = toVarcomplex(v1);
+	varcomplex v3 = 1.2vf + 3.4vf*VCI;
+	assert( v2 == v3 );
+}
+
+
+/**
+ * toFloatArray のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testToFloatArray(){
+	complex v1 = 1.2 + 3.4*I;
+	float[] v2 = toFloatArray(v1);
+	assert( v2[RE] == re(v1) );
+	assert( v2[IM] == im(v1) );
+}
+
+
+/**
+ * toFloatArray のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testToVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex v1 = 1.2vf + 3.4vf*VCI;
+	varfloat[] v2 = toVarfloatArray(v1);
+	assert( v2[RE] == re(v1) );
+	assert( v2[IM] == im(v1) );
+}
+
+
+/**
+ * creal(float[]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCrealFloatArray(){
+	float f[2];
+	f[RE] = 1.2;
+	f[IM] = 3.4;
+	assert(creal(f) == 1.2);
+}
+
+
+/**
+ * creal(varfloat[]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCrealVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varfloat f[2v];
+	f[RE] = 1.2vf;
+	f[IM] = 3.4vf;
+	assert(creal(f) == 1.2vf);
+}
+
+
+/**
+ * creal(complex) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCrealComplex(){
+	complex c = 1.2 + 3.4*I;
+	assert(creal(c) == re(c));
+}
+
+
+/**
+ * creal(varcomplex) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCrealVarcomplex(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c = 1.2vf + 3.4vf*VCI;
+	assert(creal(c) == re(c));
+}
+
+
+
+/**
+ * cimag(float[]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCimagFloatArray(){
+	float f[2];
+	f[RE] = 1.2;
+	f[IM] = 3.4;
+	assert(cimag(f) == 3.4);
+}
+
+
+/**
+ * cimag(varfloat[]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCimagVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varfloat f[2v];
+	f[RE] = 1.2vf;
+	f[IM] = 3.4vf;
+	assert(cimag(f) == 3.4vf);
+}
+
+
+/**
+ * cimag(complex) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCimagComplex(){
+	complex c = 1.2 + 3.4*I;
+	assert(cimag(c) == im(c));
+}
+
+
+/**
+ * cimag(varcomplex) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCimagVarcomplex(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c = 1.2vf + 3.4vf*VCI;
+	assert(cimag(c) == im(c));
+}
+
+
+/**
+ * cadd(float[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCaddFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 + c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = cadd(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+/**
+ * cadd(varfloat[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCaddVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 + c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = cadd(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+/**
+ * csub(float[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCsubFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 - c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = csub(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+/**
+ * csub(varfloat[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCsubVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 - c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = csub(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+/**
+ * cmul(float[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCmulFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 * c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = cmul(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+/**
+ * cmul(varfloat[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCmulVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 * c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = cmul(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+/**
+ * cdiv(float[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCdivFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 / c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = cdiv(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+/**
+ * cdiv(varfloat[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCdivVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 / c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = cdiv(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+/**
+ * cexp(float[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCexpFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = exp(c1);
+	float f1[] = toFloatArray(c1);
+	float f2[] = cexp(f1);
+	assert(f2[RE] == re(c2));
+	assert(f2[IM] == im(c2));
+}
+
+/**
+ * cexp(varfloat[2]) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCexpVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = exp(c1);
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = cexp(f1);
+	assert(f2[RE] == re(c2));
+	assert(f2[IM] == im(c2));
+}
+
+/**
+ * cexp(complex) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCexpComplex(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = exp(c1);
+	complex c3 = cexp(c1);
+	assert(re(c3) == re(c2));
+	assert(im(c3) == im(c2));
+}
+
+/**
+ * cexp(varcomplex) のテストです。
+ *
+ * @author 松井文宏
+ */
+public void testCexpVarcomplex(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = exp(c1);
+	varcomplex c3 = cexp(c1);
+	assert(re(c3) == re(c2));
+	assert(im(c3) == im(c2));
+}
+

@@ -31,7 +31,7 @@ public const int IM = 1;
  * @return 変換した値
  * @author 松井文宏
  */
-complex toComplex(float arg[]){
+public complex toComplex(float arg[]){
 	return arg[RE] + arg[IM] * I;
 }
 
@@ -43,7 +43,7 @@ complex toComplex(float arg[]){
  * @return 変換した値
  * @author 松井文宏
  */
-float[] toFloatArray(complex arg){
+public float[] toFloatArray(complex arg){
 	float value[2];
 	value[RE] = System.re(arg);
 	value[IM] = System.im(arg);
@@ -58,7 +58,7 @@ float[] toFloatArray(complex arg){
  * @return 変換した値
  * @author 松井文宏
  */
-complex toVarcomplex(varfloat arg[]){
+public varcomplex toVarcomplex(varfloat arg[]){
 	return arg[RE] + arg[IM] * VCI;
 }
 
@@ -70,7 +70,7 @@ complex toVarcomplex(varfloat arg[]){
  * @return 変換した値
  * @author 松井文宏
  */
-float[] toVarfloatArray(varcomplex arg){
+public varfloat[] toVarfloatArray(varcomplex arg){
 	varfloat value[2v];
 	value[RE] = System.re(arg);
 	value[IM] = System.im(arg);
@@ -85,7 +85,7 @@ float[] toVarfloatArray(varcomplex arg){
  * @param 実部の値
  * @author 松井文宏
  */
-public macro creal(complex arg){
+public float creal(complex arg){
 	return System.re(arg);
 }
 
@@ -97,7 +97,7 @@ public macro creal(complex arg){
  * @param 実部の値
  * @author 松井文宏
  */
-public macro creal(varcomplex arg){
+public varfloat creal(varcomplex arg){
 	return System.re(arg);
 }
 
@@ -109,7 +109,7 @@ public macro creal(varcomplex arg){
  * @param 実部の値
  * @author 松井文宏
  */
-public macro creal(float arg[]){
+public float creal(float arg[]){
 	return arg[RE];
 }
 
@@ -121,7 +121,7 @@ public macro creal(float arg[]){
  * @param 実部の値
  * @author 松井文宏
  */
-public macro creal(varfloat arg[]){
+public varfloat creal(varfloat arg[]){
 	return arg[RE];
 }
 
@@ -133,7 +133,7 @@ public macro creal(varfloat arg[]){
  * @param 虚部の値
  * @author 松井文宏
  */
-public macro cimag(complex arg){
+public float cimag(complex arg){
 	return System.im(arg);
 }
 
@@ -145,7 +145,7 @@ public macro cimag(complex arg){
  * @param 虚部の値
  * @author 松井文宏
  */
-public macro cimag(varcomplex arg){
+public varfloat cimag(varcomplex arg){
 	return System.im(arg);
 }
 
@@ -157,7 +157,7 @@ public macro cimag(varcomplex arg){
  * @param 虚部の値
  * @author 松井文宏
  */
-public macro cimag(float arg[]){
+public float cimag(float arg[]){
 	return arg[IM];
 }
 
@@ -169,7 +169,7 @@ public macro cimag(float arg[]){
  * @param 虚部の値
  * @author 松井文宏
  */
-public macro cimag(varfloat arg[]){
+public varfloat cimag(varfloat arg[]){
 	return arg[IM];
 }
 
@@ -182,8 +182,11 @@ public macro cimag(varfloat arg[]){
  * @return 演算結果
  * @author 松井文宏
  */
-macro cadd(float operandA[], float operandB[]){
-	return (operandA + operandB);
+public float[] cadd(float a[], float b[]){
+	float value[ 2 ];
+	value[RE] = a[RE] + b[RE];
+	value[IM] = a[IM] + b[IM];
+	return value;
 }
 
 
@@ -195,8 +198,11 @@ macro cadd(float operandA[], float operandB[]){
  * @return 演算結果
  * @author 松井文宏
  */
-macro cadd(varfloat operandA[], varfloat operandB[]){
-	return (operandA + operandB);
+public varfloat[] cadd(varfloat a[], varfloat b[]){
+	varfloat value[ 2v ];
+	value[RE] = a[RE] + b[RE];
+	value[IM] = a[IM] + b[IM];
+	return value;
 }
 
 
@@ -208,8 +214,11 @@ macro cadd(varfloat operandA[], varfloat operandB[]){
  * @return 演算結果
  * @author 松井文宏
  */
-macro csub(float operandA[], float operandB[]){
-	return (operandA - operandB);
+public float[] csub(float a[], float b[]){
+	float value[ 2 ];
+	value[RE] = a[RE] - b[RE];
+	value[IM] = a[IM] - b[IM];
+	return value;
 }
 
 
@@ -221,8 +230,11 @@ macro csub(float operandA[], float operandB[]){
  * @return 演算結果
  * @author 松井文宏
  */
-macro csub(varfloat operandA[], varfloat operandB[]){
-	return (operandA - operandB);
+public varfloat[] csub(varfloat a[], varfloat b[]){
+	varfloat value[ 2v ];
+	value[RE] = a[RE] - b[RE];
+	value[IM] = a[IM] - b[IM];
+	return value;
 }
 
 
@@ -234,7 +246,7 @@ macro csub(varfloat operandA[], varfloat operandB[]){
  * @return 演算結果
  * @author 松井文宏
  */
-float[] cmul(float a[], float b[]){
+public float[] cmul(float a[], float b[]){
 	float value[ 2 ];
 	value[RE] = a[RE] * b[RE] - a[IM] * b[IM];
 	value[IM] = a[RE] * b[IM] + a[IM] * b[RE];
@@ -250,8 +262,8 @@ float[] cmul(float a[], float b[]){
  * @return 演算結果
  * @author 松井文宏
  */
-float[] cmul(varfloat a[], varfloat b[]){
-	float value[ 2 ];
+public varfloat[] cmul(varfloat a[], varfloat b[]){
+	varfloat value[ 2v ];
 	value[RE] = a[RE] * b[RE] - a[IM] * b[IM];
 	value[IM] = a[RE] * b[IM] + a[IM] * b[RE];
 	return value;
@@ -266,7 +278,7 @@ float[] cmul(varfloat a[], varfloat b[]){
  * @return 演算結果
  * @author 松井文宏
  */
-float[] cdiv(float a[], float b[]){
+public float[] cdiv(float a[], float b[]){
 	float value[ 2 ];
 	float r = ( b[RE] * b[RE] + b[IM] * b[IM] );
 	value[RE] = ( a[RE] * b[RE] + a[IM] * b[IM] ) / r;
@@ -283,9 +295,9 @@ float[] cdiv(float a[], float b[]){
  * @return 演算結果
  * @author 松井文宏
  */
-float[] cdiv(varfloat a[], varfloat b[]){
-	float value[ 2 ];
-	float r = ( b[RE] * b[RE] + b[IM] * b[IM] );
+public varfloat[] cdiv(varfloat a[], varfloat b[]){
+	varfloat value[ 2v ];
+	varfloat r = ( b[RE] * b[RE] + b[IM] * b[IM] );
 	value[RE] = ( a[RE] * b[RE] + a[IM] * b[IM] ) / r;
 	value[IM] = ( a[IM] * b[RE] - a[RE] * b[IM] ) / r;
 	return value;
@@ -301,7 +313,7 @@ float[] cdiv(varfloat a[], varfloat b[]){
  * @return 演算結果
  * @author 松井文宏
  */
-complex cexp(complex arg){
+public complex cexp(complex arg){
 	float re = System.re(arg);
 	float im = System.im(arg);
 	return exp(re)*cos(im) + exp(re)*sin(im)*I;
@@ -317,9 +329,8 @@ complex cexp(complex arg){
  * @return 演算結果
  * @author 松井文宏
  */
-varcomplex cexp(varcomplex arg){
-  int digitStock = getdigit();
-  digit( digitStock * 2.34 );
+public varcomplex cexp(varcomplex arg){
+  varint digitStock = getdigit();
   varfloat re = System.re(arg);
   varfloat im = System.im(arg);
   varcomplex value = exp(re)*cos(im) + exp(re)*sin(im)*System.VCI;
@@ -337,7 +348,7 @@ varcomplex cexp(varcomplex arg){
  * @return 演算結果
  * @author 松井文宏
  */
-float[] cexp(float arg[]){
+public float[] cexp(float arg[]){
 	float value[2];
 	value[RE] = exp(arg[RE]) * cos(arg[IM]);
 	value[IM] = exp(arg[RE]) * sin(arg[IM]);
@@ -354,10 +365,9 @@ float[] cexp(float arg[]){
  * @return 演算結果
  * @author 松井文宏
  */
-varfloat[] cexp(varfloat arg[]){
+public varfloat[] cexp(varfloat arg[]){
 	varfloat value[2];
-    int digitStock = getdigit();
-    digit( digitStock * 2.34 );
+    varint digitStock = getdigit();
 	value[RE] = exp(arg[RE]) * cos(arg[IM]);
 	value[IM] = exp(arg[RE]) * sin(arg[IM]);
     digit(digitStock);
