@@ -28,7 +28,7 @@ void test(){
 	testHideComponent();
 	testShowComponent();
 
-	alert("ウィンドウを閉じてください。");
+	alert("イベントテスト後、ウィンドウを閉じてください。");
 	while(!windowClosed){
 		sleep(1000);
 	}
@@ -38,8 +38,27 @@ void test(){
 void onWindowClose(int id){
 	if(initialized && window != NULL && id == getWindow(window)){
 		deleteComponent(window);
-		println("open.gui.ButtonWindow: OK.");
+		println("open.gui.ButtonWindowTest: OK.");
 		windowClosed = true;
+	}
+}
+
+
+void onButtonClick(int id, string label){
+	if(initialized){
+		if(
+			id == getButton(window, "AAA")
+			||
+			id == getButton(window, "BBB")
+			||
+			id == getButton(window, "CCC")
+			||
+			id == getButton(window, "DDD")
+			||
+			id == getButton(window, "EEE")
+		){
+			alert(label);
+		}
 	}
 }
 

@@ -29,7 +29,7 @@ void test(){
 	testSetComponentLocation();
 	testGetComponentLocation();
 
-	alert("ウィンドウを閉じてください。");
+	alert("イベントテスト後、ウィンドウを閉じてください。");
 	while(!windowClosed){
 		sleep(1000);
 	}
@@ -41,8 +41,27 @@ void onWindowClose(int id){
 		testDemountComponent();
 		testDeleteComponent();
 		deleteComponent(window);
-		println("open.gui.ButtonPanel: OK.");
+		println("open.gui.ButtonPanelTest: OK.");
 		windowClosed = true;
+	}
+}
+
+
+void onButtonClick(int id, string label){
+	if(initialized){
+		if(
+			id == getButton(panel, "AAA")
+			||
+			id == getButton(panel, "BBB")
+			||
+			id == getButton(panel, "CCC")
+			||
+			id == getButton(panel, "DDD")
+			||
+			id == getButton(panel, "EEE")
+		){
+			println("  ButtonPanelTest > onButtonClick: " + label);
+		}
 	}
 }
 

@@ -29,7 +29,8 @@ void test(){
 	testSetComponentLocation();
 	testGetComponentLocation();
 
-	alert("ウィンドウを閉じてください。");
+	alert("テキストフィールド上で ENTER キーを押すと、そのテキストフィールドの入力値を表示します。");
+	alert("イベントテスト後、ウィンドウを閉じてください。");
 	while(!windowClosed){
 		sleep(1000);
 	}
@@ -43,6 +44,29 @@ void onWindowClose(int id){
 		deleteComponent(window);
 		println("open.gui.TextFieldPanel: OK.");
 		windowClosed = true;
+	}
+}
+
+
+void onKeyDown(int id, int keyCode){
+	if(initialized){
+		if(keyCode == GUI.KEY_ENTER){
+			if(id == getTextField(panel, "AAA")){
+				alert("AAA / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "BBB")){
+				alert("BBB / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "CCC")){
+				alert("CCC / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "DDD")){
+				alert("DDD / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "EEE")){
+				alert("EEE / " + getComponentString(id));
+			}
+		}
 	}
 }
 
