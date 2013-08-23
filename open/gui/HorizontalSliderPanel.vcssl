@@ -116,6 +116,61 @@ public HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, i
 
 
 /**
+ * スライダーパネルを生成します。
+ *
+ * @param x パネルのX座標
+ * @param y パネルのY座標
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @param labelText ラベル文字列を格納する配列
+ * @param labelWidth ラベル部分の幅
+ * @param defaultValue スライダーの初期値を格納する配列
+ * @param minValue スライダーの最小値を格納する配列
+ * @param maxValue スライダーの最小値を格納する配列
+ * @return 生成したスライダーパネル構造体
+ * @author 松井文宏
+ */
+public HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[], int defaultValue[], int minValue[], int maxValue[]){
+
+	int n = length(labelText, 0);
+	HorizontalSliderPanel panelInstance;
+
+	panelInstance.panel = newPanel(
+		x, y, width, height, DEFAULT_PANEL_TITLE
+	);
+
+	panelInstance.textLabelString = labelText;
+
+	int labelWidth = width / 2;
+
+	panelInstance.textLabelGridPanel = newGridPanel(
+		0, 0, labelWidth, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	panelInstance.horizontalSliderGridPanel = newGridPanel(
+		labelWidth, 0, width-labelWidth, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	alloc[n] panelInstance.textLabel;
+	alloc[n] panelInstance.horizontalSlider;
+
+	for(int i=0; i<n; i++){
+		panelInstance.textLabel[i] = newTextLabel(0, 0, 0, 0, labelText[i]);
+		panelInstance.horizontalSlider[i] = newHorizontalSlider(0, 0, 0, 0, defaultValue[i], minValue[i], maxValue[i]);
+		mountComponent(panelInstance.textLabel[i], panelInstance.textLabelGridPanel);
+		mountComponent(panelInstance.horizontalSlider[i], panelInstance.horizontalSliderGridPanel);
+	}
+
+	mountComponent(panelInstance.textLabelGridPanel, panelInstance.panel);
+	mountComponent(panelInstance.horizontalSliderGridPanel, panelInstance.panel);
+
+	return panelInstance;
+}
+
+
+/**
  * スライダーパネルを破棄します。
  *
  * @param panelInstance 破棄するスライダーパネル
@@ -139,9 +194,9 @@ public void deleteComponent(HorizontalSliderPanel &panelInstance){
 
 
 /**
- * スライダーパネルを破棄します。
+ * スライダーパネルを再描画します。
  *
- * @param panelInstance 破棄するスライダーパネル
+ * @param panelInstance 再描画するスライダーパネル
  * @author 松井文宏
  */
 public void paintComponent(HorizontalSliderPanel &panelInstance){
@@ -183,7 +238,7 @@ public void demountComponent(HorizontalSliderPanel &panelInstance, int component
 /**
  * ラベル部分の幅を設定します。
  *
- * @param panelInstance 取得対象のテキストフィールドパネル
+ * @param panelInstance 取得対象のスライダーパネル
  * @return パネルのGUIコンポーネントID
  * @author 松井文宏
  */
@@ -211,40 +266,45 @@ public int getPanel(HorizontalSliderPanel &panelInstance){
 }
 
 
-/**
- * 指定されたインデックスのテキストフィールドに、テキストを設定します。
+/*
+ * 指定されたインデックスのスライダーに、テキストを設定します。
  *
- * @param panelInstance 設定対象のテキストフィールドパネル
- * @param index テキストフィールドのインデックス
+ * @param panelInstance 設定対象のスライダーパネル
+ * @param index スライダーのインデックス
  * @param text 設定するテキスト
  * @author 松井文宏
  */
+/*
 public void setComponentFloat(HorizontalSliderPanel &panelInstance, int index, float value){
 	setComponentFloat(panelInstance.horizontalSlider[index], value);
 }
+*/
 
 
-/**
- * 指定されたインデックスのテキストフィールドから、テキストを取得します。
+/*
+ * 指定されたインデックスのスライダーから、テキストを取得します。
  *
- * @param panelInstance 取得対象のテキストフィールドパネル
- * @param index テキストフィールドのインデックス
- * @return テキストフィールドの保持するテキスト
+ * @param panelInstance 取得対象のスライダーパネル
+ * @param index スライダーのインデックス
+ * @return スライダーの保持するテキスト
  * @author 松井文宏
  */
+/*
 public float getComponentFloat(HorizontalSliderPanel &panelInstance, int index){
 	return getComponentFloat(panelInstance.horizontalSlider[index]);
 }
+*/
 
 
-/**
- * 指定されたラベルに対応するテキストフィールドに、テキストを設定します。
+/*
+ * 指定されたラベルに対応するスライダーに、テキストを設定します。
  *
- * @param panelInstance 設定対象のテキストフィールドパネル
- * @param labelText 設定対象のテキストフィールドに対応するラベル文字列
- * @param text 設定するテキスト
+ * @param panelInstance 設定対象のスライダーパネル
+ * @param labelText 設定対象のスライダーに対応するラベル文字列
+ * @param value 設定する値
  * @author 松井文宏
  */
+/*
 public void setComponentFloat(HorizontalSliderPanel &panelInstance, string labelText, float value){
 	int index = labelIndexOf(panelInstance, labelText);
 	if(index < 0){
@@ -252,16 +312,18 @@ public void setComponentFloat(HorizontalSliderPanel &panelInstance, string label
 	}
 	setComponentFloat(panelInstance.horizontalSlider[index], value);
 }
+*/
 
 
-/**
- * 指定されたラベルに対応するテキストフィールドから、テキストを取得します。
+/*
+ * 指定されたラベルに対応するスライダーから、テキストを取得します。
  *
- * @param panelInstance 設定対象のテキストフィールドパネル
- * @param labelText 設定対象のテキストフィールドに対応するラベル文字列
- * @return テキストフィールドの保持するテキスト
+ * @param panelInstance 設定対象のスライダーパネル
+ * @param labelText 設定対象のスライダーに対応するラベル文字列
+ * @return スライダーの保持する値
  * @author 松井文宏
  */
+/*
 public float getComponentFloat(HorizontalSliderPanel &panelInstance, string labelText){
 	int index = labelIndexOf(panelInstance, labelText);
 	if(index < 0){
@@ -269,6 +331,7 @@ public float getComponentFloat(HorizontalSliderPanel &panelInstance, string labe
 	}
 	return getComponentFloat(panelInstance.horizontalSlider[index]);
 }
+*/
 
 
 /**

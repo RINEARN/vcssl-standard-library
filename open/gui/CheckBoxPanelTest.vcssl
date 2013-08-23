@@ -1,0 +1,179 @@
+encode UTF-8;
+
+
+import GUI;
+import open.gui.CheckBoxPanel;
+
+
+/**
+ * <p> open.gui.CheckBoxPanel モジュールのテストです。</p>
+ */
+
+
+int window = NULL;
+CheckBoxPanel panel = NULL;
+bool windowClosed = false;
+
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+
+test();
+
+void test(){
+	window = newWindow(0, 0, 500, 500, "CheckBoxPanelTest");
+	testNewCheckBoxPanel();
+	testMountComponent();
+	testPaintComponent();
+	testGetPanel();
+	testGetCheckBox();
+	testGetComponentSize();
+	testSetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+
+	alert("ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && id == window){
+		testDemountComponent();
+		testDeleteComponent();
+		deleteComponent(window);
+		println("open.gui.CheckBoxPanel: OK.");
+		windowClosed = true;
+	}
+}
+
+
+/**
+ * newCheckBoxPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+void testNewCheckBoxPanel(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	bool value[] = {true, false, true, false, true};
+	panel = newCheckBoxPanel(10, 10, 200, 300, label, value);
+}
+
+
+/**
+ * deleteComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testDeleteComponent(){
+	deleteComponent(panel);
+}
+
+
+/**
+ * mountComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testMountComponent(){
+	mountComponent(panel, window);
+}
+
+
+/**
+ * demountComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testDemountComponent(){
+	demountComponent(panel, window);
+	paintComponent(window);
+}
+
+
+/**
+ * paintComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testPaintComponent(){
+	paintComponent(panel);
+}
+
+
+/**
+ * getPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetPanel(){
+	sleep(300);
+	int id = getPanel(panel);
+	hideComponent(id);
+	paintComponent(window);
+	sleep(300);
+	showComponent(id);
+	paintComponent(window);
+}
+
+
+/**
+ * getCheckBox のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetCheckBox(){
+	int id1 = getCheckBox(panel, "DDD");
+	assert(getComponentText(id1) == "DDD");
+	assert(getComponentBool(id1) == false);
+	int id2 = getCheckBox(panel, 2);
+	assert(getComponentText(id2) == "CCC");
+	assert(getComponentBool(id2) == true);
+}
+
+
+/**
+ * getComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentSize(){
+	int size[] = getComponentSize(panel);
+	assert(size[0] == 200);
+	assert(size[1] == 300);
+}
+
+
+/**
+ * setComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentSize(){
+	setComponentSize(panel, 300, 100);
+}
+
+
+/**
+ * setComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentLocation(){
+	setComponentLocation(panel, 50, 100);
+}
+
+
+/**
+ * getComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentLocation(){
+	int location[] = getComponentLocation(panel);
+	assert(location[0] == 50);
+	assert(location[1] == 100);
+}
+
+

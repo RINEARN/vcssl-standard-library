@@ -211,7 +211,7 @@ public int getWindow(TextFieldWindow &windowInstance){
 }
 
 
-/**
+/*
  * 指定されたインデックスのチェックボックスに、string値を設定します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -219,12 +219,14 @@ public int getWindow(TextFieldWindow &windowInstance){
  * @param value 設定するstring値
  * @author 松井文宏
  */
+/*
 public void setComponentString(TextFieldWindow &windowInstance, int index, string value){
 	setComponentString(windowInstance.textFieldPanel, index, value);
 }
+*/
 
 
-/**
+/*
  * 指定されたインデックスのチェックボックスから、string値を取得します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -232,12 +234,14 @@ public void setComponentString(TextFieldWindow &windowInstance, int index, strin
  * @return テキストフィールドの保持するstring値
  * @author 松井文宏
  */
+/*
 public string getComponentString(TextFieldWindow &windowInstance, int index){
 	return getComponentString(windowInstance.textFieldPanel, index);
 }
+*/
 
 
-/**
+/*
  * 指定されたラベルに対応するチェックボックスに、string値を設定します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -245,12 +249,14 @@ public string getComponentString(TextFieldWindow &windowInstance, int index){
  * @param value 設定するstring値
  * @author 松井文宏
  */
+/*
 public void setComponentString(TextFieldWindow &windowInstance, string labelText, string value){
 	setComponentString(windowInstance.textFieldPanel, labelText, value);
 }
+*/
 
 
-/**
+/*
  * 指定されたラベルに対応するチェックボックスから、string値を取得します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -258,9 +264,11 @@ public void setComponentString(TextFieldWindow &windowInstance, string labelText
  * @return テキストフィールドの保持するstring値
  * @author 松井文宏
  */
+/*
 public string getComponentString(TextFieldWindow &windowInstance, string labelText){
 	return getComponentString(windowInstance.textFieldPanel, labelText);
 }
+*/
 
 
 /**
@@ -298,6 +306,21 @@ public int getTextField(TextFieldWindow &windowInstance, int index){
  */
 public int[] getComponentSize(TextFieldWindow &windowInstance){
 	return getComponentSize(windowInstance.window);
+}
+
+
+/**
+ * ウィンドウのサイズを設定します。
+ *
+ * @param windowInstance 対象のウィンドウ
+ * @param width 幅
+ * @param width 高さ
+ * @return ウィンドウのサイズを格納する配列
+ * @author 松井文宏
+ */
+public void setComponentSize(TextFieldWindow &windowInstance, int width, int height){
+	setComponentSize(windowInstance.window, width, height);
+	setComponentSize(windowInstance);
 }
 
 
@@ -374,7 +397,9 @@ public void setComponentLocation(TextFieldWindow &windowInstance, int x, int y){
  */
 public void paintComponent(TextFieldWindow &windowInstance){
 	paintComponent(windowInstance.textFieldPanel);
-	paintComponent(windowInstance.button);
+	if(windowInstance.button != NULL){
+		paintComponent(windowInstance.button);
+	}
 	paintComponent(windowInstance.window);
 }
 

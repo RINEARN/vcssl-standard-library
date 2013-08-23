@@ -1,0 +1,163 @@
+encode UTF-8;
+
+
+import GUI;
+import open.gui.ButtonWindow;
+
+
+/**
+ * <p> open.gui.ButtonWindow モジュールのテストです。</p>
+ */
+
+
+ButtonWindow window = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	testNewButtonWindow();
+	testGetWindow();
+	testGetButton();
+	testSetComponentSize();
+	testGetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+	testPaintComponent();
+	testHideComponent();
+	testShowComponent();
+
+	alert("ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && window != NULL && id == getWindow(window)){
+		deleteComponent(window);
+		println("open.gui.ButtonWindow: OK.");
+		windowClosed = true;
+	}
+}
+
+
+/**
+ * newButtonWindow のテストです。
+ *
+ * @author 松井文宏
+ */
+void testNewButtonWindow(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	window = newButtonWindow(0, 0, 500, 500, "ButtonWindowTest", label);
+}
+
+/**
+ * getWindow のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetWindow(){
+	sleep(300);
+	int id = getWindow(window);
+	hideComponent(id);
+	sleep(300);
+	showComponent(id);
+}
+
+
+/**
+ * getWindow のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetButton(){
+	int id1 = getButton(window, "DDD");
+	assert(getComponentText(id1) == "DDD");
+	int id2 = getButton(window, 2);
+	assert(getComponentText(id2) == "CCC");
+}
+
+
+/**
+ * setComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentSize(){
+	sleep(300);
+	setComponentSize(window, 400, 300);
+	paintComponent(window);
+}
+
+
+/**
+ * getComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentSize(){
+	int size[] = getComponentSize(window);
+	assert(size[0] == 400);
+	assert(size[1] == 300);
+}
+
+
+
+/**
+ * setComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentLocation(){
+	sleep(300);
+	setComponentLocation(window, 200, 200);
+	paintComponent(window);
+}
+
+
+/**
+ * getComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentLocation(){
+	int size[] = getComponentLocation(window);
+	assert(size[0] == 200);
+	assert(size[1] == 200);
+}
+
+
+/**
+ * paintComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testPaintComponent(){
+	paintComponent(window);
+}
+
+
+/**
+ * hideComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testHideComponent(){
+	sleep(300);
+	hideComponent(window);
+}
+
+
+/**
+ * showComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testShowComponent(){
+	sleep(300);
+	showComponent(window);
+}
+

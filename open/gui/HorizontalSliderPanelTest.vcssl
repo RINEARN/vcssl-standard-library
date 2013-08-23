@@ -1,0 +1,183 @@
+encode UTF-8;
+
+
+import GUI;
+import open.gui.HorizontalSliderPanel;
+
+
+/**
+ * <p> open.gui.HorizontalSliderPanel モジュールのテストです。</p>
+ */
+
+
+int window = NULL;
+HorizontalSliderPanel panel = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	window = newWindow(0, 0, 500, 500, "HorizontalSliderPanelTest");
+	testNewHorizontalSliderPanel();
+	testMountComponent();
+	testPaintComponent();
+	testGetPanel();
+	testGetHorizontalSlider();
+	testGetComponentSize();
+	testSetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+
+	alert("ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && id == window){
+		testDemountComponent();
+		testDeleteComponent();
+		deleteComponent(window);
+		println("open.gui.HorizontalSliderPanel: OK.");
+		windowClosed = true;
+	}
+}
+
+
+/**
+ * newHorizontalSliderPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+void testNewHorizontalSliderPanel(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	/*
+	float min[] = {0.0, 1.0, 2.0, 3.0, 4.0};
+	float max[] = {10.0, 11.0, 12.0, 13.0, 14.0};
+	float value[] = {5.0, 6.0, 7.0, 8.0, 9.0};
+	*/
+	int min[] = {0, 1, 2, 3, 4};
+	int max[] = {10, 11, 12, 13, 14};
+	int value[] = {5, 6, 7, 8, 9};
+
+	panel = newHorizontalSliderPanel(10, 10, 200, 300, label, value, min, max);
+}
+
+
+/**
+ * deleteComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testDeleteComponent(){
+	deleteComponent(panel);
+}
+
+
+/**
+ * mountComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testMountComponent(){
+	mountComponent(panel, window);
+}
+
+
+/**
+ * demountComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testDemountComponent(){
+	demountComponent(panel, window);
+	paintComponent(window);
+}
+
+
+/**
+ * paintComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testPaintComponent(){
+	paintComponent(panel);
+}
+
+
+/**
+ * getPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetPanel(){
+	sleep(300);
+	int id = getPanel(panel);
+	hideComponent(id);
+	paintComponent(window);
+	sleep(300);
+	showComponent(id);
+	paintComponent(window);
+}
+
+
+/**
+ * getHorizontalSlider のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetHorizontalSlider(){
+	int id1 = getHorizontalSlider(panel, "DDD");
+	assert(getComponentInt(id1) == 8);
+	int id2 = getHorizontalSlider(panel, 2);
+	assert(getComponentInt(id2) == 7);
+}
+
+
+/**
+ * getComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentSize(){
+	int size[] = getComponentSize(panel);
+	assert(size[0] == 200);
+	assert(size[1] == 300);
+}
+
+
+/**
+ * setComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentSize(){
+	setComponentSize(panel, 300, 100);
+}
+
+
+/**
+ * setComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentLocation(){
+	setComponentLocation(panel, 50, 100);
+}
+
+
+/**
+ * getComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentLocation(){
+	int location[] = getComponentLocation(panel);
+	assert(location[0] == 50);
+	assert(location[1] == 100);
+}
+
+

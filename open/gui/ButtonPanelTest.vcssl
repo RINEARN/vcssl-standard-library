@@ -1,0 +1,174 @@
+encode UTF-8;
+
+
+import GUI;
+import open.gui.ButtonPanel;
+
+
+/**
+ * <p> open.gui.ButtonPanel モジュールのテストです。</p>
+ */
+
+
+int window = NULL;
+ButtonPanel panel = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	window = newWindow(0, 0, 500, 500, "ButtonPanelTest");
+	testNewButtonPanel();
+	testMountComponent();
+	testPaintComponent();
+	testGetPanel();
+	testGetButton();
+	testGetComponentSize();
+	testSetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+
+	alert("ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && id == window){
+		testDemountComponent();
+		testDeleteComponent();
+		deleteComponent(window);
+		println("open.gui.ButtonPanel: OK.");
+		windowClosed = true;
+	}
+}
+
+
+/**
+ * newButtonPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+void testNewButtonPanel(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	panel = newButtonPanel(10, 10, 200, 300, label);
+}
+
+
+/**
+ * deleteComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testDeleteComponent(){
+	deleteComponent(panel);
+}
+
+
+/**
+ * mountComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testMountComponent(){
+	mountComponent(panel, window);
+}
+
+
+/**
+ * demountComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testDemountComponent(){
+	demountComponent(panel, window);
+	paintComponent(window);
+}
+
+
+/**
+ * paintComponent のテストです。
+ *
+ * @author 松井文宏
+ */
+void testPaintComponent(){
+	paintComponent(panel);
+}
+
+
+/**
+ * getPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetPanel(){
+	sleep(300);
+	int id = getPanel(panel);
+	hideComponent(id);
+	paintComponent(window);
+	sleep(300);
+	showComponent(id);
+	paintComponent(window);
+}
+
+
+/**
+ * getButton のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetButton(){
+	int id1 = getButton(panel, "DDD");
+	assert(getComponentText(id1) == "DDD");
+	int id2 = getButton(panel, 2);
+	assert(getComponentText(id2) == "CCC");
+}
+
+
+/**
+ * getComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentSize(){
+	int size[] = getComponentSize(panel);
+	assert(size[0] == 200);
+	assert(size[1] == 300);
+}
+
+
+/**
+ * setComponentSize のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentSize(){
+	setComponentSize(panel, 300, 100);
+}
+
+
+/**
+ * setComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetComponentLocation(){
+	setComponentLocation(panel, 50, 100);
+}
+
+
+/**
+ * getComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testGetComponentLocation(){
+	int location[] = getComponentLocation(panel);
+	assert(location[0] == 50);
+	assert(location[1] == 100);
+}
+
+

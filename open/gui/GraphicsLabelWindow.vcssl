@@ -179,32 +179,21 @@ public int getGraphicsLabel(GraphicsLabelWindow &windowInstance){
 }
 
 
-/**
+/*
  * ウィンドウに表示するグラフィックスリソースを設定します。
  *
  * @param windowInstance 設定対象のウィンドウ
  * @param graphics 表示するグラフィックスリソース
  * @author 松井文宏
  */
+/*
 public void setComponentGraphics(GraphicsLabelWindow &windowInstance, int graphics){
 	setComponentGraphics(windowInstance.graphicsLabel, graphics);
 	int gWidth = getGraphicsWidth(graphics);
 	int gHeight = getGraphicsHeight(graphics);
 	setComponentSize(windowInstance);
 }
-
-
-/**
- * ウィンドウの位置を設定します。
- *
- * @param windowInstance 設定対象のウィンドウ
- * @param x ウィンドウ左上頂点のX座標
- * @param y ウィンドウ左上頂点のY座標
- * @author 松井文宏
- */
-public void setComponentLocation(GraphicsLabelWindow &windowInstance, int x, int y){
-	setComponentLocation(windowInstance.window, x, y);
-}
+*/
 
 
 /**
@@ -246,6 +235,18 @@ public void setComponentSize(GraphicsLabelWindow &windowInstance){
 
 
 /**
+ * ウィンドウのサイズを返します。
+ *
+ * @param windowStruct 対象のウィンドウ
+ * @return ウィンドウのサイズを格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentSize(GraphicsLabelWindow &windowStruct){
+	return getComponentSize(windowStruct.window);
+}
+
+
+/**
  * グラフィックスリソースにちょうど適切なウィンドウサイズを設定します。
  *
  * @param windowInstance 設定対象のウィンドウ
@@ -262,19 +263,20 @@ public void fitComponentSize(GraphicsLabelWindow &windowInstance){
 	int windowHeight = graphicsHeight
 		 + DEFAULT_WINDOW_HEIGHT_OFFSET + DEFAULT_WINDOW_MARGIN_TOP + DEFAULT_WINDOW_MARGIN_BOTTOM;
 
-	setComponentSize(windowInstance.window, windowWidth, windowHeight);
+	setComponentSize(windowInstance, windowWidth, windowHeight);
 }
 
 
 /**
- * ウィンドウのサイズを返します。
+ * ウィンドウの位置を設定します。
  *
- * @param windowStruct 対象のウィンドウ
- * @return ウィンドウのサイズを格納する配列
+ * @param windowInstance 設定対象のウィンドウ
+ * @param x ウィンドウ左上頂点のX座標
+ * @param y ウィンドウ左上頂点のY座標
  * @author 松井文宏
  */
-public int[] getComponentSize(GraphicsLabelWindow &windowStruct){
-	return getComponentSize(windowStruct.window);
+public void setComponentLocation(GraphicsLabelWindow &windowInstance, int x, int y){
+	setComponentLocation(windowInstance.window, x, y);
 }
 
 
@@ -287,19 +289,6 @@ public int[] getComponentSize(GraphicsLabelWindow &windowStruct){
  */
 public int[] getComponentLocation(GraphicsLabelWindow &windowStruct){
 	return getComponentLocation(windowStruct.window);
-}
-
-
-/**
- * ウィンドウの位置を設定します。
- *
- * @param windowStruct 対象のウィンドウ
- * @param x ウィンドウのX座標
- * @param y ウィンドウのY座標
- * @author 松井文宏
- */
-public void setComponentLocation(GraphicsLabelWindow &windowStruct, int x, int y){
-	setComponentLocation(windowStruct.window, x, y);
 }
 
 

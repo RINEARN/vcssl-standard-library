@@ -156,6 +156,72 @@ public HorizontalSliderWindow newHorizontalSliderWindow(string labelText[], floa
 
 
 /**
+ * スライダーウィンドウを生成します。
+ *
+ * @param x ウィンドウ左上頂点のX座標
+ * @param y ウィンドウ左上頂点のY座標
+ * @param width ウィンドウの幅
+ * @param height ウィンドウの高さ
+ * @param title ウィンドウのタイトル
+ * @param labelText 全スライダーのラベル文字列を格納する配列
+ * @param defaultValue 全スライダーのデフォルト値を格納する配列
+ * @param minValue 全スライダーの最小値を格納する配列
+ * @param maxValue 全スライダーの最大値を格納する配列
+ * @return 生成したテキストフィールドウィンドウ
+ * @author 松井文宏
+ */
+public HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width, int height, string title, string labelText[], int defaultValue[], int minValue[], int maxValue[]){
+	HorizontalSliderWindow windowInstance;
+
+	windowInstance.horizontalSliderPanel = newHorizontalSliderPanel(
+		DEFAULT_WINDOW_MARGIN_LEFT,
+		DEFAULT_WINDOW_MARGIN_TOP,
+		width - DEFAULT_WINDOW_MARGIN_LEFT - DEFAULT_WINDOW_MARGIN_RIGHT - DEFAULT_WINDOW_WIDTH_OFFSET,
+		height - DEFAULT_WINDOW_MARGIN_TOP - DEFAULT_WINDOW_MARGIN_BOTTOM - DEFAULT_WINDOW_HEIGHT_OFFSET,
+		labelText,
+		defaultValue,
+		minValue,
+		maxValue
+	);
+
+	windowInstance.window = newWindow(x, y, width, height, title);
+	mountComponent(windowInstance.horizontalSliderPanel, windowInstance.window);
+	paintComponent(windowInstance.horizontalSliderPanel);
+	paintComponent(windowInstance.window);
+
+	return windowInstance;
+}
+
+
+/**
+ * 自動でウィンドウサイズを決定し、スライダーウィンドウを生成します。
+ *
+ * @param labelText 全スライダーのラベル文字列を格納する配列
+ * @param defaultValue 全スライダーのデフォルト値を格納する配列
+ * @param minValue 全スライダーの最小値を格納する配列
+ * @param maxValue 全スライダーの最大値を格納する配列
+ * @return 生成したテキストフィールドウィンドウ
+ * @author 松井文宏
+ */
+public HorizontalSliderWindow newHorizontalSliderWindow(string labelText[], int defaultValue[], int minValue[], int maxValue[]){
+	int n = length(labelText, 0);
+	int windowHeight = DEFAULT_GRID_HEIGHT*n + DEFAULT_WINDOW_MARGIN_TOP + DEFAULT_WINDOW_MARGIN_BOTTOM + DEFAULT_WINDOW_HEIGHT_OFFSET;
+	HorizontalSliderWindow windowInstance = newHorizontalSliderWindow(
+		DEFAULT_WINDOW_X,
+		DEFAULT_WINDOW_Y,
+		DEFAULT_WINDOW_WIDTH,
+		windowHeight,
+		DEFAULT_WINDOW_TITLE,
+		labelText,
+		defaultValue,
+		minValue,
+		maxValue
+	);
+	return windowInstance;
+}
+
+
+/**
  * スライダーウィンドウを破棄します。
  *
  * @param windowInstance 破棄するウィンドウ
@@ -246,7 +312,7 @@ public int getHorizontalSlider(HorizontalSliderWindow &windowInstance, int index
 }
 
 
-/**
+/*
  * 指定されたインデックスのスライダーに、float値を設定します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -254,12 +320,14 @@ public int getHorizontalSlider(HorizontalSliderWindow &windowInstance, int index
  * @param value 設定するbool値
  * @author 松井文宏
  */
+/*
 public void setComponentFloat(HorizontalSliderWindow &windowInstance, int index, float value){
 	setComponentFloat(windowInstance.horizontalSliderPanel, index, value);
 }
+*/
 
 
-/**
+/*
  * 指定されたインデックスのスライダーから、float値を取得します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -267,12 +335,14 @@ public void setComponentFloat(HorizontalSliderWindow &windowInstance, int index,
  * @return スライダーの保持するfloat値
  * @author 松井文宏
  */
+/*
 public float getComponentFloat(HorizontalSliderWindow &windowInstance, int index){
 	return getComponentFloat(windowInstance.horizontalSliderPanel, index);
 }
+*/
 
 
-/**
+/*
  * 指定されたラベルに対応するスライダーに、float値を設定します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -280,12 +350,14 @@ public float getComponentFloat(HorizontalSliderWindow &windowInstance, int index
  * @param value 設定するfloat値
  * @author 松井文宏
  */
+/*
 public void setComponentFloat(HorizontalSliderWindow &windowInstance, string labelText, float value){
 	setComponentFloat(windowInstance.horizontalSliderPanel, labelText, value);
 }
+*/
 
 
-/**
+/*
  * 指定されたラベルに対応するスライダーから、float値を取得します。
  *
  * @param windowInstance 対象のウィンドウ
@@ -293,9 +365,11 @@ public void setComponentFloat(HorizontalSliderWindow &windowInstance, string lab
  * @return テキストフィールドの保持するflaot値
  * @author 松井文宏
  */
+/*
 public float getComponentFloat(HorizontalSliderWindow &windowInstance, string labelText){
 	return getComponentFloat(windowInstance.horizontalSliderPanel, labelText);
 }
+*/
 
 
 /**
@@ -399,7 +473,9 @@ public void setComponentLocation(HorizontalSliderWindow &windowInstance, int x, 
  */
 public void paintComponent(HorizontalSliderWindow &windowInstance){
 	paintComponent(windowInstance.horizontalSliderPanel);
-	paintComponent(windowInstance.button);
+	if(windowInstance.button != NULL){
+		paintComponent(windowInstance.button);
+	}
 	paintComponent(windowInstance.window);
 }
 
