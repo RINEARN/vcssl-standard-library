@@ -41,6 +41,8 @@ void onWindowClose(int id){
 		testDemountComponent();
 		testDeleteComponent();
 		deleteComponent(window);
+		window = NULL;
+		panel = NULL;
 		println("open.gui.ButtonPanelTest: OK.");
 		windowClosed = true;
 	}
@@ -48,7 +50,7 @@ void onWindowClose(int id){
 
 
 void onButtonClick(int id, string label){
-	if(initialized){
+	if(initialized && panel!=NULL){
 		if(
 			id == getButton(panel, "AAA")
 			||
@@ -60,7 +62,7 @@ void onButtonClick(int id, string label){
 			||
 			id == getButton(panel, "EEE")
 		){
-			println("  ButtonPanelTest > onButtonClick: " + label);
+			alert(label);
 		}
 	}
 }

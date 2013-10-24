@@ -20,6 +20,7 @@ void test(){
 	testNewCheckBoxWindow();
 	testGetWindow();
 	testGetCheckBox();
+	//testGetCheckBoxPanel();
 	testSetComponentSize();
 	testGetComponentSize();
 	testSetComponentLocation();
@@ -38,6 +39,7 @@ void test(){
 void onWindowClose(int id){
 	if(initialized && window != NULL && id == getWindow(window)){
 		deleteComponent(window);
+		window = NULL;
 		println("open.gui.CheckBoxWindow: OK.");
 		windowClosed = true;
 	}
@@ -45,7 +47,7 @@ void onWindowClose(int id){
 
 
 void onCheckBoxClick(int id, bool state){
-	if(initialized){
+	if(initialized && window!=NULL){
 		if(id == getCheckBox(window, "AAA")){
 			alert("AAA / " + state);
 		}
@@ -91,7 +93,7 @@ void testGetWindow(){
 
 
 /**
- * getWindow のテストです。
+ * getCechBox のテストです。
  *
  * @author 松井文宏
  */
@@ -103,6 +105,20 @@ void testGetCheckBox(){
 	assert(getComponentText(id2) == "CCC");
 	assert(getComponentBool(id2) == true);
 }
+
+
+/*
+ * getCheckBoxPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+/*
+void testGetCheckBoxPanel(){
+	CheckBoxPanel panel1 = getCheckBoxPanel(window);
+	CheckBoxPanel panel2 = window.checkBoxPanel;
+	assert(panel1 == panel2);
+}
+*/
 
 
 /**

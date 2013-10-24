@@ -43,6 +43,8 @@ void onWindowClose(int id){
 		testDemountComponent();
 		testDeleteComponent();
 		deleteComponent(window);
+		window = NULL;
+		panel = NULL;
 		println("open.gui.CheckBoxPanelTest: OK.");
 		windowClosed = true;
 	}
@@ -50,7 +52,7 @@ void onWindowClose(int id){
 
 
 void onCheckBoxClick(int id, bool state){
-	if(initialized){
+	if(initialized && panel!=NULL){
 		if(id == getCheckBox(panel, "AAA")){
 			alert("AAA / " + state);
 		}

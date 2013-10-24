@@ -28,6 +28,7 @@ void test(){
 	testSetComponentSize();
 	testSetComponentLocation();
 	testGetComponentLocation();
+	testSetTextLabelWidth();
 
 	alert("テキストフィールド上で ENTER キーを押すと、そのテキストフィールドの入力値を表示します。");
 	alert("イベントテスト後、ウィンドウを閉じてください。");
@@ -42,6 +43,8 @@ void onWindowClose(int id){
 		testDemountComponent();
 		testDeleteComponent();
 		deleteComponent(window);
+		window = NULL;
+		panel = NULL;
 		println("open.gui.TextFieldPanel: OK.");
 		windowClosed = true;
 	}
@@ -49,7 +52,7 @@ void onWindowClose(int id){
 
 
 void onKeyDown(int id, int keyCode){
-	if(initialized){
+	if(initialized && panel!=NULL){
 		if(keyCode == GUI.KEY_ENTER){
 			if(id == getTextField(panel, "AAA")){
 				alert("AAA / " + getComponentString(id));
@@ -196,4 +199,13 @@ void testGetComponentLocation(){
 	assert(location[1] == 100);
 }
 
+
+/**
+ * setTextLabelWidth のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetTextLabelWidth(){
+	setTextLabelWidth(panel, 70);
+}
 

@@ -28,6 +28,7 @@ void test(){
 	testSetComponentSize();
 	testSetComponentLocation();
 	testGetComponentLocation();
+	testSetTextLabelWidth();
 
 	alert("イベントテスト後、ウィンドウを閉じてください。");
 	while(!windowClosed){
@@ -41,6 +42,8 @@ void onWindowClose(int id){
 		testDemountComponent();
 		testDeleteComponent();
 		deleteComponent(window);
+		window = NULL;
+		panel = NULL;
 		println("open.gui.HorizontalSliderPanel: OK.");
 		windowClosed = true;
 	}
@@ -48,7 +51,7 @@ void onWindowClose(int id){
 
 
 void onSliderMove(int id, int value){
-	if(initialized){
+	if(initialized && panel!=NULL){
 		if(id == getHorizontalSlider(panel, "AAA")){
 			output("AAA / " + value);
 		}
@@ -199,6 +202,16 @@ void testGetComponentLocation(){
 	int location[] = getComponentLocation(panel);
 	assert(location[0] == 50);
 	assert(location[1] == 100);
+}
+
+
+/**
+ * setTextLabelWidth のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetTextLabelWidth(){
+	setTextLabelWidth(panel, 70);
 }
 
 

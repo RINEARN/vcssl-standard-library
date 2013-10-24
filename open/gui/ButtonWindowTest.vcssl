@@ -20,6 +20,7 @@ void test(){
 	testNewButtonWindow();
 	testGetWindow();
 	testGetButton();
+	//testGetButtonPanel();
 	testSetComponentSize();
 	testGetComponentSize();
 	testSetComponentLocation();
@@ -38,6 +39,7 @@ void test(){
 void onWindowClose(int id){
 	if(initialized && window != NULL && id == getWindow(window)){
 		deleteComponent(window);
+		window = NULL;
 		println("open.gui.ButtonWindowTest: OK.");
 		windowClosed = true;
 	}
@@ -45,7 +47,7 @@ void onWindowClose(int id){
 
 
 void onButtonClick(int id, string label){
-	if(initialized){
+	if(initialized && window!=NULL){
 		if(
 			id == getButton(window, "AAA")
 			||
@@ -98,6 +100,20 @@ void testGetButton(){
 	int id2 = getButton(window, 2);
 	assert(getComponentText(id2) == "CCC");
 }
+
+
+/*
+ * getButtonPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+/*
+void testGetButtonPanel(){
+	ButtonPanel panel1 = getButtonPanel(window);
+	ButtonPanel panel2 = window.buttonPanel;
+	assert(panel1 == panel2);
+}
+*/
 
 
 /**

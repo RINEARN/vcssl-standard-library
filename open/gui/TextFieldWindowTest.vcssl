@@ -20,10 +20,12 @@ void test(){
 	testNewTextFieldWindow();
 	testGetWindow();
 	testGetTextField();
+	//testGetTextFieldPanel();
 	testSetComponentSize();
 	testGetComponentSize();
 	testSetComponentLocation();
 	testGetComponentLocation();
+	testSetTextLabelWidth();
 	testPaintComponent();
 	testHideComponent();
 	testShowComponent();
@@ -39,6 +41,7 @@ void test(){
 void onWindowClose(int id){
 	if(initialized && window != NULL && id == getWindow(window)){
 		deleteComponent(window);
+		window = NULL;
 		println("open.gui.TextFieldWindow: OK.");
 		windowClosed = true;
 	}
@@ -46,7 +49,7 @@ void onWindowClose(int id){
 
 
 void onKeyDown(int id, int keyCode){
-	if(initialized){
+	if(initialized && window!=NULL){
 		if(keyCode == GUI.KEY_ENTER){
 			if(id == getTextField(window, "AAA")){
 				alert("AAA / " + getComponentString(id));
@@ -94,7 +97,7 @@ void testGetWindow(){
 
 
 /**
- * getWindow のテストです。
+ * getTextField のテストです。
  *
  * @author 松井文宏
  */
@@ -104,6 +107,20 @@ void testGetTextField(){
 	int id2 = getTextField(window, 2);
 	assert(getComponentText(id2) == "ccc");
 }
+
+
+/*
+ * getTextFieldPanel のテストです。
+ *
+ * @author 松井文宏
+ */
+/*
+void testGetTextFieldPanel(){
+	TextFieldPanel panel1 = getTextFieldPanel(window);
+	TextFieldPanel panel2 = window.textFieldPanel;
+	assert(panel1 == panel2);
+}
+*/
 
 
 /**
@@ -152,6 +169,18 @@ void testGetComponentLocation(){
 	int size[] = getComponentLocation(window);
 	assert(size[0] == 200);
 	assert(size[1] == 200);
+}
+
+
+/**
+ * setComponentLocation のテストです。
+ *
+ * @author 松井文宏
+ */
+void testSetTextLabelWidth(){
+	sleep(300);
+	setTextLabelWidth(window, 70);
+	paintComponent(window);
 }
 
 
