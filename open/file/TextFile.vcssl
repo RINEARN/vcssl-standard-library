@@ -1,0 +1,706 @@
+encode UTF-8;
+
+import System;
+import Text;
+
+
+/**
+ * <p>
+ * このモジュール open.file.TextFile は、
+ * 汎用的なテキストファイル入出力の機能を提供します。
+ * <br />
+ * 特に、CSV形式やTSV形式のファイル入出力をサポートします。
+ * </p>
+ *
+ * <p>
+ * そもそもVCSSLでは、最初期のバージョンから、CSV形式やTSV形式を含む、
+ * 基礎的なテキストファイル入出力機能が標準でサポートされています。
+ * <br />
+ * しかし、初期のVCSSLが専ら数値計算を目的とした言語であった事から、
+ * これらの機能も数値データファイルの入出力を前提とした仕様となっており、
+ * 汎用的な用途においては不便な点もあります。
+ * <br />
+ * 例えば、VCSSLの標準機能である System.open(string fileName, string mode) 関数で
+ * CSV形式やTSV形式のファイルを開く事ができますが、
+ * これは数値データファイルの操作を想定して設計された機能であるため、非常に単純な動作を行います。
+ * 特別な記号のエスケープや、値を必要に応じてダブルクォーテーションで囲むなどの処理は行われません。
+ * <br />
+ * （ その代わり、数値データファイルの入出力では高速に動作します。 ）
+ * </p>
+ *
+ * <p>
+ * そこで、このモジュールでは、数値データファイルのみならず、
+ * より汎用的なテキストファイル入出力機能を提供する事を目的としています。
+ * <br />
+ * 例えば書き込みにおいては、値がカンマ(CSV時)やタブ(TSV時)などの区切り文字を含む場合、
+ * 値全体がダブルクォーテーションで囲まれます。
+ * 値が改行を含む場合も同様です。
+ * <br />
+ * 読み込み時においても、ダブルクォーテーションで囲まれた部分は、まとめて一つの値として読み込まれ、
+ * その中に区切り文字や改行を含んでいても問題ありません。
+ * </p>
+ *
+ * <p>
+ * また、書き込む値がダブルクォーテーションを含む場合は、連続したダブルクォーテーションにエスケープされます。
+ * <br />
+ * 読み込み時においても、連続したダブルクォーテーションはエスケープされているものとして扱われます。
+ * </p>
+ *
+ * <p>
+ * なお、このモジュールでは、一般的なCSV形式やTSV形式だけでなく、
+ * 区切り文字（デリミタ）や引用符（エンクロージャ）の記号を明示的に指定する事も可能です。
+ * </p>
+ */
+
+
+/** 汎用テキストファイルの「読み込み」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。 */
+public const string READ = System.READ;
+
+/** 汎用テキストファイルの「書き込み」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。 */
+public const string WRITE = System.WRITE;
+
+/** 汎用テキストファイルの「追記」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。 */
+public const string APPEND = System.APPEND;
+
+/** TSV形式ファイルの「読み込み」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。 */
+public const string READ_TSV = System.READ_TSV;
+
+/** TSV形式ファイルの「書き込み」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。 */
+public const string WRITE_TSV = System.WRITE_TSV;
+
+/** TSV形式ファイルの「追記」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。 */
+public const string APPEND_TSV = System.APPEND_TSV;
+
+/** CSV形式ファイルの「読み込み」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。 */
+public const string READ_CSV = System.READ_CSV;
+
+/** CSV形式ファイルの「書き込み」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。 */
+public const string WRITE_CSV = System.WRITE_CSV;
+
+/** CSV形式ファイルの「追記」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。 */
+public const string APPEND_CSV = System.APPEND_CSV;
+
+
+/** 必要な値のみ引用符記号（エンクロージャ）で囲むオプションです。CSV/TSVファイルの場合、このオプションはデフォルトで適用されます。 */
+public const int ENCLOSE_IF_NECESSARY = 100;
+
+/** 全ての値を引用符記号（エンクロージャ）で囲むオプションです。 */
+public const int ENCLOSE_ALL = 101;
+
+/** どの値も引用符記号（エンクロージャ）で囲まないオプションです。 */
+public const int ENCLOSE_NONE = 102;
+
+
+/** 読み込み用バッファの初期サイズです。 */
+private const int DEFAULT_BUFFER_LENGTH = 32;
+
+/** エラーメッセージ - ファイルが読み込み可能モードでなかった場合。 */
+private const string ERROR_NOT_READABLE_MODE = "ファイルが読み込み可能なモードで開かれていません。";
+
+/** エラーメッセージ - ファイルが書き込み可能モードでなかった場合。 */
+private const string ERROR_NOT_WRITEABLE_MODE = "ファイルが書き込み可能なモードで開かれていません。";
+
+/** エラーメッセージ - 読み込みファイル行が最終行を超過した場合。 */
+private const string ERROR_NO_MORE_LINES = "ファイルの最終行を超過したため、読み込めませんでした。";
+
+/** エラーメッセージ - 読み込みファイル行が最終行を超過した場合。 */
+private const string ERROR_NOT_ACCESSABLE = "ファイルにアクセスできません。ファイルが開かれていないか、既に閉じられています。";
+
+
+/** テキストファイル構造体です。ファイルIDなどのシステムリソースや、区切り文字情報などを保持します。 */
+public struct TextFile{
+	int file = NULL;	// ファイルIDです。
+	int lineCount = 0;	// 総行数です。
+	int linePointer = 0;	// 現在の読み込み行インデックスです。
+	string mode = NULL;	// アクセスモードです。
+	string delimiter = NULL;	// 値の区切り文字です。
+	string enclosure = NULL;	// 値を囲む引用符です。
+	int enclosureOption = 0; // 値を引用符で囲む方針です。
+	string enclosureEscapeCharacter = NULL;	// 値の内に引用符が含まれる場合のエスケープ文字です。
+	string eol = NULL;	// ファイルの改行コードです。
+}
+
+
+/**
+ * ファイル名とモードを指定して、テキストファイルを開きます。
+ *
+ * @param fileName ファイル名
+ * @param mode モード（ TextFile.READ_CSV, TextFile.WRITE_TSV 等 ）
+ * @return 開いたファイルのテキストファイル構造体
+ * @author 松井文宏
+ */
+public TextFile openTextFile(string fileName, string mode){
+	string textEncoding = NULL;
+	TextFile textFile = openTextFile(fileName, mode, textEncoding);
+	return textFile;
+}
+
+
+/**
+ * ファイル名、モード、文字コードを指定して、テキストファイルを開きます。
+ *
+ * @param fileName ファイル名
+ * @param mode モード（ TextFile.READ_CSV, TextFile.WRITE_TSV 等 ）
+ * @param encoding 文字コード
+ * @return 開いたファイルのテキストファイル構造体
+ * @author 松井文宏
+ */
+public TextFile openTextFile(string fileName, string mode, string textEncoding){
+	TextFile textFile;
+	textFile.mode = mode;
+
+	// ファイルを開いてファイルIDを取得
+	if(mode == READ || mode == READ_TSV || mode == READ_CSV){
+		if(textEncoding == NULL){
+			textFile.file = System.open(fileName, System.READ);
+		}else{
+			textFile.file = System.open(fileName, System.READ, textEncoding);
+		}
+
+	}else if(mode == WRITE || mode == WRITE_TSV || mode == WRITE_CSV){
+		if(textEncoding == NULL){
+			textFile.file = System.open(fileName, System.WRITE);
+		}else{
+			textFile.file = System.open(fileName, System.WRITE, textEncoding);
+		}
+		textFile.eol = System.EOL;
+
+	}else if(mode == APPEND || mode == APPEND_TSV || mode == APPEND_CSV){
+		if(textEncoding == NULL){
+			textFile.file = System.open(fileName, System.APPEND);
+		}else{
+			textFile.file = System.open(fileName, System.APPEND, textEncoding);
+		}
+		textFile.eol = System.EOL;
+	}
+
+	// 区切り文字（デリミタ）や引用符記号（エンクロージャ）を設定
+
+	if(mode == READ || mode == WRITE || mode == APPEND){
+		string nullstr = NULL;
+	 	setDelimiter(textFile, nullstr);
+		setEnclosure(textFile, nullstr, nullstr, ENCLOSE_NONE);
+	}else if(mode == WRITE_TSV || mode == READ_TSV || mode == APPEND_TSV){
+	 	setDelimiter(textFile, "\t");
+		setEnclosure(textFile, "\"", "\"", ENCLOSE_IF_NECESSARY);
+	}else if(mode == WRITE_CSV || mode == READ_CSV || mode == APPEND_CSV){
+	 	setDelimiter(textFile, ",");
+		setEnclosure(textFile, "\"", "\"", ENCLOSE_IF_NECESSARY);
+	}
+
+	// 読み込みモードでは各パラメータを取得
+	if(mode == READ || mode == READ_TSV || mode == READ_CSV){
+		// 改行コードの取得
+		textFile.eol = getPreferredEndOfLineCode(textFile);
+		close(textFile.file);
+		textFile.linePointer = 0;
+		if(textEncoding == NULL){
+			textFile.file = System.open(fileName, System.READ);
+		}else{
+			textFile.file = System.open(fileName, System.READ, textEncoding);
+		}
+
+		// 総行数の取得
+		textFile.lineCount = getEffectiveLineCount(textFile);
+		close(textFile.file);
+		textFile.linePointer = 0;
+		if(textEncoding == NULL){
+			textFile.file = System.open(fileName, System.READ);
+		}else{
+			textFile.file = System.open(fileName, System.READ, textEncoding);
+		}
+	}
+
+	return textFile;
+}
+
+
+
+/**
+ * テキストファイルへのアクセスを閉じます。
+ * 特に書き込みアクセス後には、バッファされている内容を最後まで書き込み切るためにも、必ず呼び出す必要があります。
+ *
+ * @param textFile 対象のテキストファイル構造体
+ */
+public void close(TextFile &textFile){
+	checkAccessable(textFile);
+	System.close(textFile.file);
+	textFile = NULL;
+}
+
+
+
+/**
+ * ファイルに使用されている改行コードを解析し、
+ * CR+LF, CR, LF の3つから適切と思われるものを返します。
+ * 複数の改行コードが混在している場合は、
+ * 優先度の高いほうから CR+LF, CR, LF の順番で判定します。
+ * なお、どれにも該当しない場合は NULL を返します。
+ * この関数は、ファイルオープン時に1度だけ実行され、
+ * 結果は TextFile.eol に設定されます。
+ * 結果を別モジュールから取得したい場合は、getEndOfLineCode を使用します。
+ *
+ * @param textFile 対象のテキストファイル構造体
+ * @return 改行コード
+ * @author 松井文宏
+ */
+private string getPreferredEndOfLineCode(TextFile &textFile){
+	checkAccessable(textFile);
+	string fullText = System.load(textFile.file);
+	if(0 <= indexOf(fullText, System.CR+System.LF)){
+		return System.CR+System.LF;
+	}else if(0 <= indexOf(fullText, System.LF)){
+		return System.LF;
+	}else if(0 <= indexOf(fullText, System.CR)){
+		return System.CR;
+	}else {
+		return NULL;
+	}
+}
+
+
+
+/**
+ * ファイルに使用されている改行コードを解析し、
+ * CR+LF, CR, LF の3つから適切と思われるものを返します。
+ * 複数の改行コードが混在している場合は、
+ * 優先度の高いほうから CR+LF, CR, LF の順番で判定します。
+ * なお、どれにも該当しない場合は NULL を返します。
+ *
+ * @param textFile 対象のテキストファイル構造体
+ * @return 改行コード
+ * @author 松井文宏
+ */
+public string getEndOfLineCode(TextFile &textFile){
+	checkAccessable(textFile);
+	checkReadable(textFile);
+	return textFile.eol;
+}
+
+
+/**
+ * ファイルが読み込み可能なモードで開かれているか確認し、
+ * 違えばエラーメッセージを表示します。
+ * 
+ * @param textFile 対象のテキストファイル構造体
+ * @author 松井文宏
+ */
+private void checkReadable(TextFile &textFile){
+	string mode = textFile.mode;
+	if(mode==READ || mode==READ_TSV || mode==READ_CSV){
+		if(textFile.linePointer < textFile.lineCount){
+			return;
+		}else{
+			error(ERROR_NO_MORE_LINES);
+			return;
+		}
+	}else{
+		error(ERROR_NOT_READABLE_MODE);
+		return;
+	}
+}
+
+
+/**
+ * ファイルが読み込み可能なモードで開かれているか確認し、
+ * 違えばエラーメッセージを表示します。
+ * 
+ * @param textFile 対象のテキストファイル構造体
+ * @author 松井文宏
+ */
+private void checkWritable(TextFile &textFile){
+	string mode = textFile.mode;
+	if(mode==WRITE || mode==WRITE_TSV || mode==WRITE_CSV
+	|| mode==APPEND || mode==APPEND_TSV || mode==APPEND_CSV){
+		return;
+	}else{
+		error(ERROR_NOT_READABLE_MODE);
+	}
+}
+
+
+/**
+ * ファイルにアクセス可能な状態か確認し、違えばエラーメッセージを表示します。
+ */
+private void checkAccessable(TextFile &textFile){
+	if(textFile == NULL || textFile.file == NULL){
+		error(ERROR_NOT_ACCESSABLE);
+		return;
+	}
+}
+
+
+/**
+ * 値の区切り文字（デリミタ）を設定します。
+ *
+ * @param textFile 対象のテキストファイル構造体
+ * @param delimiter 値の区切り文字（デリミタ）
+ * @author 松井文宏
+ */
+public void setDelimiter(TextFile &textFile, string delimiter){
+	checkAccessable(textFile);
+	textFile.delimiter = delimiter;
+}
+
+
+/**
+ * 値を囲む引用符記号（エンクロージャ）を設定します。
+ *
+ * @param delimiter トークン内に区切り文字が含まれる場合に、トークンを囲む引用符文字
+ * @param enclosureEscapeCharacter トークン内に引用符文字が含まれる場合に、エスケープする文字
+ * @author 松井文宏
+ */
+public void setEnclosure(TextFile &textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption){
+	checkAccessable(textFile);
+	textFile.enclosure = enclosure;
+	textFile.enclosureEscapeCharacter = enclosureEscapeCharacter;
+	textFile.enclosureOption = enclosingOption;
+}
+
+
+/**
+ * テキストファイルに文字列を書き込み、改行します。
+ * 複数の内容を指定した場合、区切り文字が設定されていれば、間に区切り文字を挟んで書き出します。
+ * 書き込み内容に区切り文字や改行が含まれる場合、引用符が設定されていれば、値を引用符で囲って書き出します。
+ *
+ * @param textFile 対象のテキストファイル構造体
+ * @param value 書き込む文字列（可変長引数のため複数指定可能）
+ */
+public void writeln(TextFile &textFile, ... string value[]){
+	checkAccessable(textFile);
+	checkWritable(textFile);
+
+	value = addEnclosure(
+		value, textFile.delimiter,
+		textFile.enclosure, textFile.enclosureEscapeCharacter, textFile.enclosureOption
+	);
+
+	int n = length(value, 0);
+	string delimiter = textFile.delimiter;
+
+	if(delimiter == NULL){
+		for(int i=0; i<n; i++){
+			System.write(textFile.file, value[i]);
+		}
+	}else{
+		for(int i=0; i<n-1; i++){
+			System.write(textFile.file, value[i]);
+			System.write(textFile.file, delimiter);
+		}
+		System.write(textFile.file, value[n-1]);
+	}
+	System.write(textFile.file, System.EOL);
+}
+
+
+/**
+ * 書き込み対象となる値の内容を解析し、必要に応じて引用符で囲みます。
+ *
+ * @param delimiter 区切り文字
+ * @param enclosure 引用符記号
+ * @param enclosureEscapeCharacter 引用符のエスケープ文字
+ * @return 処理後の値
+ * @author 松井文宏
+ */
+private string[] addEnclosure(string value[], string delimiter, string enclosure, string enclosureEscapeCharacter, int enclosureOption){
+
+	if(delimiter == NULL || enclosure == NULL){
+		return value;
+	}
+
+	int n = length(value, 0);
+
+	// 値を必要に応じて引用符で囲む
+	for(int i=0; i<n; i++){
+
+		// 引用符記号を付ける必要があるかどうか
+		bool useEnclosure = false;
+		if(enclosureOption == ENCLOSE_ALL){
+			useEnclosure = true;
+		}else if(enclosureOption == ENCLOSE_IF_NECESSARY){
+
+			if(0 <= indexOf(value[i], delimiter)){
+				// 値が区切り文字を含む場合、引用符で囲む必要がある
+				useEnclosure = true;
+			}else if(0 <= indexOf(value[i], System.CR) || 0 <= indexOf(value[i], System.LF) ){
+				// 値が改行を含む場合、引用符で囲む必要がある
+				useEnclosure = true;
+			}else if(0 <= indexOf(value[i], enclosure) ){
+				// 値が引用符を含む場合、引用符で囲む必要がある
+				useEnclosure = true;
+			}
+		}
+
+		// 囲む処理
+		if(useEnclosure){
+
+			// 引用符で囲みたい値がさらに引用符を含む場合はエスケープが必要
+			if(enclosureEscapeCharacter != NULL){
+				if(0 <= indexOf(value[i], enclosure)){
+					value[i] = replace(value[i], enclosure, enclosureEscapeCharacter+enclosure);
+				}
+			}
+
+			// 引用符で囲む
+			value[i] = enclosure + value[i] + enclosure;
+		}
+	}
+
+	return value;
+}
+
+
+/**
+ * 読み込んだ値を解析し、引用符を除去します。
+ *
+ * @param delimiter 区切り文字
+ * @param enclosure 引用符記号
+ * @param enclosureEscapeCharacter 引用符のエスケープ文字
+ * @return 処理後の値
+ * @author 松井文宏
+ */
+private string[] removeEnclosure(string value[], string delimiter, string enclosure, string enclosureEscapeCharacter, int enclosureOption){
+
+	if(delimiter == NULL || enclosure == NULL){
+		return value;
+	}
+
+	int n = length(value, 0);
+
+	for(int i=0; i<n; i++){
+
+		int strLength = lengthOf(value[i]);
+
+		// 引用符記号で囲まれているかどうか
+		bool enclosed = false;
+		if(enclosureOption == ENCLOSE_ALL){
+			enclosed = true;
+		}else if(enclosureOption == ENCLOSE_IF_NECESSARY){
+			if(2 <= strLength){
+				if(startsWith(value[i], enclosure) && endsWith(value[i], enclosure)){
+					enclosed = true;
+				}
+			}
+		}
+
+		if(enclosed){
+			// 引用符記号の除去
+			value[i] = substring(value[i], 1, strLength-1);
+
+			// 値に含まれている、エスケープされた引用符記号を復元
+			value[i] = replace(value[i], enclosureEscapeCharacter+enclosure, enclosure);
+		}
+
+	}
+
+	return value;
+}
+
+
+/**
+ * テキストファイルから、一行分の文字列を読み込みます。
+ * 区切り文字が設定されている場合、内容を区切り文字で区切り、配列として返します。
+ * ただし引用符が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます。
+ *
+ * @param textFile 対象のテキストファイル構造体
+ * @return 読み込んだ内容
+ */
+public string[] readln(TextFile &textFile){
+	checkAccessable(textFile);
+	checkReadable(textFile);
+
+	int bufferLength = DEFAULT_BUFFER_LENGTH;
+	string value[ bufferLength ] = "";
+
+	string line = loadln(textFile);
+	string delimiter = textFile.delimiter;
+	string enclosure = textFile.enclosure;
+	int enclosureOption = textFile.enclosureOption;
+	bool inEnclosedSection = false;
+
+	int valueN = 0;
+	int from = 0;
+
+	int strLength = lengthOf(line);
+
+	for(int i=0; i<strLength; i++){
+
+		// 引用符区間の内外切り替え判定
+		if(enclosureOption != ENCLOSE_NONE){
+			if(charAt(line, i) == enclosure){
+				if(inEnclosedSection){
+					// 引用符区間の終了は、行末もしくは区切り文字の直前に限られる
+					//（値に引用符を含みながら、値全体を引用符で囲っていない場合が存在する）
+					if(i==strLength-1 || charAt(line, i+1)==delimiter){
+						inEnclosedSection = false;
+					}
+				}else{
+					if(i==0 || charAt(line, i-1)==delimiter){
+						inEnclosedSection = true;
+					}
+				}
+			}
+		}
+
+		if(!inEnclosedSection){
+			// 区切り文字ならそこでトークンを区切って代入
+			if(charAt(line, i) == delimiter){
+				value[ valueN ] += substring(line, from, i);
+				valueN++;
+				from = i + 1;
+			}
+		}
+
+		// バッファ容量が上限に達したら拡張
+		if( valueN == bufferLength ){
+			bufferLength *= 2;
+			alloc[ bufferLength ] value;
+			for(int i=valueN; i<bufferLength; i++){
+				value[i] = "";
+			}
+		}
+	}
+	value[ valueN ] += substring(line, from, strLength);
+	alloc[ valueN+1 ] value;
+
+	value = removeEnclosure(
+		value, delimiter,
+		enclosure, textFile.enclosureEscapeCharacter, textFile.enclosureOption
+	);
+
+	return value;
+}
+
+
+
+/**
+ * ファイルから一行を読み込み、そのまま返します。
+ * ただし、引用符記号が設定されていて、引用符記号で囲まれた内部に改行がある場合、
+ * それは値が改行コードを含んでいるものと見なされ、行末とは見なされません。
+ * つまり、内容によってはファイルの複数行が読み込まれる場合があります。
+ * 実際に読み込まれた行数は、引数 counter に格納されます。
+ *
+ * @param file 対象のテキストファイル構造体
+ * @param counter 読み込んだ行数が格納されます。
+ * @return 読み込んだ行の内容
+ * @author 松井文宏
+ */
+private string loadln(TextFile &textFile, int &counter){
+	int file = textFile.file;
+	string line = System.loadln(file);
+	counter++;
+
+	// 引用符符号を考慮しない場合は、ここでそのまま行を返す
+	if(textFile.enclosureOption == ENCLOSE_NONE){
+		return line;
+	}
+
+	// 引用符符号を考慮する必要がある場合、値が改行を含む場合があるので、判定を行う
+	string delimiter = textFile.delimiter;
+	string enclosure = textFile.enclosure;
+	int enclosureOption = textFile.enclosureOption;
+	bool inEnclosedSection = false;
+	int strLength = lengthOf(line);
+	for(int i=0; i<strLength; i++){
+
+		if(charAt(line, i) == enclosure){
+			if(inEnclosedSection){
+				// 引用符区間の開始は、行頭もしくは区切り文字の直後に限られる
+				//（値に引用符を含みながら、値全体を引用符で囲っていない場合に対処するため）
+				if(i==strLength-1 || charAt(line, i+1)==delimiter){
+					inEnclosedSection = false;
+				}
+			}else{
+				if(i==0 || charAt(line, i-1)==delimiter){
+					inEnclosedSection = true;
+				}
+			}
+		}
+
+		// 行末が引用符区間中であれば、値が改行が含む場合なので、続けて行を読み込む
+		if(i == strLength-1 && inEnclosedSection){
+			line += textFile.eol + loadln(textFile.file);
+			strLength = lengthOf(line);
+			counter++;
+		}
+	}
+
+	textFile.linePointer++;
+
+	return line;
+}
+
+
+/**
+ * ファイルから一行を読み込み、そのまま返します。
+ * ただし、引用符記号が設定されていて、引用符記号で囲まれた内部に改行がある場合、それは行末とは見なされません。
+ *
+ * @param file 対象のテキストファイル構造体
+ * @return 読み込んだ行の内容
+ * @author 松井文宏
+ */
+public string loadln(TextFile &textFile){
+	checkAccessable(textFile);
+	checkReadable(textFile);
+	int counter = 0;
+	string line = loadln(textFile, counter);
+	return line;
+}
+
+
+/**
+ * テキストファイルの有効行数をカウントします。
+ * 引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。
+ * 引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。
+ * つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。
+ * readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。
+ * この関数が返す有効行数を超えてreadln関数をコールする事はできません。
+ * この関数は、ファイルオープン時に1度だけ実行され、
+ * 結果は TextFile.lineCount に設定されます。
+ * 結果を別モジュールから取得したい場合は、countln を使用します。
+ *
+ * @param file 対象のテキストファイル構造体
+ * @return テキストファイルの有効行数
+ * @author 松井文宏
+ */
+private int getEffectiveLineCount(TextFile &textFile){
+	int file = textFile.file;
+	int rawLineN = countln(file);
+	int rawLinePointer = 0;
+	int effectiveLineN = 0;
+	for(int i=0; i<rawLineN; i++){
+		int counter = 0;
+		loadln(textFile, counter);
+		rawLinePointer += counter;
+		effectiveLineN++;
+		if(rawLinePointer == rawLineN){
+			return effectiveLineN;
+		}
+	}
+	return effectiveLineN;
+}
+
+
+/**
+ * テキストファイルの有効行数をカウントします。
+ * 引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。
+ * 引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。
+ * つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。
+ * readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。
+ * この関数が返す有効行数を超えてreadln関数をコールする事はできません。
+ *
+ * @param file 対象のテキストファイル構造体
+ * @return テキストファイルの有効行数
+ * @author 松井文宏
+ */
+public int countln(TextFile &textFile){
+	checkAccessable(textFile);
+	checkReadable(textFile);
+	return textFile.lineCount;
+}
+
+
+
+
+
+
