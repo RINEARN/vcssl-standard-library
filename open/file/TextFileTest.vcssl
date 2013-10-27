@@ -8,7 +8,6 @@ import open.file.TextFile;
  */
 
 
-const string textEncoding = "Shift_JIS";
 
 const string TEST_DIR_PATH = "./TestFiles";
 const string CRLF_FILE_PATH = "./TestFiles/CRLF.txt";
@@ -16,6 +15,8 @@ const string LF_FILE_PATH = "./TestFiles/LF.txt";
 const string CR_FILE_PATH = "./TestFiles/CR.txt";
 
 const string GENERAL_FILE_PATH = "./TestFiles/Test.txt";
+const string GENERAL_ENCLOSE_ALL_FILE_PATH = "./TestFiles/Test_ENCLOSE_ALL.txt";
+const string GENERAL_ENCLOSE_IF_NECESSARY_FILE_PATH = "./TestFiles/Test_ENCLOSE_IF_NECESSARY.txt";
 
 const string CSV_FILE_PATH = "./TestFiles/Test.csv";
 const string TSV_FILE_PATH = "./TestFiles/Test.tsv";
@@ -26,10 +27,28 @@ const string TSV_ENCLOSE_ALL_FILE_PATH = "./TestFiles/Test_ENCLOSE_ALL.tsv";
 const string CSV_ENCLOSE_NONE_FILE_PATH = "./TestFiles/Test_ENCLOSE_NONE.csv";
 const string TSV_ENCLOSE_NONE_FILE_PATH = "./TestFiles/Test_ENCLOSE_NONE.tsv";
 
-// 汎用ファイル
+
+// 文字コード
+const string textEncoding = "Shift_JIS";
+
+// コメント行の行頭文字列
+const string COMMENT_LINE_CODE = "#";
+
+
+// デフォルト設定の汎用ファイル（デリミタ無し、エンクロージャ無し）
 TextFile textFile_READ;
 TextFile textFile_WRITE;
 TextFile textFile_APPEND;
+
+// 全てエンクロージャで囲む設定の汎用ファイル（デリミタ無し）
+TextFile textFile_READ_ENCLOSE_ALL;
+TextFile textFile_WRITE_ENCLOSE_ALL;
+TextFile textFile_APPEND_ENCLOSE_ALL;
+
+// 必要に応じてエンクロージャで囲む設定の汎用ファイル（デリミタ無し）
+TextFile textFile_READ_ENCLOSE_IF_NECESSARY;
+TextFile textFile_WRITE_ENCLOSE_IF_NECESSARY;
+TextFile textFile_APPEND_ENCLOSE_IF_NECESSARY;
 
 // デフォルト設定（必要な値のみエンクロージャで囲む）のCSV/TSV形式ファイル
 TextFile textFile_READ_CSV;
@@ -60,31 +79,106 @@ void test(){
 		return;
 	}
 
-	// 改行コード判定テスト
+	// 改行コード指定/取得テスト
+	testSetEndOfLineCode();
 	testGetEndOfLineCode();
 
-	// 汎用ファイル書き込みテスト
+
+	// 汎用ファイル（デフォルト設定）書き込みテスト
 	testOpenTextFile_WRITE();
 	testWriteln_WRITE();
+	testCommentln_WRITE();
+	testWrite_WRITE();
 	testClose_WRITE();
 
-	// 汎用ファイル追記テスト
+	// 汎用ファイル（デフォルト設定）追記テスト
 	testOpenTextFile_APPEND();
 	testWriteln_APPEND();
+	testCommentln_APPEND();
+	testWrite_APPEND();
 	testClose_APPEND();
 
-	// 汎用ファイル読み込みテスト
+	// 汎用ファイル（デフォルト設定）読み込みテスト
 	testOpenTextFile_READ();
 	testCountln_READ();
 	testLoadln_READ();
 	testClose_READ();
 	testOpenTextFile_READ();
+	testLoad_READ();
+	testClose_READ();
+	testOpenTextFile_READ();
 	testReadln_READ();
 	testClose_READ();
+	testOpenTextFile_READ();
+	testRead_READ();
+	testClose_READ();
+
+
+	// 汎用ファイル（全てエンクロージャで囲む設定）書き込みテスト
+	testOpenTextFile_WRITE_ENCLOSE_ALL();
+	testWriteln_WRITE_ENCLOSE_ALL();
+	testCommentln_WRITE_ENCLOSE_ALL();
+	testWrite_WRITE_ENCLOSE_ALL();
+	testClose_WRITE_ENCLOSE_ALL();
+
+	// 汎用ファイル（全てエンクロージャで囲む設定）追記テスト
+	testOpenTextFile_APPEND_ENCLOSE_ALL();
+	testWriteln_APPEND_ENCLOSE_ALL();
+	testCommentln_APPEND_ENCLOSE_ALL();
+	testWrite_APPEND_ENCLOSE_ALL();
+	testClose_APPEND_ENCLOSE_ALL();
+
+	// 汎用ファイル（全てエンクロージャで囲む設定）読み込みテスト
+	testOpenTextFile_READ_ENCLOSE_ALL();
+	testCountln_READ_ENCLOSE_ALL();
+	testLoadln_READ_ENCLOSE_ALL();
+	testClose_READ_ENCLOSE_ALL();
+	testOpenTextFile_READ_ENCLOSE_ALL();
+	testLoad_READ_ENCLOSE_ALL();
+	testClose_READ_ENCLOSE_ALL();
+	testOpenTextFile_READ_ENCLOSE_ALL();
+	testReadln_READ_ENCLOSE_ALL();
+	testClose_READ_ENCLOSE_ALL();
+	testOpenTextFile_READ_ENCLOSE_ALL();
+	testRead_READ_ENCLOSE_ALL();
+	testClose_READ_ENCLOSE_ALL();
+
+
+	// 汎用ファイル（必要に応じてエンクロージャで囲む設定）書き込みテスト
+	testOpenTextFile_WRITE_ENCLOSE_IF_NECESSARY();
+	testWriteln_WRITE_ENCLOSE_IF_NECESSARY();
+	testCommentln_WRITE_ENCLOSE_IF_NECESSARY();
+	testWrite_WRITE_ENCLOSE_IF_NECESSARY();
+	testClose_WRITE_ENCLOSE_IF_NECESSARY();
+
+	// 汎用ファイル（必要に応じてエンクロージャで囲む設定）追記テスト
+	testOpenTextFile_APPEND_ENCLOSE_IF_NECESSARY();
+	testWriteln_APPEND_ENCLOSE_IF_NECESSARY();
+	testCommentln_APPEND_ENCLOSE_IF_NECESSARY();
+	testWrite_APPEND_ENCLOSE_IF_NECESSARY();
+	testClose_APPEND_ENCLOSE_IF_NECESSARY();
+
+	// 汎用ファイル（必要に応じてエンクロージャで囲む設定）読み込みテスト
+	testOpenTextFile_READ_ENCLOSE_IF_NECESSARY();
+	testCountln_READ_ENCLOSE_IF_NECESSARY();
+	testLoadln_READ_ENCLOSE_IF_NECESSARY();
+	testClose_READ_ENCLOSE_IF_NECESSARY();
+	testOpenTextFile_READ_ENCLOSE_IF_NECESSARY();
+	testLoad_READ_ENCLOSE_IF_NECESSARY();
+	testClose_READ_ENCLOSE_IF_NECESSARY();
+	testOpenTextFile_READ_ENCLOSE_IF_NECESSARY();
+	testReadln_READ_ENCLOSE_IF_NECESSARY();
+	testClose_READ_ENCLOSE_IF_NECESSARY();
+	testOpenTextFile_READ_ENCLOSE_IF_NECESSARY();
+	testRead_READ_ENCLOSE_IF_NECESSARY();
+	testClose_READ_ENCLOSE_IF_NECESSARY();
+
 
 	// CSV（デフォルト設定）書き込みテスト
 	testOpenTextFile_WRITE_CSV();
 	testWriteln_WRITE_CSV();
+	testCommentln_WRITE_CSV();
+	testWrite_WRITE_CSV();
 	testClose_WRITE_CSV();
 
 	// CSV（デフォルト設定）読み込みテスト
@@ -95,10 +189,15 @@ void test(){
 	testOpenTextFile_READ_CSV();
 	testReadln_READ_CSV();
 	testClose_READ_CSV();
+	testOpenTextFile_READ_CSV();
+	testRead_READ_CSV();
+	testClose_READ_CSV();
 
 	// TSV（デフォルト設定）書き込みテスト
 	testOpenTextFile_WRITE_TSV();
 	testWriteln_WRITE_TSV();
+	testCommentln_WRITE_TSV();
+	testWrite_WRITE_TSV();
 	testClose_WRITE_TSV();
 
 	// TSV（デフォルト設定）読み込みテスト
@@ -109,12 +208,17 @@ void test(){
 	testOpenTextFile_READ_TSV();
 	testReadln_READ_TSV();
 	testClose_READ_TSV();
+	testOpenTextFile_READ_TSV();
+	testRead_READ_TSV();
+	testClose_READ_TSV();
 
 
 
 	// CSV（全てエンクロージャで囲む設定）書き込みテスト
 	testOpenTextFile_WRITE_CSV_ENCLOSE_ALL();
 	testWriteln_WRITE_CSV_ENCLOSE_ALL();
+	testCommentln_WRITE_CSV_ENCLOSE_ALL();
+	testWrite_WRITE_CSV_ENCLOSE_ALL();
 	testClose_WRITE_CSV_ENCLOSE_ALL();
 
 	// CSV（全てエンクロージャで囲む設定）読み込みテスト
@@ -125,12 +229,17 @@ void test(){
 	testOpenTextFile_READ_CSV_ENCLOSE_ALL();
 	testReadln_READ_CSV_ENCLOSE_ALL();
 	testClose_READ_CSV_ENCLOSE_ALL();
+	testOpenTextFile_READ_CSV_ENCLOSE_ALL();
+	testRead_READ_CSV_ENCLOSE_ALL();
+	testClose_READ_CSV_ENCLOSE_ALL();
 
 
 
 	// TSV（全てエンクロージャで囲む設定）書き込みテスト
 	testOpenTextFile_WRITE_TSV_ENCLOSE_ALL();
 	testWriteln_WRITE_TSV_ENCLOSE_ALL();
+	testCommentln_WRITE_TSV_ENCLOSE_ALL();
+	testWrite_WRITE_TSV_ENCLOSE_ALL();
 	testClose_WRITE_TSV_ENCLOSE_ALL();
 
 	// TSV（全てエンクロージャで囲む設定）読み込みテスト
@@ -141,12 +250,17 @@ void test(){
 	testOpenTextFile_READ_TSV_ENCLOSE_ALL();
 	testReadln_READ_TSV_ENCLOSE_ALL();
 	testClose_READ_TSV_ENCLOSE_ALL();
+	testOpenTextFile_READ_TSV_ENCLOSE_ALL();
+	testRead_READ_TSV_ENCLOSE_ALL();
+	testClose_READ_TSV_ENCLOSE_ALL();
 
 
 
 	// CSV（一切エンクロージャで囲まない設定）書き込みテスト
 	testOpenTextFile_WRITE_CSV_ENCLOSE_NONE();
 	testWriteln_WRITE_CSV_ENCLOSE_NONE();
+	testCommentln_WRITE_CSV_ENCLOSE_NONE();
+	testWrite_WRITE_CSV_ENCLOSE_NONE();
 	testClose_WRITE_CSV_ENCLOSE_NONE();
 
 	// CSV（一切エンクロージャで囲まない設定）読み込みテスト
@@ -157,12 +271,17 @@ void test(){
 	testOpenTextFile_READ_CSV_ENCLOSE_NONE();
 	testReadln_READ_CSV_ENCLOSE_NONE();
 	testClose_READ_CSV_ENCLOSE_NONE();
+	testOpenTextFile_READ_CSV_ENCLOSE_NONE();
+	testRead_READ_CSV_ENCLOSE_NONE();
+	testClose_READ_CSV_ENCLOSE_NONE();
 
 
 
 	// TSV（一切エンクロージャで囲まない設定）書き込みテスト
 	testOpenTextFile_WRITE_TSV_ENCLOSE_NONE();
 	testWriteln_WRITE_TSV_ENCLOSE_NONE();
+	testCommentln_WRITE_TSV_ENCLOSE_NONE();
+	testWrite_WRITE_TSV_ENCLOSE_NONE();
 	testClose_WRITE_TSV_ENCLOSE_NONE();
 
 	// TSV（一切エンクロージャで囲まない設定）読み込みテスト
@@ -172,6 +291,9 @@ void test(){
 	testClose_READ_TSV_ENCLOSE_NONE();
 	testOpenTextFile_READ_TSV_ENCLOSE_NONE();
 	testReadln_READ_TSV_ENCLOSE_NONE();
+	testClose_READ_TSV_ENCLOSE_NONE();
+	testOpenTextFile_READ_TSV_ENCLOSE_NONE();
+	testRead_READ_TSV_ENCLOSE_NONE();
 	testClose_READ_TSV_ENCLOSE_NONE();
 
 
@@ -184,19 +306,36 @@ void test(){
 // 改行コードの取得テスト
 // ==================================================
 
-void testGetEndOfLineCode(){
+void testSetEndOfLineCode(){
 
-	// テストファイルの書き出し
-	int out = NULL;
-	out = open(CR_FILE_PATH, "w");
-	write(out, "a" + CR + "b" + CR + "c" + CR + "d" + CR + "e");
-	close(out);
-	out = open(LF_FILE_PATH, "w");
-	write(out, "a" + LF + "b" + LF + "c" + LF + "d" + LF + "e");
-	close(out);
-	out = open(CRLF_FILE_PATH, "w");
-	write(out, "a" + CR+LF + "b" + CR+LF + "c" + CR+LF + "d" + CR+LF + "e");
-	close(out);
+	TextFile textFile;
+
+	// CR+LF の書き出しテスト
+	textFile = openTextFile(CRLF_FILE_PATH, TextFile.WRITE);
+	setEndOfLineCode(textFile, System.CR+System.LF);
+	writeln(textFile, "a");
+	writeln(textFile, "b");
+	writeln(textFile, "c");
+	close(textFile);
+
+	// CR の書き出しテスト
+	textFile = openTextFile(CR_FILE_PATH, TextFile.WRITE);
+	setEndOfLineCode(textFile, System.CR);
+	writeln(textFile, "a");
+	writeln(textFile, "b");
+	writeln(textFile, "c");
+	close(textFile);
+
+	// LF の書き出しテスト
+	textFile = openTextFile(LF_FILE_PATH, TextFile.WRITE);
+	setEndOfLineCode(textFile, System.LF);
+	writeln(textFile, "a");
+	writeln(textFile, "b");
+	writeln(textFile, "c");
+	close(textFile);
+}
+
+void testGetEndOfLineCode(){
 
 	// CR+LF の取得テスト
 	TextFile textFileCRLF = openTextFile(CRLF_FILE_PATH, TextFile.READ, textEncoding);
@@ -215,13 +354,12 @@ void testGetEndOfLineCode(){
 	string eolLF = getEndOfLineCode(textFileLF);
 	assert(eolLF == System.LF);
 	close(textFileLF);
-
 }
 
 
 
 // ==================================================
-// 汎用ファイルテスト
+// 汎用ファイル（デフォルト設定）テスト
 // ==================================================
 
 void testOpenTextFile_WRITE(){
@@ -233,9 +371,20 @@ void testClose_WRITE(){
 }
 
 void testWriteln_WRITE(){
-	const string CRLF = System.CR + System.LF;
-	TextFile.writeln(textFile_WRITE, "123 456	7890");
-	TextFile.writeln(textFile_WRITE, "abc\"de" + CRLF + "fg,hij");
+	writeln(textFile_WRITE, "123 456	7890");
+	writeln(textFile_WRITE, "abc\"de" + System.EOL + "fg,hij");
+}
+
+void testCommentln_WRITE(){
+	setCommentLineCode(textFile_WRITE, COMMENT_LINE_CODE);
+	commentln(textFile_WRITE, "これはコメント行です。");
+}
+
+void testWrite_WRITE(){
+	write(textFile_WRITE, "123 456	7890");
+	writeln(textFile_WRITE); //改行
+	write(textFile_WRITE, "abc\"de" + System.EOL + "fg,hij");
+	writeln(textFile_WRITE); //改行
 }
 
 void testOpenTextFile_APPEND(){
@@ -247,13 +396,25 @@ void testClose_APPEND(){
 }
 
 void testWriteln_APPEND(){
-	const string CRLF = System.CR + System.LF;
-	TextFile.writeln(textFile_APPEND, "AB\"\"\"CDE" + CRLF + "FGHIJ, , , ,\t,\t,\t");
-	TextFile.writeln(textFile_APPEND, "\"\"\"あいうえお" + CRLF + "かきくけこ\"\"\"");
+	writeln(textFile_APPEND, "AB\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t");
+	writeln(textFile_APPEND, "\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"");
+}
+
+void testCommentln_APPEND(){
+	setCommentLineCode(textFile_APPEND, COMMENT_LINE_CODE);
+	commentln(textFile_APPEND, "これはコメント行です。");
+}
+
+void testWrite_APPEND(){
+	write(textFile_APPEND, "AB\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t");
+	writeln(textFile_APPEND); //改行
+	write(textFile_APPEND, "\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"");
+	writeln(textFile_APPEND); //改行
 }
 
 void testOpenTextFile_READ(){
 	textFile_READ = openTextFile(GENERAL_FILE_PATH, TextFile.READ, textEncoding);
+	setCommentLineCode(textFile_READ, COMMENT_LINE_CODE);
 }
 
 void testClose_READ(){
@@ -262,7 +423,7 @@ void testClose_READ(){
 
 void testCountln_READ(){
 	int lineN = countln(textFile_READ);
-	assert(lineN == 7);
+	assert(lineN == 14);
 }
 
 void testLoadln_READ(){
@@ -273,6 +434,23 @@ void testLoadln_READ(){
 	assert(line == "abc\"de");
 	line = loadln(textFile_READ);
 	assert(line == "fg,hij");
+
+	line = loadln(textFile_READ);
+	assert(line == "123 456	7890");
+	line = loadln(textFile_READ);
+	assert(line == "abc\"de");
+	line = loadln(textFile_READ);
+	assert(line == "fg,hij");
+
+	line = loadln(textFile_READ);
+	assert(line == "AB\"\"\"CDE");
+	line = loadln(textFile_READ);
+	assert(line == "FGHIJ, , , ,\t,\t,\t");
+	line = loadln(textFile_READ);
+	assert(line == "\"\"\"あいうえお");
+	line = loadln(textFile_READ);
+	assert(line == "かきくけこ\"\"\"");
+
 	line = loadln(textFile_READ);
 	assert(line == "AB\"\"\"CDE");
 	line = loadln(textFile_READ);
@@ -282,6 +460,46 @@ void testLoadln_READ(){
 	line = loadln(textFile_READ);
 	assert(line == "かきくけこ\"\"\"");
 }
+
+
+void testLoad_READ(){
+	string eol = getEndOfLineCode(textFile_READ);
+
+	string assertionText =
+		"123 456	7890"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"123 456	7890"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol
+		;
+
+	string loadText = load(textFile_READ);
+	assert(loadText == assertionText);
+}
+
 
 
 void testReadln_READ(){
@@ -298,6 +516,37 @@ void testReadln_READ(){
 	line = readln(textFile_READ);
 	assert(length(line, 0) == 1);
 	assert(line[0] == "fg,hij");
+
+
+	line = readln(textFile_READ);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "123 456	7890");
+
+	line = readln(textFile_READ);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "abc\"de");
+
+	line = readln(textFile_READ);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "fg,hij");
+
+
+	line = readln(textFile_READ);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "AB\"\"\"CDE");
+
+	line = readln(textFile_READ);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "FGHIJ, , , ,\t,\t,\t");
+
+	line = readln(textFile_READ);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "\"\"\"あいうえお");
+
+	line = readln(textFile_READ);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "かきくけこ\"\"\"");
+
 
 	line = readln(textFile_READ);
 	assert(length(line, 0) == 1);
@@ -317,6 +566,553 @@ void testReadln_READ(){
 }
 
 
+
+void testRead_READ(){
+	string eol = getEndOfLineCode(textFile_READ);
+
+	string assertionText =
+		"123 456	7890"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"123 456	7890"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol
+		;
+
+	string readText[] = read(textFile_READ);
+	assert(length(readText, 0) == 1);
+	assert(readText[0] == assertionText);
+}
+
+
+
+
+
+
+
+
+
+// ==================================================
+// 汎用ファイル（全てエンクロージャで囲む設定）テスト
+// ==================================================
+
+void testOpenTextFile_WRITE_ENCLOSE_ALL(){
+	textFile_WRITE_ENCLOSE_ALL = openTextFile(GENERAL_ENCLOSE_ALL_FILE_PATH, TextFile.WRITE, textEncoding);
+	setEnclosure(textFile_WRITE_ENCLOSE_ALL, "\"", "\"", ENCLOSE_ALL);
+	setCommentLineCode(textFile_WRITE_ENCLOSE_ALL, COMMENT_LINE_CODE);
+}
+
+void testClose_WRITE_ENCLOSE_ALL(){
+	close(textFile_WRITE_ENCLOSE_ALL);
+}
+
+void testWriteln_WRITE_ENCLOSE_ALL(){
+	writeln(textFile_WRITE_ENCLOSE_ALL, "123 456	7890");
+	writeln(textFile_WRITE_ENCLOSE_ALL, "#これはコメント行ではありません。");
+	writeln(textFile_WRITE_ENCLOSE_ALL, "abc\"de" + System.EOL + "fg,hij");
+}
+
+void testCommentln_WRITE_ENCLOSE_ALL(){
+	commentln(textFile_WRITE_ENCLOSE_ALL, "これはコメント行です。");
+}
+
+void testWrite_WRITE_ENCLOSE_ALL(){
+	write(textFile_WRITE_ENCLOSE_ALL, "123 456	7890");
+	writeln(textFile_WRITE_ENCLOSE_ALL); //改行
+	write(textFile_WRITE_ENCLOSE_ALL, "#これはコメント行ではありません。");
+	writeln(textFile_WRITE_ENCLOSE_ALL); //改行
+	write(textFile_WRITE_ENCLOSE_ALL, "abc\"de" + System.EOL + "fg,hij");
+	writeln(textFile_WRITE_ENCLOSE_ALL); //改行
+}
+
+void testOpenTextFile_APPEND_ENCLOSE_ALL(){
+	textFile_APPEND_ENCLOSE_ALL = openTextFile(GENERAL_ENCLOSE_ALL_FILE_PATH, TextFile.APPEND, textEncoding);
+	setEnclosure(textFile_APPEND_ENCLOSE_ALL, "\"", "\"", ENCLOSE_ALL);
+	setCommentLineCode(textFile_APPEND_ENCLOSE_ALL, COMMENT_LINE_CODE);
+}
+
+void testClose_APPEND_ENCLOSE_ALL(){
+	close(textFile_APPEND_ENCLOSE_ALL);
+}
+
+void testWriteln_APPEND_ENCLOSE_ALL(){
+	writeln(textFile_APPEND_ENCLOSE_ALL, "AB\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t");
+	writeln(textFile_APPEND_ENCLOSE_ALL, "\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"");
+}
+
+void testCommentln_APPEND_ENCLOSE_ALL(){
+	commentln(textFile_APPEND_ENCLOSE_ALL, "これはコメント行です。");
+}
+
+void testWrite_APPEND_ENCLOSE_ALL(){
+	write(textFile_APPEND_ENCLOSE_ALL, "AB\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t");
+	writeln(textFile_APPEND_ENCLOSE_ALL); //改行
+	write(textFile_APPEND_ENCLOSE_ALL, "\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"");
+	writeln(textFile_APPEND_ENCLOSE_ALL); //改行
+}
+
+
+
+void testOpenTextFile_READ_ENCLOSE_ALL(){
+	textFile_READ_ENCLOSE_ALL = openTextFile(GENERAL_ENCLOSE_ALL_FILE_PATH, TextFile.READ, textEncoding);
+	setCommentLineCode(textFile_READ_ENCLOSE_ALL, COMMENT_LINE_CODE);
+	setEnclosure(textFile_READ_ENCLOSE_ALL, "\"", "\"", ENCLOSE_ALL);
+}
+
+void testClose_READ_ENCLOSE_ALL(){
+	close(textFile_READ_ENCLOSE_ALL);
+}
+
+void testCountln_READ_ENCLOSE_ALL(){
+	int lineN = countln(textFile_READ_ENCLOSE_ALL);
+	assert(lineN == 10);
+}
+
+void testLoadln_READ_ENCLOSE_ALL(){
+
+	string line;
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"123 456	7890\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"#これはコメント行ではありません。\"");
+
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"abc\"\"de" + System.EOL + "fg,hij\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"123 456	7890\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"#これはコメント行ではありません。\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"abc\"\"de" + System.EOL + "fg,hij\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"AB\"\"\"\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"\"\"\"\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"\"\"\"\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"AB\"\"\"\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t\"");
+
+	line = loadln(textFile_READ_ENCLOSE_ALL);
+	assert(line == "\"\"\"\"\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"\"\"\"\"");
+}
+
+
+void testLoad_READ_ENCLOSE_ALL(){
+	string eol = getEndOfLineCode(textFile_READ_ENCLOSE_ALL);
+
+	string assertionText =
+		"\"123 456	7890\""
+		+ eol +
+		"\"#これはコメント行ではありません。\""
+		+ eol +
+		"\"abc\"\"de"
+		+ eol +
+		"fg,hij\""
+		+ eol +
+		"\"123 456	7890\""
+		+ eol +
+		"\"#これはコメント行ではありません。\""
+		+ eol +
+		"\"abc\"\"de"
+		+ eol +
+		"fg,hij\""
+		+ eol +
+		"\"AB\"\"\"\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t\""
+		+ eol +
+		"\"\"\"\"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\"\"\"\"\""
+		+ eol +
+		"\"AB\"\"\"\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t\""
+		+ eol +
+		"\"\"\"\"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\"\"\"\"\""
+		+ eol
+		;
+
+	string loadText = load(textFile_READ_ENCLOSE_ALL);
+	assert(loadText == assertionText);
+}
+
+
+
+void testReadln_READ_ENCLOSE_ALL(){
+	string line[];
+
+	string eol = getEndOfLineCode(textFile_READ_ENCLOSE_ALL);
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "123 456	7890");
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "#これはコメント行ではありません。");
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "abc\"de" + eol + "fg,hij");
+
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "123 456	7890");
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "#これはコメント行ではありません。");
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "abc\"de" + eol + "fg,hij");
+
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "AB\"\"\"CDE" + eol + "FGHIJ, , , ,	,	,	");
+
+	line = readln(textFile_READ_ENCLOSE_ALL);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "\"\"\"あいうえお" + eol + "かきくけこ\"\"\"");
+}
+
+
+
+void testRead_READ_ENCLOSE_ALL(){
+	string eol = getEndOfLineCode(textFile_READ_ENCLOSE_ALL);
+
+	string assertionText =
+		"123 456	7890"
+		+ eol +
+		"#これはコメント行ではありません。"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"123 456	7890"
+		+ eol +
+		"#これはコメント行ではありません。"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol
+		;
+
+	string readText[] = read(textFile_READ_ENCLOSE_ALL);
+	assert(length(readText, 0) == 1);
+	assert(readText[0] == assertionText);
+}
+
+
+
+
+
+
+
+
+
+// ==================================================
+// 汎用ファイル（必要に応じてエンクロージャで囲む設定）テスト
+// ==================================================
+
+void testOpenTextFile_WRITE_ENCLOSE_IF_NECESSARY(){
+	textFile_WRITE_ENCLOSE_IF_NECESSARY = openTextFile(GENERAL_ENCLOSE_IF_NECESSARY_FILE_PATH, TextFile.WRITE, textEncoding);
+	setEnclosure(textFile_WRITE_ENCLOSE_IF_NECESSARY, "\"", "\"", ENCLOSE_IF_NECESSARY);
+	setCommentLineCode(textFile_WRITE_ENCLOSE_IF_NECESSARY, COMMENT_LINE_CODE);
+}
+
+void testClose_WRITE_ENCLOSE_IF_NECESSARY(){
+	close(textFile_WRITE_ENCLOSE_IF_NECESSARY);
+}
+
+void testWriteln_WRITE_ENCLOSE_IF_NECESSARY(){
+	writeln(textFile_WRITE_ENCLOSE_IF_NECESSARY, "123 456	7890");
+	writeln(textFile_WRITE_ENCLOSE_IF_NECESSARY, "#これはコメント行ではありません。");
+	writeln(textFile_WRITE_ENCLOSE_IF_NECESSARY, "abc\"de" + System.EOL + "fg,hij");
+}
+
+void testCommentln_WRITE_ENCLOSE_IF_NECESSARY(){
+	commentln(textFile_WRITE_ENCLOSE_IF_NECESSARY, "これはコメント行です。");
+}
+
+void testWrite_WRITE_ENCLOSE_IF_NECESSARY(){
+	write(textFile_WRITE_ENCLOSE_IF_NECESSARY, "123 456	7890");
+	writeln(textFile_WRITE_ENCLOSE_IF_NECESSARY); //改行
+	write(textFile_WRITE_ENCLOSE_IF_NECESSARY, "#これはコメント行ではありません。");
+	writeln(textFile_WRITE_ENCLOSE_IF_NECESSARY); //改行
+	write(textFile_WRITE_ENCLOSE_IF_NECESSARY, "abc\"de" + System.EOL + "fg,hij");
+	writeln(textFile_WRITE_ENCLOSE_IF_NECESSARY); //改行
+}
+
+void testOpenTextFile_APPEND_ENCLOSE_IF_NECESSARY(){
+	textFile_APPEND_ENCLOSE_IF_NECESSARY = openTextFile(GENERAL_ENCLOSE_IF_NECESSARY_FILE_PATH, TextFile.APPEND, textEncoding);
+	setEnclosure(textFile_APPEND_ENCLOSE_IF_NECESSARY, "\"", "\"", ENCLOSE_IF_NECESSARY);
+	setCommentLineCode(textFile_APPEND_ENCLOSE_IF_NECESSARY, COMMENT_LINE_CODE);
+}
+
+void testClose_APPEND_ENCLOSE_IF_NECESSARY(){
+	close(textFile_APPEND_ENCLOSE_IF_NECESSARY);
+}
+
+void testWriteln_APPEND_ENCLOSE_IF_NECESSARY(){
+	writeln(textFile_APPEND_ENCLOSE_IF_NECESSARY, "AB\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t");
+	writeln(textFile_APPEND_ENCLOSE_IF_NECESSARY, "\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"");
+}
+
+void testCommentln_APPEND_ENCLOSE_IF_NECESSARY(){
+	commentln(textFile_APPEND_ENCLOSE_IF_NECESSARY, "これはコメント行です。");
+}
+
+void testWrite_APPEND_ENCLOSE_IF_NECESSARY(){
+	write(textFile_APPEND_ENCLOSE_IF_NECESSARY, "AB\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t");
+	writeln(textFile_APPEND_ENCLOSE_IF_NECESSARY); //改行
+	write(textFile_APPEND_ENCLOSE_IF_NECESSARY, "\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"");
+	writeln(textFile_APPEND_ENCLOSE_IF_NECESSARY); //改行
+}
+
+
+void testOpenTextFile_READ_ENCLOSE_IF_NECESSARY(){
+	textFile_READ_ENCLOSE_IF_NECESSARY = openTextFile(GENERAL_ENCLOSE_IF_NECESSARY_FILE_PATH, TextFile.READ, textEncoding);
+	setCommentLineCode(textFile_READ_ENCLOSE_IF_NECESSARY, COMMENT_LINE_CODE);
+	setEnclosure(textFile_READ_ENCLOSE_IF_NECESSARY, "\"", "\"", ENCLOSE_IF_NECESSARY);
+}
+
+void testClose_READ_ENCLOSE_IF_NECESSARY(){
+	close(textFile_READ_ENCLOSE_IF_NECESSARY);
+}
+
+void testCountln_READ_ENCLOSE_IF_NECESSARY(){
+	int lineN = countln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(lineN == 10);
+}
+
+void testLoadln_READ_ENCLOSE_IF_NECESSARY(){
+
+	string line;
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "123 456	7890");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"#これはコメント行ではありません。\"");
+
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"abc\"\"de" + System.EOL + "fg,hij\"");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "123 456	7890");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"#これはコメント行ではありません。\"");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"abc\"\"de" + System.EOL + "fg,hij\"");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"AB\"\"\"\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t\"");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"\"\"\"\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"\"\"\"\"");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"AB\"\"\"\"\"\"CDE" + System.EOL + "FGHIJ, , , ,\t,\t,\t\"");
+
+	line = loadln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(line == "\"\"\"\"\"\"\"あいうえお" + System.EOL + "かきくけこ\"\"\"\"\"\"\"");
+}
+
+
+void testLoad_READ_ENCLOSE_IF_NECESSARY(){
+	string eol = getEndOfLineCode(textFile_READ_ENCLOSE_IF_NECESSARY);
+
+	string assertionText =
+		"123 456	7890"
+		+ eol +
+		"\"#これはコメント行ではありません。\""
+		+ eol +
+		"\"abc\"\"de"
+		+ eol +
+		"fg,hij\""
+		+ eol +
+		"123 456	7890"
+		+ eol +
+		"\"#これはコメント行ではありません。\""
+		+ eol +
+		"\"abc\"\"de"
+		+ eol +
+		"fg,hij\""
+		+ eol +
+		"\"AB\"\"\"\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t\""
+		+ eol +
+		"\"\"\"\"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\"\"\"\"\""
+		+ eol +
+		"\"AB\"\"\"\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t\""
+		+ eol +
+		"\"\"\"\"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\"\"\"\"\""
+		+ eol
+		;
+
+	string loadText = load(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(loadText == assertionText);
+}
+
+
+void testReadln_READ_ENCLOSE_IF_NECESSARY(){
+	string line[];
+
+	string eol = getEndOfLineCode(textFile_READ_ENCLOSE_IF_NECESSARY);
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "123 456	7890");
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "#これはコメント行ではありません。");
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "abc\"de" + eol + "fg,hij");
+
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "123 456	7890");
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "#これはコメント行ではありません。");
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "abc\"de" + eol + "fg,hij");
+
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "AB\"\"\"CDE" + eol + "FGHIJ, , , ,	,	,	");
+
+	line = readln(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(line, 0) == 1);
+	assert(line[0] == "\"\"\"あいうえお" + eol + "かきくけこ\"\"\"");
+}
+
+
+
+void testRead_READ_ENCLOSE_IF_NECESSARY(){
+	string eol = getEndOfLineCode(textFile_READ_ENCLOSE_IF_NECESSARY);
+
+	string assertionText =
+		"123 456	7890"
+		+ eol +
+		"#これはコメント行ではありません。"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"123 456	7890"
+		+ eol +
+		"#これはコメント行ではありません。"
+		+ eol +
+		"abc\"de"
+		+ eol +
+		"fg,hij"
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol +
+		"AB\"\"\"CDE"
+		+ eol +
+		"FGHIJ, , , ,\t,\t,\t"
+		+ eol +
+		"\"\"\"あいうえお"
+		+ eol +
+		"かきくけこ\"\"\""
+		+ eol
+		;
+
+	string readText[] = read(textFile_READ_ENCLOSE_IF_NECESSARY);
+	assert(length(readText, 0) == 1);
+	assert(readText[0] == assertionText);
+}
+
+
+
+
+
+
+
+
+
+
 // ==================================================
 // デフォルト設定（必要な値のみエンクロージャで囲む）CSVテスト
 // ==================================================
@@ -331,20 +1127,33 @@ void testClose_WRITE_CSV(){
 }
 
 void testWriteln_WRITE_CSV(){
-	const string CRLF = System.CR + System.LF;
-	writeln(textFile_WRITE_CSV, "11111", "22222", "333"+CRLF+"33", "44444", "55555");
-	writeln(textFile_WRITE_CSV, "66666", "77"+CRLF+"777", "88888", "99"+CRLF+"999", "00000", "aaaaa");
+	writeln(textFile_WRITE_CSV, "11111", "22222", "333"+System.EOL+"33", "44444", "55555");
+	writeln(textFile_WRITE_CSV, "66666", "77"+System.EOL+"777", "88888", "99"+System.EOL+"999", "00000", "aaaaa");
 	writeln(textFile_WRITE_CSV, "bbbbb", "ccccc", "ddddd");
 	writeln(textFile_WRITE_CSV, "eeeee", "ff\"fff", "ggggg");
-	writeln(textFile_WRITE_CSV, "hhhhh", "ii"+CRLF+"iii", "jjjjj");
-	writeln(textFile_WRITE_CSV, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
-	writeln(textFile_WRITE_CSV, "nnnnn", "ooooo", "ppp"+CRLF+"pp", "qqqqq", "rrrrr");
+}
+
+void testCommentln_WRITE_CSV(){
+	setCommentLineCode(textFile_WRITE_CSV, COMMENT_LINE_CODE);
+	commentln(textFile_WRITE_CSV, "これはコメント行です。");
+}
+
+void testWrite_WRITE_CSV(){
+	write(textFile_WRITE_CSV, "hhhhh", "ii"+System.EOL+"iii", "jjjjj");
+	writeln(textFile_WRITE_CSV); // 改行
+	write(textFile_WRITE_CSV, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
+	writeln(textFile_WRITE_CSV); // 改行
+	write(textFile_WRITE_CSV, "nnnnn", "ooooo", "ppp"+System.EOL+"pp");
+	delimit(textFile_WRITE_CSV);
+	write(textFile_WRITE_CSV, "qqqqq", "rrrrr");
+	writeln(textFile_WRITE_CSV); // 改行
 }
 
 
 
 void testOpenTextFile_READ_CSV(){
 	textFile_READ_CSV = openTextFile(CSV_FILE_PATH, TextFile.READ_CSV, textEncoding);
+	setCommentLineCode(textFile_READ_CSV, COMMENT_LINE_CODE);
 }
 
 void testClose_READ_CSV(){
@@ -358,42 +1167,40 @@ void testCountln_READ_CSV(){
 
 void testLoadln_READ_CSV(){
 	string line;
-	const string CRLF = System.CR + System.LF;
 	line = loadln(textFile_READ_CSV);
-	assert(line == "11111,22222,\"333" + CRLF + "33\",44444,55555");
+	assert(line == "11111,22222,\"333" + System.EOL + "33\",44444,55555");
 	line = loadln(textFile_READ_CSV);
-	assert(line == "66666,\"77" + CRLF + "777\",88888,\"99" + CRLF + "999\",00000,aaaaa");
+	assert(line == "66666,\"77" + System.EOL + "777\",88888,\"99" + System.EOL + "999\",00000,aaaaa");
 	line = loadln(textFile_READ_CSV);
 	assert(line == "bbbbb,ccccc,ddddd");
 	line = loadln(textFile_READ_CSV);
 	assert(line == "eeeee,\"ff\"\"fff\",ggggg");
 	line = loadln(textFile_READ_CSV);
-	assert(line == "hhhhh,\"ii" + CRLF + "iii\",jjjjj");
+	assert(line == "hhhhh,\"ii" + System.EOL + "iii\",jjjjj");
 	line = loadln(textFile_READ_CSV);
 	assert(line == "\"\"\"\"\"\"\"kkkkk\",\"\"\"\"\"\"\"lllll\"\"\"\"\",\"mm\"\"\"\"\"\"\"\"\"\"mmm\"\"\"\"\"\"\"");
 	line = loadln(textFile_READ_CSV);
-	assert(line == "nnnnn,ooooo,\"ppp" + EOL + "pp\",qqqqq,rrrrr");
+	assert(line == "nnnnn,ooooo,\"ppp" + System.EOL + "pp\",qqqqq,rrrrr");
 }
 
 
 void testReadln_READ_CSV(){
 	string value[];
-	const string CRLF = System.CR + System.LF;
 
 	value = readln(textFile_READ_CSV);
 	assert(length(value,0) == 5);
 	assert(value[0] == "11111");
 	assert(value[1] == "22222");
-	assert(value[2] == "333" + CRLF + "33");
+	assert(value[2] == "333" + System.EOL + "33");
 	assert(value[3] == "44444");
 	assert(value[4] == "55555");
 
 	value = readln(textFile_READ_CSV);
 	assert(length(value,0) == 6);
 	assert(value[0] == "66666");
-	assert(value[1] == "77" + CRLF + "777");
+	assert(value[1] == "77" + System.EOL + "777");
 	assert(value[2] == "88888");
-	assert(value[3] == "99" + CRLF + "999");
+	assert(value[3] == "99" + System.EOL + "999");
 	assert(value[4] == "00000");
 	assert(value[5] == "aaaaa");
 
@@ -412,7 +1219,7 @@ void testReadln_READ_CSV(){
 	value = readln(textFile_READ_CSV);
 	assert(length(value,0) == 3);
 	assert(value[0] == "hhhhh");
-	assert(value[1] == "ii" + CRLF + "iii");
+	assert(value[1] == "ii" + System.EOL + "iii");
 	assert(value[2] == "jjjjj");
 
 	value = readln(textFile_READ_CSV);
@@ -425,13 +1232,54 @@ void testReadln_READ_CSV(){
 	assert(length(value,0) == 5);
 	assert(value[0] == "nnnnn");
 	assert(value[1] == "ooooo");
-	assert(value[2] == "ppp" + CRLF + "pp");
+	assert(value[2] == "ppp" + System.EOL + "pp");
 	assert(value[3] == "qqqqq");
 	assert(value[4] == "rrrrr");
 }
 
 
 
+
+void testRead_READ_CSV(){
+
+	string value[] = read(textFile_READ_CSV);
+	assert(length(value,0) == 28);
+
+	assert(value[0] == "11111");
+	assert(value[1] == "22222");
+	assert(value[2] == "333" + System.EOL + "33");
+	assert(value[3] == "44444");
+	assert(value[4] == "55555");
+
+	assert(value[5] == "66666");
+	assert(value[6] == "77" + System.EOL + "777");
+	assert(value[7] == "88888");
+	assert(value[8] == "99" + System.EOL + "999");
+	assert(value[9] == "00000");
+	assert(value[10] == "aaaaa");
+
+	assert(value[11] == "bbbbb");
+	assert(value[12] == "ccccc");
+	assert(value[13] == "ddddd");
+
+	assert(value[14] == "eeeee");
+	assert(value[15] == "ff\"fff");
+	assert(value[16] == "ggggg");
+
+	assert(value[17] == "hhhhh");
+	assert(value[18] == "ii" + System.EOL + "iii");
+	assert(value[19] == "jjjjj");
+
+	assert(value[20] == "\"\"\"kkkkk");
+	assert(value[21] == "\"\"\"lllll\"\"");
+	assert(value[22] == "mm\"\"\"\"\"mmm\"\"\"");
+
+	assert(value[23] == "nnnnn");
+	assert(value[24] == "ooooo");
+	assert(value[25] == "ppp" + System.EOL + "pp");
+	assert(value[26] == "qqqqq");
+	assert(value[27] == "rrrrr");
+}
 
 
 
@@ -443,55 +1291,66 @@ void testReadln_READ_CSV(){
 
 
 void testOpenTextFile_WRITE_TSV(){
-	textFile_WRITE_CSV = openTextFile(TSV_FILE_PATH, TextFile.WRITE_TSV, textEncoding);
+	textFile_WRITE_TSV = openTextFile(TSV_FILE_PATH, TextFile.WRITE_TSV, textEncoding);
 }
 
 void testClose_WRITE_TSV(){
-	close(textFile_WRITE_CSV);
+	close(textFile_WRITE_TSV);
 }
 
 void testWriteln_WRITE_TSV(){
-	const string CRLF = System.CR + System.LF;
-	writeln(textFile_WRITE_CSV, "11111", "22222", "333"+CRLF+"33", "44444", "55555");
-	writeln(textFile_WRITE_CSV, "66666", "77"+CRLF+"777", "88888", "99"+CRLF+"999", "00000", "aaaaa");
-	writeln(textFile_WRITE_CSV, "bbbbb", "ccccc", "ddddd");
-	writeln(textFile_WRITE_CSV, "eeeee", "ff\"fff", "ggggg");
-	writeln(textFile_WRITE_CSV, "hhhhh", "ii"+CRLF+"iii", "jjjjj");
-	writeln(textFile_WRITE_CSV, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
-	writeln(textFile_WRITE_CSV, "nnnnn", "ooooo", "ppp"+CRLF+"pp", "qqqqq", "rrrrr");
+	writeln(textFile_WRITE_TSV, "11111", "22222", "333"+System.EOL+"33", "44444", "55555");
+	writeln(textFile_WRITE_TSV, "66666", "77"+System.EOL+"777", "88888", "99"+System.EOL+"999", "00000", "aaaaa");
+	writeln(textFile_WRITE_TSV, "bbbbb", "ccccc", "ddddd");
+	writeln(textFile_WRITE_TSV, "eeeee", "ff\"fff", "ggggg");
 }
 
+void testCommentln_WRITE_TSV(){
+	setCommentLineCode(textFile_WRITE_TSV, COMMENT_LINE_CODE);
+	commentln(textFile_WRITE_TSV, "これはコメント行です。");
+}
+
+void testWrite_WRITE_TSV(){
+	write(textFile_WRITE_TSV, "hhhhh", "ii"+System.EOL+"iii", "jjjjj");
+	writeln(textFile_WRITE_TSV); // 改行
+	write(textFile_WRITE_TSV, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
+	writeln(textFile_WRITE_TSV); // 改行
+	write(textFile_WRITE_TSV, "nnnnn", "ooooo", "ppp"+System.EOL+"pp");
+	delimit(textFile_WRITE_TSV);
+	write(textFile_WRITE_TSV, "qqqqq", "rrrrr");
+	writeln(textFile_WRITE_TSV); // 改行
+}
 
 void testOpenTextFile_READ_TSV(){
-	textFile_WRITE_CSV = openTextFile(TSV_FILE_PATH, TextFile.READ_TSV, textEncoding);
+	textFile_READ_TSV = openTextFile(TSV_FILE_PATH, TextFile.READ_TSV, textEncoding);
+	setCommentLineCode(textFile_READ_TSV, COMMENT_LINE_CODE);
 }
 
 void testClose_READ_TSV(){
-	close(textFile_WRITE_CSV);
+	close(textFile_READ_TSV);
 }
 
 void testCountln_READ_TSV(){
-	int lineN = countln(textFile_WRITE_CSV);
+	int lineN = countln(textFile_READ_TSV);
 	assert(lineN == 7);
 }
 
 
 void testLoadln_READ_TSV(){
 	string line;
-	const string CRLF = System.CR + System.LF;
-	line = loadln(textFile_WRITE_CSV);
-	assert(line == "11111\t22222\t\"333" + CRLF + "33\"\t44444\t55555");
-	line = loadln(textFile_WRITE_CSV);
-	assert(line == "66666\t\"77" + CRLF + "777\"\t88888\t\"99" + CRLF + "999\"\t00000\taaaaa");
-	line = loadln(textFile_WRITE_CSV);
+	line = loadln(textFile_READ_TSV);
+	assert(line == "11111\t22222\t\"333" + System.EOL + "33\"\t44444\t55555");
+	line = loadln(textFile_READ_TSV);
+	assert(line == "66666\t\"77" + System.EOL + "777\"\t88888\t\"99" + System.EOL + "999\"\t00000\taaaaa");
+	line = loadln(textFile_READ_TSV);
 	assert(line == "bbbbb\tccccc\tddddd");
-	line = loadln(textFile_WRITE_CSV);
+	line = loadln(textFile_READ_TSV);
 	assert(line == "eeeee\t\"ff\"\"fff\"\tggggg");
-	line = loadln(textFile_WRITE_CSV);
-	assert(line == "hhhhh\t\"ii" + CRLF + "iii\"\tjjjjj");
-	line = loadln(textFile_WRITE_CSV);
+	line = loadln(textFile_READ_TSV);
+	assert(line == "hhhhh\t\"ii" + System.EOL + "iii\"\tjjjjj");
+	line = loadln(textFile_READ_TSV);
 	assert(line == "\"\"\"\"\"\"\"kkkkk\"\t\"\"\"\"\"\"\"lllll\"\"\"\"\"\t\"mm\"\"\"\"\"\"\"\"\"\"mmm\"\"\"\"\"\"\"");
-	line = loadln(textFile_WRITE_CSV);
+	line = loadln(textFile_READ_TSV);
 	assert(line == "nnnnn\tooooo\t\"ppp" + EOL + "pp\"\tqqqqq\trrrrr");
 }
 
@@ -499,58 +1358,99 @@ void testLoadln_READ_TSV(){
 
 void testReadln_READ_TSV(){
 	string value[];
-	const string CRLF = System.CR + System.LF;
 
-	value = readln(textFile_WRITE_CSV);
+	value = readln(textFile_READ_TSV);
 	assert(length(value,0) == 5);
 	assert(value[0] == "11111");
 	assert(value[1] == "22222");
-	assert(value[2] == "333" + CRLF + "33");
+	assert(value[2] == "333" + System.EOL + "33");
 	assert(value[3] == "44444");
 	assert(value[4] == "55555");
 
-	value = readln(textFile_WRITE_CSV);
+	value = readln(textFile_READ_TSV);
 	assert(length(value,0) == 6);
 	assert(value[0] == "66666");
-	assert(value[1] == "77" + CRLF + "777");
+	assert(value[1] == "77" + System.EOL + "777");
 	assert(value[2] == "88888");
-	assert(value[3] == "99" + CRLF + "999");
+	assert(value[3] == "99" + System.EOL + "999");
 	assert(value[4] == "00000");
 	assert(value[5] == "aaaaa");
 
-	value = readln(textFile_WRITE_CSV);
+	value = readln(textFile_READ_TSV);
 	assert(length(value,0) == 3);
 	assert(value[0] == "bbbbb");
 	assert(value[1] == "ccccc");
 	assert(value[2] == "ddddd");
 
-	value = readln(textFile_WRITE_CSV);
+	value = readln(textFile_READ_TSV);
 	assert(length(value,0) == 3);
 	assert(value[0] == "eeeee");
 	assert(value[1] == "ff\"fff");
 	assert(value[2] == "ggggg");
 
-	value = readln(textFile_WRITE_CSV);
+	value = readln(textFile_READ_TSV);
 	assert(length(value,0) == 3);
 	assert(value[0] == "hhhhh");
-	assert(value[1] == "ii" + CRLF + "iii");
+	assert(value[1] == "ii" + System.EOL + "iii");
 	assert(value[2] == "jjjjj");
 
-	value = readln(textFile_WRITE_CSV);
+	value = readln(textFile_READ_TSV);
 	assert(length(value,0) == 3);
 	assert(value[0] == "\"\"\"kkkkk");
 	assert(value[1] == "\"\"\"lllll\"\"");
 	assert(value[2] == "mm\"\"\"\"\"mmm\"\"\"");
 
-	value = readln(textFile_WRITE_CSV);
+	value = readln(textFile_READ_TSV);
 	assert(length(value,0) == 5);
 	assert(value[0] == "nnnnn");
 	assert(value[1] == "ooooo");
-	assert(value[2] == "ppp" + CRLF + "pp");
+	assert(value[2] == "ppp" + System.EOL + "pp");
 	assert(value[3] == "qqqqq");
 	assert(value[4] == "rrrrr");
 }
 
+
+void testRead_READ_TSV(){
+
+	string value[] = read(textFile_READ_TSV);
+
+	assert(length(value,0) == 28);
+
+	assert(value[0] == "11111");
+	assert(value[1] == "22222");
+	assert(value[2] == "333" + System.EOL + "33");
+	assert(value[3] == "44444");
+	assert(value[4] == "55555");
+
+	assert(value[5] == "66666");
+	assert(value[6] == "77" + System.EOL + "777");
+	assert(value[7] == "88888");
+	assert(value[8] == "99" + System.EOL + "999");
+	assert(value[9] == "00000");
+	assert(value[10] == "aaaaa");
+
+	assert(value[11] == "bbbbb");
+	assert(value[12] == "ccccc");
+	assert(value[13] == "ddddd");
+
+	assert(value[14] == "eeeee");
+	assert(value[15] == "ff\"fff");
+	assert(value[16] == "ggggg");
+
+	assert(value[17] == "hhhhh");
+	assert(value[18] == "ii" + System.EOL + "iii");
+	assert(value[19] == "jjjjj");
+
+	assert(value[20] == "\"\"\"kkkkk");
+	assert(value[21] == "\"\"\"lllll\"\"");
+	assert(value[22] == "mm\"\"\"\"\"mmm\"\"\"");
+
+	assert(value[23] == "nnnnn");
+	assert(value[24] == "ooooo");
+	assert(value[25] == "ppp" + System.EOL + "pp");
+	assert(value[26] == "qqqqq");
+	assert(value[27] == "rrrrr");
+}
 
 
 
@@ -571,14 +1471,26 @@ void testClose_WRITE_CSV_ENCLOSE_ALL(){
 }
 
 void testWriteln_WRITE_CSV_ENCLOSE_ALL(){
-	const string CRLF = System.CR + System.LF;
-	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "11111", "22222", "333"+CRLF+"33", "44444", "55555");
-	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "66666", "77"+CRLF+"777", "88888", "99"+CRLF+"999", "00000", "aaaaa");
+	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "11111", "22222", "333"+System.EOL+"33", "44444", "55555");
+	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "66666", "77"+System.EOL+"777", "88888", "99"+System.EOL+"999", "00000", "aaaaa");
 	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "bbbbb", "ccccc", "ddddd");
 	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "eeeee", "ff\"fff", "ggggg");
-	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "hhhhh", "ii"+CRLF+"iii", "jjjjj");
-	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
-	writeln(textFile_WRITE_CSV_ENCLOSE_ALL, "nnnnn", "ooooo", "ppp"+CRLF+"pp", "qqqqq", "rrrrr");
+}
+
+void testCommentln_WRITE_CSV_ENCLOSE_ALL(){
+	setCommentLineCode(textFile_WRITE_CSV_ENCLOSE_ALL, COMMENT_LINE_CODE);
+	commentln(textFile_WRITE_CSV_ENCLOSE_ALL, "これはコメント行です。");
+}
+
+void testWrite_WRITE_CSV_ENCLOSE_ALL(){
+	write(textFile_WRITE_CSV_ENCLOSE_ALL, "hhhhh", "ii"+System.EOL+"iii", "jjjjj");
+	writeln(textFile_WRITE_CSV_ENCLOSE_ALL);
+	write(textFile_WRITE_CSV_ENCLOSE_ALL, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
+	writeln(textFile_WRITE_CSV_ENCLOSE_ALL);
+	write(textFile_WRITE_CSV_ENCLOSE_ALL, "nnnnn", "ooooo", "ppp"+System.EOL+"pp");
+	delimit(textFile_WRITE_CSV_ENCLOSE_ALL);
+	write(textFile_WRITE_CSV_ENCLOSE_ALL, "qqqqq", "rrrrr");
+	writeln(textFile_WRITE_CSV_ENCLOSE_ALL);
 }
 
 
@@ -586,6 +1498,7 @@ void testWriteln_WRITE_CSV_ENCLOSE_ALL(){
 void testOpenTextFile_READ_CSV_ENCLOSE_ALL(){
 	textFile_READ_CSV_ENCLOSE_ALL = openTextFile(CSV_ENCLOSE_ALL_FILE_PATH, TextFile.READ_CSV, textEncoding);
 	setEnclosure(textFile_READ_CSV_ENCLOSE_ALL, "\"", "\"", TextFile.ENCLOSE_ALL);
+	setCommentLineCode(textFile_READ_CSV_ENCLOSE_ALL, COMMENT_LINE_CODE);
 }
 
 void testClose_READ_CSV_ENCLOSE_ALL(){
@@ -599,17 +1512,16 @@ void testCountln_READ_CSV_ENCLOSE_ALL(){
 
 void testLoadln_READ_CSV_ENCLOSE_ALL(){
 	string line;
-	const string CRLF = System.CR + System.LF;
 	line = loadln(textFile_READ_CSV_ENCLOSE_ALL);
-	assert(line == "\"11111\",\"22222\",\"333" + CRLF + "33\",\"44444\",\"55555\"");
+	assert(line == "\"11111\",\"22222\",\"333" + System.EOL + "33\",\"44444\",\"55555\"");
 	line = loadln(textFile_READ_CSV_ENCLOSE_ALL);
-	assert(line == "\"66666\",\"77" + CRLF + "777\",\"88888\",\"99" + CRLF + "999\",\"00000\",\"aaaaa\"");
+	assert(line == "\"66666\",\"77" + System.EOL + "777\",\"88888\",\"99" + System.EOL + "999\",\"00000\",\"aaaaa\"");
 	line = loadln(textFile_READ_CSV_ENCLOSE_ALL);
 	assert(line == "\"bbbbb\",\"ccccc\",\"ddddd\"");
 	line = loadln(textFile_READ_CSV_ENCLOSE_ALL);
 	assert(line == "\"eeeee\",\"ff\"\"fff\",\"ggggg\"");
 	line = loadln(textFile_READ_CSV_ENCLOSE_ALL);
-	assert(line == "\"hhhhh\",\"ii" + CRLF + "iii\",\"jjjjj\"");
+	assert(line == "\"hhhhh\",\"ii" + System.EOL + "iii\",\"jjjjj\"");
 	line = loadln(textFile_READ_CSV_ENCLOSE_ALL);
 	assert(line == "\"\"\"\"\"\"\"kkkkk\",\"\"\"\"\"\"\"lllll\"\"\"\"\",\"mm\"\"\"\"\"\"\"\"\"\"mmm\"\"\"\"\"\"\"");
 	line = loadln(textFile_READ_CSV_ENCLOSE_ALL);
@@ -619,22 +1531,21 @@ void testLoadln_READ_CSV_ENCLOSE_ALL(){
 
 void testReadln_READ_CSV_ENCLOSE_ALL(){
 	string value[];
-	const string CRLF = System.CR + System.LF;
 
 	value = readln(textFile_READ_CSV_ENCLOSE_ALL);
 	assert(length(value,0) == 5);
 	assert(value[0] == "11111");
 	assert(value[1] == "22222");
-	assert(value[2] == "333" + CRLF + "33");
+	assert(value[2] == "333" + System.EOL + "33");
 	assert(value[3] == "44444");
 	assert(value[4] == "55555");
 
 	value = readln(textFile_READ_CSV_ENCLOSE_ALL);
 	assert(length(value,0) == 6);
 	assert(value[0] == "66666");
-	assert(value[1] == "77" + CRLF + "777");
+	assert(value[1] == "77" + System.EOL + "777");
 	assert(value[2] == "88888");
-	assert(value[3] == "99" + CRLF + "999");
+	assert(value[3] == "99" + System.EOL + "999");
 	assert(value[4] == "00000");
 	assert(value[5] == "aaaaa");
 
@@ -653,7 +1564,7 @@ void testReadln_READ_CSV_ENCLOSE_ALL(){
 	value = readln(textFile_READ_CSV_ENCLOSE_ALL);
 	assert(length(value,0) == 3);
 	assert(value[0] == "hhhhh");
-	assert(value[1] == "ii" + CRLF + "iii");
+	assert(value[1] == "ii" + System.EOL + "iii");
 	assert(value[2] == "jjjjj");
 
 	value = readln(textFile_READ_CSV_ENCLOSE_ALL);
@@ -666,9 +1577,51 @@ void testReadln_READ_CSV_ENCLOSE_ALL(){
 	assert(length(value,0) == 5);
 	assert(value[0] == "nnnnn");
 	assert(value[1] == "ooooo");
-	assert(value[2] == "ppp" + CRLF + "pp");
+	assert(value[2] == "ppp" + System.EOL + "pp");
 	assert(value[3] == "qqqqq");
 	assert(value[4] == "rrrrr");
+}
+
+void testRead_READ_CSV_ENCLOSE_ALL(){
+
+	string value[] = read(textFile_READ_CSV_ENCLOSE_ALL);
+
+	assert(length(value,0) == 28);
+
+	assert(value[0] == "11111");
+	assert(value[1] == "22222");
+	assert(value[2] == "333" + System.EOL + "33");
+	assert(value[3] == "44444");
+	assert(value[4] == "55555");
+
+	assert(value[5] == "66666");
+	assert(value[6] == "77" + System.EOL + "777");
+	assert(value[7] == "88888");
+	assert(value[8] == "99" + System.EOL + "999");
+	assert(value[9] == "00000");
+	assert(value[10] == "aaaaa");
+
+	assert(value[11] == "bbbbb");
+	assert(value[12] == "ccccc");
+	assert(value[13] == "ddddd");
+
+	assert(value[14] == "eeeee");
+	assert(value[15] == "ff\"fff");
+	assert(value[16] == "ggggg");
+
+	assert(value[17] == "hhhhh");
+	assert(value[18] == "ii" + System.EOL + "iii");
+	assert(value[19] == "jjjjj");
+
+	assert(value[20] == "\"\"\"kkkkk");
+	assert(value[21] == "\"\"\"lllll\"\"");
+	assert(value[22] == "mm\"\"\"\"\"mmm\"\"\"");
+
+	assert(value[23] == "nnnnn");
+	assert(value[24] == "ooooo");
+	assert(value[25] == "ppp" + System.EOL + "pp");
+	assert(value[26] == "qqqqq");
+	assert(value[27] == "rrrrr");
 }
 
 
@@ -689,21 +1642,33 @@ void testClose_WRITE_TSV_ENCLOSE_ALL(){
 }
 
 void testWriteln_WRITE_TSV_ENCLOSE_ALL(){
-	const string CRLF = System.CR + System.LF;
-	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "11111", "22222", "333"+CRLF+"33", "44444", "55555");
-	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "66666", "77"+CRLF+"777", "88888", "99"+CRLF+"999", "00000", "aaaaa");
+	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "11111", "22222", "333"+System.EOL+"33", "44444", "55555");
+	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "66666", "77"+System.EOL+"777", "88888", "99"+System.EOL+"999", "00000", "aaaaa");
 	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "bbbbb", "ccccc", "ddddd");
 	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "eeeee", "ff\"fff", "ggggg");
-	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "hhhhh", "ii"+CRLF+"iii", "jjjjj");
-	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
-	writeln(textFile_WRITE_TSV_ENCLOSE_ALL, "nnnnn", "ooooo", "ppp"+CRLF+"pp", "qqqqq", "rrrrr");
 }
 
+void testCommentln_WRITE_TSV_ENCLOSE_ALL(){
+	setCommentLineCode(textFile_WRITE_TSV_ENCLOSE_ALL, COMMENT_LINE_CODE);
+	commentln(textFile_WRITE_TSV_ENCLOSE_ALL, "これはコメント行です。");
+}
+
+void testWrite_WRITE_TSV_ENCLOSE_ALL(){
+	write(textFile_WRITE_TSV_ENCLOSE_ALL, "hhhhh", "ii"+System.EOL+"iii", "jjjjj");
+	writeln(textFile_WRITE_TSV_ENCLOSE_ALL);
+	write(textFile_WRITE_TSV_ENCLOSE_ALL, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
+	writeln(textFile_WRITE_TSV_ENCLOSE_ALL);
+	write(textFile_WRITE_TSV_ENCLOSE_ALL, "nnnnn", "ooooo", "ppp"+System.EOL+"pp");
+	delimit(textFile_WRITE_TSV_ENCLOSE_ALL);
+	write(textFile_WRITE_TSV_ENCLOSE_ALL, "qqqqq", "rrrrr");
+	writeln(textFile_WRITE_TSV_ENCLOSE_ALL);
+}
 
 
 void testOpenTextFile_READ_TSV_ENCLOSE_ALL(){
 	textFile_READ_TSV_ENCLOSE_ALL = openTextFile(TSV_ENCLOSE_ALL_FILE_PATH, TextFile.READ_TSV, textEncoding);
 	setEnclosure(textFile_READ_TSV_ENCLOSE_ALL, "\"", "\"", TextFile.ENCLOSE_ALL);
+	setCommentLineCode(textFile_READ_TSV_ENCLOSE_ALL, COMMENT_LINE_CODE);
 }
 
 void testClose_READ_TSV_ENCLOSE_ALL(){
@@ -717,17 +1682,16 @@ void testCountln_READ_TSV_ENCLOSE_ALL(){
 
 void testLoadln_READ_TSV_ENCLOSE_ALL(){
 	string line;
-	const string CRLF = System.CR + System.LF;
 	line = loadln(textFile_READ_TSV_ENCLOSE_ALL);
-	assert(line == "\"11111\"\t\"22222\"\t\"333" + CRLF + "33\"\t\"44444\"\t\"55555\"");
+	assert(line == "\"11111\"\t\"22222\"\t\"333" + System.EOL + "33\"\t\"44444\"\t\"55555\"");
 	line = loadln(textFile_READ_TSV_ENCLOSE_ALL);
-	assert(line == "\"66666\"\t\"77" + CRLF + "777\"\t\"88888\"\t\"99" + CRLF + "999\"\t\"00000\"\t\"aaaaa\"");
+	assert(line == "\"66666\"\t\"77" + System.EOL + "777\"\t\"88888\"\t\"99" + System.EOL + "999\"\t\"00000\"\t\"aaaaa\"");
 	line = loadln(textFile_READ_TSV_ENCLOSE_ALL);
 	assert(line == "\"bbbbb\"\t\"ccccc\"\t\"ddddd\"");
 	line = loadln(textFile_READ_TSV_ENCLOSE_ALL);
 	assert(line == "\"eeeee\"\t\"ff\"\"fff\"\t\"ggggg\"");
 	line = loadln(textFile_READ_TSV_ENCLOSE_ALL);
-	assert(line == "\"hhhhh\"\t\"ii" + CRLF + "iii\"\t\"jjjjj\"");
+	assert(line == "\"hhhhh\"\t\"ii" + System.EOL + "iii\"\t\"jjjjj\"");
 	line = loadln(textFile_READ_TSV_ENCLOSE_ALL);
 	assert(line == "\"\"\"\"\"\"\"kkkkk\"\t\"\"\"\"\"\"\"lllll\"\"\"\"\"\t\"mm\"\"\"\"\"\"\"\"\"\"mmm\"\"\"\"\"\"\"");
 	line = loadln(textFile_READ_TSV_ENCLOSE_ALL);
@@ -737,22 +1701,21 @@ void testLoadln_READ_TSV_ENCLOSE_ALL(){
 
 void testReadln_READ_TSV_ENCLOSE_ALL(){
 	string value[];
-	const string CRLF = System.CR + System.LF;
 
 	value = readln(textFile_READ_TSV_ENCLOSE_ALL);
 	assert(length(value,0) == 5);
 	assert(value[0] == "11111");
 	assert(value[1] == "22222");
-	assert(value[2] == "333" + CRLF + "33");
+	assert(value[2] == "333" + System.EOL + "33");
 	assert(value[3] == "44444");
 	assert(value[4] == "55555");
 
 	value = readln(textFile_READ_TSV_ENCLOSE_ALL);
 	assert(length(value,0) == 6);
 	assert(value[0] == "66666");
-	assert(value[1] == "77" + CRLF + "777");
+	assert(value[1] == "77" + System.EOL + "777");
 	assert(value[2] == "88888");
-	assert(value[3] == "99" + CRLF + "999");
+	assert(value[3] == "99" + System.EOL + "999");
 	assert(value[4] == "00000");
 	assert(value[5] == "aaaaa");
 
@@ -771,7 +1734,7 @@ void testReadln_READ_TSV_ENCLOSE_ALL(){
 	value = readln(textFile_READ_TSV_ENCLOSE_ALL);
 	assert(length(value,0) == 3);
 	assert(value[0] == "hhhhh");
-	assert(value[1] == "ii" + CRLF + "iii");
+	assert(value[1] == "ii" + System.EOL + "iii");
 	assert(value[2] == "jjjjj");
 
 	value = readln(textFile_READ_TSV_ENCLOSE_ALL);
@@ -784,11 +1747,54 @@ void testReadln_READ_TSV_ENCLOSE_ALL(){
 	assert(length(value,0) == 5);
 	assert(value[0] == "nnnnn");
 	assert(value[1] == "ooooo");
-	assert(value[2] == "ppp" + CRLF + "pp");
+	assert(value[2] == "ppp" + System.EOL + "pp");
 	assert(value[3] == "qqqqq");
 	assert(value[4] == "rrrrr");
 }
 
+
+
+void testRead_READ_TSV_ENCLOSE_ALL(){
+
+	string value[] = read(textFile_READ_TSV_ENCLOSE_ALL);
+
+	assert(length(value,0) == 28);
+
+	assert(value[0] == "11111");
+	assert(value[1] == "22222");
+	assert(value[2] == "333" + System.EOL + "33");
+	assert(value[3] == "44444");
+	assert(value[4] == "55555");
+
+	assert(value[5] == "66666");
+	assert(value[6] == "77" + System.EOL + "777");
+	assert(value[7] == "88888");
+	assert(value[8] == "99" + System.EOL + "999");
+	assert(value[9] == "00000");
+	assert(value[10] == "aaaaa");
+
+	assert(value[11] == "bbbbb");
+	assert(value[12] == "ccccc");
+	assert(value[13] == "ddddd");
+
+	assert(value[14] == "eeeee");
+	assert(value[15] == "ff\"fff");
+	assert(value[16] == "ggggg");
+
+	assert(value[17] == "hhhhh");
+	assert(value[18] == "ii" + System.EOL + "iii");
+	assert(value[19] == "jjjjj");
+
+	assert(value[20] == "\"\"\"kkkkk");
+	assert(value[21] == "\"\"\"lllll\"\"");
+	assert(value[22] == "mm\"\"\"\"\"mmm\"\"\"");
+
+	assert(value[23] == "nnnnn");
+	assert(value[24] == "ooooo");
+	assert(value[25] == "ppp" + System.EOL + "pp");
+	assert(value[26] == "qqqqq");
+	assert(value[27] == "rrrrr");
+}
 
 
 
@@ -813,22 +1819,34 @@ void testClose_WRITE_CSV_ENCLOSE_NONE(){
 }
 
 void testWriteln_WRITE_CSV_ENCLOSE_NONE(){
-	const string CRLF = System.CR + System.LF;
-	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "11111", "22222", "333"+CRLF+"33", "44444", "55555");
-	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "66666", "77"+CRLF+"777", "88888", "99"+CRLF+"999", "00000", "aaaaa");
+	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "11111", "22222", "333"+System.EOL+"33", "44444", "55555");
+	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "66666", "77"+System.EOL+"777", "88888", "99"+System.EOL+"999", "00000", "aaaaa");
 	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "bbbbb", "ccccc", "ddddd");
 	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "eeeee", "ff\"fff", "ggggg");
-	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "hhhhh", "ii"+CRLF+"iii", "jjjjj");
-	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
-	writeln(textFile_WRITE_CSV_ENCLOSE_NONE, "nnnnn", "ooooo", "ppp"+CRLF+"pp", "qqqqq", "rrrrr");
 }
 
+void testCommentln_WRITE_CSV_ENCLOSE_NONE(){
+	setCommentLineCode(textFile_WRITE_CSV_ENCLOSE_NONE, COMMENT_LINE_CODE);
+	commentln(textFile_WRITE_CSV_ENCLOSE_NONE, "これはコメント行です。");
+}
+
+void testWrite_WRITE_CSV_ENCLOSE_NONE(){
+	write(textFile_WRITE_CSV_ENCLOSE_NONE, "hhhhh", "ii"+System.EOL+"iii", "jjjjj");
+	writeln(textFile_WRITE_CSV_ENCLOSE_NONE);
+	write(textFile_WRITE_CSV_ENCLOSE_NONE, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
+	writeln(textFile_WRITE_CSV_ENCLOSE_NONE);
+	write(textFile_WRITE_CSV_ENCLOSE_NONE, "nnnnn", "ooooo", "ppp"+System.EOL+"pp");
+	delimit(textFile_WRITE_CSV_ENCLOSE_NONE);
+	write(textFile_WRITE_CSV_ENCLOSE_NONE, "qqqqq", "rrrrr");
+	writeln(textFile_WRITE_CSV_ENCLOSE_NONE);
+}
 
 
 
 void testOpenTextFile_READ_CSV_ENCLOSE_NONE(){
 	textFile_READ_CSV_ENCLOSE_NONE = openTextFile(CSV_ENCLOSE_NONE_FILE_PATH, TextFile.READ_CSV, textEncoding);
 	setEnclosure(textFile_READ_CSV_ENCLOSE_NONE, "\"", "\"", TextFile.ENCLOSE_NONE);
+	setCommentLineCode(textFile_READ_CSV_ENCLOSE_NONE, COMMENT_LINE_CODE);
 }
 
 void testClose_READ_CSV_ENCLOSE_NONE(){
@@ -842,7 +1860,6 @@ void testCountln_READ_CSV_ENCLOSE_NONE(){
 
 void testLoadln_READ_CSV_ENCLOSE_NONE(){
 	string line;
-	const string CRLF = System.CR + System.LF;
 	line = loadln(textFile_READ_CSV_ENCLOSE_NONE);
 	assert(line == "11111,22222,333");
 	line = loadln(textFile_READ_CSV_ENCLOSE_NONE);
@@ -872,7 +1889,6 @@ void testLoadln_READ_CSV_ENCLOSE_NONE(){
 
 void testReadln_READ_CSV_ENCLOSE_NONE(){
 	string value[];
-	const string CRLF = System.CR + System.LF;
 
 	value = readln(textFile_READ_CSV_ENCLOSE_NONE);
 	assert(length(value,0) == 3);
@@ -945,6 +1961,53 @@ void testReadln_READ_CSV_ENCLOSE_NONE(){
 }
 
 
+void testRead_READ_CSV_ENCLOSE_NONE(){
+
+	string value[] = read(textFile_READ_CSV_ENCLOSE_NONE);
+
+	assert(length(value,0) == 33);
+
+	assert(value[0] == "11111");
+	assert(value[1] == "22222");
+	assert(value[2] == "333");
+	assert(value[3] == "33");
+	assert(value[4] == "44444");
+	assert(value[5] == "55555");
+
+	assert(value[6] == "66666");
+	assert(value[7] == "77");
+	assert(value[8] == "777");
+	assert(value[9] == "88888");
+	assert(value[10] == "99");
+	assert(value[11] == "999");
+	assert(value[12] == "00000");
+	assert(value[13] == "aaaaa");
+
+	assert(value[14] == "bbbbb");
+	assert(value[15] == "ccccc");
+	assert(value[16] == "ddddd");
+
+	assert(value[17] == "eeeee");
+	assert(value[18] == "ff\"fff");
+	assert(value[19] == "ggggg");
+
+	assert(value[20] == "hhhhh");
+	assert(value[21] == "ii");
+	assert(value[22] == "iii");
+	assert(value[23] == "jjjjj");
+
+	assert(value[24] == "\"\"\"kkkkk");
+	assert(value[25] == "\"\"\"lllll\"\"");
+	assert(value[26] == "mm\"\"\"\"\"mmm\"\"\"");
+
+	assert(value[27] == "nnnnn");
+	assert(value[28] == "ooooo");
+	assert(value[29] == "ppp");
+	assert(value[30] == "pp");
+	assert(value[31] == "qqqqq");
+	assert(value[32] == "rrrrr");
+}
+
 
 
 
@@ -965,22 +2028,34 @@ void testClose_WRITE_TSV_ENCLOSE_NONE(){
 }
 
 void testWriteln_WRITE_TSV_ENCLOSE_NONE(){
-	const string CRLF = System.CR + System.LF;
-	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "11111", "22222", "333"+CRLF+"33", "44444", "55555");
-	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "66666", "77"+CRLF+"777", "88888", "99"+CRLF+"999", "00000", "aaaaa");
+	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "11111", "22222", "333"+System.EOL+"33", "44444", "55555");
+	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "66666", "77"+System.EOL+"777", "88888", "99"+System.EOL+"999", "00000", "aaaaa");
 	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "bbbbb", "ccccc", "ddddd");
 	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "eeeee", "ff\"fff", "ggggg");
-	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "hhhhh", "ii"+CRLF+"iii", "jjjjj");
-	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
-	writeln(textFile_WRITE_TSV_ENCLOSE_NONE, "nnnnn", "ooooo", "ppp"+CRLF+"pp", "qqqqq", "rrrrr");
 }
 
+void testCommentln_WRITE_TSV_ENCLOSE_NONE(){
+	setCommentLineCode(textFile_WRITE_TSV_ENCLOSE_NONE, COMMENT_LINE_CODE);
+	commentln(textFile_WRITE_TSV_ENCLOSE_NONE, "これはコメント行です。");
+}
+
+void testWrite_WRITE_TSV_ENCLOSE_NONE(){
+	write(textFile_WRITE_TSV_ENCLOSE_NONE, "hhhhh", "ii"+System.EOL+"iii", "jjjjj");
+	writeln(textFile_WRITE_TSV_ENCLOSE_NONE);
+	write(textFile_WRITE_TSV_ENCLOSE_NONE, "\"\"\"kkkkk", "\"\"\"lllll\"\"", "mm\"\"\"\"\"mmm\"\"\"");
+	writeln(textFile_WRITE_TSV_ENCLOSE_NONE);
+	write(textFile_WRITE_TSV_ENCLOSE_NONE, "nnnnn", "ooooo", "ppp"+System.EOL+"pp");
+	delimit(textFile_WRITE_TSV_ENCLOSE_NONE);
+	write(textFile_WRITE_TSV_ENCLOSE_NONE, "qqqqq", "rrrrr");
+	writeln(textFile_WRITE_TSV_ENCLOSE_NONE);
+}
 
 
 
 void testOpenTextFile_READ_TSV_ENCLOSE_NONE(){
 	textFile_READ_TSV_ENCLOSE_NONE = openTextFile(TSV_ENCLOSE_NONE_FILE_PATH, TextFile.READ_TSV, textEncoding);
 	setEnclosure(textFile_READ_TSV_ENCLOSE_NONE, "\"", "\"", TextFile.ENCLOSE_NONE);
+	setCommentLineCode(textFile_READ_TSV_ENCLOSE_NONE, COMMENT_LINE_CODE);
 }
 
 void testClose_READ_TSV_ENCLOSE_NONE(){
@@ -994,7 +2069,6 @@ void testCountln_READ_TSV_ENCLOSE_NONE(){
 
 void testLoadln_READ_TSV_ENCLOSE_NONE(){
 	string line;
-	const string CRLF = System.CR + System.LF;
 	line = loadln(textFile_READ_TSV_ENCLOSE_NONE);
 	assert(line == "11111\t22222\t333");
 	line = loadln(textFile_READ_TSV_ENCLOSE_NONE);
@@ -1024,7 +2098,6 @@ void testLoadln_READ_TSV_ENCLOSE_NONE(){
 
 void testReadln_READ_TSV_ENCLOSE_NONE(){
 	string value[];
-	const string CRLF = System.CR + System.LF;
 
 	value = readln(textFile_READ_TSV_ENCLOSE_NONE);
 	assert(length(value,0) == 3);
@@ -1096,5 +2169,52 @@ void testReadln_READ_TSV_ENCLOSE_NONE(){
 	assert(value[2] == "rrrrr");
 }
 
+
+void testRead_READ_TSV_ENCLOSE_NONE(){
+
+	string value[] = read(textFile_READ_TSV_ENCLOSE_NONE);
+
+	assert(length(value,0) == 33);
+
+	assert(value[0] == "11111");
+	assert(value[1] == "22222");
+	assert(value[2] == "333");
+	assert(value[3] == "33");
+	assert(value[4] == "44444");
+	assert(value[5] == "55555");
+
+	assert(value[6] == "66666");
+	assert(value[7] == "77");
+	assert(value[8] == "777");
+	assert(value[9] == "88888");
+	assert(value[10] == "99");
+	assert(value[11] == "999");
+	assert(value[12] == "00000");
+	assert(value[13] == "aaaaa");
+
+	assert(value[14] == "bbbbb");
+	assert(value[15] == "ccccc");
+	assert(value[16] == "ddddd");
+
+	assert(value[17] == "eeeee");
+	assert(value[18] == "ff\"fff");
+	assert(value[19] == "ggggg");
+
+	assert(value[20] == "hhhhh");
+	assert(value[21] == "ii");
+	assert(value[22] == "iii");
+	assert(value[23] == "jjjjj");
+
+	assert(value[24] == "\"\"\"kkkkk");
+	assert(value[25] == "\"\"\"lllll\"\"");
+	assert(value[26] == "mm\"\"\"\"\"mmm\"\"\"");
+
+	assert(value[27] == "nnnnn");
+	assert(value[28] == "ooooo");
+	assert(value[29] == "ppp");
+	assert(value[30] == "pp");
+	assert(value[31] == "qqqqq");
+	assert(value[32] == "rrrrr");
+}
 
 
