@@ -56,76 +56,76 @@ import Text;
 /**
  * 汎用テキストファイルの「読み込み」モードです。
  * 区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。
- * 引用符の挙動は <a href="#ENCLOSE_NONE">ENCLOSE_NONE</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a> が適用されます。
  */
 public const string READ = System.READ;
 
 /**
  * 汎用テキストファイルの「書き込み」モードです。
  * 区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。
- * 引用符の挙動は <a href="#ENCLOSE_NONE">ENCLOSE_NONE</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a> が適用されます。
  */
 public const string WRITE = System.WRITE;
 
 /**
  * 汎用テキストファイルの「追記」モードです。
  * 区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。
- * 引用符の挙動は <a href="#ENCLOSE_NONE">ENCLOSE_NONE</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a> が適用されます。
  */
 public const string APPEND = System.APPEND;
 
 /**
  * TSV形式ファイルの「読み込み」モードです。
  * 区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。
- * 引用符の挙動は <a href="#ENCLOSE_IF_NECESSARY">ENCLOSE_IF_NECESSARY</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
  */
 public const string READ_TSV = System.READ_TSV;
 
 /**
  * TSV形式ファイルの「書き込み」モードです。
  * 区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。
- * 引用符の挙動は <a href="#ENCLOSE_IF_NECESSARY">ENCLOSE_IF_NECESSARY</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
  */
 public const string WRITE_TSV = System.WRITE_TSV;
 
 /**
  * TSV形式ファイルの「追記」モードです。
  * 区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。
- * 引用符の挙動は <a href="#ENCLOSE_IF_NECESSARY">ENCLOSE_IF_NECESSARY</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
  */
 public const string APPEND_TSV = System.APPEND_TSV;
 
 /**
  * CSV形式ファイルの「読み込み」モードです。
  * 区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。
- * 引用符の挙動は <a href="#ENCLOSE_IF_NECESSARY">ENCLOSE_IF_NECESSARY</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
  */
 public const string READ_CSV = System.READ_CSV;
 
 /**
  * CSV形式ファイルの「書き込み」モードです。
  * 区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。
- * 引用符の挙動は <a href="#ENCLOSE_IF_NECESSARY">ENCLOSE_IF_NECESSARY</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
  */
 public const string WRITE_CSV = System.WRITE_CSV;
 
 /**
  * CSV形式ファイルの「追記」モードです。
  * 区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。
- * 引用符の挙動は <a href="#ENCLOSE_IF_NECESSARY">ENCLOSE_IF_NECESSARY</a> が適用されます。
+ * 引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
  */
 public const string APPEND_CSV = System.APPEND_CSV;
 
 
 
 /** 全ての値を引用符記号（エンクロージャ）で囲むオプションです。 */
-public const int ENCLOSE_ALL = 101;
+public const int ENCLOSED_ALL = 101;
 
 /** 必要な値のみ引用符記号（エンクロージャ）で囲むオプションです。CSV/TSV形式ファイルのデフォルト設定値です。 */
-public const int ENCLOSE_IF_NECESSARY = 100;
+public const int ENCLOSED_IF_NECESSARY = 100;
 
 /** どの値も引用符記号（エンクロージャ）で囲まないオプションです。汎用テキストファイルのデフォルト設定値です。 */
-public const int ENCLOSE_NONE = 102;
+public const int ENCLOSED_NONE = 102;
 
 
 /** 読み込み用バッファの初期サイズです。 */
@@ -263,19 +263,19 @@ public TextFile openTextFile(string filePath, string mode, string textEncoding){
 		textFile.delimiter = NULL;
 		textFile.enclosure = NULL;
 		textFile.enclosureEscapeCharacter = NULL;
-		textFile.enclosureOption = ENCLOSE_NONE;
+		textFile.enclosureOption = ENCLOSED_NONE;
 
 	}else if(mode == WRITE_TSV || mode == READ_TSV || mode == APPEND_TSV){
 		textFile.delimiter = "\t";
 		textFile.enclosure = "\"";
 		textFile.enclosureEscapeCharacter = "\"";
-		textFile.enclosureOption = ENCLOSE_IF_NECESSARY;
+		textFile.enclosureOption = ENCLOSED_IF_NECESSARY;
 
 	}else if(mode == WRITE_CSV || mode == READ_CSV || mode == APPEND_CSV){
 		textFile.delimiter = ",";
 		textFile.enclosure = "\"";
 		textFile.enclosureEscapeCharacter = "\"";
-		textFile.enclosureOption = ENCLOSE_IF_NECESSARY;
+		textFile.enclosureOption = ENCLOSED_IF_NECESSARY;
 	}
 
 	// 読み込みモードでは各パラメータを取得
@@ -572,12 +572,12 @@ public void setDelimiter(TextFile &textFile, string delimiter){
  * 引数のオプション enclosingOption で指定します。
  * このオプションの指定値は以下の定数から選択します。
  * <dl>
- *   <dt><a href="#ENCLOSE_ALL">ENCLOSE_ALL</a></dt>
+ *   <dt><a href="#ENCLOSED_ALL">ENCLOSED_ALL</a></dt>
  *   <dd>値が必ず引用符で囲まれる形式です。</dd>
- *   <dt><a href="#ENCLOSE_ALL">ENCLOSE_IF_NECESSARY</a></dt>
+ *   <dt><a href="#ENCLOSED_ALL">ENCLOSED_IF_NECESSARY</a></dt>
  *   <dd>必要な場合のみ、値が引用符記号で囲まれる形式です。必要な場合とは、書き込み/読み込み内容が、
  *    「 区切り文字（デリミタ）、引用符記号、コメント行頭記号、改行 」のいずれかを含む場合です。</dd>
- *   <dt><a href="#ENCLOSE_ALL">ENCLOSE_NONE</a></dt>
+ *   <dt><a href="#ENCLOSED_ALL">ENCLOSED_NONE</a></dt>
  *   <dd>いかなる場合においても、値が引用符で囲まれない形式です。</dd>
  * </dl>
  * もしも、引用符記号で囲む値が、さらに引用符記号を含んでいる場合、
@@ -726,7 +726,7 @@ private string[] addEnclosure(string value[],
 						string enclosure, string enclosureEscapeCharacter, int enclosureOption,
 						string delimiter, string commentLineCode){
 
-	if(enclosure == NULL || enclosureOption == ENCLOSE_NONE){
+	if(enclosure == NULL || enclosureOption == ENCLOSED_NONE){
 		return value;
 	}
 
@@ -737,9 +737,9 @@ private string[] addEnclosure(string value[],
 
 		// 引用符記号を付ける必要があるかどうか
 		bool useEnclosure = false;
-		if(enclosureOption == ENCLOSE_ALL){
+		if(enclosureOption == ENCLOSED_ALL){
 			useEnclosure = true;
-		}else if(enclosureOption == ENCLOSE_IF_NECESSARY){
+		}else if(enclosureOption == ENCLOSED_IF_NECESSARY){
 
 			if(delimiter!=NULL && 0 <= indexOf(value[i], delimiter)){
 				// 値が区切り文字を含む場合、引用符で囲む必要がある
@@ -786,7 +786,7 @@ private string[] addEnclosure(string value[],
  */
 private string[] removeEnclosure(string value[], string enclosure, string enclosureEscapeCharacter, int enclosureOption){
 
-	if(enclosure == NULL || enclosureOption == ENCLOSE_NONE){
+	if(enclosure == NULL || enclosureOption == ENCLOSED_NONE){
 		return value;
 	}
 
@@ -798,9 +798,9 @@ private string[] removeEnclosure(string value[], string enclosure, string enclos
 
 		// 引用符記号で囲まれているかどうか
 		bool enclosed = false;
-		if(enclosureOption == ENCLOSE_ALL){
+		if(enclosureOption == ENCLOSED_ALL){
 			enclosed = true;
-		}else if(enclosureOption == ENCLOSE_IF_NECESSARY){
+		}else if(enclosureOption == ENCLOSED_IF_NECESSARY){
 			if(2 <= strLength){
 				if(startsWith(value[i], enclosure) && endsWith(value[i], enclosure)){
 					enclosed = true;
@@ -826,7 +826,7 @@ private string[] removeEnclosure(string value[], string enclosure, string enclos
  * テキストファイルから、一行分の内容を読み込みます。
  * 区切り文字（デリミタ）が設定されている場合、内容を区切り文字で区切り、配列として返します。
  * ただし引用符（エンクロージャ）が設定されている場合、
- * 引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSE_NONEオプション時は除く)。
+ * 引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。
  * 引用符をどのように解釈するかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。
  *
  * @param textFile 対象のテキストファイル構造体
@@ -853,7 +853,7 @@ public string[] readln(TextFile &textFile){
 	for(int i=0; i<strLength; i++){
 
 		// 引用符区間の内外切り替え判定
-		if(enclosureOption != ENCLOSE_NONE){
+		if(enclosureOption != ENCLOSED_NONE){
 			if(charAt(line, i) == enclosure){
 				if(inEnclosedSection){
 					// 引用符区間の終了は、行末もしくは区切り文字の直前に限られる
@@ -904,7 +904,7 @@ public string[] readln(TextFile &textFile){
  * テキストファイルから、全ての内容を読み込みます。
  * 区切り文字（デリミタ）が設定されている場合、内容を区切り文字または改行で区切り、配列として返します。
  * ただし引用符（エンクロージャ）が設定されている場合、
- * 引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSE_NONEオプション時は除く)。
+ * 引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。
  * 引用符をどのように解釈するかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。
  *
  * @param textFile 対象のテキストファイル構造体
@@ -1006,7 +1006,7 @@ private string loadln(TextFile &textFile, int &counter){
 	}
 
 	// 引用符符号を考慮しない場合は、ここでそのまま行を返す
-	if(textFile.enclosureOption == ENCLOSE_NONE){
+	if(textFile.enclosureOption == ENCLOSED_NONE){
 		return line;
 	}
 
