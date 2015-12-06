@@ -30,23 +30,41 @@ import Time;
  * </p>
  *
  * <p>
- * そこで実際には、自作モジュールから Graphics2DFramework を import し、直接的な描画処理やスプライトの操作など、必要な処理を記述します。
+ * そこで実際には、自作モジュールから Graphics2DFramework を import し、3Dモデルの配置や移動など、必要な処理を記述します。
  * <br />
  * そういった処理は、いくつかの決まった名前の関数を定義し、そこに記述します。つまり、GUIなどのイベントハンドラと同じ仕組みです。
  * <br />
- * するとそれらの関数を、Graphics2DFramework が適切なタイミングで自動実行します。
+ * するとそれらのイベントハンドラ関数を、Graphics3DFramework が適切なタイミングで自動実行します。
  * </p>
  *
  * <p>
- * Graphics2DFramework が自動実行する関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。
+ * Graphics2DFramework が自動実行するイベントハンドラ関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。
  * <ul>
- *   <li>void initialize( int renderer ) - 起動時に一度だけ実行されます。スプライトの生成・配置などの初期化処理は、ここに記述します。</li>
- *   <li>void finalize( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。</li>
- *   <li>void paint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、ここに記述します。</li>
- *   <li>void update( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。スプライトの移動などを行いたい場合などは、ここに記述します。</li>
- *   <li>void resize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。</li>
+ *   <li>void onStart( int renderer ) - 起動時に一度だけ実行されます。スプライトの生成・配置などの初期化処理は、ここに記述します。旧称 initialize も使用可能です。</li>
+ *   <li>void onExit( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。旧称 finalize も使用可能です。</li>
+ *   <li>void onPaint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、ここに記述します。旧称 paint も使用可能です。</li>
+ *   <li>void onUpdate( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。スプライトの移動などを行いたい場合などは、ここに記述します。旧称 update も使用可能です。</li>
+ *   <li>void onResize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。旧称 resize も使用可能です。</li>
  * </ul>
  * 上記関数のいずれも、引数 renderer には、2DCGレンダラーのID が渡されます。これは描画やスプライトの登録などに使用します。
+ * </p>
+ *
+ * <p>・古い処理系でも新しいイベントハンドラを使用するための互換コード</p>
+ *
+ * <p>
+ * なお、これらのイベントハンドラ関数は、過去に名称変更を経たため、互換目的で onStart の代わりに initialize などの旧称も使用可能となっています。
+ * <br />
+ * しかし、もし新しい名称のイベントハンドラ関数を使用しつつも、古い処理系でも動作させたいという場合は、以下の例のような互換コードを記述する事で対応できます：
+ * <br />
+ * <div class="code">
+ * // 互換コードの例 （ onExitやonPaint、onUpdateなどについても必要に応じて記述 ）
+ * <br />
+ * void initialize( int renderer ) { onStart(renderer); }  // 古い処理系では initialize 経由で onStart が呼ばれます。
+ * <br />
+ * void onStart( int renderer ) { 実際のイベント処理; } // 新しい処理系では、onStart が宣言されていれば initialize は呼ばれず、onStart が直接呼ばれます。
+ * </div>
+ * <br />
+ * この互換コードは、新しい名称のイベントハンドラ関数が 1 個以上宣言されている場合、旧称の関数はコールされない仕様を利用しています（この仕様はまさに上のような互換コードを可能にするためのものです）。
  * </p>
  *
  * <p>・ウィンドウのカスタマイズ</p>
@@ -604,6 +622,62 @@ public void main( string args[] ){
 }
 
 
+/** paint関数が定義されているかどうかを保持します。 */
+private bool existsPaint = false;
+
+/** update関数が定義されているかどうかを保持します。 */
+private bool existsUpdate = false;
+
+/** initialize関数が定義されているかどうかを保持します。 */
+private bool existsInitialize = false;
+
+/** initialize関数が定義されているかどうかを保持します。 */
+private bool existsFinalize = false;
+
+/** resize関数が定義されているかどうかを保持します。 */
+private bool existsResize = false;
+
+/** onPaint関数が定義されているかどうかを保持します。 */
+private bool existsOnPaint = false;
+
+/** onUpdate関数が定義されているかどうかを保持します。 */
+private bool existsOnUpdate = false;
+
+/** onStart関数が定義されているかどうかを保持します。 */
+private bool existsOnStart = false;
+
+/** onExit関数が定義されているかどうかを保持します。 */
+private bool existsOnExit = false;
+
+/** onResize関数が定義されているかどうかを保持します。 */
+private bool existsOnResize = false;
+
+/** 新しい名称のイベントハンドラ関数が使用されているかを保持します。 */
+private bool existsNewEventHandler = false;
+
+
+/**
+ * 各種コールバック関数が定義されているかを検証します。
+ *
+ * @author 松井文宏
+ */
+private void checkCallback(){
+	existsPaint = evaluable("paint(renderer)");
+	existsUpdate = evaluable("update(renderer)");
+	existsInitialize = evaluable("initialize(renderer)");
+	existsFinalize = evaluable("finalize(renderer)");
+	existsResize = evaluable("resize(renderer)");
+	
+	existsOnPaint = evaluable("onPaint(renderer)");
+	existsOnUpdate = evaluable("onUpdate(renderer)");
+	existsOnStart = evaluable("onStart(renderer)");
+	existsOnExit = evaluable("onExit(renderer)");
+	existsOnResize = evaluable("onResize(renderer)");
+	
+	existsNewEventHandler = existsOnPaint || existsOnUpdate || existsOnStart || existsOnExit || existsOnResize;
+}
+
+
 /**
  * フレームワークのメイン処理です。通常はmain関数から自動で実行されます。
  * ただし、メインプログラムでmain関数を定義する場合は、
@@ -620,57 +694,40 @@ public void frameworkMain( string args[] ){
 	initializeWindow();
 	initializeGraphics();
 	initializeComponent();
-	if(existsInitialize){
+	
+	if( existsInitialize && !existsNewEventHandler ){
 		eval( "initialize( renderer )" );
 	}
-
+	if( existsOnStart ){
+		eval( "onStart( renderer )" );
+	}
+	
 	if( paintGraphics2DState ){
 		paintGraphics2D( renderer );
 	}
-	if(existsPaint){
+	
+	if( existsPaint && !existsNewEventHandler ){
 		eval( "paint( renderer )" );
 	}
+	if( existsOnPaint ){
+		eval( "onPaint( renderer )" );
+	}
+	
 	paintWindow();
-
+	
 	mainLoopWait = 1000.0 / frameRate;
 	mainLoopWaitMax = 1000.0 / frameRate;
-
+	
 	mainLoop();
-
-	if(existsFinalize){
+	
+	if( existsFinalize && !existsNewEventHandler ){
 		eval( "finalize( renderer )" );
 	}
+	if( existsOnExit ){
+		eval( "onExit( renderer )" );
+	}
+	
 	exit();
-
-}
-
-
-/** paint関数が定義されているかどうかを保持します。 */
-private bool existsPaint = false;
-
-/** update関数が定義されているかどうかを保持します。 */
-private bool existsUpdate = false;
-
-/** initialize関数が定義されているかどうかを保持します。 */
-private bool existsInitialize = false;
-
-/** initialize関数が定義されているかどうかを保持します。 */
-private bool existsFinalize = false;
-
-/** resize関数が定義されているかどうかを保持します。 */
-private bool existsResize = false;
-
-/**
- * 各種コールバック関数が定義されているかを検証します。
- *
- * @author 松井文宏
- */
-private void checkCallback(){
-	existsPaint = evaluable("paint(renderer)");
-	existsUpdate = evaluable("update(renderer)");
-	existsInitialize = evaluable("initialize(renderer)");
-	existsFinalize = evaluable("finalize(renderer)");
-	existsResize = evaluable("resize(renderer)");
 }
 
 
@@ -728,8 +785,11 @@ private void mainLoop(){
 
 
 		if( animation ){
-			if(existsUpdate){
+			if(existsUpdate && !existsNewEventHandler ){
 				eval( "update( renderer )" );
+			}
+			if(existsOnUpdate && ){
+				eval( "onUpdate( renderer )" );
 			}
 
 			render();
@@ -780,9 +840,13 @@ public void render(){
 	if( paintGraphics2DState ){
 		paintGraphics2D( renderer );
 	}
-	if(existsPaint){
+	if(existsPaint && !existsNewEventHandler ){
 		eval( "paint( renderer )" );
 	}
+	if(existsOnPaint){
+		eval( "onPaint( renderer )" );
+	}
+
 }
 
 
@@ -859,8 +923,12 @@ private void setLayout(){
 	setComponentLocation( graphicsLabel, marginLeft, marginTop );
 	setComponentSize( graphicsLabel, labelWidth, labelHeight );
 	setGraphics2DSize( renderer, labelWidth, labelHeight );
-	if(existsResize){
+	
+	if( existsResize && !existsNewEventHandler ){
 		eval( "resize( renderer )" );
+	}
+	if( existsOnResize ){
+		eval( "onResize( renderer )" );
 	}
 }
 

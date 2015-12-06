@@ -98,45 +98,7 @@ varfloat mean( ... varfloat args[] ){
 
 
 /**
- * 不偏分散を計算します。
- *
- * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
- * @return 計算結果です。
- * @author 松井文宏
- */
-float va( ... float args[] ){
-	int n = length( args, 0 );
-	float mean = mean( args );
-	float value = 0.0;
-	for( int i=0; i<n; i++ ){
-		value += (mean-args[i])*(mean-args[i]);
-	}
-	value /= n-1;
-	return value;
-}
-
-
-/**
- * 不偏分散を計算します。
- *
- * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
- * @return 計算結果です。
- * @author 松井文宏
- */
-varfloat va( ... varfloat args[] ){
-	int n = length( args, (int)0v );
-	varfloat mean = mean( args );
-	varfloat value = 0.0vf;
-	for( int i=0; i<n; i++ ){
-		value += (mean-args[i])*(mean-args[i]);
-	}
-	value /= n - 1v;
-	return value;
-}
-
-
-/**
- * 標本分散を計算します。
+ * 分散（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
@@ -155,7 +117,7 @@ float van( ... float args[] ){
 
 
 /**
- * 標本分散を計算します。
+ * 分散（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
@@ -174,33 +136,71 @@ varfloat van( ... varfloat args[] ){
 
 
 /**
- * 不偏標準偏差を計算します。
+ * 不偏分散（分母は n-1 ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
  * @author 松井文宏
  */
-float sd( ... float args[] ){
-	float value = sqrt( va(args) );
+float van1( ... float args[] ){
+	int n = length( args, 0 );
+	float mean = mean( args );
+	float value = 0.0;
+	for( int i=0; i<n; i++ ){
+		value += (mean-args[i])*(mean-args[i]);
+	}
+	value /= n-1;
 	return value;
 }
 
 
 /**
- * 不偏標準偏差を計算します。
+ * 不偏分散（分母は n-1 ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
  * @author 松井文宏
  */
-varfloat sd( ... varfloat args[] ){
-	varfloat value = sqrt( va(args) );
+varfloat van1( ... varfloat args[] ){
+	int n = length( args, (int)0v );
+	varfloat mean = mean( args );
+	varfloat value = 0.0vf;
+	for( int i=0; i<n; i++ ){
+		value += (mean-args[i])*(mean-args[i]);
+	}
+	value /= n - 1v;
 	return value;
 }
 
 
 /**
- * 標本標準偏差を計算します。
+ * van1 と同一の機能を提供します。この関数は互換目的でサポートされています。
+ *
+ * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
+ * @return 計算結果です。
+ * @author 松井文宏
+ */
+ 
+float va( ... float args[] ) {
+	return van1(args);
+}
+
+
+/**
+ * van1 と同一の機能を提供します。この関数は互換目的でサポートされています。
+ *
+ * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
+ * @return 計算結果です。
+ * @author 松井文宏
+ */
+ 
+varfloat va( ... varfloat args[] ) {
+	return van1(args);
+}
+
+
+/**
+ * 標準偏差（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
@@ -213,7 +213,7 @@ float sdn( ... float args[] ){
 
 
 /**
- * 標本標準偏差を計算します。
+ * 標準偏差（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
@@ -223,4 +223,57 @@ varfloat sdn( ... varfloat args[] ){
 	varfloat value = sqrt( van(args) );
 	return value;
 }
+
+
+/**
+ * 不偏標準偏差（分母は n-1 ）を計算します。
+ *
+ * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
+ * @return 計算結果です。
+ * @author 松井文宏
+ */
+float sdn1( ... float args[] ){
+	float value = sqrt( va(args) );
+	return value;
+}
+
+
+/**
+ * 不偏標準偏差（分母は n-1 ）を計算します。
+ *
+ * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
+ * @return 計算結果です。
+ * @author 松井文宏
+ */
+varfloat sdn1( ... varfloat args[] ){
+	varfloat value = sqrt( va(args) );
+	return value;
+}
+
+
+/**
+ * sdn1 と同一の機能を提供します。この関数は互換目的でサポートされています。
+ *
+ * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
+ * @return 計算結果です。
+ * @author 松井文宏
+ */
+ 
+float sd( ... float args[] ) {
+	return sdn1(args);
+}
+
+
+/**
+ * sdn1 と同一の機能を提供します。この関数は互換目的でサポートされています。
+ *
+ * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
+ * @return 計算結果です。
+ * @author 松井文宏
+ */
+ 
+varfloat sd( ... varfloat args[] ) {
+	return sdn1(args);
+}
+
 

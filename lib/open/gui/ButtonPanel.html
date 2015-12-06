@@ -7,7 +7,42 @@
 <body>
 <h1>ButtonPanel</h1>
 <hr />
-<h2 id="abstract">概要 - Abstract</h2><p>このモジュール open.gui.ButtonPanel は、GUI部品として、ボタンが並ぶパネル ―― ボタンパネル ―― を提供します。	</p><p>VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、このモジュールで提供されるGUI部品は、<a href="#ButtonPanel">ButtonPanel</a> 構造体として扱います。</p><p>ButtonPanel 構造体は、内部にリソースのID等を保持していますが、<br />生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。<br />具体的には、 <a href="#newButtonPanel">newButtonPanel</a> 関数で生成し、 <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。</p><p>またこのモジュールでは、ButtonPanel 構造体を標準ライブラリ「 GUI 」と同様の感覚でそのまま扱えるように、標準GUIライブラリ関数のオーバーロードも提供されます。<br />例えば、 <a href="#mountComponent">mountComponent</a> 関数や、<a href="#setComponentSize">setComponentSize</a> 関数、 <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。</p> <hr /><h2 id="struct">構造体 - Structs</h2><table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="ButtonPanel"><tbody>
+<h2 id="abstract">概要 - Abstract</h2>
+<p>このモジュール open.gui.ButtonPanel は、GUI部品として、ボタンが並ぶパネル ―― ボタンパネル ―― を提供します。	</p><p>VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、このモジュールで提供されるGUI部品は、<a href="#ButtonPanel">ButtonPanel</a> 構造体として扱います。</p><p>ButtonPanel 構造体は、内部にリソースのID等を保持していますが、<br />生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。<br />具体的には、 <a href="#newButtonPanel">newButtonPanel</a> 関数で生成し、 <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。</p><p>またこのモジュールでは、ButtonPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、標準GUIライブラリ関数のオーバーロードも提供されます。<br />例えば、 <a href="#mountComponent">mountComponent</a> 関数や、<a href="#setComponentSize">setComponentSize</a> 関数、 <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。</p> <hr />
+<h2 id="abstract">目次 - Index</h2>
+<dl>
+<dt><a href="#ButtonPanel">struct ButtonPanel </a></dt>
+<dd> ボタンパネルの構造体です。 </dd>
+<dt><a href="#newButtonPanel">ButtonPanel newButtonPanel(int x, int y, int width, int height, string labelText[ ]) </a></dt>
+<dd>ボタンパネルを生成します。 </dd>
+<dt><a href="#deleteComponent">void deleteComponent(ButtonPanel &amp;panelInstance) </a></dt>
+<dd>ボタンパネルを破棄します。 </dd>
+<dt><a href="#paintComponent">void paintComponent(ButtonPanel &amp;panelInstance) </a></dt>
+<dd>ボタンパネルを再描画します。 </dd>
+<dt><a href="#mountComponent">void mountComponent(ButtonPanel &amp;panelInstance, int componentID) </a></dt>
+<dd>ボタンパネルを、別のGUIコンポーネント上に配置します。 </dd>
+<dt><a href="#demountComponent">void demountComponent(ButtonPanel &amp;panelInstance, int componentID) </a></dt>
+<dd>ボタンパネルを、別のGUIコンポーネントから配置解除します。 </dd>
+<dt><a href="#getPanel">int getPanel(ButtonPanel &amp;panelInstance) </a></dt>
+<dd>パネルのコンポーネントIDを返します。 </dd>
+<dt><a href="#getButton">int getButton(ButtonPanel &amp;panelInstance, string labelText) </a></dt>
+<dd>指定されたラベルに対応するボタンを取得します。 </dd>
+<dt><a href="#getButton">int getButton(ButtonPanel &amp;panelInstance, int index) </a></dt>
+<dd>指定されたインデックスのボタンを取得します。 </dd>
+<dt><a href="#getComponentSize">int[ ] getComponentSize(ButtonPanel &amp;panelInstance) </a></dt>
+<dd>パネルのサイズを返します。 </dd>
+<dt><a href="#setComponentSize">void setComponentSize(ButtonPanel &amp;panelInstance, int width, int height) </a></dt>
+<dd>パネルのサイズを設定します。 </dd>
+<dt><a href="#setComponentSize">void setComponentSize(ButtonPanel &amp;panelInstance) </a></dt>
+<dd>パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 </dd>
+<dt><a href="#getComponentLocation">int[ ] getComponentLocation(ButtonPanel &amp;panelInstance) </a></dt>
+<dd>パネルの位置を返します。 </dd>
+<dt><a href="#setComponentLocation">void setComponentLocation(ButtonPanel &amp;panelInstance, int x, int y) </a></dt>
+<dd>パネルの位置を設定します。 </dd>
+</dl>
+<hr />
+<h2 id="struct">構造体 - Structs</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="ButtonPanel"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
    	 	宣言<br /> - Declaration
@@ -26,13 +61,16 @@
     </tr>
 </tbody></table>
 
-<hr /><h2 id="variable">変数 - Variables</h2><hr /><h2 id="function">関数 - Functions</h2><table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="newButtonPanel"><tbody>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<hr />
+<h2 id="function">関数 - Functions</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="newButtonPanel"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	ButtonPanel newButtonPanel(int x, int y, int width, int height, string labelText[]) 
+   	 	ButtonPanel newButtonPanel(int x, int y, int width, int height, string labelText[ ]) 
    	 </td>
     </tr>
     <tr>
@@ -280,7 +318,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int[] getComponentSize(ButtonPanel &amp;panelInstance) 
+   	 	int[ ] getComponentSize(ButtonPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>
@@ -369,7 +407,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int[] getComponentLocation(ButtonPanel &amp;panelInstance) 
+   	 	int[ ] getComponentLocation(ButtonPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>

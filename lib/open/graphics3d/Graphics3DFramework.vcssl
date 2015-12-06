@@ -34,25 +34,43 @@ import Time;
  * <br />
  * そういった処理は、いくつかの決まった名前の関数を定義し、そこに記述します。つまり、GUIなどのイベントハンドラと同じ仕組みです。
  * <br />
- * するとそれらの関数を、Graphics3DFramework が適切なタイミングで自動実行します。
+ * するとそれらのイベントハンドラ関数を、Graphics3DFramework が適切なタイミングで自動実行します。
  * </p>
  *
  * <p>
- * Graphics3DFramework が自動実行する関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。
+ * Graphics3DFramework が自動実行するイベントハンドラ関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。
  * <ul>
- *   <li>void initialize( int renderer ) - 起動時に一度だけ実行されます。3Dモデルの生成・配置などの初期化処理は、ここに記述します。</li>
- *   <li>void finalize( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。</li>
- *   <li>void paint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。前景・背景2DCGの描画を行いたい場合などは、ここに記述します。</li>
- *   <li>void update( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。3Dモデルの移動などを行いたい場合などは、ここに記述します。</li>
- *   <li>void resize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。</li>
+ *   <li>void onStart( int renderer ) - 起動時に一度だけ実行されます。3Dモデルの生成・配置などの初期化処理は、ここに記述します。旧称 initialize も使用可能です。</li>
+ *   <li>void onExit( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。旧称 finalize も使用可能です。</li>
+ *   <li>void onPaint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。前景・背景2DCGの描画を行いたい場合などは、ここに記述します。旧称 paint も使用可能です。</li>
+ *   <li>void onUpdate( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。3Dモデルの移動などを行いたい場合などは、ここに記述します。旧称 update も使用可能です。</li>
+ *   <li>void onResize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。旧称 resize も使用可能です。</li>
  * </ul>
  * 上記関数のいずれも、引数 renderer には、3DCGレンダラーのID が渡されます。これは3Dモデルの配置などに使用します。
+ * </p>
+ *
+ * <p>・古い処理系でも新しいイベントハンドラを使用するための互換コード</p>
+ *
+ * <p>
+ * なお、これらのイベントハンドラ関数は、過去に名称変更を経たため、互換目的で onStart の代わりに initialize などの旧称も使用可能となっています。
+ * <br />
+ * しかし、もし新しい名称のイベントハンドラ関数を使用しつつも、古い処理系でも動作させたいという場合は、以下の例のような互換コードを記述する事で対応できます：
+ * <br />
+ * <div class="code">
+ * // 互換コードの例 （ onExitやonPaint、onUpdateなどについても必要に応じて記述 ）
+ * <br />
+ * void initialize( int renderer ) { onStart(renderer); }  // 古い処理系では initialize 経由で onStart が呼ばれます。
+ * <br />
+ * void onStart( int renderer ) { 実際のイベント処理; } // 新しい処理系では、onStart が宣言されていれば initialize は呼ばれず、onStart が直接呼ばれます。
+ * </div>
+ * <br />
+ * この互換コードは、新しい名称のイベントハンドラ関数が 1 個以上宣言されている場合、旧称の関数はコールされない仕様を利用しています（この仕様はまさに上のような互換コードを可能にするためのものです）。
  * </p>
  *
  * <p>・背景・前景の2DCG描画</p>
  *
  * <p>
- * なお、Graphics3DFramework は、前景・背景の2DCG描画もサポートしています。
+ * Graphics3DFramework は、前景・背景の2DCG描画もサポートしています。
  * <br />
  * ただしこの機能はデフォルトで無効になっているため、利用する前にそれぞれ 
  * <a href="#setForegroundRendererState">setForegroundRendererState</a> ( true ) 及び 
@@ -943,51 +961,6 @@ public void main( string args[] ){
 }
 
 
-/**
- * フレームワークのメイン処理です。通常はmain関数から自動で実行されます。
- * ただし、メインプログラムでmain関数を定義する場合は、
- * 自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。
- *
- * @param args メイン引数（ getMainArgument関数で取得可能 ）
- * @author 松井文宏
- */
-public void frameworkMain( string args[] ){
-
-	mainArguments = args;
-
-	checkCallback();
-	initializeWindow();
-	initializeGraphics();
-	initializeComponent();
-
-	if( existsInitialize ){
-		eval( "initialize( renderer )" );
-	}
-
-	if( paintGraphics3DState ){
-		paintGraphics3D( renderer );
-	}
-
-	if( existsPaint ){
-		eval( "paint( renderer )" );
-	}
-
-	paintWindow();
-
-	mainLoopWait = 1000.0 / frameRate;
-	mainLoopWaitMax = 1000.0 / frameRate;
-
-	mainLoop();
-
-	if( existsFinalize ){
-		eval( "finalize( renderer )" );
-	}
-
-	exit();
-
-}
-
-
 /** paint関数が定義されているかどうかを保持します。 */
 private bool existsPaint = false;
 
@@ -1003,6 +976,24 @@ private bool existsFinalize = false;
 /** resize関数が定義されているかどうかを保持します。 */
 private bool existsResize = false;
 
+/** onPaint関数が定義されているかどうかを保持します。 */
+private bool existsOnPaint = false;
+
+/** onUpdate関数が定義されているかどうかを保持します。 */
+private bool existsOnUpdate = false;
+
+/** onStart関数が定義されているかどうかを保持します。 */
+private bool existsOnStart = false;
+
+/** onExit関数が定義されているかどうかを保持します。 */
+private bool existsOnExit = false;
+
+/** onResize関数が定義されているかどうかを保持します。 */
+private bool existsOnResize = false;
+
+/** 新しい名称のイベントハンドラ関数が使用されているかを保持します。 */
+private bool existsNewEventHandler = false;
+
 /**
  * 各種コールバック関数が定義されているかを検証します。
  *
@@ -1014,6 +1005,81 @@ private void checkCallback(){
 	existsInitialize = evaluable("initialize(renderer)");
 	existsFinalize = evaluable("finalize(renderer)");
 	existsResize = evaluable("resize(renderer)");
+	
+	existsOnPaint = evaluable("onPaint(renderer)");
+	existsOnUpdate = evaluable("onUpdate(renderer)");
+	existsOnStart = evaluable("onStart(renderer)");
+	existsOnExit = evaluable("onExit(renderer)");
+	existsOnResize = evaluable("onResize(renderer)");
+	
+	existsNewEventHandler = existsOnPaint || existsOnUpdate || existsOnStart || existsOnExit || existsOnResize;
+}
+
+
+/**
+ * フレームワークのリソースを初期化する処理です。
+ * この関数は、このフレームワークのプログラムの末尾、
+ * グローバル領域においてコールされます。
+ * 従って、このフレームワークを 
+ * import しているプログラムのグローバル領域実行時には、
+ * すでにリソースが確保されている事が保証されます。
+ * 
+ * @author 松井文宏
+ */
+private void frameworkInitialize() {
+	initializeWindow();
+	initializeGraphics();
+	initializeComponent();
+}
+
+
+
+/**
+ * フレームワークのメイン処理です。通常はmain関数から自動で実行されます。
+ * ただし、メインプログラムでmain関数を定義する場合は、
+ * 自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。
+ *
+ * @param args メイン引数（ getMainArgument関数で取得可能 ）
+ * @author 松井文宏
+ */
+public void frameworkMain( string args[] ){
+	
+	mainArguments = args;
+	checkCallback();
+	
+	if( existsInitialize && !existsNewEventHandler ){
+		eval( "initialize( renderer )" );
+	}
+	if( existsOnStart ){
+		eval( "onStart( renderer )" );
+	}
+	
+	if( paintGraphics3DState ){
+		paintGraphics3D( renderer );
+	}
+	
+	if( existsPaint && !existsNewEventHandler ){
+		eval( "paint( renderer )" );
+	}
+	if( existsOnPaint ){
+		eval( "onPaint( renderer )" );
+	}
+	
+	paintWindow();
+	
+	mainLoopWait = 1000.0 / frameRate;
+	mainLoopWaitMax = 1000.0 / frameRate;
+	
+	mainLoop();
+	
+	if( existsFinalize && !existsNewEventHandler ){
+		eval( "finalize( renderer )" );
+	}
+	if( existsOnExit ){
+		eval( "onExit( renderer )" );
+	}
+	
+	exit();
 }
 
 
@@ -1078,8 +1144,11 @@ private void mainLoop(){
 
 		if( animation ){
 
-			if(existsUpdate){
+			if(existsUpdate && !existsNewEventHandler ){
 				eval( "update( renderer )" );
+			}
+			if(existsOnUpdate && ){
+				eval( "onUpdate( renderer )" );
 			}
 
 			// レンダリング
@@ -1155,8 +1224,11 @@ private void render3D(){
 	if( paintGraphics3DState ){
 		paintGraphics3D( renderer );
 	}
-	if(existsPaint){
+	if(existsPaint && !existsNewEventHandler ){
 		eval( "paint( renderer )" );
+	}
+	if(existsOnPaint){
+		eval( "onPaint( renderer )" );
 	}
 }
 
@@ -1174,8 +1246,11 @@ private void render3DAndBackground(){
 	if( paintGraphics3DState ){
 		paintGraphics3D( renderer );
 	}
-	if(existsPaint){
+	if(existsPaint && !existsNewEventHandler ){
 		eval( "paint( renderer )" );
+	}
+	if(existsOnPaint){
+		eval( "onPaint( renderer )" );
 	}
 	drawGraphics(backgroundRenderer, 0, 0, graphics);
 }
@@ -1194,8 +1269,11 @@ private void render3DAndBackgroundAndForeground(){
 	if( paintGraphics3DState ){
 		paintGraphics3D( renderer );
 	}
-	if(existsPaint){
+	if(existsPaint && !existsNewEventHandler ){
 		eval( "paint( renderer )" );
+	}
+	if(existsOnPaint){
+		eval( "onPaint( renderer )" );
 	}
 	drawGraphics(backgroundRenderer, 0, 0, graphics);
 	drawGraphics(backgroundRenderer, 0, 0, foregroundGraphics);
@@ -1303,9 +1381,12 @@ private void setLayout(){
 	if(foregroundRenderer != NULL){
 		setGraphics2DSize( foregroundRenderer, labelWidth, labelHeight );
 	}
-
-	if( existsResize ){
+	
+	if( existsResize && !existsNewEventHandler ){
 		eval( "resize( renderer )" );
+	}
+	if( existsOnResize ){
+		eval( "onResize( renderer )" );
 	}
 }
 
@@ -1350,4 +1431,7 @@ private void getPreferredScreenHeight(){
 	return labelHeight;
 }
 
+
+// リソースを確保します。このように、グローバル領域でこの処理を実行する理由は、このフレームワークを import しているプログラムのグローバル領域実行時において、すでにリソースが確保されている事を保証するためです。
+frameworkInitialize();
 

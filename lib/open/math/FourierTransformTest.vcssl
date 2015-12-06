@@ -36,11 +36,6 @@ void test(){
 }
 
 
-/**
- * float型のフーリエ変換/逆変換テストです。
- *
- * @author 松井文宏
- */
 void testDftFloat(){
 
 	// 元の波:
@@ -73,7 +68,7 @@ void testDftFloat(){
 	}
 
 	// 再度逆変換して、元の波と比較検証
-	complex reTransWave[] = dft(transWave, INVERSE);
+	complex reTransWave[] = dft(transWave, BACKWARD);
 	for(int i=0; i<N; i++){
 		assert(almostEquals( re(reTransWave[i]), re(baseWave[i]) ));
 		assert(almostEquals( im(reTransWave[i]), im(baseWave[i]) ));
@@ -86,7 +81,7 @@ void testDftFloat(){
 		int reTransWaveGraph = newGraph2D();
 		setGraph2DTitle(baseWaveGraph, "BASE WAVE ( float )");
 		setGraph2DTitle(transWaveGraph, "FORWARD TRANSFORMED WAVE ( float )");
-		setGraph2DTitle(reTransWaveGraph, "FORWARD -> INVERSE TRANSFORMED WAVE ( float )");
+		setGraph2DTitle(reTransWaveGraph, "FORWARD -> BACKWARD TRANSFORMED WAVE ( float )");
 		float nArray[] = getNArray(N);
 		float absArray[];
 
@@ -102,11 +97,6 @@ void testDftFloat(){
 }
 
 
-/**
- * varfloat型（多倍長）のフーリエ変換/逆変換テストです。
- *
- * @author 松井文宏
- */
 void testDftVarfloat(){
 	digit(VARFLOAT_DIGIT);
 
@@ -140,7 +130,7 @@ void testDftVarfloat(){
 	}
 
 	// 再度逆変換して、元の波と比較検証
-	varcomplex reTransWave[] = dft(transWave, INVERSE);
+	varcomplex reTransWave[] = dft(transWave, BACKWARD);
 	for(varint i=0v; i<N; i++){
 		assert(almostEquals( re(reTransWave[i]), re(baseWave[i]) ));
 		assert(almostEquals( im(reTransWave[i]), im(baseWave[i]) ));
@@ -153,7 +143,7 @@ void testDftVarfloat(){
 		int reTransWaveGraph = newGraph2D();
 		setGraph2DTitle(baseWaveGraph, "BASE WAVE ( varfloat )");
 		setGraph2DTitle(transWaveGraph, "FORWARD TRANSFORMED WAVE ( varfloat )");
-		setGraph2DTitle(reTransWaveGraph, "FORWARD -> INVERSE TRANSFORMED WAVE ( varfloat )");
+		setGraph2DTitle(reTransWaveGraph, "FORWARD -> BACKWARD TRANSFORMED WAVE ( varfloat )");
 		float nArray[] = getNArray(N);
 		float absArray[];
 

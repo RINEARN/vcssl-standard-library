@@ -30,7 +30,7 @@ int spriteHeight = 50;
  * この関数はフレームワーク側から、
  * 起動後のタイミングで一度だけ実行されます。
  */
-void initialize(int renderer){
+void onStart(int renderer){
 	testSetBackgroundColor();
 	testGetBackgroundColor();
 	testSetWindowSize();
@@ -58,10 +58,8 @@ void initialize(int renderer){
 /**
  * この関数はフレームワーク側から、
  * 画面更新タイミングの間で毎回実行されます。
- *
- * @author 松井文宏
  */
-void update(int renderer){
+void onUpdate(int renderer){
 
 	// スプライトを移動
 	spriteX++;
@@ -91,7 +89,7 @@ void update(int renderer){
  * この関数はフレームワーク側から、
  * 画面更新タイミングで毎回実行されます。
  */
-void paint(int renderer){
+void onPaint(int renderer){
 	setDrawColor(renderer, 70, 140, 255, 180);
 	drawOval(renderer, 0, 0, 600, 400, true);
 	setDrawColor(renderer, 70, 255, 70, 180);
@@ -106,7 +104,7 @@ void paint(int renderer){
  * この関数はフレームワーク側から、
  * 終了前のタイミングで一度だけ実行されます。
  */
-void finalize(int renderer){
+void onExit(int renderer){
 	alert("終了します");
 }
 
@@ -120,7 +118,6 @@ public void onButtonClick(int id){
 }
 
 
-/** 画像ファイルの出力テストです。 */
 public void testExport(){
 	string fileName = "Graphics2DFrameworkTest.jpg";
 	export(fileName, "JPEG", 100.0);
@@ -128,12 +125,10 @@ public void testExport(){
 }
 
 
-/** 背景色の設定テストです。 */
 void testSetBackgroundColor(){
 	setBackgroundColor(0, 0, 0, 255);
 }
 
-/** 背景色の取得テストです。 */
 void testGetBackgroundColor(){
 	int color[] = getBackgroundColor();
 	assert(color[0] == 0);
@@ -145,13 +140,11 @@ void testGetBackgroundColor(){
 
 
 
-/** ウィンドウサイズの変更テストです。 */
 void testSetWindowSize(){
 	setWindowSize(1000, 800);
 }
 
 
-/** ウィンドウサイズの取得テストです。 */
 void testGetWindowSize(){
 	int size[] = getWindowSize();
 	assert(size[0] == 1000);
@@ -159,31 +152,26 @@ void testGetWindowSize(){
 }
 
 
-/** タイトルサイズの変更テストです。 */
 void testSetWindowTitle(){
 	setWindowTitle("Test");
 }
 
 
-/** タイトルサイズの取得テストです。 */
 void testGetWindowTitle(){
 	assert(getWindowTitle() == "Test");
 }
 
 
-/** 理想フレームレートの設定テストです。 */
 void testSetFrameRate(){
 	setFrameRate(24.0);
 }
 
 
-/** 理想フレームレートの取得テストです。 */
 void testGetFrameRate(){
 	assert(getFrameRate() == 24.0);
 }
 
 
-/** 実測フレームレートの取得テストです。 */
 void testGetCurrentFrameRate(){
 	float rate = getCurrentFrameRate();
 	int rend = getRenderer();
@@ -193,7 +181,6 @@ void testGetCurrentFrameRate(){
 }
 
 
-/** 最終フレーム時刻の取得テストです。 */
 void testGetLastFrameTime(){
 	int time = getLastFrameTime();
 	int rend = getRenderer();
@@ -203,48 +190,39 @@ void testGetLastFrameTime(){
 }
 
 
-/** ウィンドウ内余白（上）の設定テストです。 */
 void testSetMarginTop(){
 	setMarginTop(20);
 }
 
-/** ウィンドウ内余白（上）の取得テストです。 */
 void testGetMarginTop(){
 	assert(getMarginTop() == 20);
 }
 
 
-/** ウィンドウ内余白（下）の設定テストです。 */
 void testSetMarginBottom(){
 	setMarginBottom(20);
 }
 
-/** ウィンドウ内余白（下）の取得テストです。 */
 void testGetMarginBottom(){
 	assert(getMarginBottom() == 20);
 }
 
-/** ウィンドウ内余白（右）の設定テストです。 */
 void testSetMarginRight(){
 	setMarginRight(20);
 }
 
-/** ウィンドウ内余白（右）の取得テストです。 */
 void testGetMarginRight(){
 	assert(getMarginRight() == 20);
 }
 
-/** ウィンドウ内余白（左）の設定テストです。 */
 void testSetMarginLeft(){
 	setMarginLeft(200);
 }
 
-/** ウィンドウ内余白（左）の取得テストです。 */
 void testGetMarginLeft(){
 	assert(getMarginLeft() == 200);
 }
 
-/** ウィンドウIDの設定テストです。 */
 void testGetWindow(){
 	int window = getWindow();
 	int button = newButton(10, 20, 180, 50, "EXPORT");

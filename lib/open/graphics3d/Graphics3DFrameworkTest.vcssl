@@ -21,7 +21,7 @@ const bool TEST_2D_RENDERING = true;
  * この関数はフレームワーク側から、
  * 起動後のタイミングで一度だけ実行されます。
  */
-void initialize(int renderer){
+void onStart(int renderer){
 	if(TEST_2D_RENDERING){
 		testSetBackgroundRendererState();
 		testSetForegroundRendererState();
@@ -58,7 +58,7 @@ void initialize(int renderer){
 	// 円錐モデル（ワイヤーフレーム）を配置
 	int cone = newConeModel(1.4, 1.4, 2.0, 20, 14);
 	moveModel(cone, 2.0, 0.0, -1.0);
-	rotXModel(cone, 1.2);
+	rotModelX(cone, 1.2);
 	setModelFill(cone, false);
 	mountModel(cone, renderer);
 
@@ -73,12 +73,10 @@ void initialize(int renderer){
 /**
  * この関数はフレームワーク側から、
  * 画面更新タイミングの間で毎回実行されます。
- *
- * @author 松井文宏
  */
-void update(int renderer){
+void onUpdate(int renderer){
 	// モデルを回転
-	rotZModel(sphere, 0.02);
+	rotModelZ(sphere, 0.02);
 }
 
 
@@ -86,7 +84,7 @@ void update(int renderer){
  * この関数はフレームワーク側から、
  * 画面更新タイミングで毎回実行されます。
  */
-void paint(int renderer){
+void onPaint(int renderer){
 	if(TEST_2D_RENDERING){
 		// 背景2DCG描画テスト
 		testGetBackgroundRenderer();
@@ -107,7 +105,7 @@ void paint(int renderer){
  * この関数はフレームワーク側から、
  * 終了前のタイミングで一度だけ実行されます。
  */
-void finalize(int renderer){
+void onExit(int renderer){
 	alert("終了します");
 }
 
@@ -121,7 +119,6 @@ public void onButtonClick(int id){
 }
 
 
-/** 画像ファイルの出力テストです。 */
 public void testExport(){
 	string fileName = "Graphics3DFrameworkTest.jpg";
 	export(fileName, "JPEG", 100.0);
@@ -129,12 +126,10 @@ public void testExport(){
 }
 
 
-/** 背景色の設定テストです。 */
 void testSetBackgroundColor(){
 	setBackgroundColor(0, 0, 0, 255);
 }
 
-/** 背景色の取得テストです。 */
 void testGetBackgroundColor(){
 	int color[] = getBackgroundColor();
 	assert(color[0] == 0);
@@ -144,37 +139,31 @@ void testGetBackgroundColor(){
 }
 
 
-/** 描画倍率の設定テストです。 */
 void testSetMagnification(){
 	setMagnification(1400.0);
 }
 
-/** 描画倍率の取得テストです。 */
 void testGetMagnification(){
 	assert(getMagnification() == 1400.0);
 }
 
 
-/** 背景2DCGレンダラの有効テストです。 */
 void testSetBackgroundRendererState(){
 	setBackgroundRendererState(true);
 }
 
 
-/** 前景2DCGレンダラの有効テストです。 */
 void testSetForegroundRendererState(){
 	setForegroundRendererState(true);
 }
 
 
-/** 背景2DCG描画の取得テストです。 */
 void testGetBackgroundRenderer(){
 	int bgRenderer = getBackgroundRenderer();
 	assert(bgRenderer != NULL);
 }
 
 
-/** 背景2DCGの描画テストです。 */
 void testBackgroundRenderer(){
 	int bgRenderer = getBackgroundRenderer();
 	setDrawColor(bgRenderer, 0, 0, 255, 255);
@@ -182,14 +171,12 @@ void testBackgroundRenderer(){
 }
 
 
-/** 前景2DCG描画の取得テストです。 */
 void testGetForegroundRenderer(){
 	int fgRenderer = getForegroundRenderer();
 	assert(fgRenderer != NULL);
 }
 
 
-/** 前景2DCGの描画テストです。 */
 void testForegroundRenderer(){
 	int fgRenderer = getForegroundRenderer();
 	setDrawColor(fgRenderer, 0, 255, 0, 200);
@@ -197,13 +184,11 @@ void testForegroundRenderer(){
 }
 
 
-/** ウィンドウサイズの変更テストです。 */
 void testSetWindowSize(){
 	setWindowSize(1000, 800);
 }
 
 
-/** ウィンドウサイズの取得テストです。 */
 void testGetWindowSize(){
 	int size[] = getWindowSize();
 	assert(size[0] == 1000);
@@ -211,25 +196,21 @@ void testGetWindowSize(){
 }
 
 
-/** タイトルサイズの変更テストです。 */
 void testSetWindowTitle(){
 	setWindowTitle("Test");
 }
 
 
-/** タイトルサイズの取得テストです。 */
 void testGetWindowTitle(){
 	assert(getWindowTitle() == "Test");
 }
 
 
-/** 方向性ライトのベクトル設定テストです。 */
 void testSetDirectionalLightVector(){
 	setDirectionalLightVector(-1.0, 0.0, 2.0);
 }
 
 
-/** 方向性ライトのベクトル取得テストです。 */
 void testGetDirectionalLightVector(){
 	float v[] = getDirectionalLightVector();
 	assert(v[0] == -1.0);
@@ -238,43 +219,36 @@ void testGetDirectionalLightVector(){
 }
 
 
-/** 方向性ライトの輝度設定テストです。 */
 void testSetDirectionalLightBrightness(){
 	setDirectionalLightBrightness(0.4);
 }
 
 
-/** 方向性ライトの輝度取得テストです。 */
 void testGetDirectionalLightBrightness(){
 	assert(getDirectionalLightBrightness() == 0.4);
 }
 
 
-/** 環境光ライトの輝度設定テストです。 */
 void testSetDirectionalLightBrightness(){
 	setDirectionalLightBrightness(0.5);
 }
 
 
-/** 環境光ライトの輝度取得テストです。 */
 void testGetDirectionalLightBrightness(){
 	assert(getDirectionalLightBrightness() == 0.5);
 }
 
 
-/** 理想フレームレートの設定テストです。 */
 void testSetFrameRate(){
 	setFrameRate(24.0);
 }
 
 
-/** 理想フレームレートの取得テストです。 */
 void testGetFrameRate(){
 	assert(getFrameRate() == 24.0);
 }
 
 
-/** 実測フレームレートの取得テストです。 */
 void testGetCurrentFrameRate(){
 	float rate = getCurrentFrameRate();
 	int bgRend = getBackgroundRenderer();
@@ -284,7 +258,6 @@ void testGetCurrentFrameRate(){
 }
 
 
-/** 最終フレーム時刻の取得テストです。 */
 void testGetLastFrameTime(){
 	int time = getLastFrameTime();
 	int bgRend = getBackgroundRenderer();
@@ -294,54 +267,44 @@ void testGetLastFrameTime(){
 }
 
 
-/** ウィンドウ内余白（上）の設定テストです。 */
 void testSetMarginTop(){
 	setMarginTop(20);
 }
 
-/** ウィンドウ内余白（上）の取得テストです。 */
 void testGetMarginTop(){
 	assert(getMarginTop() == 20);
 }
 
 
-/** ウィンドウ内余白（下）の設定テストです。 */
 void testSetMarginBottom(){
 	setMarginBottom(20);
 }
 
-/** ウィンドウ内余白（下）の取得テストです。 */
 void testGetMarginBottom(){
 	assert(getMarginBottom() == 20);
 }
 
-/** ウィンドウ内余白（右）の設定テストです。 */
 void testSetMarginRight(){
 	setMarginRight(20);
 }
 
-/** ウィンドウ内余白（右）の取得テストです。 */
 void testGetMarginRight(){
 	assert(getMarginRight() == 20);
 }
 
-/** ウィンドウ内余白（左）の設定テストです。 */
 void testSetMarginLeft(){
 	setMarginLeft(200);
 }
 
-/** ウィンドウ内余白（左）の取得テストです。 */
 void testGetMarginLeft(){
 	assert(getMarginLeft() == 200);
 }
 
-/** ウィンドウIDの設定テストです。 */
 void testGetWindow(){
 	int window = getWindow();
 	int button = newButton(10, 20, 180, 50, "EXPORT");
 	mountComponent(button, window);
 }
-
 
 
 

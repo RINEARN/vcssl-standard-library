@@ -7,7 +7,48 @@
 <body>
 <h1>List</h1>
 <hr />
-<h2 id="abstract">概要 - Abstract</h2><p>このモジュール open.data.List は、リスト型のデータ構造を提供します。	</p><p>このモジュールでは、リストのデータを保持するジェネリック構造体 <a href="#List">List</a> と、それに対してデータを出し入れするジェネリック関数 <a href="#add">add</a>, <a href="#remove">remove</a> などが提供されます。</p><p>なお、この open.data.List では、配列を要素として扱う事はできません。配列を要素にしたい場合は、open.data.<a href="WrappedList.html">WrappedList</a> を使用して下さい。</p> <hr /><h2 id="struct">構造体 - Structs</h2><table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="List"><tbody>
+<h2 id="abstract">概要 - Abstract</h2>
+<p>このモジュール open.data.List は、リスト型のデータ構造を提供します。	</p><p>このモジュールでは、リストのデータを保持するジェネリック構造体 <a href="#List">List</a> と、それに対してデータを出し入れするジェネリック関数 <a href="#add">add</a>, <a href="#remove">remove</a> などが提供されます。</p><p>なお、この open.data.List では、配列を要素として扱う事はできません。配列を要素にしたい場合は、open.data.<a href="WrappedList.html">WrappedList</a> を使用して下さい。</p> <hr />
+<h2 id="abstract">目次 - Index</h2>
+<dl>
+<dt><a href="#List">struct List&lt;Type&gt; </a></dt>
+<dd>リスト構造体です。リストのデータを保持します。 </dd>
+<dt><a href="#clear">void clear&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dd>要素を全て削除します。 </dd>
+<dt><a href="#size">int size&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dd>使用中のサイズを返します。 </dd>
+<dt><a href="#add">void add&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type value ) </a></dt>
+<dd>リストの末尾に要素を追加します。 </dd>
+<dt><a href="#get">Type get&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index ) </a></dt>
+<dd>特定インデックスの要素を取得します。 </dd>
+<dt><a href="#set">void set&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index, Type element ) </a></dt>
+<dd>特定インデックスの要素を代入します。そのインデックスの位置にあった要素は上書きされます。 </dd>
+<dt><a href="#insert">Type insert&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index, Type value ) </a></dt>
+<dd>特定インデックスに要素を挿入します。そのインデックスの位置にあった要素は、次のインデックスの位置に移動します。また、それ以降の全ての要素も、インデックスが後方に 1 ずつ移動します。 </dd>
+<dt><a href="#contains">bool contains&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dd>リストが指定された要素を含んでいるか判定します。 </dd>
+<dt><a href="#removeAt">Type removeAt&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index ) </a></dt>
+<dd>特定インデックスの要素を削除します。 </dd>
+<dt><a href="#remove">void remove&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dd>指定された要素を削除します。複数存在する場合は、最初のものだけが削除されます。 </dd>
+<dt><a href="#removeAll">void removeAll&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dd>指定された要素を全て削除します。 </dd>
+<dt><a href="#indexOf">int indexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dd>指定された要素を、先頭から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
+<dt><a href="#indexOf">int indexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element, int from ) </a></dt>
+<dd>指定された要素を、指定インデックスの位置から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
+<dt><a href="#lastIndexOf">int lastIndexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dd>指定された要素を、末尾から前方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
+<dt><a href="#lastIndexOf">int lastIndexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element, int from ) </a></dt>
+<dd>指定された要素を、指定インデックスの位置から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
+<dt><a href="#reverse">void reverse&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dd>リストが保持する全要素の順序を反転させます。 </dd>
+<dt><a href="#toArray">Type[ ] toArray&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dd>リストが保持する全要素を、1次元の配列に格納して返します。 </dd>
+</dl>
+<hr />
+<h2 id="struct">構造体 - Structs</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="List"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
    	 	宣言<br /> - Declaration
@@ -26,7 +67,11 @@
     </tr>
 </tbody></table>
 
-<hr /><h2 id="variable">変数 - Variables</h2><p> - なし - None  -</p><hr /><h2 id="function">関数 - Functions</h2><table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="clear"><tbody>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<p> - なし - None  -</p>
+<hr />
+<h2 id="function">関数 - Functions</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="clear"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
    	 	宣言<br /> - Declaration
@@ -445,7 +490,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	Type[] toArray&lt;Type&gt;( List&lt;Type&gt; &amp;list ) 
+   	 	Type[ ] toArray&lt;Type&gt;( List&lt;Type&gt; &amp;list ) 
    	 </td>
     </tr>
     <tr>

@@ -7,7 +7,146 @@
 <body>
 <h1>Graphics3DFramework</h1>
 <hr />
-<h2 id="abstract">概要 - Abstract</h2><p>このモジュール open.gui.Graphics3DFramework は、3DCG（ 3次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p><p>VCSSLの標準ライブラリ「 Graphics3D 」や「 GUI 」だけを用いて、ゼロから3DCGプログラムを記述する場合、<br />ウィンドウ・レンダラー（描画エンジン）の生成や、アニメーションループ、基本的なイベントハンドラなど、いくつかの定型的な処理を、毎回記述しなければいけません。<br />そこで、この Graphics3DFramework では、上述のような定型処理を、雛形のようにあらかじめ用意する事によって、手軽な3DCG利用をサポートします。</p><p>・必要な処理の記述</p><p>Graphics3DFramework は、構造的には、単体で既に完成した3DCGプログラムです。実際、単体で実行する事が可能です。<br />ただし、単体では何の3Dモデルも配置されておらず、ただ白い画面が表示されるだけです。</p><p>そこで実際には、自作モジュールから Graphics3DFramework を import し、3Dモデルの配置や移動など、必要な処理を記述します。<br />そういった処理は、いくつかの決まった名前の関数を定義し、そこに記述します。つまり、GUIなどのイベントハンドラと同じ仕組みです。<br />するとそれらの関数を、Graphics3DFramework が適切なタイミングで自動実行します。</p><p>Graphics3DFramework が自動実行する関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。<ul>  <li>void initialize( int renderer ) - 起動時に一度だけ実行されます。3Dモデルの生成・配置などの初期化処理は、ここに記述します。</li>  <li>void finalize( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。</li>  <li>void paint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。前景・背景2DCGの描画を行いたい場合などは、ここに記述します。</li>  <li>void update( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。3Dモデルの移動などを行いたい場合などは、ここに記述します。</li>  <li>void resize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。</li></ul>上記関数のいずれも、引数 renderer には、3DCGレンダラーのID が渡されます。これは3Dモデルの配置などに使用します。</p><p>・背景・前景の2DCG描画</p><p>なお、Graphics3DFramework は、前景・背景の2DCG描画もサポートしています。<br />ただしこの機能はデフォルトで無効になっているため、利用する前にそれぞれ <a href="#setForegroundRendererState">setForegroundRendererState</a> ( true ) 及び <a href="#setBackgroundRendererState">setBackgroundRendererState</a> ( true ) を実行して下さい。<br />その後、 <a href="#getForegroundRenderer">getForegroundRenderer</a> ( ) 及び <a href="#getBackgroundRenderer">getBackgroundRenderer</a> ( ) で 2DCGレンダラーのIDを取得し、paint関数内などで描画を行います。</p><p>・ウィンドウのカスタマイズ</p><p>Graphics3DFramework では、ウィンドウ内に余白領域を設定し、そこにボタンやテキストフィールドなどのGUI部品を配置する事ができます。<br />余白の設定は、<a href="#setMarginTop">setMarginTop</a> ( int margin ) 関数や <a href="#setMarginLeft">setMarginLeft</a> ( int margin ) 関数などで行います。<br />そして <a href="#getWindow">getWindow</a> ( ) 関数でウィンドウのIDを取得し、余白領域にGUI部品を自由に配置してください。</p><p>・フレームレート調整</p><p>加えて、Graphics3DFramework は、フレームレートの自動調整機構も備えています。<br />具体的には、Graphics3DFramework は、毎フレーム間の所要時間を計測し、常に設定された目標フレームレートに近づくよう、アニメーションループのウェイト ( 待機時間 ) を自動調整します。<br />目標フレームレートは <a href="#setFrameRate">setFrameRate</a> ( float rate ) で設定します。また、実測フレームレートは <a href="#getCurrentFrameRate">getCurrentFrameRate</a> ( ) で取得可能です。</p><p>・処理落ち</p><p>なお、実行環境の処理速度にも依存しますが、描画する画面サイズが大きかったり、描画内容が重かったりすると、<br />アニメーションの待機時間を最小にしても、実測フレームレートが目標フレームレートに達しなくなる現象 ―― 処理落ち ―― が生じます。</p><p>処理落ちが発生すると、画面の再描画処理が追いつかなくなり、画面がちらつく場合があります。<br />その場合は、目標フレームレートを実測フレームレートの限界よりも余裕のある値に設定する事で、画面のちらつきを抑える事ができます。<br />しかし、実測フレームレートは環境に大きく依存するため、代わりに <a href="#setAnimationWaitMin">setAnimationWaitMin</a> ( int wait ) 関数でアニメーションウェイトの下限値（ミリ秒単位）を大きめに設定する事でも、<br />画面のちらつきを抑える事ができます（ ただしこの場合、実測フレームレートの限界は低下します ）。</p> <hr /><h2 id="struct">構造体 - Structs</h2><p> - なし - None  -</p><hr /><h2 id="variable">変数 - Variables</h2><hr /><h2 id="function">関数 - Functions</h2><table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getGraphics"><tbody>
+<h2 id="abstract">概要 - Abstract</h2>
+<p>このモジュール open.gui.Graphics3DFramework は、3DCG（ 3次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p><p>VCSSLの標準ライブラリ「 Graphics3D 」や「 GUI 」だけを用いて、ゼロから3DCGプログラムを記述する場合、<br />ウィンドウ・レンダラー（描画エンジン）の生成や、アニメーションループ、基本的なイベントハンドラなど、いくつかの定型的な処理を、毎回記述しなければいけません。<br />そこで、この Graphics3DFramework では、上述のような定型処理を、雛形のようにあらかじめ用意する事によって、手軽な3DCG利用をサポートします。</p><p>・必要な処理の記述</p><p>Graphics3DFramework は、構造的には、単体で既に完成した3DCGプログラムです。実際、単体で実行する事が可能です。<br />ただし、単体では何の3Dモデルも配置されておらず、ただ白い画面が表示されるだけです。</p><p>そこで実際には、自作モジュールから Graphics3DFramework を import し、3Dモデルの配置や移動など、必要な処理を記述します。<br />そういった処理は、いくつかの決まった名前の関数を定義し、そこに記述します。つまり、GUIなどのイベントハンドラと同じ仕組みです。<br />するとそれらのイベントハンドラ関数を、Graphics3DFramework が適切なタイミングで自動実行します。</p><p>Graphics3DFramework が自動実行するイベントハンドラ関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。<ul>  <li>void onStart( int renderer ) - 起動時に一度だけ実行されます。3Dモデルの生成・配置などの初期化処理は、ここに記述します。旧称 initialize も使用可能です。</li>  <li>void onExit( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。旧称 finalize も使用可能です。</li>  <li>void onPaint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。前景・背景2DCGの描画を行いたい場合などは、ここに記述します。旧称 paint も使用可能です。</li>  <li>void onUpdate( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。3Dモデルの移動などを行いたい場合などは、ここに記述します。旧称 update も使用可能です。</li>  <li>void onResize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。旧称 resize も使用可能です。</li></ul>上記関数のいずれも、引数 renderer には、3DCGレンダラーのID が渡されます。これは3Dモデルの配置などに使用します。</p><p>・古い処理系でも新しいイベントハンドラを使用するための互換コード</p><p>なお、これらのイベントハンドラ関数は、過去に名称変更を経たため、互換目的で onStart の代わりに initialize などの旧称も使用可能となっています。<br />しかし、もし新しい名称のイベントハンドラ関数を使用しつつも、古い処理系でも動作させたいという場合は、以下の例のような互換コードを記述する事で対応できます：<br /><div class="code">// 互換コードの例 （ onExitやonPaint、onUpdateなどについても必要に応じて記述 ）<br />void initialize( int renderer ) { onStart(renderer); }  // 古い処理系では initialize 経由で onStart が呼ばれます。<br />void onStart( int renderer ) { 実際のイベント処理; } // 新しい処理系では、onStart が宣言されていれば initialize は呼ばれず、onStart が直接呼ばれます。</div><br />この互換コードは、新しい名称のイベントハンドラ関数が 1 個以上宣言されている場合、旧称の関数はコールされない仕様を利用しています（この仕様はまさに上のような互換コードを可能にするためのものです）。</p><p>・背景・前景の2DCG描画</p><p>Graphics3DFramework は、前景・背景の2DCG描画もサポートしています。<br />ただしこの機能はデフォルトで無効になっているため、利用する前にそれぞれ <a href="#setForegroundRendererState">setForegroundRendererState</a> ( true ) 及び <a href="#setBackgroundRendererState">setBackgroundRendererState</a> ( true ) を実行して下さい。<br />その後、 <a href="#getForegroundRenderer">getForegroundRenderer</a> ( ) 及び <a href="#getBackgroundRenderer">getBackgroundRenderer</a> ( ) で 2DCGレンダラーのIDを取得し、paint関数内などで描画を行います。</p><p>・ウィンドウのカスタマイズ</p><p>Graphics3DFramework では、ウィンドウ内に余白領域を設定し、そこにボタンやテキストフィールドなどのGUI部品を配置する事ができます。<br />余白の設定は、<a href="#setMarginTop">setMarginTop</a> ( int margin ) 関数や <a href="#setMarginLeft">setMarginLeft</a> ( int margin ) 関数などで行います。<br />そして <a href="#getWindow">getWindow</a> ( ) 関数でウィンドウのIDを取得し、余白領域にGUI部品を自由に配置してください。</p><p>・フレームレート調整</p><p>加えて、Graphics3DFramework は、フレームレートの自動調整機構も備えています。<br />具体的には、Graphics3DFramework は、毎フレーム間の所要時間を計測し、常に設定された目標フレームレートに近づくよう、アニメーションループのウェイト ( 待機時間 ) を自動調整します。<br />目標フレームレートは <a href="#setFrameRate">setFrameRate</a> ( float rate ) で設定します。また、実測フレームレートは <a href="#getCurrentFrameRate">getCurrentFrameRate</a> ( ) で取得可能です。</p><p>・処理落ち</p><p>なお、実行環境の処理速度にも依存しますが、描画する画面サイズが大きかったり、描画内容が重かったりすると、<br />アニメーションの待機時間を最小にしても、実測フレームレートが目標フレームレートに達しなくなる現象 ―― 処理落ち ―― が生じます。</p><p>処理落ちが発生すると、画面の再描画処理が追いつかなくなり、画面がちらつく場合があります。<br />その場合は、目標フレームレートを実測フレームレートの限界よりも余裕のある値に設定する事で、画面のちらつきを抑える事ができます。<br />しかし、実測フレームレートは環境に大きく依存するため、代わりに <a href="#setAnimationWaitMin">setAnimationWaitMin</a> ( int wait ) 関数でアニメーションウェイトの下限値（ミリ秒単位）を大きめに設定する事でも、<br />画面のちらつきを抑える事ができます（ ただしこの場合、実測フレームレートの限界は低下します ）。</p> <hr />
+<h2 id="abstract">目次 - Index</h2>
+<dl>
+<dt><a href="#getGraphics">int getGraphics() </a></dt>
+<dd>3DCGのグラフィックスリソースIDを返します。 </dd>
+<dt><a href="#getBackgroundGraphics">int getBackgroundGraphics() </a></dt>
+<dd>背景2DCGのグラフィックスリソースIDを返します。 </dd>
+<dt><a href="#getForegroundGraphics">int getForegroundGraphics() </a></dt>
+<dd>前景2DCGのグラフィックスリソースIDを返します。 </dd>
+<dt><a href="#getRenderer">int getRenderer() </a></dt>
+<dd>3DCGのレンダラーIDを返します。 </dd>
+<dt><a href="#getBackgroundRenderer">int getBackgroundRenderer() </a></dt>
+<dd>背景2DCGのレンダラーIDを返します。 </dd>
+<dt><a href="#getForegroundRenderer">int getForegroundRenderer() </a></dt>
+<dd>前景2DCGのレンダラーIDを返します。 </dd>
+<dt><a href="#setBackgroundRendererState">void setBackgroundRendererState(bool state) </a></dt>
+<dd>背景2DCGレンダラーの有効/無効を設定します。 </dd>
+<dt><a href="#setForegroundRendererState">void setForegroundRendererState(bool state) </a></dt>
+<dd>前景2DCGレンダラーの有効/無効を設定します。 </dd>
+<dt><a href="#getGraphicsLabel">int getGraphicsLabel() </a></dt>
+<dd>描画ラベルのGUIコンポーネントIDを返します。 </dd>
+<dt><a href="#getWindow">int getWindow() </a></dt>
+<dd>ウィンドウのGUIコンポーネントIDを取得します。 </dd>
+<dt><a href="#setAnimationState">void setAnimationState(bool enable) </a></dt>
+<dd>アニメーションモードの有効/無効を設定します。 </dd>
+<dt><a href="#getAnimationState">bool getAnimationState() </a></dt>
+<dd>アニメーションの有効/無効を取得します。 </dd>
+<dt><a href="#setFrameRate">void setFrameRate(float rate) </a></dt>
+<dd>アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。 </dd>
+<dt><a href="#getFrameRate">float getFrameRate() </a></dt>
+<dd>アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。 </dd>
+<dt><a href="#getCurrentFrameRate">float getCurrentFrameRate() </a></dt>
+<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。 </dd>
+<dt><a href="#getLastFrameTime">int getLastFrameTime() </a></dt>
+<dd>アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。 </dd>
+<dt><a href="#getCurrentFrameRate">float getCurrentFrameRate() </a></dt>
+<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。 </dd>
+<dt><a href="#getLastFrameTime">int getLastFrameTime() </a></dt>
+<dd>アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。 </dd>
+<dt><a href="#setPaintGraphics2DState">void setPaintGraphics2DState(bool state) </a></dt>
+<dd>画面描画時（paintコール前）の背景・前景描画において、自動でGraphics3D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。 </dd>
+<dt><a href="#getPaintGraphics3DState">bool getPaintGraphics3DState() </a></dt>
+<dd>画面描画時（paintコール前）に、自動でGraphics3D.paintGraphics3Dをコールするかどうかを取得します。 </dd>
+<dt><a href="#setMagnification">void setMagnification(float rate) </a></dt>
+<dd>描画倍率を設定します。倍率は、視点から1.0の距離にある、半径1.0の円が、半径何ピクセルに描かれるかの比率に一致します。 </dd>
+<dt><a href="#getMagnification">float getMagnification() </a></dt>
+<dd>描画倍率を取得します。倍率は、視点から1.0の距離にある、半径1.0の円が、半径何ピクセルに描かれるかの比率に一致します。 </dd>
+<dt><a href="#setBackgroundColor">void setBackgroundColor(int r, int g, int b, int a) </a></dt>
+<dd>背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。 </dd>
+<dt><a href="#setBackgroundColor">void setBackgroundColor(int color[ ]) </a></dt>
+<dd>背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。 </dd>
+<dt><a href="#getBackgroundColor">int[ ] getBackgroundColor() </a></dt>
+<dd>背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。 </dd>
+<dt><a href="#setDirectionalLightVector">void setDirectionalLightVector(float x, float y, float z) </a></dt>
+<dd>平行光源の方向ベクトルを指定します。ベクトルは、ライトの存在する方向のベクトルを指定します。 </dd>
+<dt><a href="#setDirectionalLightVector">void setDirectionalLightVector(float v[ ]) </a></dt>
+<dd>平行光源の方向ベクトルを指定します。ベクトルは、ライトの存在する方向のベクトルを指定します。 </dd>
+<dt><a href="#getDirectionalLightVector">float[ ] getDirectionalLightVector() </a></dt>
+<dd>平行光源の方向ベクトルを取得します。ベクトルは、ライトの存在する方向のベクトルが返されます。 </dd>
+<dt><a href="#setDirectionalLightBrightness">void setDirectionalLightBrightness(float power) </a></dt>
+<dd>平行光源の輝度を指定します。 </dd>
+<dt><a href="#getDirectionalLightBrightness">float getDirectionalLightBrightness() </a></dt>
+<dd>平行光源の輝度を取得します。 </dd>
+<dt><a href="#setAmbientLightBrightness">void setAmbientLightBrightness(float power) </a></dt>
+<dd>アンビエント光源の輝度を指定します。 </dd>
+<dt><a href="#getAmbientLightBrightness">float getAmbientLightBrightness() </a></dt>
+<dd>アンビエント光源の輝度を取得します。 </dd>
+<dt><a href="#setWindowTitle">void setWindowTitle(string title) </a></dt>
+<dd> ウィンドウタイトルを設定します。 </dd>
+<dt><a href="#getWindowTitle">string getWindowTitle() </a></dt>
+<dd> ウィンドウタイトルを取得します。 </dd>
+<dt><a href="#setWindowSize">void setWindowSize(int width, int height) </a></dt>
+<dd>ウィンドウサイズを指定します。 </dd>
+<dt><a href="#setWindowSize">void setWindowSize(int size[ ]) </a></dt>
+<dd>ウィンドウサイズを設定します。 </dd>
+<dt><a href="#getWindowSize">int[ ] getWindowSize() </a></dt>
+<dd>ウィンドウサイズを取得します。 </dd>
+<dt><a href="#setMarginRight">void setMarginRight(int margin) </a></dt>
+<dd>ウィンドウ右側の余白を設定します。 </dd>
+<dt><a href="#getMarginRight">int getMarginRight() </a></dt>
+<dd>ウィンドウ右側の余白を取得します。 </dd>
+<dt><a href="#setMarginLeft">void setMarginLeft(int margin) </a></dt>
+<dd>ウィンドウ左側の余白を設定します。 </dd>
+<dt><a href="#getMarginLeft">int getMarginLeft() </a></dt>
+<dd>ウィンドウ左側の余白を取得します。 </dd>
+<dt><a href="#setMarginTop">void setMarginTop(int margin) </a></dt>
+<dd>ウィンドウ上側の余白を設定します。 </dd>
+<dt><a href="#getMarginTop">int getMarginTop() </a></dt>
+<dd>ウィンドウ上側の余白を取得します。 </dd>
+<dt><a href="#setMarginBottom">void setMarginBottom(int margin) </a></dt>
+<dd>ウィンドウ下側の余白を設定します。 </dd>
+<dt><a href="#getMarginBottom">int getMarginBottom() </a></dt>
+<dd>ウィンドウ下側の余白を取得します。 </dd>
+<dt><a href="#setAnimationWaitMin">void setAnimationWaitMin(int wait) </a></dt>
+<dd>アニメーションウェイト（メインループのウェイト）の下限値を設定します。 </dd>
+<dt><a href="#getAnimationWaitMin">int getAnimationWaitMin() </a></dt>
+<dd>アニメーションウェイト（メインループのウェイト）の下限値を設定します。 </dd>
+<dt><a href="#setAnimationWaitMax">void setAnimationWaitMax(int wait) </a></dt>
+<dd>アニメーションウェイト（メインループのウェイト）の上限値を設定します。 </dd>
+<dt><a href="#getAnimationWaitMax">int getAnimationWaitMax() </a></dt>
+<dd>アニメーションウェイト（メインループのウェイト）の上限値を設定します。 </dd>
+<dt><a href="#setMainLoopState">void setMainLoopState(bool state) </a></dt>
+<dd>メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。 </dd>
+<dt><a href="#getMainLoopState">bool getMainLoopState() </a></dt>
+<dd>メインループの継続状態を取得します。 </dd>
+<dt><a href="#getMainArgument">string[ ] getMainArgument() </a></dt>
+<dd>main関数の引数を取得します。</dd>
+<dt><a href="#export">void export( string filePath, string format, float quality ) </a></dt>
+<dd>現在の描画ラベルの内容を、画像ファイルに出力します。ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、次回の画面更新タイミングに合わせて実行されます。 </dd>
+<dt><a href="#main">void main( string args[ ] ) </a></dt>
+<dd>main関数です。通常は自動で実行され、frameworkMain関数をコールします。ただし、メインプログラムでmain関数を定義する場合は、こちらは自動で実行されなくなるので、下記のframeworkMainを明示的に呼ぶ必要があります。 </dd>
+<dt><a href="#frameworkMain">void frameworkMain( string args[ ] ) </a></dt>
+<dd>フレームワークのメイン処理です。通常はmain関数から自動で実行されます。ただし、メインプログラムでmain関数を定義する場合は、自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。 </dd>
+<dt><a href="#onWindowClose">void onWindowClose( int id ) </a></dt>
+<dd>ウィンドウが閉じられた際にコールされるイベントハンドラです。 </dd>
+<dt><a href="#onWindowResize">void onWindowResize( int id, int width, int height ) </a></dt>
+<dd>ウィンドウがリサイズされた際にコールされるイベントハンドラです。 </dd>
+<dt><a href="#paintWindow">void paintWindow() </a></dt>
+<dd>ウィンドウの再描画を行います。通常は自動で実行されますが、通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 </dd>
+<dt><a href="#render">void render() </a></dt>
+<dd>paint関数などをコールし、画面表示内容を描画します。3DCGと、背景及び前景2DCGの合成も行います。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 </dd>
+<dt><a href="#onStart">void onStart( int rendererID ) </a></dt>
+<dd>起動時に一度だけコールされます。3Dモデルの生成・配置などの初期化処理は、ここに記述します。 </dd>
+<dt><a href="#onExit">void onExit( int rendererID ) </a></dt>
+<dd>終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。 </dd>
+<dt><a href="#onPaint">void onPaint( int rendererID ) </a></dt>
+<dd>画面更新タイミング（毎秒数十回）で毎回コールされます。前景・背景2DCGの描画を行いたい場合などは、ここに記述します。 </dd>
+<dt><a href="#onUpdate">void onUpdate( int rendererID ) </a></dt>
+<dd>画面更新タイミング（毎秒数十回）の間で毎回コールされます。3Dモデルの移動などを行いたい場合などは、ここに記述します。 </dd>
+<dt><a href="#onResize">void onResize( int rendererID ) </a></dt>
+<dd>ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。 </dd>
+</dl>
+<hr />
+<h2 id="struct">構造体 - Structs</h2>
+<p> - なし - None  -</p>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<hr />
+<h2 id="function">関数 - Functions</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getGraphics"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
    	 	宣言<br /> - Declaration
@@ -439,13 +578,13 @@
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setPaintGraphics3DState"><tbody>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setPaintGraphics3DState(bool state) 
+   	 	float getCurrentFrameRate() 
    	 </td>
     </tr>
     <tr>
@@ -453,15 +592,42 @@
    	 	詳細<br /> - Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
-   	 	画面描画時（paintコール前）に、自動でGraphics3D.paintGraphics3Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。 
+   	 	 アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	引数<br /> - Arguments
+   	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
-   	 	state : 設定した状態 <br />
+   	 	画面更新頻度(実測値)<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getLastFrameTime() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	最終画面更新時刻(通常はミリ秒単位)<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -607,7 +773,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setBackgroundColor(int color[]) 
+   	 	void setBackgroundColor(int color[ ]) 
    	 </td>
     </tr>
     <tr>
@@ -634,7 +800,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int[] getBackgroundColor() 
+   	 	int[ ] getBackgroundColor() 
    	 </td>
     </tr>
     <tr>
@@ -688,7 +854,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setDirectionalLightVector(float v[]) 
+   	 	void setDirectionalLightVector(float v[ ]) 
    	 </td>
     </tr>
     <tr>
@@ -715,7 +881,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	float[] getDirectionalLightVector() 
+   	 	float[ ] getDirectionalLightVector() 
    	 </td>
     </tr>
     <tr>
@@ -915,7 +1081,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setWindowSize(int size[]) 
+   	 	void setWindowSize(int size[ ]) 
    	 </td>
     </tr>
     <tr>
@@ -942,7 +1108,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int[] getWindowSize() 
+   	 	int[ ] getWindowSize() 
    	 </td>
     </tr>
     <tr>
@@ -1315,7 +1481,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	string[] getMainArgument() 
+   	 	string[ ] getMainArgument() 
    	 </td>
     </tr>
     <tr>
@@ -1369,7 +1535,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void main( string args[] ) 
+   	 	void main( string args[ ] ) 
    	 </td>
     </tr>
     <tr>
@@ -1396,7 +1562,7 @@
    	 	宣言<br /> - Declaration
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void frameworkMain( string args[] ) 
+   	 	void frameworkMain( string args[ ] ) 
    	 </td>
     </tr>
     <tr>
@@ -1413,25 +1579,6 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
    	 	args : メイン引数（ getMainArgument関数で取得可能 ） <br />
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="paintWindow"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void paintWindow() 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
-   	 	ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。 
    	 </td>
     </tr>
 </tbody></table>
@@ -1486,6 +1633,181 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
    	 	id : ウィンドウのGUIコンポーネントID <br />width : ウィンドウの幅 <br />height : ウィンドウの高さ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="paintWindow"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void paintWindow() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウの再描画を行います。通常は自動で実行されますが、通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="render"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void render() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	paint関数などをコールし、画面表示内容を描画します。3DCGと、背景及び前景2DCGの合成も行います。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="function">イベントハンドラ - Event Handler</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onStart"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onStart( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	起動時に一度だけコールされます。3Dモデルの生成・配置などの初期化処理は、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onExit"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onExit( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onPaint"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onPaint( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	画面更新タイミング（毎秒数十回）で毎回コールされます。前景・背景2DCGの描画を行いたい場合などは、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onUpdate"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onUpdate( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	画面更新タイミング（毎秒数十回）の間で毎回コールされます。3Dモデルの移動などを行いたい場合などは、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onResize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onResize( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
    	 </td>
     </tr>
 </tbody></table>
