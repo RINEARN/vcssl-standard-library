@@ -1,0 +1,370 @@
+encode UTF-8;
+
+
+/**
+ * <p>
+ * このモジュール open.data.List は、
+ * リスト型のデータ構造を提供します。	
+ * </p>
+ *
+ * <p>
+ * このモジュールでは、リストのデータを保持する
+ * ジェネリック構造体 <a href="#List">List</a> と、
+ * それに対してデータを出し入れするジェネリック関数 
+ * <a href="#add">add</a>, <a href="#remove">remove</a> 
+ * などが提供されます。
+ * </p>
+ *
+ * <p>
+ * なお、この open.data.List では、
+ * 配列を要素として扱う事はできません。配列を要素にしたい場合は、
+ * open.data.<a href="WrappedList.html">WrappedList</a> 
+ * を使用して下さい。
+ * </p>
+ */
+
+
+/**
+ * リスト構造体です。リストのデータを保持します。
+ *
+ * @author 松井文宏
+ */
+public struct List<Type>{
+	int size = 0;
+	Type data[1];
+}
+
+
+/**
+ * 要素を全て削除します。
+ *
+ * @param list 対象のリスト構造体
+ * @author 松井文宏
+ */
+public void clear<Type>( List<Type> &list ){
+	alloc[0] list.data;
+	alloc[1] list.data;
+	list.size = 0;
+}
+
+
+/**
+ * 使用中のサイズを返します。
+ *
+ * @param list 対象のリスト構造体
+ * @author 松井文宏
+ */
+public int size<Type>( List<Type> &list ){
+	return list.size;
+}
+
+
+/**
+ * リストの末尾に要素を追加します。
+ *
+ * @param list 対象のリスト構造体
+ * @param value 追加する要素
+ * @author 松井文宏
+ */
+public void add<Type>( List<Type> &list, Type value ){
+	setProperLength<Type>(list);
+	list.data[ list.size++ ] = value;
+}
+
+
+/**
+ * 特定インデックスの要素を取得します。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 取得したい要素のインデックス
+ * @return 指定されたインデックスの要素
+ * @author 松井文宏
+ */
+public Type get<Type>( List<Type> &list, int index ){
+	if(list.size <= index){
+		error("Listのインデックスが領域外を指定しました。");
+		exit();
+	}
+	return list.data[ index ];
+}
+
+
+/**
+ * 特定インデックスの要素を代入します。
+ * そのインデックスの位置にあった要素は上書きされます。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 代入したい要素のインデックス
+ * @param element 代入する要素
+ * @author 松井文宏
+ */
+public void set<Type>( List<Type> &list, int index, Type element ){
+	if(list.size <= index){
+		error("Listのインデックスが領域外を指定しました。");
+		exit();
+	}
+	list.data[ index ] = element;
+}
+
+
+/**
+ * 特定インデックスに要素を挿入します。
+ * そのインデックスの位置にあった要素は、
+ * 次のインデックスの位置に移動します。
+ * また、それ以降の全ての要素も、
+ * インデックスが後方に 1 ずつ移動します。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 挿入したい要素のインデックス
+ * @param element 挿入する要素
+ * @author 松井文宏
+ */
+public Type insert<Type>( List<Type> &list, int index, Type value ){
+	if(list.size <= index){
+		error("Listのインデックスが領域外を指定しました。");
+		exit();
+	}
+	int n = list.size;
+	list.size++;
+	setProperLength<Type>(list);
+	for(int i=n-1; index<=i; i--){
+		list.data[ i+1 ] = list.data[ i ];
+	}
+	list.data[ index ] = value;
+}
+
+
+/**
+ * リストが指定された要素を含んでいるか判定します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 含まれるか判定したい要素
+ * @author 松井文宏
+ */
+public bool contains<Type>( List<Type> &list, Type element ){
+	int n = list.size;
+	for(int i=0; i<n; i++){
+		if(list.data[i] == element){
+			return true;
+		}
+	}
+	return false;
+}
+
+
+/**
+ * 特定インデックスの要素を削除します。
+ *
+ * @param list 対象のリスト構造体
+ * @param index 削除したい要素のインデックス
+ * @author 松井文宏
+ */
+public Type removeAt<Type>( List<Type> &list, int index ){
+	if(list.size <= index){
+		error("Listのインデックスが領域外を指定しました。");
+		exit();
+	}
+	int n = list.size;
+	for(int i=index; i<n-1; i++){
+		list.data[ i ] = list.data[ i+1 ];
+	}
+	list.size--;
+	setProperLength<Type>(list);
+}
+
+
+/**
+ * 指定された要素を削除します。
+ * 複数存在する場合は、最初のものだけが削除されます。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @author 松井文宏
+ */
+public void remove<Type>( List<Type> &list, Type element ){
+	int index = indexOf<Type>(list, element);
+	if(0 <= index){
+		removeAt<Type>(list, index);
+	}
+}
+
+
+/**
+ * 指定された要素を全て削除します。
+ * 
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @author 松井文宏
+ */
+public void removeAll<Type>( List<Type> &list, Type element ){
+	int index = indexOf<Type>(list, element);
+	while( 0 <= (index = indexOf<Type>(list, element)) ){
+		removeAt<Type>(list, index);
+	}
+}
+
+
+/**
+ * 指定された要素を、
+ * 先頭から後方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 検索したい要素
+ * @author 松井文宏
+ */
+public int indexOf<Type>( List<Type> &list, Type element ){
+	int n = list.size;
+	for(int i=0; i<n; i++){
+		if(list.data[i] == element){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * 指定された要素を、
+ * 指定インデックスの位置から後方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @param from 検索開始インデックス
+ * @author 松井文宏
+ */
+public int indexOf<Type>( List<Type> &list, Type element, int from ){
+	int n = list.size;
+	if(n <= from){
+		error("Listの検索開始インデックスが領域外を指定しました。");
+	}
+	for(int i=from; i<n; i++){
+		if(list.data[i] == element){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * 指定された要素を、
+ * 末尾から前方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @author 松井文宏
+ */
+public int lastIndexOf<Type>( List<Type> &list, Type element ){
+	int n = list.size;
+	for(int i=n-1; 0<=i; i--){
+		if(list.data[i] == element){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * 指定された要素を、
+ * 指定インデックスの位置から後方検索し、
+ * 存在すればそのインデックスを、
+ * 存在しなければ-1を返します。
+ *
+ * @param list 対象のリスト構造体
+ * @param element 削除したい要素
+ * @param from 検索開始インデックス
+ * @author 松井文宏
+ */
+public int lastIndexOf<Type>( List<Type> &list, Type element, int from ){
+	int n = list.size;
+	if(from <= 0){
+		error("Listの検索開始インデックスが領域外を指定しました。");
+	}
+	for(int i=from; 0<=i; i--){
+		if(list.data[i] == element){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * リストが保持する全要素の順序を反転させます。
+ *
+ * @param list 対象のリスト構造体
+ * @author 松井文宏
+ */
+public void reverse<Type>( List<Type> &list ){
+	int n = list.size;
+	Type data[] = list.data;
+	Type rev[n];
+	for(int i=0; i<n; i++){
+		rev[i] = data[n-1-i];
+	}
+	list.data = rev;
+}
+
+
+/**
+ * リストが保持する全要素を、1次元の配列に格納して返します。
+ *
+ * @param list 対象のリスト構造体
+ * @return リストの全要素をまとめた1次元配列
+ * @author 松井文宏
+ */
+public Type[] toArray<Type>( List<Type> &list ){
+	Type array[] = list.data;
+	alloc[ list.size ] array;
+	return array;
+}
+
+
+/**
+ * 使用中のサイズに適切な配列バッファ長を設定します。
+ *
+ * @param list 対象のリスト構造体
+ * @author 松井文宏
+ */
+private void setProperLength<Type>( List<Type> &list ){
+	int zero = 0;
+	int length = length( list.data, zero );
+	int properLength = getProperLength(length, list.size);
+	if(properLength != length){
+		alloc[ properLength ] list.data;
+	}
+}
+
+
+/**
+ * 使用中の要素数に最適なリストバッファ長を返します。
+ *
+ * @param length 現在のリストバッファ長
+ * @param size 現在使用中の要素数
+ * @author 松井文宏
+ */
+private int getProperLength(int length, int size){
+	if( length == 0 ){
+		return 1;
+	}else if( length <= size ){
+		while( length <= size ){
+			length *= 2;
+		}
+		return length;
+	}else if( size < length/2 ){
+		while( size < length/2 ){
+			length /= 2;
+		}
+		return length;
+	}else{
+		return length;
+	}
+}
+
