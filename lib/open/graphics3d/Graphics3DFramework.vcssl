@@ -281,16 +281,27 @@ private bool getForegroundRendererState(){
 }
 
 
-/** 描画ラベルのGUIコンポーネントIDです。 */
-private int graphicsLabel = NULL;
+/** 描画内容を表示する、画像ラベルのGUIコンポーネントIDです。 */
+private int imageLabel = NULL;
 
 /**
- * 描画ラベルのGUIコンポーネントIDを返します。
+ * 描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。
  *
- * @return 描画ラベルのGUIコンポーネントID
+ * @return 画像ラベルのGUIコンポーネントID
+ */
+public int getImageLabel(){
+	return imageLabel;
+}
+
+/**
+ * 画像ラベルのGUIコンポーネントIDを返します。
+ * この関数は、より新しい <a href="#getImageLabel">getImageLabel</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ *
+ * @return 画像ラベルのGUIコンポーネントID
  */
 public int getGraphicsLabel(){
-	return graphicsLabel;
+	return imageLabel;
 }
 
 
@@ -1129,7 +1140,7 @@ public void onWindowResize( int id, int width, int height ){
  */
 private void mainLoop(){
 
-	setComponentColor(graphicsLabel, 0,0,0,255, 0,0,0,255);
+	setComponentColor(imageLabel, 0,0,0,255, 0,0,0,255);
 
 	while( mainLoopState ){
 
@@ -1187,7 +1198,7 @@ private void mainLoop(){
  * @author 松井文宏
  */
 public void paintWindow(){
-	paintComponent( graphicsLabel );
+	paintComponent( imageLabel );
 	paintComponent( window );
 }
 
@@ -1351,12 +1362,12 @@ private void initializeComponent(){
 	int labelWidth = getPreferredScreenWidth();
 	int labelHeight = getPreferredScreenHeight();
 
-	graphicsLabel = newGraphicsLabel( marginLeft, marginTop, labelWidth, labelHeight, graphics );
+	imageLabel = newGraphicsLabel( marginLeft, marginTop, labelWidth, labelHeight, graphics );
 	setGraphicsLabelRenderer();
 
-	mountComponent( graphicsLabel, window );
+	mountComponent( imageLabel, window );
 
-	setGraphics3DDefaultEventHandler( renderer, graphicsLabel );
+	setGraphics3DDefaultEventHandler( renderer, imageLabel );
 
 }
 
@@ -1371,8 +1382,8 @@ private void setLayout(){
 	int labelWidth = getPreferredScreenWidth();
 	int labelHeight = getPreferredScreenHeight();
 
-	setComponentLocation( graphicsLabel, marginLeft, margin Top );
-	setComponentSize( graphicsLabel, labelWidth, labelHeight );
+	setComponentLocation( imageLabel, marginLeft, margin Top );
+	setComponentSize( imageLabel, labelWidth, labelHeight );
 	setGraphics3DSize( renderer, labelWidth, labelHeight );
 
 	if(backgroundRenderer != NULL){
@@ -1397,13 +1408,13 @@ private void setLayout(){
  * @author 松井文宏
  */
 private void setGraphicsLabelRenderer(){
-	if(graphicsLabel == NULL){
+	if(imageLabel == NULL){
 		return;
 	}
 	if(backgroundRendererState){
-		setComponentGraphics(graphicsLabel, backgroundGraphics);
+		setComponentGraphics(imageLabel, backgroundGraphics);
 	}else{
-		setComponentGraphics(graphicsLabel, graphics);
+		setComponentGraphics(imageLabel, graphics);
 	}
 }
 

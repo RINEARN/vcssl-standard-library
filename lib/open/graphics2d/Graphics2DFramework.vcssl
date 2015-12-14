@@ -134,16 +134,27 @@ public int getRenderer(){
 }
 
 
-/** 描画領域ラベルのGUIコンポーネントIDです。 */
-private int graphicsLabel = -1;
+/** 描画内容を表示する、画像ラベルのGUIコンポーネントIDです。 */
+private int imageLabel = -1;
 
 /**
- * 描画ラベルのGUIコンポーネントIDです。
+ * 描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。
+ *
+ * @return 画像ラベルのGUIコンポーネントID
+ */
+public int getImageLabel(){
+	return imageLabel;
+}
+
+/**
+ * 画像ラベルのGUIコンポーネントIDを返します。
+ * この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。
+ * この関数は互換目的でサポートされています。
  *
  * @return 描画領域ラベルのGUIコンポーネントID
  */
 public int getGraphicsLabel(){
-	return graphicsLabel;
+	return imageLabel;
 }
 
 
@@ -151,7 +162,7 @@ public int getGraphicsLabel(){
 private int window = -1;
 
 /**
- * ウィンドウのGUIコンポーネントIDを取得します。
+ * ウィンドウのGUIコンポーネントIDを返します。
  *
  * ウィンドウのGUIコンポーネントID
  */
@@ -824,7 +835,7 @@ private void mainLoop(){
  * @author 松井文宏
  */
 public void paintWindow(){
-	paintComponent( graphicsLabel );
+	paintComponent( imageLabel );
 	paintComponent( window );
 }
 
@@ -907,8 +918,8 @@ private void initializeGraphics(){
 private void initializeComponent(){
 	int labelWidth = getPreferredScreenWidth();
 	int labelHeight = getPreferredScreenHeight();
-	graphicsLabel = newGraphicsLabel( marginLeft, marginTop, labelWidth, labelHeight, graphics );
-	mountComponent( graphicsLabel, window );
+	imageLabel = newGraphicsLabel( marginLeft, marginTop, labelWidth, labelHeight, graphics );
+	mountComponent( imageLabel, window );
 }
 
 
@@ -920,8 +931,8 @@ private void initializeComponent(){
 private void setLayout(){
 	int labelWidth = getPreferredScreenWidth();
 	int labelHeight = getPreferredScreenHeight();
-	setComponentLocation( graphicsLabel, marginLeft, marginTop );
-	setComponentSize( graphicsLabel, labelWidth, labelHeight );
+	setComponentLocation( imageLabel, marginLeft, marginTop );
+	setComponentSize( imageLabel, labelWidth, labelHeight );
 	setGraphics2DSize( renderer, labelWidth, labelHeight );
 	
 	if( existsResize && !existsNewEventHandler ){

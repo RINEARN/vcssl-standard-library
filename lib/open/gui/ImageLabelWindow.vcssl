@@ -5,21 +5,42 @@ import Graphics;
 
 /**
  * <p>
- * このモジュール open.gui.GraphicsLabelWindow は、
- * GUI部品として、グラフィックスラベルを表示するウィンドウ ―― グラフィックスラベルウィンドウ ―― を提供します。	
+ * このモジュール open.gui.ImageLabelWindow は、
+ * GUI部品として、画像ラベルを表示するウィンドウ ―― 画像ラベルウィンドウ ―― を提供します。	
  * <br />
- * 即席の描画ウィンドウや、画像ファイル表示ウィンドウなどとして使用できます。
+ * 即席の描画ウィンドウや、画像ファイルの内容を表示するウィンドウなどとして使用できます。
  * </p>
  *
  * <p>
- * なお、このモジュールは、現在は名称変更された <a href="ImageLabelWindow.html">ImageLabelWindow</a> として提供されています。
- * 今後、新機能の実装や改良は、ImageLabelWindow に対して行われます。このモジュールは互換目的でサポートされています。
+ * VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、
+ * このモジュールで提供されるGUI部品は、
+ * <a href="#ImageLabelWindow">ImageLabelWindow</a> 構造体として扱います。
+ * </p>
+ *
+ * <p>
+ * ImageLabelWindow 構造体は、内部にリソースのID等を保持していますが、
+ * <br />
+ * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
+ * <br />
+ * 具体的には、 <a href="#newImageLabelWindow">newImageLabelWindow</a> 関数で生成し、 
+ * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
+ * </p>
+ *
+ * <p>
+ * またこのモジュールでは、
+ * ImageLabelWindow 構造体を標準ライブラリ「 GUI 」と同様の感覚でそのまま扱えるように、
+ * 標準GUIライブラリ関数のオーバーロードも提供されます。
+ * <br />
+ * 例えば、 
+ * <a href="#mountComponent">mountComponent</a> 関数や、
+ * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
  * </p>
  */
 
 
 /** デフォルトのウィンドウタイトルです。 */
-private const string DEFAULT_WINDOW_TITLE = "GraphicsLabelWindow";
+private const string DEFAULT_WINDOW_TITLE = "ImageLabelWindow";
 
 /** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
 private const int DEFAULT_WINDOW_WIDTH_OFFSET = 16;
@@ -46,17 +67,17 @@ private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
 private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
 
 
-/** グラフィックラベルウィンドウの構造体です。 */
-public struct GraphicsLabelWindow{
+/** 画像ラベルウィンドウの構造体です。 */
+public struct ImageLabelWindow{
 	// ウィンドウのGUI部品IDです。
 	int window = NULL;
-	// グラフィックスラベルのGUI部品IDです。
-	int graphicsLabel = NULL;
+	// 画像ラベルのGUI部品IDです。
+	int imageLabel = NULL;
 }
 
 
 /**
- * グラフィックスラベルウィンドウを生成します。
+ * 画像ラベルウィンドウを生成します。
  *
  * @param x ウィンドウ左上頂点のX座標
  * @param y ウィンドウ左上頂点のY座標
@@ -67,27 +88,27 @@ public struct GraphicsLabelWindow{
  * @return 生成したウィンドウ構造体
  * @author 松井文宏
  */
-public GraphicsLabelWindow newGraphicsLabelWindow(int x, int y, int width, int height, string title, int graphics){
-	GraphicsLabelWindow windowInstance;
+public ImageLabelWindow newImageLabelWindow(int x, int y, int width, int height, string title, int graphics){
+	ImageLabelWindow windowInstance;
 	int graphicsWidth = getGraphicsWidth(graphics);
 	int graphicsHeight = getGraphicsHeight(graphics);
 	int labelX = (width - DEFAULT_WINDOW_WIDTH_OFFSET - graphicsWidth) / 2;
 	int labelY = (height - DEFAULT_WINDOW_HEIGHT_OFFSET - graphicsHeight) / 2;
-	windowInstance.graphicsLabel = newGraphicsLabel(labelX, labelY, graphicsWidth, graphicsHeight, graphics);
+	windowInstance.imageLabel = newImageLabel(labelX, labelY, graphicsWidth, graphicsHeight, graphics);
 	windowInstance.window = newWindow(x, y, width, height, title);
-	mountComponent(windowInstance.graphicsLabel, windowInstance.window);
+	mountComponent(windowInstance.imageLabel, windowInstance.window);
 	return windowInstance;
 }
 
 
 /**
- * 自動でウィンドウサイズを決定し、グラフィックスラベルウィンドウを生成します。
+ * 自動でウィンドウサイズを決定し、画像ラベルウィンドウを生成します。
  *
  * @param graphics グラフィックスリソース
  * @return 生成したウィンドウ構造体
  * @author 松井文宏
  */
-public GraphicsLabelWindow newGraphicsLabelWindow(int graphics){
+public ImageLabelWindow newImageLabelWindow(int graphics){
 	int graphicsWidth = getGraphicsWidth(graphics);
 	int graphicsHeight = getGraphicsHeight(graphics);
 
@@ -97,9 +118,9 @@ public GraphicsLabelWindow newGraphicsLabelWindow(int graphics){
 	int windowHeight = graphicsHeight
 		 + DEFAULT_WINDOW_HEIGHT_OFFSET + DEFAULT_WINDOW_MARGIN_TOP + DEFAULT_WINDOW_MARGIN_BOTTOM;
 
-	GraphicsLabelWindow windowInstance;
+	ImageLabelWindow windowInstance;
 
-	windowInstance.graphicsLabel = newGraphicsLabel(
+	windowInstance.imageLabel = newImageLabel(
 		DEFAULT_WINDOW_MARGIN_LEFT,
 		DEFAULT_WINDOW_MARGIN_TOP,
 		graphicsWidth,
@@ -115,21 +136,21 @@ public GraphicsLabelWindow newGraphicsLabelWindow(int graphics){
 		DEFAULT_WINDOW_TITLE
 	);
 
-	mountComponent(windowInstance.graphicsLabel, windowInstance.window);
+	mountComponent(windowInstance.imageLabel, windowInstance.window);
 
 	return windowInstance;
 }
 
 
 /**
- * グラフィックスラベルウィンドウを破棄します。
+ * 画像ラベルウィンドウを破棄します。
  *
  * @param windowInstance 破棄するウィンドウ
  * @author 松井文宏
  */
-public void deleteComponent(GraphicsLabelWindow &windowInstance){
+public void deleteComponent(ImageLabelWindow &windowInstance){
 	deleteComponent(windowInstance.window);
-	deleteComponent(windowInstance.graphicsLabel);
+	deleteComponent(windowInstance.imageLabel);
 	windowInstance = NULL;
 }
 
@@ -141,20 +162,20 @@ public void deleteComponent(GraphicsLabelWindow &windowInstance){
  * @return ウィンドウのGUIコンポーネントID
  * @author 松井文宏
  */
-public int getWindow(GraphicsLabelWindow &windowInstance){
+public int getWindow(ImageLabelWindow &windowInstance){
 	return windowInstance.window;
 }
 
 
 /**
- * グラフィックスラベルのGUIコンポーネントIDを返します。
+ * 画像ラベルのGUIコンポーネントIDを返します。
  *
  * @param windowInstance 取得対象のウィンドウ
- * @return グラフィックスラベルのGUIコンポーネントID
+ * @return 画像ラベルのGUIコンポーネントID
  * @author 松井文宏
  */
-public int getGraphicsLabel(GraphicsLabelWindow &windowInstance){
-	return windowInstance.graphicsLabel;
+public int getImageLabel(ImageLabelWindow &windowInstance){
+	return windowInstance.imageLabel;
 }
 
 
@@ -166,8 +187,8 @@ public int getGraphicsLabel(GraphicsLabelWindow &windowInstance){
  * @author 松井文宏
  */
 /*
-public void setComponentGraphics(GraphicsLabelWindow &windowInstance, int graphics){
-	setComponentGraphics(windowInstance.graphicsLabel, graphics);
+public void setComponentGraphics(ImageLabelWindow &windowInstance, int graphics){
+	setComponentGraphics(windowInstance.imageLabel, graphics);
 	int gWidth = getGraphicsWidth(graphics);
 	int gHeight = getGraphicsHeight(graphics);
 	setComponentSize(windowInstance);
@@ -183,7 +204,7 @@ public void setComponentGraphics(GraphicsLabelWindow &windowInstance, int graphi
  * @param height ウィンドウの高さ
  * @author 松井文宏
  */
-public void setComponentSize(GraphicsLabelWindow &windowInstance, int width, int height){
+public void setComponentSize(ImageLabelWindow &windowInstance, int width, int height){
 	setComponentSize(windowInstance.window, width, height);
 	setComponentSize(windowInstance);
 }
@@ -192,36 +213,36 @@ public void setComponentSize(GraphicsLabelWindow &windowInstance, int width, int
 /**
  * ウィンドウの現在のサイズに合わせて、内部コンポーネントのレイアウトを自動設定します。ウインドウのサイズを外部から変更した際に使用します。
  *
- * @param windowStruct 対象のウィンドウ
+ * @param windowInstance 対象のウィンドウ
  * @author 松井文宏
  */
-public void setComponentSize(GraphicsLabelWindow &windowInstance){
+public void setComponentSize(ImageLabelWindow &windowInstance){
 
 	int windowSize[] = getComponentSize(windowInstance.window);
 	int innerWidth = windowSize[0] - DEFAULT_WINDOW_WIDTH_OFFSET;
 	int innerHeight = windowSize[1] - DEFAULT_WINDOW_HEIGHT_OFFSET;
 
-	int graphics = getComponentGraphics(windowInstance.graphicsLabel);
+	int graphics = getComponentGraphics(windowInstance.imageLabel);
 	int labelWidth = getGraphicsWidth(graphics);
 	int labelHeight = getGraphicsHeight(graphics);
 
 	int labelX = (innerWidth - labelWidth) / 2;
 	int labelY = (innerHeight - labelHeight) / 2;
 
-	setComponentSize(windowInstance.graphicsLabel, labelWidth, labelHeight);
-	setComponentLocation(windowInstance.graphicsLabel, labelX, labelY);
+	setComponentSize(windowInstance.imageLabel, labelWidth, labelHeight);
+	setComponentLocation(windowInstance.imageLabel, labelX, labelY);
 }
 
 
 /**
  * ウィンドウのサイズを返します。
  *
- * @param windowStruct 対象のウィンドウ
+ * @param windowInstance 対象のウィンドウ
  * @return ウィンドウのサイズを格納する配列
  * @author 松井文宏
  */
-public int[] getComponentSize(GraphicsLabelWindow &windowStruct){
-	return getComponentSize(windowStruct.window);
+public int[] getComponentSize(ImageLabelWindow &windowInstance){
+	return getComponentSize(windowInstance.window);
 }
 
 
@@ -231,8 +252,8 @@ public int[] getComponentSize(GraphicsLabelWindow &windowStruct){
  * @param windowInstance 設定対象のウィンドウ
  * @author 松井文宏
  */
-public void fitComponentSize(GraphicsLabelWindow &windowInstance){
-	int graphics = getComponentGraphics(windowInstance.graphicsLabel);
+public void fitComponentSize(ImageLabelWindow &windowInstance){
+	int graphics = getComponentGraphics(windowInstance.imageLabel);
 	int graphicsWidth = getGraphicsWidth(graphics);
 	int graphicsHeight = getGraphicsHeight(graphics);
 
@@ -254,7 +275,7 @@ public void fitComponentSize(GraphicsLabelWindow &windowInstance){
  * @param y ウィンドウ左上頂点のY座標
  * @author 松井文宏
  */
-public void setComponentLocation(GraphicsLabelWindow &windowInstance, int x, int y){
+public void setComponentLocation(ImageLabelWindow &windowInstance, int x, int y){
 	setComponentLocation(windowInstance.window, x, y);
 }
 
@@ -262,43 +283,43 @@ public void setComponentLocation(GraphicsLabelWindow &windowInstance, int x, int
 /**
  * ウィンドウの位置を返します。
  *
- * @param windowStruct 対象のウィンドウ
+ * @param windowInstance 対象のウィンドウ
  * @return ウィンドウの位置を格納する配列
  * @author 松井文宏
  */
-public int[] getComponentLocation(GraphicsLabelWindow &windowStruct){
-	return getComponentLocation(windowStruct.window);
+public int[] getComponentLocation(ImageLabelWindow &windowInstance){
+	return getComponentLocation(windowInstance.window);
 }
 
 
 /**
  * ウィンドウを再描画します。
  *
- * @param windowStruct 対象のウィンドウ
+ * @param windowInstance 対象のウィンドウ
  */
-public void paintComponent(GraphicsLabelWindow &windowStruct){
-	paintComponent(windowStruct.graphicsLabel);
-	paintComponent(windowStruct.window);
+public void paintComponent(ImageLabelWindow &windowInstance){
+	paintComponent(windowInstance.imageLabel);
+	paintComponent(windowInstance.window);
 }
 
 
 /**
  * ウィンドウを不可視化します。
  *
- * @param windowStruct 対象のウィンドウ
+ * @param windowInstance 対象のウィンドウ
  */
-public void hideComponent(GraphicsLabelWindow &windowStruct){
-	hideComponent(windowStruct.window);
+public void hideComponent(ImageLabelWindow &windowInstance){
+	hideComponent(windowInstance.window);
 }
 
 
 /**
  * ウィンドウを可視化します。
  *
- * @param windowStruct 対象のウィンドウ
+ * @param windowInstance 対象のウィンドウ
  */
-public void showComponent(GraphicsLabelWindow &windowStruct){
-	showComponent(windowStruct.window);
+public void showComponent(ImageLabelWindow &windowInstance){
+	showComponent(windowInstance.window);
 }
 
 

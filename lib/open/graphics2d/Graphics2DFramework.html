@@ -14,11 +14,13 @@
 <dt><a href="#getGraphics">int getGraphics() </a></dt>
 <dd>2DCGのグラフィックスIDを返します。 </dd>
 <dt><a href="#getRenderer">int getRenderer() </a></dt>
-<dd>2DCGのレンダラーIDを返します。 </dd>
+<dd>2DCGのレンダラーIDを返します。return 2DCGのレンダラーID </dd>
+<dt><a href="#getImageLabel">int getImageLabel() </a></dt>
+<dd>描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。 </dd>
 <dt><a href="#getGraphicsLabel">int getGraphicsLabel() </a></dt>
-<dd>描画ラベルのGUIコンポーネントIDです。 </dd>
+<dd>画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="#getWindow">int getWindow() </a></dt>
-<dd>ウィンドウのGUIコンポーネントIDを取得します。ウィンドウのGUIコンポーネントID </dd>
+<dd>ウィンドウのGUIコンポーネントIDを返します。ウィンドウのGUIコンポーネントID </dd>
 <dt><a href="#setAnimationState">void setAnimationState(bool enable) </a></dt>
 <dd>アニメーションモードの有効/無効を設定します。 </dd>
 <dt><a href="#getAnimationState">bool getAnimationState() </a></dt>
@@ -95,6 +97,16 @@
 <dd>ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。 </dd>
 <dt><a href="#render">void render() </a></dt>
 <dd>paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 </dd>
+<dt><a href="#onStart">void onStart( int rendererID ) </a></dt>
+<dd>起動時に一度だけコールされます。スプライトの生成・配置などの初期化処理は、ここに記述します。 </dd>
+<dt><a href="#onExit">void onExit( int rendererID ) </a></dt>
+<dd>終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。 </dd>
+<dt><a href="#onPaint">void onPaint( int rendererID ) </a></dt>
+<dd>画面更新タイミング（毎秒数十回）で毎回コールされます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、こに記述します。 </dd>
+<dt><a href="#onUpdate">void onUpdate( int rendererID ) </a></dt>
+<dd>画面更新タイミング（毎秒数十回）の間で毎回コールされます。スプライトの移動などを行いたい場合などは、ここに記述します。 </dd>
+<dt><a href="#onResizet">void onResizet( int rendererID ) </a></dt>
+<dd>ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。 </dd>
 </dl>
 <hr />
 <h2 id="struct">構造体 - Structs</h2>
@@ -143,7 +155,26 @@
    	 	詳細<br /> - Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
-   	 	2DCGのレンダラーIDを返します。 
+   	 	2DCGのレンダラーIDを返します。return 2DCGのレンダラーID 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getImageLabel"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getImageLabel() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。 
    	 </td>
     </tr>
     <tr>
@@ -151,7 +182,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
-   	 	2DCGのレンダラーID<br />
+   	 	画像ラベルのGUIコンポーネントID<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -170,7 +201,7 @@
    	 	詳細<br /> - Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
-   	 	描画ラベルのGUIコンポーネントIDです。 
+   	 	画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。この関数は互換目的でサポートされています。 
    	 </td>
     </tr>
     <tr>
@@ -197,7 +228,7 @@
    	 	詳細<br /> - Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
-   	 	ウィンドウのGUIコンポーネントIDを取得します。ウィンドウのGUIコンポーネントID 
+   	 	ウィンドウのGUIコンポーネントIDを返します。ウィンドウのGUIコンポーネントID 
    	 </td>
     </tr>
 </tbody></table>
@@ -1160,6 +1191,143 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
    	 	paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="function">イベントハンドラ - Event Handler</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onStart"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onStart( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	起動時に一度だけコールされます。スプライトの生成・配置などの初期化処理は、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onExit"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onExit( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onPaint"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onPaint( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	画面更新タイミング（毎秒数十回）で毎回コールされます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、こに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onUpdate"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onUpdate( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	画面更新タイミング（毎秒数十回）の間で毎回コールされます。スプライトの移動などを行いたい場合などは、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="onResizet"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onResizet( int rendererID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	rendererID : レンダラ―ID <br />
    	 </td>
     </tr>
 </tbody></table>
