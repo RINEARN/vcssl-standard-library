@@ -691,7 +691,7 @@ private int windowX = 0;
 private int windowY = 0;
 
 /**
- * ウィンドウサイズを指定します。
+ * ウィンドウサイズを設定します。
  *
  * @param width 幅
  * @param height 高さ
@@ -716,6 +716,7 @@ public void setWindowSize(int size[]){
 	windowHeight = size[1];
 	if(window != NULL){
 		setComponentSize(window, windowWidth, windowHeight);
+		sleep(windowResizeWait);
 		setLayout();
 	}
 }
@@ -728,6 +729,44 @@ public void setWindowSize(int size[]){
 public int[] getWindowSize(){
 	int size[] = {windowWidth, windowHeight};
 	return size;
+}
+
+
+/**
+ * ウィンドウの位置を設定します。
+ *
+ * @param x ウィンドウ左上のX座標
+ * @param y ウィンドウ左上のY座標
+ */
+public void setWindowLocation(int x, int y){
+	windowX = x;
+	windowY = y;
+	if(window != NULL){
+		setComponentLocation(window, windowX, windowY);
+	}
+}
+
+/**
+ * ウィンドウの位置を設定します。
+ *
+ * @param size ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）
+ */
+public void setWindowLocation(int location[]){
+	windowX = location[0];
+	windowY = location[1];
+	if(window != NULL){
+		setComponentLocation(window, windowX, windowY);
+	}
+}
+
+/**
+ * ウィンドウの位置を取得します。
+ *
+ * @return ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）
+ */
+public int[] getWindowLocation(){
+	int location[] = {windowX, windowY};
+	return location;
 }
 
 
