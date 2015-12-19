@@ -357,7 +357,7 @@ private int windowX = 0;
 private int windowY = 0;
 
 /**
- * ウィンドウサイズを指定します。
+ * ウィンドウサイズを設定します。
  *
  * @param width 幅
  * @param height 高さ
@@ -728,6 +728,24 @@ private void checkCallback(){
 
 
 /**
+ * フレームワークのリソースを初期化する処理です。
+ * この関数は、このフレームワークのプログラムの末尾、
+ * グローバル領域においてコールされます。
+ * 従って、このフレームワークを 
+ * import しているプログラムのグローバル領域実行時には、
+ * すでにリソースが確保されている事が保証されます。
+ * 
+ * @author 松井文宏
+ */
+private void frameworkInitialize() {
+	initializeWindow();
+	initializeGraphics();
+	initializeComponent();
+}
+
+
+
+/**
  * フレームワークのメイン処理です。通常はmain関数から自動で実行されます。
  * ただし、メインプログラムでmain関数を定義する場合は、
  * 自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。
@@ -738,11 +756,7 @@ private void checkCallback(){
 public void frameworkMain( string args[] ){
 
 	mainArguments = args;
-
 	checkCallback();
-	initializeWindow();
-	initializeGraphics();
-	initializeComponent();
 	
 	if( existsInitialize && !existsNewEventHandler ){
 		eval( "initialize( renderer )" );
@@ -1004,4 +1018,8 @@ private void getPreferredScreenHeight(){
 	int labelHeight = innerSize[1] - marginTop - marginBottom;
 	return labelHeight;
 }
+
+
+// リソースを確保します。このように、グローバル領域でこの処理を実行する理由は、このフレームワークを import しているプログラムのグローバル領域実行時において、すでにリソースが確保されている事を保証するためです。
+frameworkInitialize();
 
