@@ -1,1 +1,168 @@
 include "../../graphics2d/Graphics2DFramework.vcssl";
+
+/**
+ * このライブラリは graphics2d.Graphics2DFramework へ移動されました。
+ * このファイルは、上記ライブラリの中身がそのまま展開されるエイリアスです。
+ * ただし、古いコードを実行する際に互換性を保持するため、いくつかの実装が追加されています。
+ */
+
+
+/** paint関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
+private bool existsPaint = false;
+
+/** update関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
+private bool existsUpdate = false;
+
+/** initialize関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
+private bool existsInitialize = false;
+
+/** initialize関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
+private bool existsFinalize = false;
+
+/** resize関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
+private bool existsResize = false;
+
+/** 新しい名称のイベントハンドラ関数が使用されているかを保持します。 */
+private bool existsNewEventHandler = false;
+
+
+// Override
+private void checkCallback(){
+	existsPaint = evaluable("paint(renderer)");
+	existsUpdate = evaluable("update(renderer)");
+	existsInitialize = evaluable("initialize(renderer)");
+	existsFinalize = evaluable("finalize(renderer)");
+	existsResize = evaluable("resize(renderer)");
+	
+	existsOnPaint = evaluable("onPaint(renderer)");
+	existsOnUpdate = evaluable("onUpdate(renderer)");
+	existsOnStart = evaluable("onStart(renderer)");
+	existsOnExit = evaluable("onExit(renderer)");
+	existsOnResize = evaluable("onResize(renderer)");
+	
+	existsNewEventHandler = existsOnPaint || existsOnUpdate || existsOnStart || existsOnExit || existsOnResize;
+}
+
+
+// Override
+public void frameworkMain( string args[] ){
+
+	mainArguments = args;
+	checkCallback();
+	
+	if( existsInitialize && !existsNewEventHandler ){
+		eval( "initialize( renderer )" );
+	}
+	if( existsOnStart ){
+		eval( "onStart( renderer )" );
+	}
+	
+	if( paintGraphics2DState ){
+		paintGraphics2D( renderer );
+	}
+	
+	if( existsPaint && !existsNewEventHandler ){
+		eval( "paint( renderer )" );
+	}
+	if( existsOnPaint ){
+		eval( "onPaint( renderer )" );
+	}
+	
+	paintWindow();
+	
+	mainLoopWait = 1000.0 / frameRate;
+	mainLoopWaitMax = 1000.0 / frameRate;
+	
+	mainLoop();
+	
+	if( existsFinalize && !existsNewEventHandler ){
+		eval( "finalize( renderer )" );
+	}
+	if( existsOnExit ){
+		eval( "onExit( renderer )" );
+	}
+	
+	exit();
+}
+
+
+// Override
+private void mainLoop(){
+
+	while( mainLoopState ){
+
+		lastFrameTime = time();
+
+		// ウィンドウがリサイズされた場合はここで修正
+		if(windowResized){
+			windowResized = false;
+			sleep(windowResizeWait);
+			setLayout();
+		}
+
+
+		if( animation ){
+			if(existsUpdate && !existsNewEventHandler ){
+				eval( "update( renderer )" );
+			}
+			if(existsOnUpdate && ){
+				eval( "onUpdate( renderer )" );
+			}
+
+			render();
+
+			// ファイル出力要求があればここで実行
+			if(exportRequested){
+				export();
+				exportRequested = false;
+			}
+
+			paintWindow();
+
+		}
+
+		// アニメーションウェイト
+		sleep( mainLoopWait );
+
+		// フレームレート調整
+		currentFrameRate = 1000.0 / millisecond( time() - (lastFrameTime) );
+		mainLoopWait = getLoopWait( frameRate, currentFrameRate, mainLoopWait, mainLoopWaitMin, mainLoopWaitMax );
+
+	}
+
+}
+
+
+// Override
+public void render(){
+	if( paintGraphics2DState ){
+		paintGraphics2D( renderer );
+	}
+	if(existsPaint && !existsNewEventHandler ){
+		eval( "paint( renderer )" );
+	}
+	if(existsOnPaint){
+		eval( "onPaint( renderer )" );
+	}
+
+}
+
+
+// Override
+private void setLayout(){
+	int labelWidth = getPreferredScreenWidth();
+	int labelHeight = getPreferredScreenHeight();
+	setComponentLocation( imageLabel, marginLeft, marginTop );
+	setComponentSize( imageLabel, labelWidth, labelHeight );
+	setGraphics2DSize( renderer, labelWidth, labelHeight );
+	
+	if( existsResize && !existsNewEventHandler ){
+		eval( "resize( renderer )" );
+	}
+	if( existsOnResize ){
+		eval( "onResize( renderer )" );
+	}
+}
+
+
+

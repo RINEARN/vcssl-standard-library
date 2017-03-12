@@ -1,1 +1,80 @@
 include "../../system/Int.vcssl";
+
+/**
+ * このライブラリは system.Int へ移動されました。
+ * このファイルは、上記ライブラリの中身がそのまま展開されるエイリアスです。
+ * ただし、古いコードを実行する際に互換性を保持するため、いくつかの実装が追加されています。
+ */
+
+
+// Override
+public bool isInt(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	if(startsWith(s,"0x") || startsWith(s,"0X")){
+
+		// 16進数の場合
+		return isHex(s);
+
+	}else if(startsWith(s,"0b") || startsWith(s,"0B")){
+
+		// 2進数の場合
+		return isBin(s);
+
+	}else if(startsWith(s,"0") || startsWith(s,"0") || startsWith(s,"0o") || startsWith(s,"0o")){
+
+		// 8進数の場合
+		return isOct(s);
+
+	}else{
+
+		// 10進数の場合
+		return isDec(s);
+
+	}
+
+}
+
+
+
+/**
+ * 文字列の中身が8進数表記であり、かつint型に変換可能か判定します。
+ *
+ * @param s 判定する値
+ * @return 判定結果（trueならば変換可能）
+ * @author 松井文宏
+ */
+public bool isOct(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+	
+
+	if(startsWith(s,"0o") || startsWith(s,"0o")){
+
+		// 先頭の 0o を削除
+		s = substring(s, 2, lengthOf(s));
+		
+		// 全部数字ならOK
+		return isDec(s);
+
+	}else if(startsWith(s,"0") || startsWith(s,"0")){
+
+		// 全部数字ならOK
+		return isDec(s);
+
+	}else{
+
+		return false;
+
+	}
+}
+
+
+

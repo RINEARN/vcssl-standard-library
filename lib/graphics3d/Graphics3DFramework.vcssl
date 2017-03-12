@@ -49,24 +49,6 @@ import Time;
  * 上記関数のいずれも、引数 renderer には、3DCGレンダラーのID が渡されます。これは3Dモデルの配置などに使用します。
  * </p>
  *
- * <p>・古い処理系でも新しいイベントハンドラを使用するための互換コード</p>
- *
- * <p>
- * なお、これらのイベントハンドラ関数は、過去に名称変更を経たため、互換目的で onStart の代わりに initialize などの旧称も使用可能となっています。
- * <br />
- * しかし、もし新しい名称のイベントハンドラ関数を使用しつつも、古い処理系でも動作させたいという場合は、以下の例のような互換コードを記述する事で対応できます：
- * <br />
- * <div class="code">
- * // 互換コードの例 （ onExitやonPaint、onUpdateなどについても必要に応じて記述 ）
- * <br />
- * void initialize( int renderer ) { onStart(renderer); }  // 古い処理系では initialize 経由で onStart が呼ばれます。
- * <br />
- * void onStart( int renderer ) { 実際のイベント処理; } // 新しい処理系では、onStart が宣言されていれば initialize は呼ばれず、onStart が直接呼ばれます。
- * </div>
- * <br />
- * この互換コードは、新しい名称のイベントハンドラ関数が 1 個以上宣言されている場合、旧称の関数はコールされない仕様を利用しています（この仕様はまさに上のような互換コードを可能にするためのものです）。
- * </p>
- *
  * <p>・背景・前景の2DCG描画</p>
  *
  * <p>
@@ -1011,21 +993,6 @@ public void main( string args[] ){
 }
 
 
-/** paint関数が定義されているかどうかを保持します。 */
-private bool existsPaint = false;
-
-/** update関数が定義されているかどうかを保持します。 */
-private bool existsUpdate = false;
-
-/** initialize関数が定義されているかどうかを保持します。 */
-private bool existsInitialize = false;
-
-/** initialize関数が定義されているかどうかを保持します。 */
-private bool existsFinalize = false;
-
-/** resize関数が定義されているかどうかを保持します。 */
-private bool existsResize = false;
-
 /** onPaint関数が定義されているかどうかを保持します。 */
 private bool existsOnPaint = false;
 
@@ -1041,8 +1008,6 @@ private bool existsOnExit = false;
 /** onResize関数が定義されているかどうかを保持します。 */
 private bool existsOnResize = false;
 
-/** 新しい名称のイベントハンドラ関数が使用されているかを保持します。 */
-private bool existsNewEventHandler = false;
 
 /**
  * 各種コールバック関数が定義されているかを検証します。
@@ -1050,19 +1015,11 @@ private bool existsNewEventHandler = false;
  * @author 松井文宏
  */
 private void checkCallback(){
-	existsPaint = evaluable("paint(renderer)");
-	existsUpdate = evaluable("update(renderer)");
-	existsInitialize = evaluable("initialize(renderer)");
-	existsFinalize = evaluable("finalize(renderer)");
-	existsResize = evaluable("resize(renderer)");
-	
 	existsOnPaint = evaluable("onPaint(renderer)");
 	existsOnUpdate = evaluable("onUpdate(renderer)");
 	existsOnStart = evaluable("onStart(renderer)");
 	existsOnExit = evaluable("onExit(renderer)");
 	existsOnResize = evaluable("onResize(renderer)");
-	
-	existsNewEventHandler = existsOnPaint || existsOnUpdate || existsOnStart || existsOnExit || existsOnResize;
 }
 
 
@@ -1097,9 +1054,6 @@ public void frameworkMain( string args[] ){
 	mainArguments = args;
 	checkCallback();
 	
-	if( existsInitialize && !existsNewEventHandler ){
-		eval( "initialize( renderer )" );
-	}
 	if( existsOnStart ){
 		eval( "onStart( renderer )" );
 	}
@@ -1108,9 +1062,6 @@ public void frameworkMain( string args[] ){
 		paintGraphics3D( renderer );
 	}
 	
-	if( existsPaint && !existsNewEventHandler ){
-		eval( "paint( renderer )" );
-	}
 	if( existsOnPaint ){
 		eval( "onPaint( renderer )" );
 	}
@@ -1122,9 +1073,6 @@ public void frameworkMain( string args[] ){
 	
 	mainLoop();
 	
-	if( existsFinalize && !existsNewEventHandler ){
-		eval( "finalize( renderer )" );
-	}
 	if( existsOnExit ){
 		eval( "onExit( renderer )" );
 	}
@@ -1194,10 +1142,7 @@ private void mainLoop(){
 
 		if( animation ){
 
-			if(existsUpdate && !existsNewEventHandler ){
-				eval( "update( renderer )" );
-			}
-			if(existsOnUpdate && ){
+			if(existsOnUpdate){
 				eval( "onUpdate( renderer )" );
 			}
 
@@ -1274,9 +1219,6 @@ private void render3D(){
 	if( paintGraphics3DState ){
 		paintGraphics3D( renderer );
 	}
-	if(existsPaint && !existsNewEventHandler ){
-		eval( "paint( renderer )" );
-	}
 	if(existsOnPaint){
 		eval( "onPaint( renderer )" );
 	}
@@ -1295,9 +1237,6 @@ private void render3DAndBackground(){
 	}
 	if( paintGraphics3DState ){
 		paintGraphics3D( renderer );
-	}
-	if(existsPaint && !existsNewEventHandler ){
-		eval( "paint( renderer )" );
 	}
 	if(existsOnPaint){
 		eval( "onPaint( renderer )" );
@@ -1318,9 +1257,6 @@ private void render3DAndBackgroundAndForeground(){
 	}
 	if( paintGraphics3DState ){
 		paintGraphics3D( renderer );
-	}
-	if(existsPaint && !existsNewEventHandler ){
-		eval( "paint( renderer )" );
 	}
 	if(existsOnPaint){
 		eval( "onPaint( renderer )" );
@@ -1432,9 +1368,6 @@ private void setLayout(){
 		setGraphics2DSize( foregroundRenderer, labelWidth, labelHeight );
 	}
 	
-	if( existsResize && !existsNewEventHandler ){
-		eval( "resize( renderer )" );
-	}
 	if( existsOnResize ){
 		eval( "onResize( renderer )" );
 	}

@@ -18,7 +18,7 @@ void test(){
 	testIsHex();
 	testIsInt();
 
-	println("system.Int: OK.");
+	println("open.system.Int: OK.");
 }
 
 
@@ -36,6 +36,7 @@ public void testToIntArray(){
 
 public void testIsBin(){
 	assert( isBin("0b100101") );
+	assert( !isBin("0123") );
 	assert( !isBin("0o123") );
 	assert( !isBin("0x123abc") );
 	assert( !isBin("123") );
@@ -46,8 +47,8 @@ public void testIsBin(){
 
 public void testIsOct(){
 	assert( !isOct("0b100101") );
-	assert( !isOct("0123") );  // 旧8進数リテラルは廃止（open.system.Intでは互換サポート）
-	assert( isOct("0o123") ); // 新8進数リテラルに対応
+	assert( isOct("0123") );
+	assert( isOct("0o123") );
 	assert( !isOct("0x123abc") );
 	assert( !isOct("123") );
 	assert( !isOct("1.23") );
@@ -57,6 +58,7 @@ public void testIsOct(){
 
 public void testIsHex(){
 	assert( !isHex("0b100101") );
+	assert( !isHex("0123") );
 	assert( !isHex("0o123") );
 	assert( isHex("0x123abc") );
 	assert( !isHex("123") );
@@ -67,7 +69,7 @@ public void testIsHex(){
 
 public void testIsInt(){
 	assert( isInt("0b100101") );
-	assert( isInt("0o123") );
+	assert( isInt("0123") );
 	assert( isInt("0x123abc") );
 	assert( isInt("123") );
 	assert( !isHex("1.23") );

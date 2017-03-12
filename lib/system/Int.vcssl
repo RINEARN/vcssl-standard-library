@@ -49,7 +49,7 @@ public bool isInt(string s){
 		// 2進数の場合
 		return isBin(s);
 
-	}else if(startsWith(s,"0") || startsWith(s,"0")){
+	}else if(startsWith(s,"0o") || startsWith(s,"0o")){
 
 		// 8進数の場合
 		return isOct(s);
@@ -62,7 +62,6 @@ public bool isInt(string s){
 	}
 
 }
-
 
 
 /**
@@ -153,6 +152,35 @@ public bool isHex(string s){
 }
 
 
+/**
+ * 文字列の中身が8進数表記であり、かつint型に変換可能か判定します。
+ *
+ * @param s 判定する値
+ * @return 判定結果（trueならば変換可能）
+ * @author 松井文宏
+ */
+public bool isOct(string s){
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	if(startsWith(s,"0o") || startsWith(s,"0o")){
+
+		// 先頭の 0o を削除
+		s = substring(s, 2, lengthOf(s));
+		
+		// 全部数字ならOK
+		return isDec(s);
+
+	}else{
+
+		return false;
+
+	}
+}
+
 
 /**
  * 文字列の中身が8進数表記であり、かつint型に変換可能か判定します。
@@ -168,8 +196,11 @@ public bool isOct(string s){
 		s = substring(s, 1, lengthOf(s));
 	}
 
-	if(startsWith(s,"0") || startsWith(s,"0")){
+	if(startsWith(s,"0o") || startsWith(s,"0o")){
 
+		// 先頭の 0o を削除
+		s = substring(s, 2, lengthOf(s));
+		
 		// 全部数字ならOK
 		return isDec(s);
 
@@ -179,7 +210,6 @@ public bool isOct(string s){
 
 	}
 }
-
 
 
 /**
