@@ -1,0 +1,266 @@
+coding UTF-8;
+
+
+import "./WrappedList.vcssl";
+
+
+/**
+ * <p>data.WrappedList モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint配列です。*/
+private const int[] A = {1, 2, 3};
+
+/** テストで要素として使用するint配列です。*/
+private const int[] B = {4, 5, 6, 7};
+
+/** テストで要素として使用するint配列です。*/
+private const int[] C = {8, 9, 10, 11, 12};
+
+
+test();
+
+
+private void test(){
+	testClear();
+	testSize();
+	testAdd();
+	testGet();
+	testInsert();
+	testContains();
+	testRemoveAt();
+	testRemove();
+	testRemoveAll();
+	testIndexOf();
+	testLastIndexOf();
+	testReverse();
+	testToDataWrapperArray();
+
+	println("data.WrappedListTest: OK.");
+}
+
+
+private bool isEquivalentArray(bool[] b){
+	int n = length(b, 0);
+	for(int i=0; i<n; i++){
+		if(!b[i]){
+			return false;
+		}
+	}
+	return true;
+}
+
+
+private void testClear(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	assert(size<int[]>(list) == 2);
+	clear<int[]>(list);
+	assert(size<int[]>(list) == 0);
+	add<int[]>(list, C);
+	add<int[]>(list, B);
+	add<int[]>(list, A);
+	assert(size<int[]>(list) == 3);
+	int[] v = get<int[]>(list, 0);
+	assert(isEquivalentArray(v == C));
+}
+
+
+private void testSize(){
+	WrappedList<int[]> list;
+	assert(size<int[]>(list) == 0);
+	add<int[]>(list, A);
+	assert(size<int[]>(list) == 1);
+	add<int[]>(list, B);
+	assert(size<int[]>(list) == 2);
+	add<int[]>(list, C);
+	assert(size<int[]>(list) == 3);
+}
+
+
+private void testAdd(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	assert(isEquivalentArray( get<int[]>(list, 0) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 1) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 2) == C ));
+}
+
+
+private void testGet(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	assert(isEquivalentArray( get<int[]>(list, 0) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 1) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 2) == C ));
+}
+
+
+private void testInsert(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	insert<int[]>(list, 1, C);
+	assert(isEquivalentArray( get<int[]>(list, 0) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 1) == C ));
+	assert(isEquivalentArray( get<int[]>(list, 2) == B ));
+}
+
+
+private void testContains(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	assert(contains<int[]>(list, A));
+	assert(contains<int[]>(list, B));
+	assert(!(contains<int[]>(list, C)));
+}
+
+
+private void testRemoveAt(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	removeAt<int[]>(list, 1);
+	removeAt<int[]>(list, 5);
+	assert(size<int[]>(list) == 7);
+	assert(isEquivalentArray( get<int[]>(list, 0) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 1) == C ));
+	assert(isEquivalentArray( get<int[]>(list, 2) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 3) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 4) == C ));
+	assert(isEquivalentArray( get<int[]>(list, 5) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 6) == C ));
+}
+
+
+private void testRemove(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	remove<int[]>(list, C);
+	assert(size<int[]>(list) == 8);
+	assert(isEquivalentArray( get<int[]>(list, 0) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 1) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 2) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 3) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 4) == C ));
+	assert(isEquivalentArray( get<int[]>(list, 5) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 6) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 7) == C ));
+}
+
+
+private void testRemoveAll(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	removeAll<int[]>(list, C);
+	assert(size<int[]>(list) == 6);
+	assert(isEquivalentArray( get<int[]>(list, 0) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 1) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 2) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 3) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 4) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 5) == B ));
+}
+
+
+private void testIndexOf(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	assert(indexOf<int[]>(list, B) == 1);
+	assert(indexOf<int[]>(list, B, 3) == 4);
+	assert(indexOf<int[]>(list, B, 6) == 7);
+}
+
+
+private void testLastIndexOf(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	assert(lastIndexOf<int[]>(list, B) == 7);
+	assert(lastIndexOf<int[]>(list, B, 6) == 4);
+	assert(lastIndexOf<int[]>(list, B, 3) == 1);
+}
+
+
+private void testReverse(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, B);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	add<int[]>(list, A);
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	reverse<int[]>(list);
+	assert(isEquivalentArray( get<int[]>(list, 0) == C ));
+	assert(isEquivalentArray( get<int[]>(list, 1) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 2) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 3) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 4) == C ));
+	assert(isEquivalentArray( get<int[]>(list, 5) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 6) == A ));
+	assert(isEquivalentArray( get<int[]>(list, 7) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 8) == B ));
+	assert(isEquivalentArray( get<int[]>(list, 9) == A ));
+}
+
+
+private void testToDataWrapperArray(){
+	WrappedList<int[]> list;
+	add<int[]>(list, A);
+	add<int[]>(list, B);
+	add<int[]>(list, C);
+	DataWrapper<int[]>[] w = toDataWrapperArray<int[]>(list);
+	assert(isEquivalentArray( unwrap<int[]>(w[0]) == A ));
+	assert(isEquivalentArray( unwrap<int[]>(w[1]) == B ));
+	assert(isEquivalentArray( unwrap<int[]>(w[2]) == C ));
+}
+

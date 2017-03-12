@@ -1,0 +1,154 @@
+coding UTF-8;
+
+
+import "HorizontalSliderPanel.vcssl";
+
+import GUI;
+
+
+/**
+ * <p> gui.HorizontalSliderPanel モジュールのテストです。</p>
+ */
+
+
+int window = NULL;
+HorizontalSliderPanel panel = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	window = newWindow(0, 0, 500, 500, "HorizontalSliderPanelTest");
+	testNewHorizontalSliderPanel();
+	testMountComponent();
+	testPaintComponent();
+	testGetPanel();
+	testGetHorizontalSlider();
+	testGetComponentSize();
+	testSetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+	testSetTextLabelWidth();
+
+	alert("イベントテスト後、ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && id == window){
+		testDemountComponent();
+		testDeleteComponent();
+		deleteComponent(window);
+		window = NULL;
+		panel = NULL;
+		println("gui.HorizontalSliderPanel: OK.");
+		windowClosed = true;
+	}
+}
+
+
+void onSliderMove(int id, int value){
+	if(initialized && panel!=NULL){
+		if(id == getHorizontalSlider(panel, "AAA")){
+			output("AAA / " + value);
+		}
+		if(id == getHorizontalSlider(panel, "BBB")){
+			output("BBB / " + value);
+		}
+		if(id == getHorizontalSlider(panel, "CCC")){
+			output("CCC / " + value);
+		}
+		if(id == getHorizontalSlider(panel, "DDD")){
+			output("DDD / " + value);
+		}
+		if(id == getHorizontalSlider(panel, "EEE")){
+			output("EEE / " + value);
+		}
+	}
+}
+
+
+void testNewHorizontalSliderPanel(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+
+	int min[] = {0, 1, 2, 3, 4};
+	int max[] = {10, 11, 12, 13, 14};
+	int value[] = {5, 6, 7, 8, 9};
+
+	panel = newHorizontalSliderPanel(10, 10, 200, 300, label, value, min, max);
+}
+
+
+void testDeleteComponent(){
+	deleteComponent(panel);
+}
+
+
+void testMountComponent(){
+	mountComponent(panel, window);
+}
+
+
+void testDemountComponent(){
+	demountComponent(panel, window);
+	paintComponent(window);
+}
+
+
+void testPaintComponent(){
+	paintComponent(panel);
+}
+
+
+void testGetPanel(){
+	sleep(300);
+	int id = getPanel(panel);
+	hideComponent(id);
+	paintComponent(window);
+	sleep(300);
+	showComponent(id);
+	paintComponent(window);
+}
+
+
+void testGetHorizontalSlider(){
+	int id1 = getHorizontalSlider(panel, "DDD");
+	assert(getComponentInt(id1) == 8);
+	int id2 = getHorizontalSlider(panel, 2);
+	assert(getComponentInt(id2) == 7);
+}
+
+
+void testGetComponentSize(){
+	int size[] = getComponentSize(panel);
+	assert(size[0] == 200);
+	assert(size[1] == 300);
+}
+
+
+void testSetComponentSize(){
+	setComponentSize(panel, 300, 100);
+}
+
+
+void testSetComponentLocation(){
+	setComponentLocation(panel, 50, 100);
+}
+
+
+void testGetComponentLocation(){
+	int location[] = getComponentLocation(panel);
+	assert(location[0] == 50);
+	assert(location[1] == 100);
+}
+
+
+void testSetTextLabelWidth(){
+	setTextLabelWidth(panel, 70);
+}
+
+

@@ -1,0 +1,258 @@
+coding UTF-8;
+
+
+import "./List.vcssl";
+
+
+/**
+ * <p>data.List モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint値です。*/
+private const int A = 1;
+
+/** テストで要素として使用するint値です。*/
+private const int B = 2;
+
+/** テストで要素として使用するint値です。*/
+private const int C = 3;
+
+
+test();
+
+
+private void test(){
+	testClear();
+	testSize();
+	testAdd();
+	testGet();
+	testInsert();
+	testContains();
+	testRemoveAt();
+	testRemove();
+	testRemoveAll();
+	testIndexOf();
+	testLastIndexOf();
+	testReverse();
+	testToArray();
+
+	println("data.ListTest: OK.");
+}
+
+
+private void testClear(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	assert(size<int>(list) == 2);
+	clear<int>(list);
+	assert(size<int>(list) == 0);
+	add<int>(list, C);
+	add<int>(list, B);
+	add<int>(list, A);
+	assert(size<int>(list) == 3);
+	int v = get<int>(list, 0);
+	assert(v == C);
+}
+
+
+private void testSize(){
+	List<int> list;
+	assert(size<int>(list) == 0);
+	add<int>(list, A);
+	assert(size<int>(list) == 1);
+	add<int>(list, B);
+	assert(size<int>(list) == 2);
+	add<int>(list, C);
+	assert(size<int>(list) == 3);
+}
+
+
+private void testAdd(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == C);
+}
+
+
+private void testGet(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == C);
+}
+
+
+private void testInsert(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	insert<int>(list, 1, C);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == C);
+	assert(get<int>(list, 2) == B);
+}
+
+
+private void testContains(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	assert(contains<int>(list, A));
+	assert(contains<int>(list, B));
+	assert(!(contains<int>(list, C)));
+}
+
+
+private void testRemoveAt(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	removeAt<int>(list, 1);
+	removeAt<int>(list, 5);
+	assert(size<int>(list) == 7);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == C);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == B);
+	assert(get<int>(list, 4) == C);
+	assert(get<int>(list, 5) == B);
+	assert(get<int>(list, 6) == C);
+}
+
+
+private void testRemove(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	remove<int>(list, C);
+	assert(size<int>(list) == 8);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == B);
+	assert(get<int>(list, 4) == C);
+	assert(get<int>(list, 5) == A);
+	assert(get<int>(list, 6) == B);
+	assert(get<int>(list, 7) == C);
+}
+
+
+private void testRemoveAll(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	removeAll<int>(list, C);
+	assert(size<int>(list) == 6);
+	assert(get<int>(list, 0) == A);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == B);
+	assert(get<int>(list, 4) == A);
+	assert(get<int>(list, 5) == B);
+}
+
+
+private void testIndexOf(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(indexOf<int>(list, B) == 1);
+	assert(indexOf<int>(list, B, 3) == 4);
+	assert(indexOf<int>(list, B, 6) == 7);
+}
+
+
+private void testLastIndexOf(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	assert(lastIndexOf<int>(list, B) == 7);
+	assert(lastIndexOf<int>(list, B, 6) == 4);
+	assert(lastIndexOf<int>(list, B, 3) == 1);
+}
+
+
+private void testReverse(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, B);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	add<int>(list, A);
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	reverse<int>(list);
+	assert(get<int>(list, 0) == C);
+	assert(get<int>(list, 1) == B);
+	assert(get<int>(list, 2) == A);
+	assert(get<int>(list, 3) == A);
+	assert(get<int>(list, 4) == C);
+	assert(get<int>(list, 5) == B);
+	assert(get<int>(list, 6) == A);
+	assert(get<int>(list, 7) == B);
+	assert(get<int>(list, 8) == B);
+	assert(get<int>(list, 9) == A);
+}
+
+
+private void testToArray(){
+	List<int> list;
+	add<int>(list, A);
+	add<int>(list, B);
+	add<int>(list, C);
+	int[] w = toArray<int>(list);
+	assert(w[0] == A);
+	assert(w[1] == B);
+	assert(w[2] == C);
+}
+
+
+
+

@@ -1,0 +1,141 @@
+coding UTF-8;
+
+
+import "./ButtonPanel.vcssl";
+
+import GUI;
+
+
+/**
+ * <p> gui.ButtonPanel モジュールのテストです。</p>
+ */
+
+
+int window = NULL;
+ButtonPanel panel = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	window = newWindow(0, 0, 500, 500, "ButtonPanelTest");
+	testNewButtonPanel();
+	testMountComponent();
+	testPaintComponent();
+	testGetPanel();
+	testGetButton();
+	testGetComponentSize();
+	testSetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+
+	alert("イベントテスト後、ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && id == window){
+		testDemountComponent();
+		testDeleteComponent();
+		deleteComponent(window);
+		window = NULL;
+		panel = NULL;
+		println("gui.ButtonPanelTest: OK.");
+		windowClosed = true;
+	}
+}
+
+
+void onButtonClick(int id, string label){
+	if(initialized && panel!=NULL){
+		if(
+			id == getButton(panel, "AAA")
+			||
+			id == getButton(panel, "BBB")
+			||
+			id == getButton(panel, "CCC")
+			||
+			id == getButton(panel, "DDD")
+			||
+			id == getButton(panel, "EEE")
+		){
+			alert(label);
+		}
+	}
+}
+
+
+void testNewButtonPanel(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	panel = newButtonPanel(10, 10, 200, 300, label);
+}
+
+
+void testDeleteComponent(){
+	deleteComponent(panel);
+}
+
+
+void testMountComponent(){
+	mountComponent(panel, window);
+}
+
+
+void testDemountComponent(){
+	demountComponent(panel, window);
+	paintComponent(window);
+}
+
+
+void testPaintComponent(){
+	paintComponent(panel);
+}
+
+
+void testGetPanel(){
+	sleep(300);
+	int id = getPanel(panel);
+	hideComponent(id);
+	paintComponent(window);
+	sleep(300);
+	showComponent(id);
+	paintComponent(window);
+}
+
+
+void testGetButton(){
+	int id1 = getButton(panel, "DDD");
+	assert(getComponentText(id1) == "DDD");
+	int id2 = getButton(panel, 2);
+	assert(getComponentText(id2) == "CCC");
+}
+
+
+void testGetComponentSize(){
+	int size[] = getComponentSize(panel);
+	assert(size[0] == 200);
+	assert(size[1] == 300);
+}
+
+
+void testSetComponentSize(){
+	setComponentSize(panel, 300, 100);
+}
+
+
+void testSetComponentLocation(){
+	setComponentLocation(panel, 50, 100);
+}
+
+
+void testGetComponentLocation(){
+	int location[] = getComponentLocation(panel);
+	assert(location[0] == 50);
+	assert(location[1] == 100);
+}
+
+

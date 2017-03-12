@@ -1,0 +1,258 @@
+coding UTF-8;
+
+
+import "./Queue.vcssl";
+
+
+/**
+ * <p>data.Queue モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint値です。*/
+private const int A = 1;
+
+/** テストで要素として使用するint値です。*/
+private const int B = 2;
+
+/** テストで要素として使用するint値です。*/
+private const int C = 3;
+
+
+test();
+
+
+private void test(){
+	testClear();
+	testSize();
+	testEnqueue();
+	testDequeue();
+	testPeek();
+	testContains();
+	testReverse();
+	testToArray();
+
+	println("data.QueueTest: OK.");
+}
+
+
+private void testClear(){
+	Queue<int> queue;
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 2);
+	clear<int>(queue);
+	assert(size<int>(queue) == 0);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 3);
+	assert(dequeue<int>(queue) == A);
+}
+
+
+private void testSize(){
+	Queue<int> queue;
+	assert(size<int>(queue) == 0);
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 1);
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 2);
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 3);
+}
+
+
+private void testEnqueue(){
+	Queue<int> queue;
+	assert(size<int>(queue) == 0);
+
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 1);
+	assert(peek<int>(queue) == A);
+
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 2);
+	assert(peek<int>(queue) == A);
+
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 3);
+	assert(peek<int>(queue) == A);
+
+	dequeue<int>(queue);
+
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 3);
+	assert(peek<int>(queue) == B);
+
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 4);
+	assert(peek<int>(queue) == B);
+
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 5);
+	assert(peek<int>(queue) == B);
+
+	dequeue<int>(queue);
+
+	enqueue<int>(queue, A);
+	assert(size<int>(queue) == 5);
+	assert(peek<int>(queue) == C);
+
+	enqueue<int>(queue, B);
+	assert(size<int>(queue) == 6);
+	assert(peek<int>(queue) == C);
+
+	enqueue<int>(queue, C);
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+}
+
+
+private void testDequeue(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+
+	assert(size<int>(queue) == 9);
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 8);
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 7);
+	assert(dequeue<int>(queue) == C);
+
+	assert(size<int>(queue) == 6);
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 5);
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 4);
+	assert(dequeue<int>(queue) == C);
+
+	assert(size<int>(queue) == 3);
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 2);
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 1);
+	assert(dequeue<int>(queue) == C);
+
+	assert(size<int>(queue) == 0);
+}
+
+
+private void testPeek(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+
+	assert(size<int>(queue) == 9);
+	assert(peek<int>(queue) == A);
+
+	assert(size<int>(queue) == 9);
+	assert(peek<int>(queue) == A);
+
+	assert(size<int>(queue) == 9);
+	assert(peek<int>(queue) == A);
+
+	assert(dequeue<int>(queue) == A);
+
+	assert(size<int>(queue) == 8);
+	assert(peek<int>(queue) == B);
+
+	assert(size<int>(queue) == 8);
+	assert(peek<int>(queue) == B);
+
+	assert(size<int>(queue) == 8);
+	assert(peek<int>(queue) == B);
+
+	assert(dequeue<int>(queue) == B);
+
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+
+	assert(size<int>(queue) == 7);
+	assert(peek<int>(queue) == C);
+
+	assert(dequeue<int>(queue) == C);
+}
+
+
+private void testContains(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+
+	assert(contains<int>(queue, A));
+	assert(contains<int>(queue, B));
+	assert(!(contains<int>(queue, C)));
+}
+
+
+private void testReverse(){
+	Queue<int> queue;
+
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	enqueue<int>(queue, C);
+
+	reverse<int>(queue);
+
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == B);
+	assert(dequeue<int>(queue) == A);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == C);
+	assert(dequeue<int>(queue) == B);
+	assert(dequeue<int>(queue) == A);
+}
+
+
+private void testToArray(){
+	Queue<int> queue;
+	enqueue<int>(queue, A);
+	enqueue<int>(queue, B);
+	enqueue<int>(queue, C);
+	int[] w = toArray<int>(queue);
+	assert(w[0] == A);
+	assert(w[1] == B);
+	assert(w[2] == C);
+}
+
+

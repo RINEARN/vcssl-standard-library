@@ -1,0 +1,157 @@
+coding UTF-8;
+
+
+import "./GraphicsLabelWindow.vcssl";
+
+import GUI;
+import Graphics2D;
+
+
+/**
+ * <p> gui.GraphicsLabelWindow モジュールのテストです。</p>
+ */
+
+
+GraphicsLabelWindow window = NULL;
+int graphicsA = NULL;
+int graphicsB = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	draw();
+	testNewGraphicsLabelWindow();
+	testGetWindow();
+	testGetGraphicsLabel();
+	testSetComponentGraphics();
+	testSetComponentSize();
+	testGetComponentSize();
+	testFitComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+	testHideComponent();
+	testShowComponent();
+
+	alert("ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && window != NULL && id == getWindow(window)){
+		deleteComponent(window);
+		deleteGraphics(graphicsA);
+		deleteGraphics(graphicsB);
+		println("gui.GraphicsLabelWindow: OK.");
+		windowClosed = true;
+	}
+}
+
+
+void draw(){
+	int rend;
+
+	graphicsA = newGraphics();
+	rend = newGraphics2DRenderer(500, 500, graphicsA);
+	setGraphics2DColor(rend, 0,255,0,255);
+	clearGraphics2D(rend);
+	setDrawColor(rend, 0,0,255,255);
+	drawRect(rend, 0,0,300,200, true);
+	setDrawColor(rend, 255,0,255,255);
+	drawRect(rend, 100,100,300,200, false);
+	setDrawColor(rend, 0,255,255,200);
+	drawOval(rend, 200,150,300,200, true);
+	deleteGraphics2DRenderer(rend);
+
+	graphicsB = newGraphics();
+	rend = newGraphics2DRenderer(400, 300, graphicsB);
+	setGraphics2DColor(rend, 0,255,255,255);
+	clearGraphics2D(rend);
+	setDrawColor(rend, 255,0,255,255);
+	drawRect(rend, 0,0,200,100, true);
+	setDrawColor(rend, 0,0,255,255);
+	drawRect(rend, 100,100,200,100, false);
+	setDrawColor(rend, 255,255,0,200);
+	drawOval(rend, 150,120,200,100, true);
+	deleteGraphics2DRenderer(rend);
+}
+
+
+void testNewGraphicsLabelWindow(){
+	window = newGraphicsLabelWindow(graphicsA);
+}
+
+
+void testGetWindow(){
+	sleep(300);
+	int id = getWindow(window);
+	hideComponent(id);
+	sleep(300);
+	showComponent(id);
+}
+
+
+void testGetGraphicsLabel(){
+	sleep(300);
+	int id = getGraphicsLabel(window);
+	hideComponent(id);
+	sleep(300);
+	showComponent(id);
+}
+
+
+void testSetComponentGraphics(){
+	setComponentGraphics(getGraphicsLabel(window), graphicsB);
+	paintComponent(window);
+}
+
+
+void testSetComponentSize(){
+	sleep(300);
+	setComponentSize(window, 1200, 1000);
+}
+
+
+void testGetComponentSize(){
+	int size[] = getComponentSize(window);
+	assert(size[0] == 1200);
+	assert(size[1] == 1000);
+}
+
+
+void testFitComponentSize(){
+	sleep(300);
+	fitComponentSize(window);
+}
+
+
+void testSetComponentLocation(){
+	sleep(300);
+	setComponentLocation(window, 120, 100);
+}
+
+
+void testGetComponentLocation(){
+	sleep(300);
+	int location[] = getComponentLocation(window);
+	assert(location[0] == 120);
+	assert(location[1] == 100);
+}
+
+
+void testHideComponent(){
+	sleep(300);
+	hideComponent(window);
+}
+
+
+void testShowComponent(){
+	sleep(300);
+	showComponent(window);
+}
+
+

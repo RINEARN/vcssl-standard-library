@@ -1,0 +1,148 @@
+coding UTF-8;
+
+
+import "./CheckBoxWindow.vcssl";
+import GUI;
+
+
+/**
+ * <p> gui.CheckBoxWindow モジュールのテストです。</p>
+ */
+
+
+CheckBoxWindow window = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	testNewCheckBoxWindow();
+	testGetWindow();
+	testGetCheckBox();
+	//testGetCheckBoxPanel();
+	testSetComponentSize();
+	testGetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+	testPaintComponent();
+	testHideComponent();
+	testShowComponent();
+
+	alert("イベントテスト後、ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && window != NULL && id == getWindow(window)){
+		deleteComponent(window);
+		window = NULL;
+		println("gui.CheckBoxWindow: OK.");
+		windowClosed = true;
+	}
+}
+
+
+void onCheckBoxClick(int id, bool state){
+	if(initialized && window!=NULL){
+		if(id == getCheckBox(window, "AAA")){
+			alert("AAA / " + state);
+		}
+		if(id == getCheckBox(window, "BBB")){
+			alert("BBB / " + state);
+		}
+		if(id == getCheckBox(window, "CCC")){
+			alert("CCC / " + state);
+		}
+		if(id == getCheckBox(window, "DDD")){
+			alert("DDD / " + state);
+		}
+		if(id == getCheckBox(window, "EEE")){
+			alert("EEE / " + state);
+		}
+	}
+}
+
+
+void testNewCheckBoxWindow(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	bool value[] = {true, false, true, false, true};
+	window = newCheckBoxWindow(0, 0, 500, 500, "CheckBoxWindowTest", label, value);
+}
+
+
+void testGetWindow(){
+	sleep(300);
+	int id = getWindow(window);
+	hideComponent(id);
+	sleep(300);
+	showComponent(id);
+}
+
+
+void testGetCheckBox(){
+	int id1 = getCheckBox(window, "DDD");
+	assert(getComponentText(id1) == "DDD");
+	assert(getComponentBool(id1) == false);
+	int id2 = getCheckBox(window, 2);
+	assert(getComponentText(id2) == "CCC");
+	assert(getComponentBool(id2) == true);
+}
+
+
+/*
+void testGetCheckBoxPanel(){
+	CheckBoxPanel panel1 = getCheckBoxPanel(window);
+	CheckBoxPanel panel2 = window.checkBoxPanel;
+	assert(panel1 == panel2);
+}
+*/
+
+
+void testSetComponentSize(){
+	sleep(300);
+	setComponentSize(window, 400, 300);
+	paintComponent(window);
+}
+
+
+void testGetComponentSize(){
+	int size[] = getComponentSize(window);
+	assert(size[0] == 400);
+	assert(size[1] == 300);
+}
+
+
+void testSetComponentLocation(){
+	sleep(300);
+	setComponentLocation(window, 200, 200);
+	paintComponent(window);
+}
+
+
+void testGetComponentLocation(){
+	int size[] = getComponentLocation(window);
+	assert(size[0] == 200);
+	assert(size[1] == 200);
+}
+
+
+void testPaintComponent(){
+	paintComponent(window);
+}
+
+
+void testHideComponent(){
+	sleep(300);
+	hideComponent(window);
+}
+
+
+void testShowComponent(){
+	sleep(300);
+	showComponent(window);
+}
+

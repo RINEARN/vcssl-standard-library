@@ -1,0 +1,218 @@
+coding UTF-8;
+
+
+import Text;
+import system.Int;
+
+
+/**
+ * <p>
+ * このライブラリ system.Float は、float型の補助機能を提供します。
+ * </p>
+ */
+
+
+/** float型のリテラルとして許されるサフィックスの一覧です。 */
+private const string FLOAT_SUFFIX[] = { "f", "F" }
+
+
+
+
+/**
+ * float型の複数の値を、配列にまとめて返します。
+ *
+ * @param args 配列にまとめたい値（可変長引数）
+ * @return 引数の値をまとめた配列
+ * @author 松井文宏
+ */
+public float[] toFloatArray(... float args[]){
+	return args;
+}
+
+
+
+
+/**
+ * 文字列の中身がfloat型に変換可能か判定します。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば変換可能)
+ * @author 松井文宏
+ */
+public bool isFloat(string s){
+
+	if(lengthOf(s) == 0){
+		return false;
+	}
+
+	// + と - で始まる場合は削除
+	if(startsWith(s,"+") || startsWith(s,"-")){
+		s = substring(s, 1, lengthOf(s));
+	}
+
+	// サフィックスが許される形式の場合は削除
+	if(checkSuffix(s)){
+		s = removeSuffix(s);
+	}else{
+		return false;
+	}
+
+	// 指数部表記が正しければ削除
+	if(checkExponentPart(s)){
+		s = removeExponentPart(s);
+	}else{
+		return false;
+	}
+
+	// 少数点表記が正しければ削除
+	if(checkPoint(s)){
+		s = replace(s, ".", "");
+	}else{
+		return false;
+	}
+
+	// 残りが全部数字ならOK
+	return Int.isDec(s);
+
+}
+
+
+/**
+ * 文字列の含む少数点が正しいかどうかを判定します。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば正しい)
+ * @author 松井文宏
+ */
+private bool checkPoint(string s){
+
+	string part[] = split(s, ".");
+	int n = length(part, 0) - 1;
+
+	if(n == 1){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+
+/**
+ * 文字列の含む指数部表記が正しいかどうかを判定します。
+ * 指数部表記が無い場合にも true が返されます。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば正しい)
+ * @author 松井文宏
+ */
+private bool checkExponentPart(string s){
+
+	// e を E に置換
+	s = replace(s, "e", "E");
+
+	string part[] = split(s, "E");
+	int n = length(part, 0);
+
+	if(n == 1){ // 指数部を含まない
+
+		return true;
+
+	}else if(n == 2){ // 指数部を含む
+
+		// 指数部が整数ならOK
+		return Int.isDec(part[1]);
+
+	}else{ // 指数部が多すぎる
+
+		return false;
+
+	}
+}
+
+
+/**
+ * 文字列の含む指数部を削除して返します。
+ *
+ * @param s 指数部を削除したい文字列
+ * @return 指数部を削除した文字列
+ * @author 松井文宏
+ */
+private string removeExponentPart(string s){
+
+	// e を E に置換
+	s = replace(s, "e", "E");
+
+	int i = indexOf(s, "E");
+	if(0 <= i){
+
+		// Eを含んでいればそれ以降を削除して返す
+		return substring(s, 0, i);
+
+	}else{
+
+		// 含んでいなければそのまま返す
+		return s;
+
+	}
+}
+
+
+/**
+ * 文字列の末尾がサフィックスとして許されるかどうかを判定します。
+ * サフィックスが無い場合にも true が返されます。
+ * 末尾に複数の文字が続く場合でも、最終文字だけで判定されます。
+ *
+ * @param s 判定する値
+ * @return 判定結果(trueならば正しい)
+ * @author 松井文宏
+ */
+private bool checkSuffix(string s){
+
+	// サフィックスが無い場合（数字で終わっている）
+	for(int i=0; i<9; i++){
+		if(endsWith(s, (string)i)){
+			return true;
+		}
+	}
+
+	// サフィックスがある場合
+	int sN = length(FLOAT_SUFFIX, 0);
+
+	for(int i=0; i<sN; i++){
+
+		if(endsWith(s, FLOAT_SUFFIX[i])){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+/**
+ * 文字列の含むサフィックスを削除して返します。
+ *
+ * @param s サフィックスを削除したい文字列
+ * @return サフィックスを削除した文字列
+ * @author 松井文宏
+ */
+private string removeSuffix(string s){
+
+	int sN = length(FLOAT_SUFFIX, 0);
+
+	for(int i=0; i<sN; i++){
+
+		if(endsWith(s, FLOAT_SUFFIX[i])){
+
+			// サフィックスの文字列長さだけ末尾をカットして返す
+			int cutLength = lengthOf(s)-lengthOf(FLOAT_SUFFIX[i]);
+			return substring(s, 0, cutLength);
+
+		}
+	}
+
+	return s;
+}
+
+

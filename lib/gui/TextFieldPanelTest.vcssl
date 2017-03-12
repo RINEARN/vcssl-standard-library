@@ -1,0 +1,152 @@
+coding UTF-8;
+
+
+import "./TextFieldPanel.vcssl";
+
+import GUI;
+
+
+/**
+ * <p> gui.TextFieldPanel モジュールのテストです。</p>
+ */
+
+
+int window = NULL;
+TextFieldPanel panel = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	window = newWindow(0, 0, 500, 500, "TextFieldPanelTest");
+	testNewTextFieldPanel();
+	testMountComponent();
+	testPaintComponent();
+	testGetPanel();
+	testGetTextField();
+	testGetComponentSize();
+	testSetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+	testSetTextLabelWidth();
+
+	alert("テキストフィールド上で ENTER キーを押すと、そのテキストフィールドの入力値を表示します。");
+	alert("イベントテスト後、ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && id == window){
+		testDemountComponent();
+		testDeleteComponent();
+		deleteComponent(window);
+		window = NULL;
+		panel = NULL;
+		println("gui.TextFieldPanel: OK.");
+		windowClosed = true;
+	}
+}
+
+
+void onKeyDown(int id, int keyCode){
+	if(initialized && panel!=NULL){
+		if(keyCode == GUI.KEY_ENTER){
+			if(id == getTextField(panel, "AAA")){
+				alert("AAA / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "BBB")){
+				alert("BBB / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "CCC")){
+				alert("CCC / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "DDD")){
+				alert("DDD / " + getComponentString(id));
+			}
+			if(id == getTextField(panel, "EEE")){
+				alert("EEE / " + getComponentString(id));
+			}
+		}
+	}
+}
+
+
+void testNewTextFieldPanel(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	string value[] = {"aaa", "bbb", "ccc", "ddd", "eee"};
+	panel = newTextFieldPanel(10, 10, 200, 300, label, value);
+}
+
+
+void testDeleteComponent(){
+	deleteComponent(panel);
+}
+
+
+void testMountComponent(){
+	mountComponent(panel, window);
+}
+
+
+void testDemountComponent(){
+	demountComponent(panel, window);
+	paintComponent(window);
+}
+
+
+void testPaintComponent(){
+	paintComponent(panel);
+}
+
+
+void testGetPanel(){
+	sleep(300);
+	int id = getPanel(panel);
+	hideComponent(id);
+	paintComponent(window);
+	sleep(300);
+	showComponent(id);
+	paintComponent(window);
+}
+
+
+void testGetTextField(){
+	int id1 = getTextField(panel, "DDD");
+	assert(getComponentText(id1) == "ddd");
+	int id2 = getTextField(panel, 2);
+	assert(getComponentText(id2) == "ccc");
+}
+
+
+void testGetComponentSize(){
+	int size[] = getComponentSize(panel);
+	assert(size[0] == 200);
+	assert(size[1] == 300);
+}
+
+
+void testSetComponentSize(){
+	setComponentSize(panel, 300, 100);
+}
+
+
+void testSetComponentLocation(){
+	setComponentLocation(panel, 50, 100);
+}
+
+
+void testGetComponentLocation(){
+	int location[] = getComponentLocation(panel);
+	assert(location[0] == 50);
+	assert(location[1] == 100);
+}
+
+
+void testSetTextLabelWidth(){
+	setTextLabelWidth(panel, 70);
+}
+

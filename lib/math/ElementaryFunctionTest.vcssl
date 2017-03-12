@@ -1,0 +1,79 @@
+coding UTF-8;
+
+import "./ElementaryFunction.vcssl";
+import Math;
+import System;
+
+/**
+ * <p> math.ElementaryFunction のテストです。</p>
+ */
+
+
+test();
+
+void test(){
+	testExpComplex();
+	testExpVarcomplex();
+	testAbsComplex();
+	testAbsVarcomplex();
+
+	println("math.ElementaryFunction: OK.");
+}
+
+
+void testExpComplex(){
+	// 実数テスト
+	complex v1 = exp( 1.23 + 0.0*I );
+	assert(re(v1) == Math.exp(1.23));
+	assert(im(v1) == 0.0);
+
+	// 虚数テスト
+	// exp(ix) = cos(x) + i sin(x)
+	complex v2 = exp( 0.0 + 1.23*I );
+	assert(re(v2) == Math.cos(1.23));
+	assert(im(v2) == Math.sin(1.23));
+
+	// 複素数テスト
+	// exp(ix + y) = ( cos(x) + i sin(x) ) * exp(y)
+	complex v3 = exp( 3.2 + 1.23*I );
+	assert(re(v3) == Math.exp(3.2)*Math.cos(1.23));
+	assert(im(v3) == Math.exp(3.2)*Math.sin(1.23));
+}
+
+void testExpVarcomplex(){
+	digit(100);
+
+	// 実数テスト
+	varcomplex v1 = exp( 1.23vf + 0.0vf*VCI );
+	assert(re(v1) == Math.exp(1.23vf));
+	assert(im(v1) == 0.0vf);
+
+	// 虚数テスト
+	// exp(ix) = cos(x) + i sin(x)
+	varcomplex v2 = exp( 0.0vf + 1.23vf*I );
+	assert(re(v2) == Math.cos(1.23vf));
+	assert(im(v2) == Math.sin(1.23vf));
+
+	// 複素数テスト
+	// exp(ix + y) = ( cos(x) + i sin(x) ) * exp(y)
+	varcomplex v3 = exp( 3.2vf + 1.23vf*I );
+	assert(re(v3) == Math.exp(3.2vf)*Math.cos(1.23vf));
+	assert(im(v3) == Math.exp(3.2vf)*Math.sin(1.23vf));
+}
+
+
+void testAbsComplex(){
+	float a = abs( 1.1 + 2.2*I );
+	float b = sqrt(1.1*1.1 + 2.2*2.2);
+	assert(a == b);
+}
+
+void testAbsVarcomplex(){
+	digit(100);
+	varfloat a = abs( 1.1vf + 2.2vf*VCI );
+	varfloat b = sqrt(1.1vf*1.1vf + 2.2vf*2.2vf);
+	assert(a == b);
+}
+
+
+

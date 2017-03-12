@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CheckBoxWindow</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>CheckBoxWindow</h1>
+<hr />
+<h2 id="abstract">概要 - Abstract</h2>
+<p>このライブラリ gui.CheckBoxWindow は、GUI部品として、チェックボックスが並ぶウィンドウ ―― チェックボックスウィンドウ ―― を提供します。	</p><p>VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、このモジュールで提供されるGUI部品は、<a href="#CheckBoxWindow">CheckBoxWindow</a> 構造体として扱います。</p><p>CheckBoxWindow 構造体は、内部にリソースのID等を保持していますが、<br />生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。<br />具体的には、 <a href="#newCheckBoxWindow">newCheckBoxWindow</a> 関数で生成し、 <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。</p><p>またこのモジュールでは、CheckBoxWindow 構造体を標準ライブラリ「 GUI 」と同様の感覚でそのまま扱えるように、標準GUIライブラリ関数のオーバーロードも提供されます。<br />例えば、 <a href="#mountComponent">mountComponent</a> 関数や、<a href="#setComponentSize">setComponentSize</a> 関数、 <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。</p> <hr />
+<h2 id="abstract">目次 - Index</h2>
+<dl>
+<dt><a href="#CheckBoxWindow">struct CheckBoxWindow </a></dt>
+<dd>チェックボックスウィンドウの構造体です。 </dd>
+<dt><a href="#newCheckBoxWindow">CheckBoxWindow newCheckBoxWindow(int x, int y, int width, int height, string title, string labelText[ ], bool[ ] defaultValue) </a></dt>
+<dd>チェックボックスウィンドウを生成します。 </dd>
+<dt><a href="#newCheckBoxWindow">CheckBoxWindow newCheckBoxWindow(string labelText[ ], bool[ ] defaultValue) </a></dt>
+<dd>自動でウィンドウサイズを決定し、チェックボックスウィンドウを生成します。 </dd>
+<dt><a href="#deleteComponent">void deleteComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>チェックボックスウィンドウを破棄します。 </dd>
+<dt><a href="#setButton">void setButton(CheckBoxWindow &amp;windowInstance, string label) </a></dt>
+<dd>ウィンドウ下部に、決定ボタンを出現させます。 </dd>
+<dt><a href="#getButton">int getButton(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>決定ボタンのコンポーネントIDを取得します。 </dd>
+<dt><a href="#getWindow">int getWindow(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>ウィンドウのGUIコンポーネントIDを取得します。 </dd>
+<dt><a href="#getCheckBox">int getCheckBox(CheckBoxWindow &amp;windowInstance, string labelText) </a></dt>
+<dd>指定されたラベルに対応するチェックボックスを取得します。 </dd>
+<dt><a href="#getCheckBox">int getCheckBox(CheckBoxWindow &amp;windowInstance, int index) </a></dt>
+<dd>指定されたインデックスのチェックボックスを取得します。 </dd>
+<dt><a href="#getComponentSize">int[ ] getComponentSize(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>ウィンドウのサイズを返します。 </dd>
+<dt><a href="#setComponentSize">void setComponentSize(CheckBoxWindow &amp;windowInstance, int width, int height) </a></dt>
+<dd>ウィンドウのサイズを設定します。 </dd>
+<dt><a href="#setComponentSize">void setComponentSize(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。 </dd>
+<dt><a href="#getComponentLocation">int[ ] getComponentLocation(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>ウィンドウの位置を返します。 </dd>
+<dt><a href="#setComponentLocation">void setComponentLocation(CheckBoxWindow &amp;windowInstance, int x, int y) </a></dt>
+<dd>ウィンドウの位置を設定します。 </dd>
+<dt><a href="#paintComponent">void paintComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>ウィンドウを再描画します。 </dd>
+<dt><a href="#hideComponent">void hideComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>ウィンドウを不可視化します。 </dd>
+<dt><a href="#showComponent">void showComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dd>ウィンドウを可視化します。 </dd>
+</dl>
+<hr />
+<h2 id="struct">構造体 - Structs</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="CheckBoxWindow"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	struct CheckBoxWindow 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	チェックボックスウィンドウの構造体です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr /><h2 id="variable">変数 - Variables</h2>
+<hr />
+<h2 id="function">関数 - Functions</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="newCheckBoxWindow"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	CheckBoxWindow newCheckBoxWindow(int x, int y, int width, int height, string title, string labelText[ ], bool[ ] defaultValue) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	チェックボックスウィンドウを生成します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	x : ウィンドウ左上頂点のX座標 <br />y : ウィンドウ左上頂点のY座標 <br />width : ウィンドウの幅 <br />height : ウィンドウの高さ <br />title : ウィンドウのタイトル <br />labelText : 全チェックボックスのラベル文字列を格納する配列 <br />defaultText : 全チェックボックスのデフォルト値を格納する配列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	生成したチェックボックスウィンドウ<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	CheckBoxWindow newCheckBoxWindow(string labelText[ ], bool[ ] defaultValue) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	自動でウィンドウサイズを決定し、チェックボックスウィンドウを生成します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	labelText : 全チェックボックスのラベル文字列を格納する配列 <br />defaultText : 全チェックボックスのデフォルト値を格納する配列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	生成したチェックボックスウィンドウ<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="deleteComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void deleteComponent(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	チェックボックスウィンドウを破棄します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 破棄するウィンドウ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setButton"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setButton(CheckBoxWindow &amp;windowInstance, string label) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウ下部に、決定ボタンを出現させます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />決定ボタンのラベル文字列 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getButton"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getButton(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	決定ボタンのコンポーネントIDを取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	決定ボタンのコンポーネントID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getWindow"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getWindow(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウのGUIコンポーネントIDを取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウのGUIコンポーネントID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getCheckBox"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getCheckBox(CheckBoxWindow &amp;windowInstance, string labelText) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	指定されたラベルに対応するチェックボックスを取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />labelText : 取得対象のチェックボックスに対応するラベル文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	チェックボックスのGUIコンポーネントID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getCheckBox(CheckBoxWindow &amp;windowInstance, int index) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	指定されたインデックスのチェックボックスを取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />index : チェックボックスのインデックス <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	チェックボックスのGUIコンポーネントID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getComponentSize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int[ ] getComponentSize(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウのサイズを返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウのサイズを格納する配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setComponentSize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setComponentSize(CheckBoxWindow &amp;windowInstance, int width, int height) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウのサイズを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />width : 幅 <br />width : 高さ <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウのサイズを格納する配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setComponentSize(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getComponentLocation"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int[ ] getComponentLocation(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウの位置を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウの位置を格納する配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setComponentLocation"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setComponentLocation(CheckBoxWindow &amp;windowInstance, int x, int y) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウの位置を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />x : ウィンドウのX座標 <br />y : ウィンドウのY座標 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="paintComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void paintComponent(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウを再描画します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="hideComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void hideComponent(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウを不可視化します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="showComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void showComponent(CheckBoxWindow &amp;windowInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ウィンドウを可視化します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	windowInstance : 対象のウィンドウ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>

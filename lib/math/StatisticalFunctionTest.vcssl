@@ -1,0 +1,236 @@
+coding UTF-8;
+
+import "StatisticalFunction.vcssl";
+
+import Math;
+
+/**
+ * <p> math.StatisticalFunction のテストです。 </p>
+ */
+
+
+test();
+
+void test(){
+
+	testSumFloat();
+	testSumVarfloat();
+
+	testMeanFloat();
+	testMeanVarfloat();
+
+	testVanFloat();
+	testVanVarfloat();
+	testVan1Float();
+	testVan1Varfloat();
+	testVaFloat();
+	testVaVarfloat();
+
+	testSdnFloat();
+	testSdnVarfloat();
+	testSdn1Float();
+	testSdn1Varfloat();
+	testSdFloat();
+	testSdVarfloat();
+
+	println("math.StatisticalFunction: OK.");
+}
+
+
+void testSumFloat(){
+	float v1 = sum(1.0,2.1,3.2,4.3,5.4);
+	float v2 =     1.0+2.1+3.2+4.3+5.4;
+	assert(v1 == v2);
+}
+
+
+void testSumVarfloat(){
+	digit(100);
+	varfloat v1 = sum(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+	varfloat v2 =     1.0vf+2.1vf+3.2vf+4.3vf+5.4vf;
+	assert(v1 == v2);
+}
+
+
+void testMeanFloat(){
+	float v1 = mean(1.0,2.1,3.2,4.3,5.4);
+	float v2 =     (1.0+2.1+3.2+4.3+5.4) / 5;
+	assert(v1 == v2);
+}
+
+
+void testMeanVarfloat(){
+	digit(100);
+	varfloat v1 = mean(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+	varfloat v2 =     (1.0vf+2.1vf+3.2vf+4.3vf+5.4vf) / 5v;
+	assert(v1 == v2);
+}
+
+
+void testVaFloat(){
+	float v1 = va(1.0,2.1,3.2,4.3,5.4);
+
+	float m = (1.0+2.1+3.2+4.3+5.4) / 5;
+	float v2 =((1.0-m)*(1.0-m)
+			 + (2.1-m)*(2.1-m)
+			 + (3.2-m)*(3.2-m)
+			 + (4.3-m)*(4.3-m)
+			 + (5.4-m)*(5.4-m)) / (5-1);
+	assert(v1 == v2);
+}
+
+
+void testVaVarfloat(){
+	digit(100);
+	float v1 = va(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+
+	float m = (1.0vf+2.1vf+3.2vf+4.3vf+5.4vf) / 5v;
+	float v2 =((1.0vf-m)*(1.0vf-m)
+			 + (2.1vf-m)*(2.1vf-m)
+			 + (3.2vf-m)*(3.2vf-m)
+			 + (4.3vf-m)*(4.3vf-m)
+			 + (5.4vf-m)*(5.4vf-m)) / (5v-1v);
+	assert(v1 == v2);
+}
+
+
+void testVan1Float(){
+	float v1 = van1(1.0,2.1,3.2,4.3,5.4);
+
+	float m = (1.0+2.1+3.2+4.3+5.4) / 5;
+	float v2 =((1.0-m)*(1.0-m)
+			 + (2.1-m)*(2.1-m)
+			 + (3.2-m)*(3.2-m)
+			 + (4.3-m)*(4.3-m)
+			 + (5.4-m)*(5.4-m)) / (5-1);
+	assert(v1 == v2);
+}
+
+
+void testVan1Varfloat(){
+	digit(100);
+	float v1 = van1(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+
+	float m = (1.0vf+2.1vf+3.2vf+4.3vf+5.4vf) / 5v;
+	float v2 =((1.0vf-m)*(1.0vf-m)
+			 + (2.1vf-m)*(2.1vf-m)
+			 + (3.2vf-m)*(3.2vf-m)
+			 + (4.3vf-m)*(4.3vf-m)
+			 + (5.4vf-m)*(5.4vf-m)) / (5v-1v);
+	assert(v1 == v2);
+}
+
+
+void testVanFloat(){
+	float v1 = van(1.0,2.1,3.2,4.3,5.4);
+
+	float m = (1.0+2.1+3.2+4.3+5.4) / 5;
+	float v2 =((1.0-m)*(1.0-m)
+			 + (2.1-m)*(2.1-m)
+			 + (3.2-m)*(3.2-m)
+			 + (4.3-m)*(4.3-m)
+			 + (5.4-m)*(5.4-m)) / 5;
+	assert(v1 == v2);
+}
+
+
+void testVanVarfloat(){
+	digit(100);
+	float v1 = van(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+
+	float m = (1.0vf+2.1vf+3.2vf+4.3vf+5.4vf) / 5v;
+	float v2 =((1.0vf-m)*(1.0vf-m)
+			 + (2.1vf-m)*(2.1vf-m)
+			 + (3.2vf-m)*(3.2vf-m)
+			 + (4.3vf-m)*(4.3vf-m)
+			 + (5.4vf-m)*(5.4vf-m)) / 5v;
+	assert(v1 == v2);
+}
+
+
+void testSdFloat(){
+	float v1 = sd(1.0,2.1,3.2,4.3,5.4);
+
+	float m = (1.0+2.1+3.2+4.3+5.4) / 5;
+	float v2 =((1.0-m)*(1.0-m)
+			 + (2.1-m)*(2.1-m)
+			 + (3.2-m)*(3.2-m)
+			 + (4.3-m)*(4.3-m)
+			 + (5.4-m)*(5.4-m)) / (5-1);
+	v2 = sqrt(v2);
+	assert(v1 == v2);
+}
+
+
+void testSdVarfloat(){
+	digit(100);
+	float v1 = sd(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+
+	float m = (1.0vf+2.1vf+3.2vf+4.3vf+5.4vf) / 5v;
+	float v2 =((1.0vf-m)*(1.0vf-m)
+			 + (2.1vf-m)*(2.1vf-m)
+			 + (3.2vf-m)*(3.2vf-m)
+			 + (4.3vf-m)*(4.3vf-m)
+			 + (5.4vf-m)*(5.4vf-m)) / (5v-1v);
+	v2 = sqrt(v2);
+	assert(v1 == v2);
+}
+
+
+void testSdn1Float(){
+	float v1 = sdn1(1.0,2.1,3.2,4.3,5.4);
+
+	float m = (1.0+2.1+3.2+4.3+5.4) / 5;
+	float v2 =((1.0-m)*(1.0-m)
+			 + (2.1-m)*(2.1-m)
+			 + (3.2-m)*(3.2-m)
+			 + (4.3-m)*(4.3-m)
+			 + (5.4-m)*(5.4-m)) / (5-1);
+	v2 = sqrt(v2);
+	assert(v1 == v2);
+}
+
+
+void testSdn1Varfloat(){
+	digit(100);
+	float v1 = sdn1(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+
+	float m = (1.0vf+2.1vf+3.2vf+4.3vf+5.4vf) / 5v;
+	float v2 =((1.0vf-m)*(1.0vf-m)
+			 + (2.1vf-m)*(2.1vf-m)
+			 + (3.2vf-m)*(3.2vf-m)
+			 + (4.3vf-m)*(4.3vf-m)
+			 + (5.4vf-m)*(5.4vf-m)) / (5v-1v);
+	v2 = sqrt(v2);
+	assert(v1 == v2);
+}
+
+
+void testSdnFloat(){
+	float v1 = sdn(1.0,2.1,3.2,4.3,5.4);
+
+	float m = (1.0+2.1+3.2+4.3+5.4) / 5;
+	float v2 =((1.0-m)*(1.0-m)
+			 + (2.1-m)*(2.1-m)
+			 + (3.2-m)*(3.2-m)
+			 + (4.3-m)*(4.3-m)
+			 + (5.4-m)*(5.4-m)) / 5;
+	v2 = sqrt(v2);
+	assert(v1 == v2);
+}
+
+
+void testSdnVarfloat(){
+	digit(100);
+	float v1 = sdn(1.0vf,2.1vf,3.2vf,4.3vf,5.4vf);
+
+	float m = (1.0vf+2.1vf+3.2vf+4.3vf+5.4vf) / 5v;
+	float v2 =((1.0vf-m)*(1.0vf-m)
+			 + (2.1vf-m)*(2.1vf-m)
+			 + (3.2vf-m)*(3.2vf-m)
+			 + (4.3vf-m)*(4.3vf-m)
+			 + (5.4vf-m)*(5.4vf-m)) / 5v;
+	v2 = sqrt(v2);
+	assert(v1 == v2);
+}
+

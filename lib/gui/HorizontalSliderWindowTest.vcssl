@@ -1,0 +1,157 @@
+coding UTF-8;
+
+
+import "./HorizontalSliderWindow.vcssl";
+import GUI;
+
+
+/**
+ * <p> gui.HorizontalSliderWindow モジュールのテストです。</p>
+ */
+
+
+HorizontalSliderWindow window = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	testNewHorizontalSliderWindow();
+	testGetWindow();
+	testGetHorizontalSlider();
+	//testGetHorizontalSliderPanel();
+	testSetComponentSize();
+	testGetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+	testSetTextLabelWidth();
+	testPaintComponent();
+	testHideComponent();
+	testShowComponent();
+
+	alert("イベントテスト後、ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && window != NULL && id == getWindow(window)){
+		deleteComponent(window);
+		window = NULL;
+		println("gui.HorizontalSliderWindow: OK.");
+		windowClosed = true;
+	}
+}
+
+
+void onSliderMove(int id, int value){
+	if(initialized && window!=NULL){
+		if(id == getHorizontalSlider(window, "AAA")){
+			output("AAA / " + value);
+		}
+		if(id == getHorizontalSlider(window, "BBB")){
+			output("BBB / " + value);
+		}
+		if(id == getHorizontalSlider(window, "CCC")){
+			output("CCC / " + value);
+		}
+		if(id == getHorizontalSlider(window, "DDD")){
+			output("DDD / " + value);
+		}
+		if(id == getHorizontalSlider(window, "EEE")){
+			output("EEE / " + value);
+		}
+	}
+}
+
+
+void testNewHorizontalSliderWindow(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	
+	int min[] = {0, 1, 2, 3, 4};
+	int max[] = {10, 11, 12, 13, 14};
+	int value[] = {5, 6, 7, 8, 9};
+
+	window = newHorizontalSliderWindow(0, 0, 500, 500, "HorizontalSliderWindowTest", label, value, min, max);
+}
+
+void testGetWindow(){
+	sleep(300);
+	int id = getWindow(window);
+	hideComponent(id);
+	sleep(300);
+	showComponent(id);
+}
+
+
+void testGetHorizontalSlider(){
+	int id1 = getHorizontalSlider(window, "DDD");
+	assert(getComponentInt(id1) == 8);
+	int id2 = getHorizontalSlider(window, 2);
+	assert(getComponentInt(id2) == 7);
+}
+
+
+/*
+void testGetHorizontalSliderPanel(){
+	HorizontalSliderPanel panel1 = getHorizontalSliderPanel(window);
+	HorizontalSliderPanel panel2 = window.horizontalSliderPanel;
+	assert(panel1 == panel2);
+}
+*/
+
+
+void testSetComponentSize(){
+	sleep(300);
+	setComponentSize(window, 400, 300);
+	paintComponent(window);
+}
+
+
+void testGetComponentSize(){
+	int size[] = getComponentSize(window);
+	assert(size[0] == 400);
+	assert(size[1] == 300);
+}
+
+
+void testSetComponentLocation(){
+	sleep(300);
+	setComponentLocation(window, 200, 200);
+	paintComponent(window);
+}
+
+
+void testGetComponentLocation(){
+	int size[] = getComponentLocation(window);
+	assert(size[0] == 200);
+	assert(size[1] == 200);
+}
+
+
+void testSetTextLabelWidth(){
+	sleep(300);
+	setTextLabelWidth(window, 80);
+	paintComponent(window);
+}
+
+
+void testPaintComponent(){
+	paintComponent(window);
+}
+
+
+void testHideComponent(){
+	sleep(300);
+	hideComponent(window);
+}
+
+
+void testShowComponent(){
+	sleep(300);
+	showComponent(window);
+}
+

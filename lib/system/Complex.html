@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Complex</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>Complex</h1>
+<hr />
+<h2 id="abstract">概要 - Abstract</h2>
+<p>このライブラリ system.Complex は、complex型の補助機能を提供します。</p><p>また、complex型やvarcomplex型がサポートされていない処理系において、float[2]配列やvarfloat[2]配列で複素数演算を行うための機能も提供されます。</p> <hr />
+<h2 id="abstract">目次 - Index</h2>
+<dl>
+<dt><a href="#RE">const int RE </a></dt>
+<dd> float[2]を複素数として扱う場合の実部インデックスを表します。 </dd>
+<dt><a href="#IM">const int IM </a></dt>
+<dd> float[2]を複素数として扱う場合の虚部インデックスを表します。 </dd>
+<dt><a href="#toComplex">complex toComplex(float arg[ ]) </a></dt>
+<dd>float[2] を complex に変換します。 </dd>
+<dt><a href="#toComplexArray">complex[ ] toComplexArray(... complex args[ ]) </a></dt>
+<dd>complex型の複数の値を、配列にまとめて返します。 </dd>
+<dt><a href="#toVarcomplexArray">varcomplex[ ] toVarcomplexArray(... varcomplex args[ ]) </a></dt>
+<dd>varcomplex型の複数の値を、配列にまとめて返します。 </dd>
+<dt><a href="#toFloatArray">float[ ] toFloatArray(complex arg) </a></dt>
+<dd>complex を float[2] に変換します。 </dd>
+<dt><a href="#toVarcomplex">varcomplex toVarcomplex(varfloat arg[ ]) </a></dt>
+<dd>varfloat[2] を varcomplex に変換します。 </dd>
+<dt><a href="#toVarfloatArray">varfloat[ ] toVarfloatArray(varcomplex arg) </a></dt>
+<dd>complex を float[2] に変換します。 </dd>
+<dt><a href="#creal">float creal(complex arg) </a></dt>
+<dd>複素数の実部を返します。この関数は、System.re( complex ) 関数をそのままラッピングしています。 </dd>
+<dt><a href="#creal">varfloat creal(varcomplex arg) </a></dt>
+<dd>複素数の実部を返します。この関数は、System.re( varcomplex ) 関数をそのままラッピングしています。 </dd>
+<dt><a href="#creal">float creal(float arg[ ]) </a></dt>
+<dd>複素数の実部を返します。 </dd>
+<dt><a href="#creal">varfloat creal(varfloat arg[ ]) </a></dt>
+<dd>複素数の実部を返します。 </dd>
+<dt><a href="#cimag">float cimag(complex arg) </a></dt>
+<dd>複素数の虚部を返します。この関数は、System.im( complex ) 関数をそのままラッピングしています。 </dd>
+<dt><a href="#cimag">varfloat cimag(varcomplex arg) </a></dt>
+<dd>複素数の虚部を返します。この関数は、System.im( varcomplex ) 関数をそのままラッピングしています。 </dd>
+<dt><a href="#cimag">float cimag(float arg[ ]) </a></dt>
+<dd>虚部を返します。 </dd>
+<dt><a href="#cimag">varfloat cimag(varfloat arg[ ]) </a></dt>
+<dd>虚部を返します。 </dd>
+<dt><a href="#cadd">float[ ] cadd(float a[ ], float b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし、加算値を返します。 </dd>
+<dt><a href="#cadd">varfloat[ ] cadd(varfloat a[ ], varfloat b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし、加算値を返します。 </dd>
+<dt><a href="#csub">float[ ] csub(float a[ ], float b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし減算値を返します。 </dd>
+<dt><a href="#csub">varfloat[ ] csub(varfloat a[ ], varfloat b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし減算値を返します。 </dd>
+<dt><a href="#cmul">float[ ] cmul(float a[ ], float b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし、乗算値を返します。 </dd>
+<dt><a href="#cmul">varfloat[ ] cmul(varfloat a[ ], varfloat b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし、乗算値を返します。 </dd>
+<dt><a href="#cdiv">float[ ] cdiv(float a[ ], float b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし、除算値を返します。 </dd>
+<dt><a href="#cdiv">varfloat[ ] cdiv(varfloat a[ ], varfloat b[ ]) </a></dt>
+<dd>float[2]/varfloat[2]を複素数と見なし、除算値を返します。 </dd>
+</dl>
+<hr />
+<h2 id="struct">構造体 - Structs</h2>
+<p> - なし - None  -</p>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="RE"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int RE 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	 float[2]を複素数として扱う場合の実部インデックスを表します。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="IM"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int IM 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	 float[2]を複素数として扱う場合の虚部インデックスを表します。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="function">関数 - Functions</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="toComplex"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	complex toComplex(float arg[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2] を complex に変換します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換する値 : <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換した値<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="toComplexArray"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	complex[ ] toComplexArray(... complex args[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	complex型の複数の値を、配列にまとめて返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	args : 配列にまとめたい値（可変長引数） <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	引数の値をまとめた配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="toVarcomplexArray"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varcomplex[ ] toVarcomplexArray(... varcomplex args[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	varcomplex型の複数の値を、配列にまとめて返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	args : 配列にまとめたい値（可変長引数） <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	引数の値をまとめた配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="toFloatArray"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float[ ] toFloatArray(complex arg) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	complex を float[2] に変換します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換する値 : <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換した値<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="toVarcomplex"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varcomplex toVarcomplex(varfloat arg[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	varfloat[2] を varcomplex に変換します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換する値 : <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換した値<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="toVarfloatArray"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat[ ] toVarfloatArray(varcomplex arg) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	complex を float[2] に変換します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換する値 : <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	変換した値<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="creal"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float creal(complex arg) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の実部を返します。この関数は、System.re( complex ) 関数をそのままラッピングしています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />実部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat creal(varcomplex arg) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の実部を返します。この関数は、System.re( varcomplex ) 関数をそのままラッピングしています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />実部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float creal(float arg[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の実部を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />実部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat creal(varfloat arg[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の実部を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />実部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="cimag"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float cimag(complex arg) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の虚部を返します。この関数は、System.im( complex ) 関数をそのままラッピングしています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />虚部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat cimag(varcomplex arg) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の虚部を返します。この関数は、System.im( varcomplex ) 関数をそのままラッピングしています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />虚部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float cimag(float arg[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	虚部を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />虚部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat cimag(varfloat arg[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	虚部を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	複素数の値 : <br />虚部の値 : <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="cadd"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float[ ] cadd(float a[ ], float b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし、加算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat[ ] cadd(varfloat a[ ], varfloat b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし、加算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="csub"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float[ ] csub(float a[ ], float b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし減算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat[ ] csub(varfloat a[ ], varfloat b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし減算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="cmul"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float[ ] cmul(float a[ ], float b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし、乗算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat[ ] cmul(varfloat a[ ], varfloat b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし、乗算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="cdiv"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	float[ ] cdiv(float a[ ], float b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし、除算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat[ ] cdiv(varfloat a[ ], varfloat b[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	float[2]/varfloat[2]を複素数と見なし、除算値を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	operandA : 演算する値(左側) <br />operandA : 演算する値(右側) <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	演算結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>

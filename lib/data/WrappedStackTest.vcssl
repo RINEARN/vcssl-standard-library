@@ -1,0 +1,265 @@
+coding UTF-8;
+
+
+import "./WrappedStack.vcssl";
+
+
+/**
+ * <p>data.WrappedStack モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint配列です。*/
+private const int[] A = {1, 2, 3};
+
+/** テストで要素として使用するint配列です。*/
+private const int[] B = {4, 5, 6, 7};
+
+/** テストで要素として使用するint配列です。*/
+private const int[] C = {8, 9, 10, 11, 12};
+
+
+test();
+
+
+private void test(){
+	testClear();
+	testSize();
+	testPush();
+	testPop();
+	testPeek();
+	testContains();
+	testReverse();
+	testToDataWrapperArray();
+
+	println("data.WrappedStackTest: OK.");
+}
+
+
+private bool isEquivalentArray(bool[] b){
+	int n = length(b, 0);
+	for(int i=0; i<n; i++){
+		if(!b[i]){
+			return false;
+		}
+	}
+	return true;
+}
+
+
+private void testClear(){
+	WrappedStack<int[]> stack;
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 2);
+	clear<int[]>(stack);
+	assert(size<int[]>(stack) == 0);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 3);
+	assert(isEquivalentArray( pop<int[]>(stack) == C ));
+}
+
+
+private void testSize(){
+	WrappedStack<int[]> stack;
+	assert(size<int[]>(stack) == 0);
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 1);
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 2);
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 3);
+}
+
+
+private void testPush(){
+	WrappedStack<int[]> stack;
+	assert(size<int[]>(stack) == 0);
+
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 1);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 2);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 3);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 4);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 5);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 6);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	push<int[]>(stack, A);
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	push<int[]>(stack, B);
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	push<int[]>(stack, C);
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+}
+
+
+private void testPop(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 6);
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 5);
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 4);
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 3);
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 2);
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 1);
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 0);
+}
+
+
+private void testPeek(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 9);
+	assert(isEquivalentArray(peek<int[]>(stack) == C));
+
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 8);
+	assert(isEquivalentArray(peek<int[]>(stack) == B));
+
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	assert(size<int[]>(stack) == 7);
+	assert(isEquivalentArray(peek<int[]>(stack) == A));
+
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+}
+
+
+private void testContains(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+
+	assert(contains<int[]>(stack, A));
+	assert(contains<int[]>(stack, B));
+	assert(!(contains<int[]>(stack, C)));
+}
+
+
+private void testReverse(){
+	WrappedStack<int[]> stack;
+
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, C);
+	push<int[]>(stack, C);
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	push<int[]>(stack, C);
+
+	reverse<int[]>(stack);
+
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == A));
+	assert(isEquivalentArray(pop<int[]>(stack) == B));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+	assert(isEquivalentArray(pop<int[]>(stack) == C));
+}
+
+
+private void testToDataWrapperArray(){
+	WrappedStack<int[]> stack;
+	push<int[]>(stack, A);
+	push<int[]>(stack, B);
+	push<int[]>(stack, C);
+	DataWrapper<int[]>[] w = toDataWrapperArray<int[]>(stack);
+	assert(isEquivalentArray( unwrap<int[]>(w[0]) == C ));
+	assert(isEquivalentArray( unwrap<int[]>(w[1]) == B ));
+	assert(isEquivalentArray( unwrap<int[]>(w[2]) == A ));
+}
+
+

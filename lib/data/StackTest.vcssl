@@ -1,0 +1,255 @@
+coding UTF-8;
+
+
+import "./Stack.vcssl";
+
+
+
+/**
+ * <p>data.Stack モジュールのテストです。</p>
+ */
+
+
+/** テストで要素として使用するint値です。*/
+private const int A = 1;
+
+/** テストで要素として使用するint値です。*/
+private const int B = 2;
+
+/** テストで要素として使用するint値です。*/
+private const int C = 3;
+
+
+test();
+
+
+private void test(){
+	testClear();
+	testSize();
+	testPush();
+	testPop();
+	testPeek();
+	testContains();
+	testReverse();
+	testToArray();
+
+	println("data.StackTest: OK.");
+}
+
+
+private void testClear(){
+	Stack<int> stack;
+	push<int>(stack, A);
+	push<int>(stack, B);
+	assert(size<int>(stack) == 2);
+	clear<int>(stack);
+	assert(size<int>(stack) == 0);
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	assert(size<int>(stack) == 3);
+	assert(pop<int>(stack) == C);
+}
+
+
+private void testSize(){
+	Stack<int> stack;
+	assert(size<int>(stack) == 0);
+	push<int>(stack, A);
+	assert(size<int>(stack) == 1);
+	push<int>(stack, B);
+	assert(size<int>(stack) == 2);
+	push<int>(stack, C);
+	assert(size<int>(stack) == 3);
+}
+
+
+private void testPush(){
+	Stack<int> stack;
+	assert(size<int>(stack) == 0);
+
+	push<int>(stack, A);
+	assert(size<int>(stack) == 1);
+	assert(peek<int>(stack) == A);
+
+	push<int>(stack, B);
+	assert(size<int>(stack) == 2);
+	assert(peek<int>(stack) == B);
+
+	push<int>(stack, C);
+	assert(size<int>(stack) == 3);
+	assert(peek<int>(stack) == C);
+
+	push<int>(stack, A);
+	assert(size<int>(stack) == 4);
+	assert(peek<int>(stack) == A);
+
+	push<int>(stack, B);
+	assert(size<int>(stack) == 5);
+	assert(peek<int>(stack) == B);
+
+	push<int>(stack, C);
+	assert(size<int>(stack) == 6);
+	assert(peek<int>(stack) == C);
+
+	push<int>(stack, A);
+	assert(size<int>(stack) == 7);
+	assert(peek<int>(stack) == A);
+
+	push<int>(stack, B);
+	assert(size<int>(stack) == 8);
+	assert(peek<int>(stack) == B);
+
+	push<int>(stack, C);
+	assert(size<int>(stack) == 9);
+	assert(peek<int>(stack) == C);
+}
+
+
+private void testPop(){
+	Stack<int> stack;
+
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+
+	assert(size<int>(stack) == 9);
+	assert(pop<int>(stack) == C);
+
+	assert(size<int>(stack) == 8);
+	assert(pop<int>(stack) == B);
+
+	assert(size<int>(stack) == 7);
+	assert(pop<int>(stack) == A);
+
+	assert(size<int>(stack) == 6);
+	assert(pop<int>(stack) == C);
+
+	assert(size<int>(stack) == 5);
+	assert(pop<int>(stack) == B);
+
+	assert(size<int>(stack) == 4);
+	assert(pop<int>(stack) == A);
+
+	assert(size<int>(stack) == 3);
+	assert(pop<int>(stack) == C);
+
+	assert(size<int>(stack) == 2);
+	assert(pop<int>(stack) == B);
+
+	assert(size<int>(stack) == 1);
+	assert(pop<int>(stack) == A);
+
+	assert(size<int>(stack) == 0);
+}
+
+
+private void testPeek(){
+	Stack<int> stack;
+
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+
+	assert(size<int>(stack) == 9);
+	assert(peek<int>(stack) == C);
+
+	assert(size<int>(stack) == 9);
+	assert(peek<int>(stack) == C);
+
+	assert(size<int>(stack) == 9);
+	assert(peek<int>(stack) == C);
+
+	assert(pop<int>(stack) == C);
+
+	assert(size<int>(stack) == 8);
+	assert(peek<int>(stack) == B);
+
+	assert(size<int>(stack) == 8);
+	assert(peek<int>(stack) == B);
+
+	assert(size<int>(stack) == 8);
+	assert(peek<int>(stack) == B);
+
+	assert(pop<int>(stack) == B);
+
+	assert(size<int>(stack) == 7);
+	assert(peek<int>(stack) == A);
+
+	assert(size<int>(stack) == 7);
+	assert(peek<int>(stack) == A);
+
+	assert(size<int>(stack) == 7);
+	assert(peek<int>(stack) == A);
+
+	assert(pop<int>(stack) == A);
+}
+
+
+private void testContains(){
+	Stack<int> stack;
+
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, A);
+	push<int>(stack, B);
+
+	assert(contains<int>(stack, A));
+	assert(contains<int>(stack, B));
+	assert(!(contains<int>(stack, C)));
+}
+
+
+private void testReverse(){
+	Stack<int> stack;
+
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	push<int>(stack, C);
+	push<int>(stack, C);
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	push<int>(stack, C);
+
+	reverse<int>(stack);
+
+	assert(pop<int>(stack) == A);
+	assert(pop<int>(stack) == B);
+	assert(pop<int>(stack) == C);
+	assert(pop<int>(stack) == C);
+	assert(pop<int>(stack) == C);
+	assert(pop<int>(stack) == A);
+	assert(pop<int>(stack) == B);
+	assert(pop<int>(stack) == C);
+	assert(pop<int>(stack) == C);
+}
+
+
+private void testToArray(){
+	Stack<int> stack;
+	push<int>(stack, A);
+	push<int>(stack, B);
+	push<int>(stack, C);
+	int[] w = toArray<int>(stack);
+	assert(w[0] == C);
+	assert(w[1] == B);
+	assert(w[2] == A);
+}
+
+

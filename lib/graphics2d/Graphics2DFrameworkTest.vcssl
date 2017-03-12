@@ -1,0 +1,249 @@
+coding UTF-8;
+
+import "./Graphics2DFramework.vcssl";
+
+import GUI;
+import Math;
+import Graphics;
+import Graphics2D;
+
+/**
+ * graphics2d.Graphics2DFramework モジュールのテストです。
+ */
+
+
+/** テストで用いるスプライトのIDです。 */
+int sprite = NULL;
+
+/** テストで用いるスプライトのX座標です。 */
+int spriteX = 0;
+
+/** テストで用いるスプライトのY座標です。 */
+int spriteY = 0;
+
+/** テストで用いるスプライトの幅です。 */
+int spriteWidth = 50;
+
+/** テストで用いるスプライトの高さです。 */
+int spriteHeight = 50;
+
+/**
+ * この関数はフレームワーク側から、
+ * 起動後のタイミングで一度だけ実行されます。
+ */
+void onStart(int renderer){
+	testSetBackgroundColor();
+	testGetBackgroundColor();
+	testSetWindowSize();
+	testGetWindowSize();
+	testSetWindowTitle();
+	testSetWindowLocation();
+	testGetWindowLocation();
+	testGetWindowTitle();
+	testSetFrameRate();
+	testSetMarginTop();
+	testGetMarginTop();
+	testSetMarginBottom();
+	testGetMarginBottom();
+	testSetMarginRight();
+	testGetMarginRight();
+	testSetMarginLeft();
+	testGetMarginLeft();
+	testGetWindow();
+
+	// スプライトを生成して配置
+	sprite = newOvalSprite(spriteX, spriteY, spriteWidth, spriteHeight, true);
+	setSpriteColor(sprite, 255, 255, 0, 255);
+	mountSprite(sprite, renderer);
+}
+
+
+/**
+ * この関数はフレームワーク側から、
+ * 画面更新タイミングの間で毎回実行されます。
+ */
+void onUpdate(int renderer){
+
+	// スプライトを移動
+	spriteX++;
+	spriteY++;
+	if(500 < spriteX){
+		spriteX = 0;
+	}
+	if(500 < spriteY){
+		spriteY = 0;
+	}
+	setSpriteLocation(sprite, spriteX, spriteY);
+
+	// スプライトをサイズ変更
+	spriteWidth++;
+	spriteHeight++;
+	if(100 < spriteWidth){
+		spriteWidth = 50;
+	}
+	if(100 < spriteHeight){
+		spriteHeight = 50;
+	}
+	setSpriteSize(sprite, spriteWidth, spriteHeight);
+}
+
+
+/**
+ * この関数はフレームワーク側から、
+ * 画面更新タイミングで毎回実行されます。
+ */
+void onPaint(int renderer){
+	setDrawColor(renderer, 70, 140, 255, 180);
+	drawOval(renderer, 0, 0, 600, 400, true);
+	setDrawColor(renderer, 70, 255, 70, 180);
+	drawRect(renderer, 300, 300, 500, 300, true);
+
+	testGetCurrentFrameRate();
+	testGetLastFrameTime();
+}
+
+
+/**
+ * この関数はフレームワーク側から、
+ * 終了前のタイミングで一度だけ実行されます。
+ */
+void onExit(int renderer){
+	alert("終了します");
+}
+
+
+/**
+ * ボタンのイベントハンドラです。
+ * ボタンがクリックされたタイミングで実行されます。
+ */
+public void onButtonClick(int id){
+	testExport();
+}
+
+
+public void testExport(){
+	string fileName = "Graphics2DFrameworkTest.jpg";
+	export(fileName, "JPEG", 100.0);
+	alert(fileName + " に出力しました。");
+}
+
+
+void testSetBackgroundColor(){
+	setBackgroundColor(0, 0, 0, 255);
+}
+
+void testGetBackgroundColor(){
+	int color[] = getBackgroundColor();
+	assert(color[0] == 0);
+	assert(color[1] == 0);
+	assert(color[2] == 0);
+	assert(color[3] == 255);
+}
+
+
+
+
+void testSetWindowSize(){
+	setWindowSize(1000, 800);
+}
+
+
+void testGetWindowSize(){
+	int size[] = getWindowSize();
+	assert(size[0] == 1000);
+	assert(size[1] == 800);
+}
+
+
+void testSetWindowLocation(){
+	setWindowLocation(200, 100);
+}
+
+
+void testGetWindowLocation(){
+	int location[] = getWindowLocation();
+	assert(location[0] == 200);
+	assert(location[1] == 100);
+}
+
+
+void testSetWindowTitle(){
+	setWindowTitle("Test");
+}
+
+
+void testGetWindowTitle(){
+	assert(getWindowTitle() == "Test");
+}
+
+
+void testSetFrameRate(){
+	setFrameRate(24.0);
+}
+
+
+void testGetFrameRate(){
+	assert(getFrameRate() == 24.0);
+}
+
+
+void testGetCurrentFrameRate(){
+	float rate = getCurrentFrameRate();
+	int rend = getRenderer();
+	setDrawFontSize(rend, 12);
+	setDrawColor(rend, 255, 255, 255, 255);
+	drawText(rend, 50, 50, 1000, 20, "Current Frame Rate = " + rate);
+}
+
+
+void testGetLastFrameTime(){
+	int time = getLastFrameTime();
+	int rend = getRenderer();
+	setDrawFontSize(rend, 12);
+	setDrawColor(rend, 255, 255, 255, 255);
+	drawText(rend, 50, 80, 1000, 20, "Last Frame Time = " + time);
+}
+
+
+void testSetMarginTop(){
+	setMarginTop(20);
+}
+
+void testGetMarginTop(){
+	assert(getMarginTop() == 20);
+}
+
+
+void testSetMarginBottom(){
+	setMarginBottom(20);
+}
+
+void testGetMarginBottom(){
+	assert(getMarginBottom() == 20);
+}
+
+void testSetMarginRight(){
+	setMarginRight(20);
+}
+
+void testGetMarginRight(){
+	assert(getMarginRight() == 20);
+}
+
+void testSetMarginLeft(){
+	setMarginLeft(200);
+}
+
+void testGetMarginLeft(){
+	assert(getMarginLeft() == 200);
+}
+
+void testGetWindow(){
+	int window = getWindow();
+	int button = newButton(10, 20, 180, 50, "EXPORT");
+	mountComponent(button, window);
+}
+
+
+
+

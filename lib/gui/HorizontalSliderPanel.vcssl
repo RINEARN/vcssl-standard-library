@@ -1,0 +1,463 @@
+coding UTF-8;
+
+import GUI;
+
+/**
+ * <p>
+ * このライブラリ gui.HorizontalSliderPanel は、
+ * GUI部品として、水平スライダーが並ぶパネル ―― スライダーパネル ―― を提供します。	
+ * </p>
+ *
+ * <p>
+ * VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、
+ * このモジュールで提供されるGUI部品は、
+ * <a href="#HorizontalSliderPanel">HorizontalSliderPanel</a> 構造体として扱います。
+ * </p>
+ *
+ * <p>
+ * HorizontalSliderPanel 構造体は、内部にリソースのID等を保持していますが、
+ * <br />
+ * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
+ * <br />
+ * 具体的には、 <a href="#newHorizontalSliderPanel">newHorizontalSliderPanel</a> 関数で生成し、 
+ * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
+ * </p>
+ *
+ * <p>
+ * またこのモジュールでは、
+ * HorizontalSliderPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、
+ * 標準GUIライブラリ関数のオーバーロードも提供されます。
+ * <br />
+ * 例えば、 
+ * <a href="#mountComponent">mountComponent</a> 関数や、
+ * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
+ * </p>
+ */
+
+
+/** デフォルトのパネルタイトルです。 */
+private const string DEFAULT_PANEL_TITLE = "CheckBoxPanel";
+
+/** 指定されたラベルが見つからなかった場合のエラーメッセージです。 */
+private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しません：";
+
+
+/** スライダーパネルの構造体です。 */
+public struct HorizontalSliderPanel{
+	// パネルのGUI部品ID
+	protected int panel = NULL;
+	// テキストラベルを並べるグリッドパネルのGUI部品ID
+	protected int textLabelGridPanel = NULL;
+	// 水平スライダーを並べるグリッドパネルのGUI部品ID
+	protected int horizontalSliderGridPanel = NULL;
+	// テキストラベルのGUI部品ID
+	protected int textLabel[0];
+	// 水平スライダーのGUI部品ID
+	protected int horizontalSlider[0];
+	// テキストラベルの文字列を保持する
+	protected string textLabelString[0];
+}
+
+
+/**
+ * スライダーパネルを生成します。
+ *
+ * @param x パネルのX座標
+ * @param y パネルのY座標
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @param labelText ラベル文字列を格納する配列
+ * @param labelWidth ラベル部分の幅
+ * @param defaultValue スライダーの初期値を格納する配列
+ * @param minValue スライダーの最小値を格納する配列
+ * @param maxValue スライダーの最小値を格納する配列
+ * @return 生成したスライダーパネル構造体
+ * @author 松井文宏
+ */
+public HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[], float defaultValue[], float minValue[], float maxValue[]){
+
+	int n = length(labelText, 0);
+	HorizontalSliderPanel panelInstance;
+
+	panelInstance.panel = newPanel(
+		x, y, width, height, DEFAULT_PANEL_TITLE
+	);
+
+	panelInstance.textLabelString = labelText;
+
+	int labelWidth = width / 2;
+
+	panelInstance.textLabelGridPanel = newGridPanel(
+		0, 0, labelWidth, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	panelInstance.horizontalSliderGridPanel = newGridPanel(
+		labelWidth, 0, width-labelWidth, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	alloc[n] panelInstance.textLabel;
+	alloc[n] panelInstance.horizontalSlider;
+
+	for(int i=0; i<n; i++){
+		panelInstance.textLabel[i] = newTextLabel(0, 0, 0, 0, labelText[i]);
+		panelInstance.horizontalSlider[i] = newHorizontalSlider(0, 0, 0, 0, defaultValue[i], minValue[i], maxValue[i]);
+		mountComponent(panelInstance.textLabel[i], panelInstance.textLabelGridPanel);
+		mountComponent(panelInstance.horizontalSlider[i], panelInstance.horizontalSliderGridPanel);
+	}
+
+	mountComponent(panelInstance.textLabelGridPanel, panelInstance.panel);
+	mountComponent(panelInstance.horizontalSliderGridPanel, panelInstance.panel);
+
+	return panelInstance;
+}
+
+
+/**
+ * スライダーパネルを生成します。
+ *
+ * @param x パネルのX座標
+ * @param y パネルのY座標
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @param labelText ラベル文字列を格納する配列
+ * @param labelWidth ラベル部分の幅
+ * @param defaultValue スライダーの初期値を格納する配列
+ * @param minValue スライダーの最小値を格納する配列
+ * @param maxValue スライダーの最小値を格納する配列
+ * @return 生成したスライダーパネル構造体
+ * @author 松井文宏
+ */
+public HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[], int defaultValue[], int minValue[], int maxValue[]){
+
+	int n = length(labelText, 0);
+	HorizontalSliderPanel panelInstance;
+
+	panelInstance.panel = newPanel(
+		x, y, width, height, DEFAULT_PANEL_TITLE
+	);
+
+	panelInstance.textLabelString = labelText;
+
+	int labelWidth = width / 2;
+
+	panelInstance.textLabelGridPanel = newGridPanel(
+		0, 0, labelWidth, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	panelInstance.horizontalSliderGridPanel = newGridPanel(
+		labelWidth, 0, width-labelWidth, height, "",	//x,y,幅,高さ,タイトル
+		n, 1	//行数,列数
+	);
+
+	alloc[n] panelInstance.textLabel;
+	alloc[n] panelInstance.horizontalSlider;
+
+	for(int i=0; i<n; i++){
+		panelInstance.textLabel[i] = newTextLabel(0, 0, 0, 0, labelText[i]);
+		panelInstance.horizontalSlider[i] = newHorizontalSlider(0, 0, 0, 0, defaultValue[i], minValue[i], maxValue[i]);
+		mountComponent(panelInstance.textLabel[i], panelInstance.textLabelGridPanel);
+		mountComponent(panelInstance.horizontalSlider[i], panelInstance.horizontalSliderGridPanel);
+	}
+
+	mountComponent(panelInstance.textLabelGridPanel, panelInstance.panel);
+	mountComponent(panelInstance.horizontalSliderGridPanel, panelInstance.panel);
+
+	return panelInstance;
+}
+
+
+/**
+ * スライダーパネルを破棄します。
+ *
+ * @param panelInstance 破棄するスライダーパネル
+ * @author 松井文宏
+ */
+public void deleteComponent(HorizontalSliderPanel &panelInstance){
+	int n = length(panelInstance.textLabel, 0);
+	for(int i=0; i<n; i++){
+		demountComponent(panelInstance.textLabel[i], panelInstance.textLabelGridPanel);
+		demountComponent(panelInstance.horizontalSlider[i], panelInstance.horizontalSliderGridPanel);
+		deleteComponent(panelInstance.textLabel[i]);
+		deleteComponent(panelInstance.horizontalSlider[i]);
+	}
+	demountComponent(panelInstance.textLabelGridPanel, panelInstance.panel);
+	demountComponent(panelInstance.horizontalSliderGridPanel, panelInstance.panel);
+	deleteComponent(panelInstance.textLabelGridPanel);
+	deleteComponent(panelInstance.horizontalSliderGridPanel);
+	deleteComponent(panelInstance.panel);
+	panelInstance = NULL;
+}
+
+
+/**
+ * スライダーパネルを再描画します。
+ *
+ * @param panelInstance 再描画するスライダーパネル
+ * @author 松井文宏
+ */
+public void paintComponent(HorizontalSliderPanel &panelInstance){
+	int n = length(panelInstance.textLabel, 0);
+	for(int i=0; i<n; i++){
+		paintComponent(panelInstance.textLabel[i]);
+		paintComponent(panelInstance.horizontalSlider[i]);
+	}
+	paintComponent(panelInstance.textLabelGridPanel);
+	paintComponent(panelInstance.horizontalSliderGridPanel);
+	paintComponent(panelInstance.panel);
+}
+
+
+/**
+ * スライダーパネルを、別のGUIコンポーネント上に配置します。
+ *
+ * @param panelInstance 配置するスライダーパネル
+ * @param componentID 配置先GUIコンポーネントID
+ * @author 松井文宏
+ */
+public void mountComponent(HorizontalSliderPanel &panelInstance, int componentID){
+	mountComponent(panelInstance.panel, componentID);
+}
+
+
+/**
+ * スライダーパネルを、別のGUIコンポーネントから配置解除します。
+ *
+ * @param panelInstance 配置解除するスライダーパネル
+ * @param componentID 配置先GUIコンポーネントID
+ * @author 松井文宏
+ */
+public void demountComponent(HorizontalSliderPanel &panelInstance, int componentID){
+	demountComponent(panelInstance.panel, componentID);
+}
+
+
+/**
+ * ラベル部分の幅を設定します。
+ *
+ * @param panelInstance 取得対象のスライダーパネル
+ * @param labelWidth ラベル部分の幅
+ * @author 松井文宏
+ */
+public void setTextLabelWidth(HorizontalSliderPanel &panelInstance, int labelWidth){
+	int panelSize[] = getComponentSize(panelInstance.panel);
+	int panelWidth = panelSize[0];
+	int panelHeight = panelSize[1];
+
+	setComponentSize(panelInstance.textLabelGridPanel, labelWidth, panelHeight);
+	setComponentSize(panelInstance.horizontalSliderGridPanel, panelWidth-labelWidth, panelHeight);
+
+	setComponentLocation(panelInstance.horizontalSliderGridPanel, labelWidth, 0);
+}
+
+
+/**
+ * （この関数は互換目的でサポートされています。getTextLabelWidth を使用して下さい。）
+ * ラベル部分の幅を設定します。
+ *
+ * @param panelInstance 取得対象のスライダーパネル
+ * @param labelWidth ラベル部分の幅
+ * @author 松井文宏
+ */
+public void setLabelWidth(HorizontalSliderPanel panelInstance, int labelWidth){
+	setTextLabelWidth(panelInstance, labelWidth);
+}
+
+
+/**
+ * パネルのコンポーネントIDを返します。
+ *
+ * @param panelInstance 取得対象のスライダーパネル
+ * @return パネルのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getPanel(HorizontalSliderPanel &panelInstance){
+	return panelInstance.panel;
+}
+
+
+/*
+ * 指定されたインデックスのスライダーに、テキストを設定します。
+ *
+ * @param panelInstance 設定対象のスライダーパネル
+ * @param index スライダーのインデックス
+ * @param text 設定するテキスト
+ * @author 松井文宏
+ */
+/*
+public void setComponentFloat(HorizontalSliderPanel &panelInstance, int index, float value){
+	setComponentFloat(panelInstance.horizontalSlider[index], value);
+}
+*/
+
+
+/*
+ * 指定されたインデックスのスライダーから、テキストを取得します。
+ *
+ * @param panelInstance 取得対象のスライダーパネル
+ * @param index スライダーのインデックス
+ * @return スライダーの保持するテキスト
+ * @author 松井文宏
+ */
+/*
+public float getComponentFloat(HorizontalSliderPanel &panelInstance, int index){
+	return getComponentFloat(panelInstance.horizontalSlider[index]);
+}
+*/
+
+
+/*
+ * 指定されたラベルに対応するスライダーに、テキストを設定します。
+ *
+ * @param panelInstance 設定対象のスライダーパネル
+ * @param labelText 設定対象のスライダーに対応するラベル文字列
+ * @param value 設定する値
+ * @author 松井文宏
+ */
+/*
+public void setComponentFloat(HorizontalSliderPanel &panelInstance, string labelText, float value){
+	int index = labelIndexOf(panelInstance, labelText);
+	if(index < 0){
+		error(ERROR_LABEL_NOT_FOUND + labelText);
+	}
+	setComponentFloat(panelInstance.horizontalSlider[index], value);
+}
+*/
+
+
+/*
+ * 指定されたラベルに対応するスライダーから、テキストを取得します。
+ *
+ * @param panelInstance 設定対象のスライダーパネル
+ * @param labelText 設定対象のスライダーに対応するラベル文字列
+ * @return スライダーの保持する値
+ * @author 松井文宏
+ */
+/*
+public float getComponentFloat(HorizontalSliderPanel &panelInstance, string labelText){
+	int index = labelIndexOf(panelInstance, labelText);
+	if(index < 0){
+		error(ERROR_LABEL_NOT_FOUND + labelText);
+	}
+	return getComponentFloat(panelInstance.horizontalSlider[index]);
+}
+*/
+
+
+/**
+ * 指定されたラベルに対応するスライダーを取得します。
+ *
+ * @param panelInstance 対象のスライダーパネル
+ * @param labelText 取得対象のスライダーに対応するラベル文字列
+ * @return スライダーのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getHorizontalSlider(HorizontalSliderPanel &panelInstance, string labelText){
+	int index = labelIndexOf(panelInstance, labelText);
+	if(index < 0){
+		error(ERROR_LABEL_NOT_FOUND + labelText);
+	}
+	return panelInstance.horizontalSlider[index];
+}
+
+
+/**
+ * 指定されたインデックスのスライダーを取得します。
+ *
+ * @param panelInstance 対象のスライダーパネル
+ * @param index スライダーのインデックス
+ * @return スライダーのGUIコンポーネントID
+ * @author 松井文宏
+ */
+public int getHorizontalSlider(HorizontalSliderPanel &panelInstance, int index){
+	return panelInstance.horizontalSlider[index];
+}
+
+
+/**
+ * ラベル文字列に対応する、スライダーのインデックスを返します。
+ *
+ * @param panelInstance 取得対象のスライダーパネル
+ * @param labelText 検索するラベル文字列
+ * @return スライダーのインデックス
+ * @author 松井文宏
+ */
+private int labelIndexOf(HorizontalSliderPanel &panelInstance, string labelText){
+	int n = length(panelInstance.textLabelString, 0);
+	for(int i=0; i<n; i++){
+		if(panelInstance.textLabelString[i] == labelText){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+/**
+ * パネルのサイズを返します。
+ *
+ * @param panelInstance 対象のスライダーパネル
+ * @return パネルのサイズを格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentSize(HorizontalSliderPanel &panelInstance){
+	return getComponentSize(panelInstance.panel);
+}
+
+
+/**
+ * パネルのサイズを設定します。
+ *
+ * @param panelInstance 対象のスライダーパネル
+ * @param width パネルの幅
+ * @param height パネルの高さ
+ * @author 松井文宏
+ */
+public void setComponentSize(HorizontalSliderPanel &panelInstance, int width, int height){
+	setComponentSize(panelInstance.panel, width, height);
+	setComponentSize(panelInstance);
+}
+
+
+/**
+ * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
+ *
+ * @param panelInstance 対象のスライダーパネル
+ * @author 松井文宏
+ */
+public void setComponentSize(HorizontalSliderPanel &panelInstance){
+	int panelSize[] = getComponentSize(panelInstance.panel);
+	setComponentSize(panelInstance.textLabelGridPanel, panelSize[0]/2, panelSize[1]);
+	setComponentSize(panelInstance.horizontalSliderGridPanel, panelSize[0]/2, panelSize[1]);
+	setComponentLocation(panelInstance.horizontalSliderGridPanel, panelSize[0]/2, 0);
+}
+
+
+/**
+ * パネルの位置を返します。
+ *
+ * @param panelInstance 対象のスライダーパネル
+ * @return パネルの位置を格納する配列
+ * @author 松井文宏
+ */
+public int[] getComponentLocation(HorizontalSliderPanel &panelInstance){
+	return getComponentLocation(panelInstance.panel);
+}
+
+
+/**
+ * パネルの位置を設定します。
+ *
+ * @param panelInstance 対象のスライダーパネル
+ * @param x ウィンドウのX座標
+ * @param y ウィンドウのY座標
+ * @author 松井文宏
+ */
+public void setComponentLocation(HorizontalSliderPanel &panelInstance, int x, int y){
+	setComponentLocation(panelInstance.panel, x, y);
+}
+
+

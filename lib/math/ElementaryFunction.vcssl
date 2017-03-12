@@ -1,0 +1,102 @@
+coding UTF-8;
+
+
+/**
+ * <p>
+ * このライブラリ math.ElementaryFunction は、初頭数学関数を提供します。
+ * <br />
+ * VCSSL標準ライブラリ「 Math 」と同様の位置づけで、
+ * Math で提供されていない機能を補う事を目的としています。
+ * </p>
+ *
+ * <p>
+ * なお、このモジュールでは varfloat 型や varcomplex 型など、
+ * 多倍長精度のものも提供されますが、
+ * <br />
+ * ただアルゴリズムが実装されているだけであり、
+ * 演算誤差の蓄積や、桁落ち等に対する特別な措置は行われません。
+ * </p>
+ *
+ * <p>
+ * つまり、最終桁まで正しい値が得られる訳ではなく、
+ * 演算結果の末尾に、常に誤差蓄積による正しくない部分が含まれます。
+ * <br />
+ * この誤差部分の長さは、実装のアルゴリズムの違いや、
+ * 引数による収束速度の違い、桁落ちの度合いなど、場合によって異なります。
+ * <br />
+ * 例えば、一般に特異点の近傍では収束が著しく遅くなり、それに伴って誤差蓄積も増大します。
+ * </p>
+ *
+ * <p>
+ * 従って、 varfloat 型や varcomplex 型などの多倍長精度の関数を使用する場合は、
+ * <br />
+ * 必要な桁数よりも、十分に大きな桁数で関数を呼び出し、
+ * 得られた結果から不要な（誤差を含む）部分を切り捨てて下さい。
+ * </p>
+ */
+
+
+import Math;
+import System;
+
+
+/**
+ * 複素数の指数関数です。
+ *
+ * @param arg 指数関数の引数です。
+ * @return 指数関数の値です。
+ * @author 松井文宏
+ */
+public complex exp(complex arg){
+	float argRe = re(arg);
+	float argIm = im(arg);
+	complex value = exp(argRe) * ( cos(argIm) + I*sin(argIm) );
+	return value;
+}
+
+
+/**
+ * 複素数の指数関数です。
+ *
+ * @param arg 指数関数の引数です。
+ * @return 指数関数の値です。
+ * @author 松井文宏
+ */
+public varcomplex exp(varcomplex arg){
+	varfloat argRe = re(arg);
+	varfloat argIm = im(arg);
+	varcomplex value = exp(argRe) * ( cos(argIm) + I*sin(argIm) );
+	return value;
+}
+
+
+
+/**
+ * 複素数の絶対値を返す関数です。
+ *
+ * @param arg 絶対値を求める対象の複素数です。
+ * @return 絶対値の値です。
+ * @author 松井文宏
+ */
+public float abs(complex arg){
+	float argRe = re(arg);
+	float argIm = im(arg);
+	float value = sqrt(argRe*argRe + argIm*argIm);
+	return value;
+}
+
+
+/**
+ * 複素数の絶対値を返す関数です。
+ *
+ * @param arg 絶対値を求める対象の複素数です。
+ * @return 絶対値の値です。
+ * @author 松井文宏
+ */
+public varfloat abs(varcomplex arg){
+	varfloat argRe = re(arg);
+	varfloat argIm = im(arg);
+	varfloat value = sqrt(argRe*argRe + argIm*argIm);
+	return value;
+}
+

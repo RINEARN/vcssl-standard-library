@@ -1,0 +1,261 @@
+coding UTF-8;
+
+import "./FourierTransform.vcssl";
+import "./ElementaryFunction.vcssl";
+
+import science.graph.Graph2D;
+import Math;
+import System;
+
+/**
+ * <p> math.FourierTransform のテストです。 </p>
+ */
+
+/** テスト波データの要素数です。 */
+const int N = 32;
+
+/** テストでのfloat値比較で、合格と見なす一致桁数です。 */
+const int FLOAT_EQUALITY_PRECISION = 12;
+
+/** テストでのvarfloatの設定桁数です。 */
+const int VARFLOAT_DIGIT = 50;
+
+/** テストでのvarfloat値比較で、合格と見なす一致桁数です。 */
+const int VARFLOAT_EQUALITY_PRECISION = 47;
+
+/** 結果をグラフに表示するかどうかを指定します。 */
+const bool OUTPUT_GRAPH = false;
+
+
+test();
+
+void test(){
+	testDftVarfloat();
+	testDftFloat();
+
+	println("math.FourierTransform: OK.");
+}
+
+
+void testDftFloat(){
+
+	// 元の波:
+	// exp(5xi) + exp(17xi) + exp(24xi)
+	complex baseWave[N] = 0.0;
+	baseWave += getWaveComplex(N, 5);
+	baseWave += getWaveComplex(N, 17);
+	baseWave += getWaveComplex(N, 24);
+
+	// 離散フーリエ変換後の波:
+	// 元の波に混合した波数成分 5, 17, 24 の位置にピークを持つ
+	complex transWave[] = dft(baseWave, FORWARD);
+
+	//規格化
+	transWave /= N;
+
+	// 変換後の波を理論値と比較検証
+	for(int i=0; i<N; i++){
+		if(i==5 || i==17 || i==24){
+
+			// 混合した波数成分の位置にピーク
+			assert(almostEquals( re(transWave[i]), 1.0 ));
+
+		}else{
+
+			// 他はほぼゼロ
+			assert(almostEquals( re(transWave[i]), 0.0 ));
+
+		}
+	}
+
+	// 再度逆変換して、元の波と比較検証
+	complex reTransWave[] = dft(transWave, BACKWARD);
+	for(int i=0; i<N; i++){
+		assert(almostEquals( re(reTransWave[i]), re(baseWave[i]) ));
+		assert(almostEquals( im(reTransWave[i]), im(baseWave[i]) ));
+	}
+
+	// グラフ出力
+	if(OUTPUT_GRAPH){
+		int baseWaveGraph = newGraph2D();
+		int transWaveGraph = newGraph2D();
+		int reTransWaveGraph = newGraph2D();
+		setGraph2DTitle(baseWaveGraph, "BASE WAVE ( float )");
+		setGraph2DTitle(transWaveGraph, "FORWARD TRANSFORMED WAVE ( float )");
+		setGraph2DTitle(reTransWaveGraph, "FORWARD -> BACKWARD TRANSFORMED WAVE ( float )");
+		float nArray[] = getNArray(N);
+		float absArray[];
+
+		absArray = getAbsFloatArray(N, baseWave);
+		setGraph2DData(baseWaveGraph, nArray, absArray);
+
+		absArray = getAbsFloatArray(N, transWave);
+		setGraph2DData(transWaveGraph, nArray, absArray);
+
+		absArray = getAbsFloatArray(N, reTransWave);
+		setGraph2DData(reTransWaveGraph, nArray, absArray);
+	}
+}
+
+
+void testDftVarfloat(){
+	digit(VARFLOAT_DIGIT);
+
+	// 元の波:
+	// exp(5xi) + exp(17xi) + exp(24xi)
+	varcomplex baseWave[N] = 0.0vf;
+	baseWave += getWaveVarcomplex((varint)N, 5v);
+	baseWave += getWaveVarcomplex((varint)N, 17v);
+	baseWave += getWaveVarcomplex((varint)N, 24v);
+
+	// 離散フーリエ変換後の波:
+	// 元の波に混合した波数成分 5, 17, 24 の位置にピークを持つ
+	varcomplex transWave[] = dft(baseWave, FORWARD);
+
+	//規格化
+	transWave /= (varfloat)N;
+
+	// 変換後の波を理論値と比較検証
+	for(varint i=0v; i<N; i++){
+		if(i==5v || i==17v || i==24v){
+
+			// 混合した波数成分の位置にピーク
+			assert(almostEquals( re(transWave[i]), 1.0vf ));
+
+		}else{
+
+			// 他はほぼゼロ
+			assert(almostEquals( re(transWave[i]), 0.0vf ));
+
+		}
+	}
+
+	// 再度逆変換して、元の波と比較検証
+	varcomplex reTransWave[] = dft(transWave, BACKWARD);
+	for(varint i=0v; i<N; i++){
+		assert(almostEquals( re(reTransWave[i]), re(baseWave[i]) ));
+		assert(almostEquals( im(reTransWave[i]), im(baseWave[i]) ));
+	}
+
+	// グラフ出力
+	if(OUTPUT_GRAPH){
+		int baseWaveGraph = newGraph2D();
+		int transWaveGraph = newGraph2D();
+		int reTransWaveGraph = newGraph2D();
+		setGraph2DTitle(baseWaveGraph, "BASE WAVE ( varfloat )");
+		setGraph2DTitle(transWaveGraph, "FORWARD TRANSFORMED WAVE ( varfloat )");
+		setGraph2DTitle(reTransWaveGraph, "FORWARD -> BACKWARD TRANSFORMED WAVE ( varfloat )");
+		float nArray[] = getNArray(N);
+		float absArray[];
+
+		absArray = getAbsFloatArray(N, baseWave);
+		setGraph2DData(baseWaveGraph, nArray, absArray);
+
+		absArray = getAbsFloatArray(N, transWave);
+		setGraph2DData(transWaveGraph, nArray, absArray);
+
+		absArray = getAbsFloatArray(N, reTransWave);
+		setGraph2DData(reTransWaveGraph, nArray, absArray);
+	}
+}
+
+/**
+ * 誤差を考慮して、floatの比較を行います。
+ * FLOAT_EQUALITY_PRECISION 桁まで一致していれば true を返します。
+ *
+ * @author 松井文宏
+ */
+bool almostEquals(float a, float b){
+	float bounds = pow(10.0, -1.0*FLOAT_EQUALITY_PRECISION);
+	float error = abs(a - b);
+	return bounds > error;
+}
+
+
+/**
+ * 誤差を考慮して、varfloatの比較を行います。
+ * VARFLOAT_EQUALITY_PRECISION 桁まで一致していれば true を返します。
+ *
+ * @author 松井文宏
+ */
+bool almostEquals(varfloat a, varfloat b){
+	varfloat bounds = pow(10.0vf, -1.0vf*VARFLOAT_EQUALITY_PRECISION);
+	varfloat error = abs(a - b);
+	return bounds > error;
+}
+
+
+/**
+ * exp( i k x ) の波を、離散化数 N で返します。
+ * 配列の端から端までの x の範囲は、0 ～ 2π(N-1)/N と見なします。
+ *
+ * @author 松井文宏
+ */
+complex[] getWaveComplex(int n, int k){
+	complex value[n];
+	for(int j=0; j<n; j++){
+		float x = 2.0*PI * j / n;
+		complex v = exp(I * k * x);
+		value[j] = v;
+	}
+	return value;
+}
+
+/**
+ * exp( i k x ) の波を、離散化数 N で返します。
+ * 配列の端から端までの x の範囲は、0 ～ 2π(N-1)/N と見なします。
+ *
+ * @author 松井文宏
+ */
+varcomplex[] getWaveVarcomplex(varint n, varint k){
+	varcomplex value[n];
+	varfloat pi = pi();
+	for(varint j=0v; j<n; j++){
+		varfloat x = 2.0vf*pi * j / n;
+		varcomplex v = exp(VCI * k * x);
+		value[j] = v;
+	}
+	return value;
+}
+
+
+/**
+ * 0 ～ N-1 までの整数値を、float型配列に格納して返します。グラフプロット用です。
+ *
+ * @author 松井文宏
+ */
+float[] getNArray(int n){
+	float nArray[n];
+	for(int j=0; j<n; j++){
+		nArray[j] = j;
+	}
+	return nArray;
+}
+
+
+/**
+ * complex配列の、各要素の絶対値を格納するfloat型配列を返します。グラフプロット用です。
+ *
+ * @author 松井文宏
+ */
+float[] getAbsFloatArray(int n, complex wave[]){
+	float absArray[n];
+	for(int j=0; j<n; j++){
+		absArray[j] = abs(wave[j]);
+	}
+	return absArray;
+}
+
+/**
+ * varcomplex配列の、各要素の絶対値を格納するfloat型配列を返します。グラフプロット用です。
+ *
+ * @author 松井文宏
+ */
+float[] getAbsFloatArray(int n, varcomplex wave[]){
+	float absArray[n];
+	for(int j=0; j<n; j++){
+		absArray[j] = abs(wave[j]);
+	}
+	return absArray;
+}
+

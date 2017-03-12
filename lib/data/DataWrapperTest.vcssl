@@ -1,0 +1,319 @@
+coding UTF-8;
+
+import "./DataWrapper.vcssl";
+
+
+/**
+ * <p>data.DataWrapper モジュールのテストです。</p>
+ */
+
+
+/** テストで用いる構造体です。 */
+public struct DataWrapperTestStruct{
+	int x;
+}
+
+
+test();
+
+
+private void test(){
+
+	// スカラのラッピング/アンラッピングテスト
+	testInt();
+	testFloat();
+	testComplex();
+	testVarint();
+	testVarfloat();
+	testVarcomplex();
+	testBool();
+	testString();
+	testStruct();
+
+	// 配列のラッピング/アンラッピングテスト
+	testIntArray();
+	testFloatArray();
+	testComplexArray();
+	testVarintArray();
+	testVarfloatArray();
+	testVarcomplexArray();
+	testBoolArray();
+	testStringArray();
+	testStructArray();
+
+	// ジャグ配列のテスト実装
+	testJaggedArray2D();
+	testJaggedArray3D();
+
+	println("data.DataWrapperTest: OK.");
+}
+
+
+private bool isEquivalentArray(bool[] b){
+	int n = length(b, 0);
+	for(int i=0; i<n; i++){
+		if(!b[i]){
+			return false;
+		}
+	}
+	return true;
+}
+
+
+private void testInt(){
+	int v1 = 1;
+	DataWrapper<int> w1 = wrap<int>(v1);
+	DataWrapper<int> w2 = w1;
+	int v2 = unwrap<int>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testFloat(){
+	float v1 = 1.1;
+	DataWrapper<float> w1 = wrap<float>(v1);
+	DataWrapper<float> w2 = w1;
+	float v2 = unwrap<float>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testComplex(){
+	complex v1 = 1.1 + 2.2*I;
+	DataWrapper<complex> w1 = wrap<complex>(v1);
+	DataWrapper<complex> w2 = w1;
+	complex v2 = unwrap<complex>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testVarint(){
+	varint v1 = 1v;
+	DataWrapper<varint> w1 = wrap<varint>(v1);
+	DataWrapper<varint> w2 = w1;
+	varint v2 = unwrap<varint>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testVarfloat(){
+	varfloat v1 = 1.1vf;
+	DataWrapper<varfloat> w1 = wrap<varfloat>(v1);
+	DataWrapper<varfloat> w2 = w1;
+	varfloat v2 = unwrap<varfloat>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testVarcomplex(){
+	varcomplex v1 = 1.1vf + 2.2vf*VCI;
+	DataWrapper<varcomplex> w1 = wrap<varcomplex>(v1);
+	DataWrapper<varcomplex> w2 = w1;
+	varcomplex v2 = unwrap<varcomplex>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testBool(){
+	bool v1 = true;
+	DataWrapper<bool> w1 = wrap<bool>(v1);
+	DataWrapper<bool> w2 = w1;
+	bool v2 = unwrap<bool>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testString(){
+	string v1 = "abc";
+	DataWrapper<string> w1 = wrap<string>(v1);
+	DataWrapper<string> w2 = w1;
+	string v2 = unwrap<string>(w2);
+	assert(v1 == v2);
+}
+
+
+private void testStruct(){
+	DataWrapperTestStruct v1;
+	v1.x = 1;
+	DataWrapper<DataWrapperTestStruct> w1 = wrap<DataWrapperTestStruct>(v1);
+	DataWrapper<DataWrapperTestStruct> w2 = w1;
+	DataWrapperTestStruct v2 = unwrap<DataWrapperTestStruct>(w2);
+	assert(v1.x == v2.x);
+}
+
+
+private void testIntArray(){
+	int v1[] = {1, 2, 3};
+	DataWrapper<int[]> w1 = wrap<int[]>(v1);
+	DataWrapper<int[]> w2 = w1;
+	int v2[] = unwrap<int[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testFloatArray(){
+	float v1[] = {1.1, 2.2, 3.3};
+	DataWrapper<float[]> w1 = wrap<float[]>(v1);
+	DataWrapper<float[]> w2 = w1;
+	float v2[] = unwrap<float[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testComplexArray(){
+	complex v1[] = {1.1+1.2*I, 2.2+2.3*I, 3.3+3.4*I};
+	DataWrapper<complex[]> w1 = wrap<complex[]>(v1);
+	DataWrapper<complex[]> w2 = w1;
+	complex v2[] = unwrap<complex[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testVarintArray(){
+	varint v1[3v];
+	v1[0v] = 1v;
+	v1[1v] = 2v;
+	v1[2v] = 3v;
+	DataWrapper<varint[]> w1 = wrap<varint[]>(v1);
+	DataWrapper<varint[]> w2 = w1;
+	varint v2[] = unwrap<varint[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testVarfloatArray(){
+	varfloat v1[3v];
+	v1[0v] = 1.1vf;
+	v1[1v] = 2.2vf;
+	v1[2v] = 3.3vf;
+	DataWrapper<varfloat[]> w1 = wrap<varfloat[]>(v1);
+	DataWrapper<varfloat[]> w2 = w1;
+	varfloat v2[] = unwrap<varfloat[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testVarcomplexArray(){
+	varcomplex v1[3v];
+	v1[0v] = 1.1vf + 1.2vf*VCI;
+	v1[1v] = 2.2vf + 2.3vf*VCI;
+	v1[2v] = 3.3vf + 3.4vf*VCI;
+	DataWrapper<varcomplex[]> w1 = wrap<varcomplex[]>(v1);
+	DataWrapper<varcomplex[]> w2 = w1;
+	varcomplex v2[] = unwrap<varcomplex[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testBoolArray(){
+	bool v1[] = {true, false, true};
+	DataWrapper<bool[]> w1 = wrap<bool[]>(v1);
+	DataWrapper<bool[]> w2 = w1;
+	bool v2[] = unwrap<bool[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testStringArray(){
+	string v1[] = {"abc", "ABC", "123"};
+	DataWrapper<string[]> w1 = wrap<string[]>(v1);
+	DataWrapper<string[]> w2 = w1;
+	string v2[] = unwrap<string[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testStructArray(){
+	DataWrapperTestStruct v1[3];
+	v1[0].x = 1;
+	v1[1].x = 2;
+	v1[2].x = 3;
+	DataWrapper<DataWrapperTestStruct[]> w1 = wrap<DataWrapperTestStruct[]>(v1);
+	DataWrapper<DataWrapperTestStruct[]> w2 = w1;
+	DataWrapperTestStruct v2[] = unwrap<DataWrapperTestStruct[]>(w2);
+	assert(isEquivalentArray(v1 == v2));
+}
+
+
+private void testJaggedArray2D(){
+
+	// int[] を 3 つ保持するジャグ配列
+	DataWrapper<int[]> jaggedArray[3];
+
+	int[] a1 = {1, 2, 3};
+	int[] b1 = {4, 5, 6, 7};
+	int[] c1 = {8, 9, 10, 11, 12};
+
+	// int[] を実際に 3 つ格納
+	jaggedArray[0] = wrap<int[]>(a1);
+	jaggedArray[1] = wrap<int[]>(b1);
+	jaggedArray[2] = wrap<int[]>(c1);
+
+	// 格納していた int[] を 3 つ取り出す
+	int[] a2 = unwrap<int[]>(jaggedArray[0]);
+	int[] b2 = unwrap<int[]>(jaggedArray[1]);
+	int[] c2 = unwrap<int[]>(jaggedArray[2]);
+
+	// 等値検証
+	assert(isEquivalentArray(a1 == a2));
+	assert(isEquivalentArray(b1 == b2));
+	assert(isEquivalentArray(c1 == c2));
+}
+
+
+private void testJaggedArray3D(){
+
+	// 2次元ジャグ配列 ( DataWrapper<int[]>[] ) を2つ保持する3次元ジャグ配列
+	DataWrapper<DataWrapper<int[]>[]> jaggedArray3D[2];
+
+	// 要素となる2次元ジャグ配列
+	DataWrapper<int[]> jagElemA1[3];
+	int[] a1 = {1, 2, 3};
+	int[] b1 = {4, 5, 6, 7};
+	int[] c1 = {8, 9, 10, 11, 12};
+	jagElemA1[0] = wrap<int[]>(a1);
+	jagElemA1[1] = wrap<int[]>(b1);
+	jagElemA1[2] = wrap<int[]>(c1);
+
+	// 要素となる2次元ジャグ配列
+	DataWrapper<int[]> jagElemB1[4];
+	int[] w1 = {1};
+	int[] x1 = {2, 4, 8};
+	int[] y1 = {16, 32, 64, 128};
+	int[] z1 = {256, 512, 1024, 2048, 4096};
+	jagElemB1[0] = wrap<int[]>(w1);
+	jagElemB1[1] = wrap<int[]>(x1);
+	jagElemB1[2] = wrap<int[]>(y1);
+	jagElemB1[3] = wrap<int[]>(z1);
+
+	// 3次元ジャグ配列の要素に2次元ジャグ配列を格納
+	jaggedArray3D[0] = wrap<DataWrapper<int[]>[]>(jagElemA1);
+	jaggedArray3D[1] = wrap<DataWrapper<int[]>[]>(jagElemB1);
+
+	// 3次元ジャグ配列から、要素の2次元ジャグ配列を取り出す
+	DataWrapper<int[]> jagElemA2[]
+	 = unwrap<DataWrapper<int[]>[]>(jaggedArray3D[0]);
+	DataWrapper<int[]> jagElemB2[]
+	 = unwrap<DataWrapper<int[]>[]>(jaggedArray3D[1]);
+
+	// 2次元ジャグ配列から、要素のint[]を取り出す
+	int a2[] = unwrap<int[]>(jagElemA2[0]);
+	int b2[] = unwrap<int[]>(jagElemA2[1]);
+	int c2[] = unwrap<int[]>(jagElemA2[2]);
+
+	int w2[] = unwrap<int[]>(jagElemB2[0]);
+	int x2[] = unwrap<int[]>(jagElemB2[1]);
+	int y2[] = unwrap<int[]>(jagElemB2[2]);
+	int z2[] = unwrap<int[]>(jagElemB2[3]);
+
+	// 等値検証
+	assert(isEquivalentArray(a1 == a2));
+	assert(isEquivalentArray(b1 == b2));
+	assert(isEquivalentArray(c1 == c2));
+
+	assert(isEquivalentArray(x1 == x2));
+	assert(isEquivalentArray(y1 == y2));
+	assert(isEquivalentArray(z1 == z2));
+	assert(isEquivalentArray(w1 == w2));
+}
+

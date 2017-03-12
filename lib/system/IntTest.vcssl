@@ -1,0 +1,75 @@
+coding UTF-8;
+
+import "./Int.vcssl";
+
+/**
+ * <p>
+ * system.Int モジュールのテストです。
+ * </p>
+ */
+
+
+test();
+
+void test(){
+	testToIntArray();
+	testIsBin();
+	testIsOct();
+	testIsHex();
+	testIsInt();
+
+	println("system.Int: OK.");
+}
+
+
+
+public void testToIntArray(){
+	int array[] = toIntArray(1, 2, 3, 4, 5);
+	assert(length(array, 0) == 5);
+	assert(array[0] == 1);
+	assert(array[1] == 2);
+	assert(array[2] == 3);
+	assert(array[3] == 4);
+	assert(array[4] == 5);
+}
+
+
+public void testIsBin(){
+	assert( isBin("0b100101") );
+	assert( !isBin("0123") );
+	assert( !isBin("0x123abc") );
+	assert( !isBin("123") );
+	assert( !isBin("1.23") );
+	assert( !isBin("abc") );
+}
+
+
+public void testIsOct(){
+	assert( !isOct("0b100101") );
+	assert( isOct("0123") );
+	assert( !isOct("0x123abc") );
+	assert( !isOct("123") );
+	assert( !isOct("1.23") );
+	assert( !isOct("abc") );
+}
+
+
+public void testIsHex(){
+	assert( !isHex("0b100101") );
+	assert( !isHex("0123") );
+	assert( isHex("0x123abc") );
+	assert( !isHex("123") );
+	assert( !isHex("1.23") );
+	assert( !isHex("abc") );
+}
+
+
+public void testIsInt(){
+	assert( isInt("0b100101") );
+	assert( isInt("0123") );
+	assert( isInt("0x123abc") );
+	assert( isInt("123") );
+	assert( !isHex("1.23") );
+	assert( !isHex("abc") );
+}
+

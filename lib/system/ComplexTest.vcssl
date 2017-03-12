@@ -1,0 +1,291 @@
+coding UTF-8;
+
+import "./Complex.vcssl";
+import "../math/ElementaryFunction.vcssl";
+
+import System;
+
+/**
+ * <p>
+ * system.Complex モジュールのテストです。
+ * </p>
+ */
+
+
+/** テストでのvarfloatの設定桁数です。 */
+const int VARFLOAT_DIGIT = 50;
+
+/** テストでのvarfloat値比較で、合格と見なす一致桁数です。 */
+const int VARFLOAT_EQUALITY_PRECISION = 47;
+
+/** テストでのfloat値比較で、合格と見なす一致桁数です。 */
+const int FLOAT_EQUALITY_PRECISION = 14;
+
+
+test();
+
+void test(){
+	testToComplex();
+	testToVarcomplex();
+
+	testToComplexArray();
+
+	testToFloatArray();
+	testToVarfloatArray();
+
+	testCrealFloatArray();
+	testCrealVarfloatArray();
+	testCrealComplex();
+	testCrealVarcomplex();
+
+	testCimagFloatArray();
+	testCimagVarfloatArray();
+	testCimagComplex();
+	testCimagVarcomplex();
+
+	testCaddFloatArray();
+	testCaddVarfloatArray();
+	testCsubFloatArray();
+	testCsubVarfloatArray();
+	testCmulFloatArray();
+	testCmulVarfloatArray();
+	testCdivFloatArray();
+	testCdivVarfloatArray();
+
+	println("system.Complex: OK.");
+}
+
+
+public void testToComplex(){
+	float v1[] = {1.2, 3.4};
+	complex v2 = toComplex(v1);
+	complex v3 = 1.2 + 3.4*I;
+	assert( v2 == v3 );
+}
+
+
+public void testToVarcomplex(){
+	digit(VARFLOAT_DIGIT);
+	varfloat v1[2];
+	v1[RE] = 1.2vf;
+	v1[IM] = 3.4vf;
+	varcomplex v2 = toVarcomplex(v1);
+	varcomplex v3 = 1.2vf + 3.4vf*VCI;
+	assert( v2 == v3 );
+}
+
+
+
+
+public void testToComplexArray(){
+	complex array[] = toComplexArray(1.0+2.0*I, 3.0+4.0*I, 5.0+6.0*I, 7.0+8.0*I, 9.0+10.0*I);
+	assert(length(array, 0) == 5);
+	assert(re(array[0]) == 1.0);
+	assert(im(array[0]) == 2.0);
+	assert(re(array[1]) == 3.0);
+	assert(im(array[1]) == 4.0);
+	assert(re(array[2]) == 5.0);
+	assert(im(array[2]) == 6.0);
+	assert(re(array[3]) == 7.0);
+	assert(im(array[3]) == 8.0);
+	assert(re(array[4]) == 9.0);
+	assert(im(array[4]) == 10.0);
+}
+
+
+
+public void testToVarcomplexArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex array[] = toVarcomplexArray(1.0vf+2.0vf*VCI, 3.0vf+4.0vf*VCI, 5.0vf+6.0vf*VCI, 7.0vf+8.0vf*VCI, 9.0vf+10.0vf*VCI);
+	assert(length(array, (int)0v) == 5v);
+	assert(re(array[0v]) == 1.0vf);
+	assert(im(array[0v]) == 2.0vf);
+	assert(re(array[1v]) == 3.0vf);
+	assert(im(array[1v]) == 4.0vf);
+	assert(re(array[2v]) == 5.0vf);
+	assert(im(array[2v]) == 6.0vf);
+	assert(re(array[3v]) == 7.0vf);
+	assert(im(array[3v]) == 8.0vf);
+	assert(re(array[4v]) == 9.0vf);
+	assert(im(array[4v]) == 10.0vf);
+}
+
+
+
+
+public void testToFloatArray(){
+	complex v1 = 1.2 + 3.4*I;
+	float[] v2 = toFloatArray(v1);
+	assert( v2[RE] == re(v1) );
+	assert( v2[IM] == im(v1) );
+}
+
+
+public void testToVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex v1 = 1.2vf + 3.4vf*VCI;
+	varfloat[] v2 = toVarfloatArray(v1);
+	assert( v2[RE] == re(v1) );
+	assert( v2[IM] == im(v1) );
+}
+
+
+public void testCrealFloatArray(){
+	float f[2];
+	f[RE] = 1.2;
+	f[IM] = 3.4;
+	assert(creal(f) == 1.2);
+}
+
+
+public void testCrealVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varfloat f[2v];
+	f[RE] = 1.2vf;
+	f[IM] = 3.4vf;
+	assert(creal(f) == 1.2vf);
+}
+
+
+public void testCrealComplex(){
+	complex c = 1.2 + 3.4*I;
+	assert(creal(c) == re(c));
+}
+
+
+public void testCrealVarcomplex(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c = 1.2vf + 3.4vf*VCI;
+	assert(creal(c) == re(c));
+}
+
+
+
+public void testCimagFloatArray(){
+	float f[2];
+	f[RE] = 1.2;
+	f[IM] = 3.4;
+	assert(cimag(f) == 3.4);
+}
+
+
+public void testCimagVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varfloat f[2v];
+	f[RE] = 1.2vf;
+	f[IM] = 3.4vf;
+	assert(cimag(f) == 3.4vf);
+}
+
+
+public void testCimagComplex(){
+	complex c = 1.2 + 3.4*I;
+	assert(cimag(c) == im(c));
+}
+
+
+public void testCimagVarcomplex(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c = 1.2vf + 3.4vf*VCI;
+	assert(cimag(c) == im(c));
+}
+
+
+public void testCaddFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 + c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = cadd(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+public void testCaddVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 + c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = cadd(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+public void testCsubFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 - c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = csub(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+public void testCsubVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 - c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = csub(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+public void testCmulFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 * c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = cmul(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+public void testCmulVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 * c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = cmul(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+public void testCdivFloatArray(){
+	complex c1 = 1.2 + 3.4*I;
+	complex c2 = 5.6 + 7.8*I;
+	complex c3 = c1 / c2;
+	float f1[] = toFloatArray(c1);
+	float f2[] = toFloatArray(c2);
+	float f3[] = cdiv(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+public void testCdivVarfloatArray(){
+	digit(VARFLOAT_DIGIT);
+	varcomplex c1 = 1.2vf + 3.4vf*VCI;
+	varcomplex c2 = 5.6vf + 7.8vf*VCI;
+	varcomplex c3 = c1 / c2;
+	varfloat f1[] = toVarfloatArray(c1);
+	varfloat f2[] = toVarfloatArray(c2);
+	varfloat f3[] = cdiv(f1, f2);
+	assert(f3[RE] == re(c3));
+	assert(f3[IM] == im(c3));
+}
+
+
+
+

@@ -1,0 +1,58 @@
+coding UTF-8;
+
+import "./Float.vcssl";
+
+/**
+ * <p>
+ * system.Float モジュールのテストです。
+ * </p>
+ */
+
+
+test();
+
+void test(){
+	testIsFloat();
+	testToFloatArray();
+	println("system.Float: OK.");
+}
+
+public void testToFloatArray(){
+	float array[] = toFloatArray(1.0, 2.0, 3.0, 4.0, 5.0);
+	assert(length(array, 0) == 5);
+	assert(array[0] == 1.0);
+	assert(array[1] == 2.0);
+	assert(array[2] == 3.0);
+	assert(array[3] == 4.0);
+	assert(array[4] == 5.0);
+}
+
+public void testIsFloat(){
+	assert( isFloat("1.0") );
+	assert( isFloat("1.0f") );
+	assert( isFloat("1.0F") );
+	assert( isFloat("1.0E2") );
+	assert( isFloat("1.0E-2") );
+	assert( isFloat("1.0e2") );
+	assert( isFloat("1.0e-2") );
+
+	assert( isFloat("+1.0") );
+	assert( isFloat("+1.0f") );
+	assert( isFloat("+1.0F") );
+	assert( isFloat("+1.0E2") );
+	assert( isFloat("+1.0E-2") );
+	assert( isFloat("+1.0e2") );
+	assert( isFloat("+1.0e-2") );
+
+	assert( isFloat("-1.0") );
+	assert( isFloat("-1.0f") );
+	assert( isFloat("-1.0F") );
+	assert( isFloat("-1.0E2") );
+	assert( isFloat("-1.0E-2") );
+	assert( isFloat("-1.0e2") );
+	assert( isFloat("-1.0e-2") );
+
+	assert( !isFloat("123") );
+	assert( !isFloat("abc") );
+}
+

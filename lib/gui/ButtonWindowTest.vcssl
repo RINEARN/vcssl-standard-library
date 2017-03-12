@@ -1,0 +1,143 @@
+coding UTF-8;
+
+
+import "./ButtonWindow.vcssl";
+
+import GUI;
+
+
+/**
+ * <p> gui.ButtonWindow モジュールのテストです。</p>
+ */
+
+
+ButtonWindow window = NULL;
+bool windowClosed = false;
+bool initialized = true; // この行が実行されるまではデフォルト値の false
+
+test();
+
+void test(){
+	testNewButtonWindow();
+	testGetWindow();
+	testGetButton();
+	//testGetButtonPanel();
+	testSetComponentSize();
+	testGetComponentSize();
+	testSetComponentLocation();
+	testGetComponentLocation();
+	testPaintComponent();
+	testHideComponent();
+	testShowComponent();
+
+	alert("イベントテスト後、ウィンドウを閉じてください。");
+	while(!windowClosed){
+		sleep(1000);
+	}
+}
+
+
+void onWindowClose(int id){
+	if(initialized && window != NULL && id == getWindow(window)){
+		deleteComponent(window);
+		window = NULL;
+		println("gui.ButtonWindowTest: OK.");
+		windowClosed = true;
+	}
+}
+
+
+void onButtonClick(int id, string label){
+	if(initialized && window!=NULL){
+		if(
+			id == getButton(window, "AAA")
+			||
+			id == getButton(window, "BBB")
+			||
+			id == getButton(window, "CCC")
+			||
+			id == getButton(window, "DDD")
+			||
+			id == getButton(window, "EEE")
+		){
+			alert(label);
+		}
+	}
+}
+
+
+void testNewButtonWindow(){
+	string label[] = {"AAA", "BBB", "CCC", "DDD", "EEE"};
+	window = newButtonWindow(0, 0, 500, 500, "ButtonWindowTest", label);
+}
+
+void testGetWindow(){
+	sleep(300);
+	int id = getWindow(window);
+	hideComponent(id);
+	sleep(300);
+	showComponent(id);
+}
+
+
+void testGetButton(){
+	int id1 = getButton(window, "DDD");
+	assert(getComponentText(id1) == "DDD");
+	int id2 = getButton(window, 2);
+	assert(getComponentText(id2) == "CCC");
+}
+
+
+/*
+void testGetButtonPanel(){
+	ButtonPanel panel1 = getButtonPanel(window);
+	ButtonPanel panel2 = window.buttonPanel;
+	assert(panel1 == panel2);
+}
+*/
+
+
+void testSetComponentSize(){
+	sleep(300);
+	setComponentSize(window, 400, 300);
+	paintComponent(window);
+}
+
+
+void testGetComponentSize(){
+	int size[] = getComponentSize(window);
+	assert(size[0] == 400);
+	assert(size[1] == 300);
+}
+
+
+void testSetComponentLocation(){
+	sleep(300);
+	setComponentLocation(window, 200, 200);
+	paintComponent(window);
+}
+
+
+void testGetComponentLocation(){
+	int size[] = getComponentLocation(window);
+	assert(size[0] == 200);
+	assert(size[1] == 200);
+}
+
+
+void testPaintComponent(){
+	paintComponent(window);
+}
+
+
+void testHideComponent(){
+	sleep(300);
+	hideComponent(window);
+}
+
+
+void testShowComponent(){
+	sleep(300);
+	showComponent(window);
+}
+

@@ -1,0 +1,53 @@
+coding UTF-8;
+
+import "./GaussianFunction.vcssl";
+
+import Math;
+import System;
+
+/**
+ * <p> math.GaussianFunction のテストです。</p>
+ */
+
+
+test();
+
+void test(){
+	testGaussFloat();
+	testGaussVarfloat();
+	testGaussianFloat();
+	testGaussianVarfloat();
+
+	println("math.GaussianFunction: OK.");
+}
+
+
+void testGaussFloat(){
+	float a = gauss(1.0, 2.1, 3.2, 4.3);
+	float b = 2.1 * Math.exp( - (1.0-3.2)*(1.0-3.2)/(4.3*4.3) );
+	assert(a == b);
+}
+
+
+void testGaussVarfloat(){
+	float a = gauss(1.0vf, 2.1vf, 3.2vf, 4.3vf);
+	float b = 2.1vf * Math.exp( - (1.0vf-3.2vf)*(1.0vf-3.2vf)/(4.3vf*4.3vf) );
+	assert(a == b);
+}
+
+
+void testGaussianFloat(){
+	float a = gaussian(1.0, 2.1, 3.2, 4.3);
+	float b = 2.1 * Math.exp( - (1.0-3.2)*(1.0-3.2)/(2.0*4.3*4.3) );
+	assert(a == b);
+}
+
+
+void testGaussianVarfloat(){
+	float a = gaussian(1.0vf, 2.1vf, 3.2vf, 4.3vf);
+	float b = 2.1vf * Math.exp( - (1.0vf-3.2vf)*(1.0vf-3.2vf)/(2.0vf*4.3vf*4.3vf) );
+	assert(a == b);
+}
+
+
+

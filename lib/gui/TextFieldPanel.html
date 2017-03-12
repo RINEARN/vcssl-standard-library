@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TextFieldPanel</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>TextFieldPanel</h1>
+<hr />
+<h2 id="abstract">概要 - Abstract</h2>
+<p>このライブラリ gui.TextFieldPanel は、GUI部品として、テキストフィールドが並ぶパネル ―― テキストフィールドパネル ―― を提供します。	</p><p>VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、このモジュールで提供されるGUI部品は、<a href="#TextFieldPanel">TextFieldPanel</a> 構造体として扱います。</p><p>TextFieldPanel 構造体は、内部にリソースのID等を保持していますが、<br />生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。<br />具体的には、 <a href="#newTextFieldPanel">newTextFieldPanel</a> 関数で生成し、 <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。</p><p>またこのモジュールでは、TextFieldPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、標準GUIライブラリ関数のオーバーロードも提供されます。<br />例えば、 <a href="#mountComponent">mountComponent</a> 関数や、<a href="#setComponentSize">setComponentSize</a> 関数、 <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。</p> <hr />
+<h2 id="abstract">目次 - Index</h2>
+<dl>
+<dt><a href="#TextFieldPanel">struct TextFieldPanel </a></dt>
+<dd> テキストフィールドパネルの構造体です。 </dd>
+<dt><a href="#newTextFieldPanel">TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, string labelText[ ], string defaultText[ ]) </a></dt>
+<dd>テキストフィールドパネルを生成します。 </dd>
+<dt><a href="#deleteComponent">void deleteComponent(TextFieldPanel &amp;panelInstance) </a></dt>
+<dd>テキストフィールドパネルを破棄します。 </dd>
+<dt><a href="#paintComponent">void paintComponent(TextFieldPanel &amp;panelInstance) </a></dt>
+<dd>テキストフィールドパネルを再描画します。 </dd>
+<dt><a href="#mountComponent">void mountComponent(TextFieldPanel &amp;panelInstance, int componentID) </a></dt>
+<dd>テキストフィールドパネルを、別のGUIコンポーネント上に配置します。 </dd>
+<dt><a href="#demountComponent">void demountComponent(TextFieldPanel &amp;panelInstance, int componentID) </a></dt>
+<dd>テキストパネルを、別のGUIコンポーネントから配置解除します。 </dd>
+<dt><a href="#setLabelWidth">void setLabelWidth(TextFieldPanel &amp;panelInstance, int labelWidth) </a></dt>
+<dd>（この関数は互換目的でサポートされています。getTextLabelWidth を使用して下さい。）ラベル部分の幅を設定します。 </dd>
+<dt><a href="#setTextLabelWidth">void setTextLabelWidth(TextFieldPanel &amp;panelInstance, int labelWidth) </a></dt>
+<dd>ラベル部分の幅を設定します。 </dd>
+<dt><a href="#getPanel">int getPanel(TextFieldPanel &amp;panelInstance) </a></dt>
+<dd>パネルのコンポーネントIDを返します。 </dd>
+<dt><a href="#getTextField">int getTextField(TextFieldPanel &amp;panelInstance, string labelText) </a></dt>
+<dd>指定されたラベルに対応するテキストフィールドを取得します。 </dd>
+<dt><a href="#getTextField">int getTextField(TextFieldPanel &amp;panelInstance, int index) </a></dt>
+<dd>指定されたインデックスのテキストフィールドを取得します。 </dd>
+<dt><a href="#getComponentSize">int[ ] getComponentSize(TextFieldPanel &amp;panelInstance) </a></dt>
+<dd>パネルのサイズを返します。 </dd>
+<dt><a href="#setComponentSize">void setComponentSize(TextFieldPanel &amp;panelInstance, int width, int height) </a></dt>
+<dd>パネルのサイズを設定します。 </dd>
+<dt><a href="#setComponentSize">void setComponentSize(TextFieldPanel &amp;panelInstance) </a></dt>
+<dd>パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 </dd>
+<dt><a href="#getComponentLocation">int[ ] getComponentLocation(TextFieldPanel &amp;panelInstance) </a></dt>
+<dd>パネルの位置を返します。 </dd>
+<dt><a href="#setComponentLocation">void setComponentLocation(TextFieldPanel &amp;panelInstance, int x, int y) </a></dt>
+<dd>パネルの位置を設定します。 </dd>
+</dl>
+<hr />
+<h2 id="struct">構造体 - Structs</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="TextFieldPanel"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	struct TextFieldPanel 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	 テキストフィールドパネルの構造体です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr /><h2 id="variable">変数 - Variables</h2>
+<hr />
+<h2 id="function">関数 - Functions</h2>
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="newTextFieldPanel"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, string labelText[ ], string defaultText[ ]) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	テキストフィールドパネルを生成します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	x : パネルのX座標 <br />y : パネルのY座標 <br />width : パネルの幅 <br />height : パネルの高さ <br />labelText : ラベル文字列を格納する配列 <br />labelWidth : ラベル部分の幅 <br />defaultText : テキストフィールドの初期値文字列を格納する配列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	生成したテキストフィールドパネル構造体<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="deleteComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void deleteComponent(TextFieldPanel &amp;panelInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	テキストフィールドパネルを破棄します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 破棄するテキストフィールドパネル <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="paintComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void paintComponent(TextFieldPanel &amp;panelInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	テキストフィールドパネルを再描画します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 再描画するテキストフィールドパネル <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="mountComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void mountComponent(TextFieldPanel &amp;panelInstance, int componentID) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	テキストフィールドパネルを、別のGUIコンポーネント上に配置します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 配置するテキストフィールドパネル <br />componentID : 配置先GUIコンポーネントID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="demountComponent"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void demountComponent(TextFieldPanel &amp;panelInstance, int componentID) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	テキストパネルを、別のGUIコンポーネントから配置解除します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 配置解除するテキストフィールドパネル <br />componentID : 配置先GUIコンポーネントID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setLabelWidth"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setLabelWidth(TextFieldPanel &amp;panelInstance, int labelWidth) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	（この関数は互換目的でサポートされています。getTextLabelWidth を使用して下さい。）ラベル部分の幅を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 取得対象のテキストフィールドパネル <br />labelWidth : ラベル部分の幅 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setTextLabelWidth"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setTextLabelWidth(TextFieldPanel &amp;panelInstance, int labelWidth) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	ラベル部分の幅を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 取得対象のテキストフィールドパネル <br />labelWidth : ラベル部分の幅 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getPanel"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getPanel(TextFieldPanel &amp;panelInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルのコンポーネントIDを返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 取得対象のテキストフィールドパネル <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルのGUIコンポーネントID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getTextField"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getTextField(TextFieldPanel &amp;panelInstance, string labelText) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	指定されたラベルに対応するテキストフィールドを取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 対象のテキストフィールドパネル <br />labelText : 取得対象のテキストフィールドに対応するラベル文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	テキストフィールドのGUIコンポーネントID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getTextField(TextFieldPanel &amp;panelInstance, int index) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	指定されたインデックスのテキストフィールドを取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 対象のテキストフィールドパネル <br />index : テキストフィールドのインデックス <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	テキストフィールドのGUIコンポーネントID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getComponentSize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int[ ] getComponentSize(TextFieldPanel &amp;panelInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルのサイズを返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 対象のテキストフィールドパネル <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルのサイズを格納する配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setComponentSize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setComponentSize(TextFieldPanel &amp;panelInstance, int width, int height) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルのサイズを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 対象のテキストフィールドパネル <br />width : パネルの幅 <br />height : パネルの高さ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setComponentSize(TextFieldPanel &amp;panelInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 対象のテキストフィールドパネル <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getComponentLocation"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int[ ] getComponentLocation(TextFieldPanel &amp;panelInstance) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルの位置を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 対象のテキストフィールドパネル <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルの位置を格納する配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setComponentLocation"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	宣言<br /> - Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setComponentLocation(TextFieldPanel &amp;panelInstance, int x, int y) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	詳細<br /> - Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	パネルの位置を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 	panelInstance : 対象のスライダーパネル <br />x : ウィンドウのX座標 <br />y : ウィンドウのY座標 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>
