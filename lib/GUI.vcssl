@@ -1,0 +1,1435 @@
+/**
+ * <p>
+ * VCSSL GUI ライブラリ は、VCSSLでグラフィカル・ユーザー・インターフェイスを扱うための標準ライブラリです。
+ * </p>
+ * 
+ * <p>
+ * GUIライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。
+ * 具体的な使用方法については、「 VCSSL公式開発ガイド 」をご参照ください。
+ * </p>
+ * 
+ * <div style="border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;">
+ * <div style="font-weight:bold;">- 注意 -</div>
+ * <div style="padding:10px;">
+ * GUIを用いたプログラムでは、イベントハンドラの使用が必須となります。VCSSLでは、イベントハンドラの処理は独立スレッドで実行されます。
+ * 現行版の RINEARN VCSSL Runtime では、マルチスレッド処理への対応が十分ではありません。 これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。 
+ * これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。 RINEARN VCSSL Runtime でイベントハンドラに処理を記述するには、この事情を把握した上で行って下さい。
+ * 現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。 
+ * </div>
+ * 
+ * <div style="font-weight:bold;">・同一の配列変数へ、複数スレッドから同時アクセスした場合における、インデックスの不整合</div>
+ * 
+ * <div style="padding:10px;">
+ * 現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。 
+ * </div>
+ * 
+ * <div style="font-weight:bold;">・同一の関数への、非常に頻繁な複数スレッド同時アクセスに伴う、エンジンの緊急停止</div>
+ * 
+ * <div style="padding:10px;">
+ * 原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。 しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。 ※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。
+ * </div>
+ * 以上のような不都合が生じる可能性があるため、現状の RINEARN VCSSL Runtime においてイベントハンドラ内の処理を記述する際は、上記の点を認識した上で、以下のようなガイドラインに基づいた設計を行って下さい。
+ * <br />
+ * <div style="font-weight:bold;">・イベントハンドラでは、イベント情報をグローバル変数に控える等の軽い処理に留めておき、実際の処理はなるべくメインスレッドで行う</div>
+ * <br />
+ * <div style="font-weight:bold;">・メインスレッドで頻繁にアクセスしている配列変数に、イベントハンドラや別スレッドからアクセスしない</div>
+ * </div>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_Graphics_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.GUIProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.GUIProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/** マウスの左ボタンを表す定数です。 */
+public const int MOUSE_LEFT = 10001;
+
+/** マウスの中央ボタンを表す定数です。 */
+public const int MOUSE_MIDDLE = 10002;
+
+/** マウスの右ボタンを表す定数です。 */
+public const int MOUSE_RIGHT = 10003;
+
+/** マウスのシングルクリックを表す定数です。 */
+public const int MOUSE_SINGLE = 1;
+
+/** マウスのダブルクリックを表す定数です。 */
+public const int MOUSE_DOUBLE = 2;
+
+
+
+/** スペースキーを表す定数です。 */
+public const int KEY_SPACE = 10001;
+
+/** エンターキーを表す定数です。 */
+public const int KEY_ENTER = 10002;
+
+/** シフトキーを表す定数です。 */
+public const int KEY_SHIFT = 10003;
+
+/** Alt キーを表す定数です。 */
+public const int KEY_ALT = 10004;
+
+/** @ キーを表す定数です。 */
+public const int KEY_AT = 10005;
+
+/** Tab キーを表す定数です。 */
+public const int KEY_TAB = 10006;
+
+/** Ctrl キーを表す定数です。 */
+public const int KEY_CONTROL = 10007;
+
+/** Backspace キーを表す定数です。 */
+public const int KEY_BACK_SPACE = 10008;
+
+
+
+/** A キーを表す定数です。 */
+public const int KEY_A = 11001;
+
+/** B キーを表す定数です。 */
+public const int KEY_B = 11002;
+
+/** C キーを表す定数です。 */
+public const int KEY_C = 11003;
+
+/** D キーを表す定数です。 */
+public const int KEY_D = 11004;
+
+/** E キーを表す定数です。 */
+public const int KEY_E = 11005;
+
+/** F キーを表す定数です。 */
+public const int KEY_F = 11006;
+
+/** G キーを表す定数です。 */
+public const int KEY_G = 11007;
+
+/** H キーを表す定数です。 */
+public const int KEY_H = 11008;
+
+/** I キーを表す定数です。 */
+public const int KEY_I = 11009;
+
+/** J キーを表す定数です。 */
+public const int KEY_J = 11010;
+
+/** K キーを表す定数です。 */
+public const int KEY_K = 11011;
+
+/** L キーを表す定数です。 */
+public const int KEY_L = 11012;
+
+/** M キーを表す定数です。 */
+public const int KEY_M = 11013;
+
+/** N キーを表す定数です。 */
+public const int KEY_N = 11014;
+
+/** O キーを表す定数です。 */
+public const int KEY_O = 11015;
+
+/** P キーを表す定数です。 */
+public const int KEY_P = 11016;
+
+/** Q キーを表す定数です。 */
+public const int KEY_Q = 11017;
+
+/** R キーを表す定数です。 */
+public const int KEY_R = 11018;
+
+/** S キーを表す定数です。 */
+public const int KEY_S = 11019;
+
+/** T キーを表す定数です。 */
+public const int KEY_T = 11020;
+
+/** U キーを表す定数です。 */
+public const int KEY_U = 11021;
+
+/** V キーを表す定数です。 */
+public const int KEY_V = 11022;
+
+/** W キーを表す定数です。 */
+public const int KEY_W = 11023;
+
+/** X キーを表す定数です。 */
+public const int KEY_X = 11024;
+
+/** Y キーを表す定数です。 */
+public const int KEY_Y = 11025;
+
+/** Z キーを表す定数です。 */
+public const int KEY_Z = 11026;
+
+
+
+/** 0 キーを表す定数です。 */
+public const int KEY_0 = 12000;
+
+/** 1 キーを表す定数です。 */
+public const int KEY_1 = 12001;
+
+/** 2 キーを表す定数です。 */
+public const int KEY_2 = 12002;
+
+/** 3 キーを表す定数です。 */
+public const int KEY_3 = 12003;
+
+/** 4 キーを表す定数です。 */
+public const int KEY_4 = 12004;
+
+/** 5 キーを表す定数です。 */
+public const int KEY_5 = 12005;
+
+/** 6 キーを表す定数です。 */
+public const int KEY_6 = 12006;
+
+/** 7 キーを表す定数です。 */
+public const int KEY_7 = 12007;
+
+/** 8 キーを表す定数です。 */
+public const int KEY_8 = 12008;
+
+/** 9 キーを表す定数です。 */
+public const int KEY_9 = 12009;
+
+
+/** 0 キーを表す定数です。 */
+public const int KEY_NUMPAD0 = 12100;
+
+/** 1 キーを表す定数です。 */
+public const int KEY_NUMPAD1 = 12101;
+
+/** 2 キーを表す定数です。 */
+public const int KEY_NUMPAD2 = 12102;
+
+/** 3 キーを表す定数です。 */
+public const int KEY_NUMPAD3 = 12103;
+
+/** 4 キーを表す定数です。 */
+public const int KEY_NUMPAD4 = 12104;
+
+/** 5 キーを表す定数です。 */
+public const int KEY_NUMPAD5 = 12105;
+
+/** 6 キーを表す定数です。 */
+public const int KEY_NUMPAD6 = 12106;
+
+/** 7 キーを表す定数です。 */
+public const int KEY_NUMPAD7 = 12107;
+
+/** 8 キーを表す定数です。 */
+public const int KEY_NUMPAD8 = 12108;
+
+/** 9 キーを表す定数です。 */
+public const int KEY_NUMPAD9 = 12109;
+
+
+
+/** 上 キーを表す定数です。 */
+public const int KEY_UP = 13001;
+
+/** 下 キーを表す定数です。 */
+public const int KEY_DOWN = 13002;
+
+/** 右 キーを表す定数です。 */
+public const int KEY_RIGHT = 13003;
+
+/** 左 キーを表す定数です。 */
+public const int KEY_LEFT = 13004;
+
+
+
+/** Insert キーを表す定数です。 */
+public const int KEY_INSERT = 14001;
+
+/** Home キーを表す定数です。 */
+public const int KEY_HOME = 14002;
+
+/** Delete キーを表す定数です。 */
+public const int KEY_DELETE = 14003;
+
+/** End キーを表す定数です。 */
+public const int KEY_END = 14004;
+
+/** Page Up キーを表す定数です。 */
+public const int KEY_PAGE_UP = 14005;
+
+/** Page Down キーを表す定数です。 */
+public const int KEY_PAGE_DOWN = 14006;
+
+/** Caps Lock キーを表す定数です。 */
+public const int KEY_CAPS_LOCK = 14007;
+
+/** バックスラッシュ キーを表す定数です。 */
+public const int KEY_BACK_SLASH = 15001;
+
+/** / キーを表す定数です。 */
+public const int KEY_SLASH = 15002;
+
+/** - キーを表す定数です。 */
+public const int KEY_MINUS = 15003;
+
+/** + キーを表す定数です。 */
+public const int KEY_PLUS = 15004;
+
+/** # キーを表す定数です。 */
+public const int KEY_NUMBER = 15005;
+
+/** ; キーを表す定数です。 */
+public const int KEY_SEMICOLON = 15006;
+
+/** : キーを表す定数です。 */
+public const int KEY_COLON = 15007;
+
+/** , キーを表す定数です。 */
+public const int KEY_COMMA = 15008;
+
+/** . キーを表す定数です。 */
+public const int KEY_PERIOD = 15009;
+
+/** _ キーを表す定数です。 */
+public const int KEY_UNDERSCORE = 15010;
+
+/** ! キーを表す定数です。 */
+public const int KEY_EXCLAMATION = 15011;
+
+/** = キーを表す定数です。 */
+public const int KEY_EQUALS = 15012;
+
+/** $ キーを表す定数です。 */
+public const int KEY_DOLLAR = 15013;
+
+/** ^ キーを表す定数です。 */
+public const int KEY_CIRCUMFLEX = 15014;
+
+/** [ キーを表す定数です。 */
+public const int KEY_LEFT_SQUARE_BRACKET = 15015;
+
+/** ] キーを表す定数です。 */
+public const int KEY_RIGHT_SQUARE_BRACKET = 15016;
+
+/** ( キーを表す定数です。 */
+public const int KEY_LEFT_PARENTHESIS = 15018;
+
+/** ) キーを表す定数です。 */
+public const int KEY_RIGHT_PARENTHESIS = 15017;
+
+/** | キーを表す定数です。 */
+public const int KEY_SEPARATOR = 15021;
+
+/** 加算キーを表す定数です。 */
+public const int KEY_ADD = 15022;
+
+/** 減算キーを表す定数です。 */
+public const int KEY_SUBTRACT = 15023;
+
+/** 除算キーを表す定数です。 */
+public const int KEY_DIVIDE = 15024;
+
+/** 乗算キーを表す定数です。 */
+public const int KEY_MULTIPLY = 15025;
+
+
+
+/** F1 キーを表す定数です。 */
+public const int KEY_F1 = 16001;
+
+/** F2 キーを表す定数です。 */
+public const int KEY_F2 = 16002;
+
+/** F3 キーを表す定数です。 */
+public const int KEY_F3 = 16003;
+
+/** F4 キーを表す定数です。 */
+public const int KEY_F4 = 16004;
+
+/** F5 キーを表す定数です。 */
+public const int KEY_F5 = 16005;
+
+/** F6 キーを表す定数です。 */
+public const int KEY_F6 = 16006;
+
+/** F7 キーを表す定数です。 */
+public const int KEY_F7 = 16007;
+
+/** F8 キーを表す定数です。 */
+public const int KEY_F8 = 16008;
+
+/** F9 キーを表す定数です。 */
+public const int KEY_F9 = 16009;
+
+/** F10 キーを表す定数です。 */
+public const int KEY_F10 = 16010;
+
+/** F11 キーを表す定数です。 */
+public const int KEY_F11 = 16011;
+
+/** F12 キーを表す定数です。 */
+public const int KEY_F12 = 16012;
+
+/** F13 キーを表す定数です。 */
+public const int KEY_F13 = 16013;
+
+/** F14 キーを表す定数です。 */
+public const int KEY_F14 = 16014;
+
+/** F15 キーを表す定数です。 */
+public const int KEY_F15 = 16015;
+
+/** F16 キーを表す定数です。 */
+public const int KEY_F16 = 16016;
+
+/** F17 キーを表す定数です。 */
+public const int KEY_F17 = 16017;
+
+/** F18 キーを表す定数です。 */
+public const int KEY_F18 = 16018;
+
+/** F19 キーを表す定数です。 */
+public const int KEY_F19 = 16019;
+
+/** F20 キーを表す定数です。 */
+public const int KEY_F20 = 16020;
+
+
+/** GUIコンポーネントの内側を指定するための定数です。<a href="#getComponentSize">getComponentSize</a> 関数で使用します。 */
+public const int INNER = 1;
+
+/** GUIコンポーネントの外側を指定するための定数です。<a href="#getComponentSize">getComponentSize</a> 関数で使用します。 */
+public const int OUTER = 2;
+
+/** リストアップされている項目全てを指定するための定数です。<a href="#setComponentStringArray">setComponentStringArray</a> 関数や <a href="#getComponentStringArray">getComponentStringArray</a> 関数で使用します。 */
+public const int LISTED = 3;
+
+/** 選択されている項目全てを指定するための定数です。<a href="#setComponentStringArray">setComponentStringArray</a> 関数や <a href="#getComponentStringArray">getComponentStringArray</a> 関数で使用します。 */
+public const int SELECTED = 4;
+
+
+
+// 互換サポートの定数（ 現在は非推奨です ）
+public const int SIZE_INNER = 1;
+public const int SIZE_OUTER = 2;
+public const int VALUE_ALL = 3;
+public const int VALUE_LISTED = 3;
+public const int VALUE_SELECTED = 4;
+
+
+
+/**
+ * GUIコンポーネントを、別のGUIコンポーネント上に配置します。
+ * 
+ * @param componentID 配置するGUIコンポーネントのID
+ * @param componentID 配置先GUIコンポーネントのID
+ */
+void mountComponent( int componentID, int parentComponentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addComponent( componentID, parentComponentID );
+}
+
+/**
+ * GUIコンポーネントを配置解除します。
+ * 
+ * @param componentID 配置解除するGUIコンポーネントのID
+ * @param componentID 現在の配置先GUIコンポーネントのID
+ */
+void demountComponent( int componentID, int parentComponentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_removeComponent( componentID, parentComponentID );
+}
+
+/**
+ * GUIコンポーネントを破棄します。
+ * 
+ * @param componentID 破棄するGUIコンポーネントのID
+ */
+void deleteComponent( int componentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeComponent( componentID );
+}
+
+
+/**
+ * ウィンドウを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param title ウィンドウタイトル
+ * @return GUIコンポーネントID
+ */
+int newWindow( int x, int y, int w, int h, string title ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createWindow( x, y, w, h, title );
+}
+
+/**
+ * ボタンを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param text ボタンに表示するテキスト
+ * @return GUIコンポーネントID
+ */
+int newButton( int x, int y, int w, int h, string text ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createButton( x, y, w, h, text );
+}
+
+/**
+ * テキストフィールド（ 1行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param text 初期値として表示するテキスト
+ * @return GUIコンポーネントID
+ */
+int newTextField( int x, int y, int w, int h, string text ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextField( x, y, w, h, text );
+}
+
+/**
+ * テキストエリア（ 複数行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param text 初期値として表示するテキスト
+ * @return GUIコンポーネントID
+ */
+int newTextArea( int x, int y, int w, int h, string text ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextArea( x, y, w, h, text );
+}
+
+int newSystemTextField( int x, int y, int w, int h, string text ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createNativeTextField( x, y, w, h, text );
+}
+int newSystemTextArea( int x, int y, int w, int h, string text ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createNativeTextArea( x, y, w, h, text );
+}
+
+/**
+ * テキストラベル（ 1行のテキストを表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param text 表示するテキスト
+ * @return GUIコンポーネントID
+ */
+int newTextLabel( int x, int y, int w, int h, string text ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextLabel( x, y, w, h, text );
+}
+
+/**
+ * 画像ラベルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID 画像を格納するグラフィックスリソースのID
+ * @return GUIコンポーネントID
+ */
+int newImageLabel( int x, int y, int w, int h, int graphicsID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLabel( x, y, w, h, graphicsID );
+}
+
+/**
+ * チェックボックスを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param text 表示するテキスト
+ * @param b 初期値
+ * @return GUIコンポーネントID
+ */
+int newCheckBox( int x, int y, int w, int h, string text, boolean b ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createCheckBox( x, y, w, h, text, b );
+}
+
+/**
+ * セレクトフィールド（ 選択肢から1つの項目を選択可能な、1行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param str 選択肢
+ * @return GUIコンポーネントID
+ */
+int newSelectField( int x, int y, int w, int h, string str[ ] ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createSelectField( x, y, w, h );
+  int l = length( str );
+  for( int i=0; i<l; i++ ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_createSelectField_ADD_ITEM( id, str[ i ] );
+  }
+  return id;
+}
+
+
+/**
+ * セレクトエリア（ 選択肢から複数項目を選択可能な、複数行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param str 選択肢
+ * @return GUIコンポーネントID
+ */
+int newSelectArea( int x, int y, int w, int h, string str[ ] ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createSelectArea( x, y, w, h );
+  int n = length( str );
+  string list[n+1];
+  list[0] = id;
+  for(int i=0; i<n; i++){
+    list[i+1] = str[i];
+  }
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_createSelectArea_SET_LIST(list);
+  return id;
+}
+
+/**
+ * 0.0 ～ 1.0 の範囲でfloat 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param value 初期値
+ * @return GUIコンポーネントID
+ */
+int newVerticalSlider( int x, int y, int w, int h, float value ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createVerticalSlider( x, y, w, h, value );
+}
+
+/**
+ * float 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param value 初期値
+ * @param min 最小値
+ * @param max 最大値
+ * @return GUIコンポーネントID
+ */
+int newVerticalSlider( int x, int y, int w, int h, float value, float min, float max ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createVerticalSlider_FVALUE_FMAX_FMIN( x, y, w, h, value, min, max );
+}
+
+/**
+ * int 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param value 初期値
+ * @param min 最小値
+ * @param max 最大値
+ * @return GUIコンポーネントID
+ */
+int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createVerticalSlider_IVALUE_IMAX_IMIN( x, y, w, h, value, min, max );
+}
+
+
+/**
+ * 0.0 ～ 1.0 の範囲でfloat 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param value 初期値
+ * @return GUIコンポーネントID
+ */
+int newHorizontalSlider( int x, int y, int w, int h, float value ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createHorizontalSlider( x, y, w, h, value );
+}
+
+/**
+ * float 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param value 初期値
+ * @param min 最小値
+ * @param max 最大値
+ * @return GUIコンポーネントID
+ */
+int newHorizontalSlider( int x, int y, int w, int h, float value, float min, float max ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createHorizontalSlider_FVALUE_FMAX_FMIN( x, y, w, h, value, min, max );
+}
+
+/**
+ * int 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param value 初期値
+ * @param min 最小値
+ * @param max 最大値
+ * @return GUIコンポーネントID
+ */
+int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createHorizontalSlider_IVALUE_IMAX_IMIN( x, y, w, h, value, min, max );
+}
+
+
+/**
+ * 任意座標レイアウト用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param title パネルタイトル
+ * @return GUIコンポーネントID
+ */
+int newPanel( int x, int y, int w, int h, string title ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPanel( x, y, w, h );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+/**
+ * グリッド配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param title パネルタイトル
+ * @return GUIコンポーネントID
+ */
+int newGridPanel( int x, int y, int w, int h, string title, int rows, int columns ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGridPanel( x, y, w, h, rows, columns );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+/**
+ * フロー配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param title パネルタイトル
+ * @return GUIコンポーネントID
+ */
+int newFlowPanel( int x, int y, int w, int h, string title ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createFlowPanel( x, y, w, h );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+// 未正式サポート
+int newVerticalPanel( int x, int y, int w, int h, string title ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createVerticalPanel( x, y, w, h );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+// 未正式サポート
+int newHorizontalPanel( int x, int y, int w, int h, string title ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLevelPanel( x, y, w, h );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+// 未正式サポート
+int newLevelPanel( int x, int y, int w, int h, string title ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLevelPanel( x, y, w, h );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+/**
+ * タブ表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param title パネルタイトル
+ * @return GUIコンポーネントID
+ */
+int newTabPanel( int x, int y, int w, int h, string title ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTabPanel( x, y, w, h );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+/**
+ * スクロール表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param title パネルタイトル
+ * @return GUIコンポーネントID
+ */
+int newScrollPanel( int x, int y, int w, int h, string title ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createScrollPanel( x, y, w, h );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( id, title );
+  return id;
+}
+
+
+/**
+ * GUIコンポーネントを再描画します。
+ * 再描画は、表示内容のテキストやグラフィックスデータが変化した際に必要です。
+ * 及び自身に配置されている子コンポーネントの表示内容が変化した際にも必要となります。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ */
+macro paintComponent( int componentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_repaintComponent( componentID );
+}
+
+/**
+ * GUIコンポーネントの位置を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ */
+void setComponentLocation( int componentID, int x, int y ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVertex( componentID, x, y );
+}
+
+/**
+ * GUIコンポーネントの位置を取得します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return 左上頂点座標（ [0] が X, [1] が Y ）
+ */
+int[] getComponentLocation( int componentID ){
+  int size[ 2 ];
+  size = SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentVertex( componentID );
+  return size;
+}
+
+
+/**
+ * GUIコンポーネントの大きさを設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param width 幅
+ * @param height 高さ
+ */
+void setComponentSize( int componentID, int width, int height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentSize( componentID, width, height );
+}
+
+/**
+ * GUIコンポーネントの大きさを取得します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return 大きさ（ [0] が 幅, [1] が 高さ ）
+ */
+int[] getComponentSize( int componentID ){
+  int size[ 2 ];
+  size = SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentSize( componentID );
+  return size;
+}
+
+/**
+ * GUIコンポーネントの特定部分の大きさを取得します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param option 部分指定オプション（ <a href="#OUTER">OUTER</a>、 <a href="#INNER">INNER</a> ）
+ * @return 大きさ（ [0] が 幅, [1] が 高さ ）
+ */
+int[] getComponentSize( int componentID, int option ){
+  int size[ 2 ];
+  if(option == INNER){
+    size = SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentInnerSize( componentID );
+  }else if(option == OUTER){
+    size = SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentSize( componentID );
+  }else{
+    error("Invalid options: " + option);
+  }
+  return size;
+}
+
+
+
+/**
+ * GUIコンポーネントの色を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param fr 前景色の赤色成分（ 0 - 255 ）
+ * @param fg 前景色の緑色成分（ 0 - 255 ）
+ * @param fb 前景色の青色成分（ 0 - 255 ）
+ * @param fa 前景色のα値成分（ 0 - 255 ）
+ * @param br 前景色の赤色成分（ 0 - 255 ）
+ * @param bg 前景色の緑色成分（ 0 - 255 ）
+ * @param bb 前景色の青色成分（ 0 - 255 ）
+ * @param ba 前景色のα値成分（ 0 - 255 ）
+ */
+void setComponentColor( int componentID, int fr, int fg, int fb, int fa, int br, int bg, int bb, int ba ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentColor( componentID, fr, fg, fb, fa, br, bg, bb, ba );
+}
+
+/**
+ * GUIコンポーネントの色を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param fgRGBA 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ * @param bgRGBA 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+void setComponentColor( int componentID, int fgRGBA[], int bgRGBA[]  ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentColor( componentID, fgRGBA[0], fgRGBA[1], fgRGBA[2], fgRGBA[3], bgRGBA[0], bgRGBA[1], bgRGBA[2], bgRGBA[3] );
+}
+
+/**
+ * GUIコンポーネントの色を返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return (int[][])色色成分を格納する配列（ [0][0]が前景の赤、[0][1]が前景の緑、[0][2]が前景の青、[0][3]が前景のα、[1][0]が背景の赤、[1][1]が背景の緑、[1][2]が背景の青、[1][3]が背景のαで、各色 0 - 255 ）
+ */
+macro getComponentColor( int componentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentColor( componentID );
+}
+
+/**
+ * GUIコンポーネントのテキスト情報を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param text テキスト情報
+ */
+void setComponentText( int componentID, string text ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( componentID, text );
+}
+
+/**
+ * GUIコンポーネントのテキスト情報を取得します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return text テキスト情報
+ */
+string getComponentText( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentText( componentID );
+}
+
+/**
+ * GUIコンポーネントのテキスト情報を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param text テキスト情報
+ * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
+ */
+void setComponentText( int componentID, string text[], int option ){
+	setComponentStringArray(componentID, text, option);
+}
+
+/**
+ * GUIコンポーネントのテキスト情報を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
+ * @return テキスト情報
+ */
+string[] getComponentText( int componentID, int option ){
+	return getComponentStringArray(componentID, option);
+}
+
+/**
+ * GUIコンポーネントの画像を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ */
+void setComponentImage( int componentID, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentGraphics( componentID, graphicsID );
+}
+
+/**
+ * GUIコンポーネントの画像を格納する、グラフィックスデータのIDを返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return graphicsID 画像を格納するグラフィックスデータのID
+ */
+int getComponentGraphics( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentGraphics( componentID );
+}
+
+
+/**
+ * GUIコンポーネントの非表示にします。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ */
+void showComponent( int componentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVisible( componentID, true );
+}
+
+/**
+ * GUIコンポーネントの表示します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ */
+void hideComponent( int componentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVisible( componentID, false );
+}
+
+
+/**
+ * GUIコンポーネントのフォントを設定します
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param name フォント名（処理系依存、環境依存）
+ */
+void setComponentFont( int componentID, string name ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontName( componentID, name );
+}
+
+/**
+ * GUIコンポーネントのフォントサイズを設定します
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param size フォントサイズ
+ */
+void setComponentFontSize( int componentID, int size ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontSize( componentID, size );
+}
+
+/**
+ * GUIコンポーネントのフォントを太字に設定または解除します。イタリック体と併用はできません。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param isBold 太字設定
+ */
+void setComponentFontBold( int componentID, bool isBold ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontBold( componentID, isBold );
+}
+
+/**
+ * GUIコンポーネントのフォントをイタリック体に設定または解除します。太字と併用はできません。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param isItalic イタリック体設定
+ */
+void setComponentFontItalic( int componentID, bool isItalic ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontItalic( componentID, isItalic );
+}
+
+
+
+
+
+
+/**
+ * GUIコンポーネントが保持する float 型の値を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param value 保持値
+ */
+void setComponentFloat( int componentID, float value ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFloatValue( componentID, value );
+}
+
+/**
+ * GUIコンポーネントが保持する float 型の値を返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return 保持値
+ */
+float getComponentFloat( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentFloatValue( componentID );
+}
+
+
+/**
+ * GUIコンポーネントが保持する int 型の値を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param value 保持値
+ */
+void setComponentInt( int componentID, int value ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentIntegerValue( componentID, value );
+}
+
+/**
+ * GUIコンポーネントが保持する int  型の値を返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return 保持値
+ */
+int getComponentInt( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentIntegerValue( componentID );
+}
+
+
+/**
+ * GUIコンポーネントが保持する bool 型の値を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param value 保持値
+ */
+void setComponentBool( int componentID, bool state ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentState( componentID, state );
+}
+
+/**
+ * GUIコンポーネントが保持する bool  型の値を返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return 保持値
+ */
+bool getComponentBool( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentState( componentID );
+}
+
+
+/**
+ * GUIコンポーネントが保持する string  型の値を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param value 保持値
+ */
+void setComponentString( int componentID, string text ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( componentID, text );
+}
+
+/**
+ * GUIコンポーネントが保持する string  型の値を返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return 保持値
+ */
+string getComponentString( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentText( componentID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * GUIコンポーネントが保持する string  型配列の値を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param value 保持値
+ * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
+ */
+void setComponentStringArray( int componentID, string text[], int option ){
+  int n = length( text );
+  string list[n+1];
+  list[0] = componentID;
+  for(int i=0; i<n; i++){
+    list[i+1] = text[i];
+  }
+  if(option == SELECTED){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentListSelected( list );
+  }
+  if(option == LISTED){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentList( list );
+  }
+}
+
+/**
+ * GUIコンポーネントが保持する string 型配列の値を返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
+ * @return 保持値
+ */
+string[] getComponentStringArray( int componentID, int option ){
+  if(option == SELECTED){
+    return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentListSelected( componentID );
+  }
+  if(option == LISTED){
+    return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentList( componentID );
+  }
+}
+
+
+
+
+/**
+ * GUIコンポーネントが保持する int  型配列の値を設定します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param value 保持値
+ */
+void setComponentIntArray( int componentID, int value[] ){
+  int n = length( value, 0 );
+  string list[n+1];
+  list[0] = componentID;
+  for(int i=0; i<n; i++){
+    list[i+1] = value[i];
+  }
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentIntArrayValue( list );
+}
+
+/**
+ * GUIコンポーネントが保持する int 型配列の値を返します。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return 保持値
+ */
+int[] getComponentIntArray( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentIntArrayValue( componentID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * GUIコンポーネントを、別のGUIコンポーネント上に配置します。VCSSL 3 以降では、より新しい <a href="#mountComponent">mountComponent</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param componentID 配置するGUIコンポーネントのID
+ * @param componentID 配置先GUIコンポーネントのID
+ */
+void addComponent( int componentID, int parentComponentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addComponent( componentID, parentComponentID );
+}
+
+/**
+ * GUIコンポーネントを配置解除します。VCSSL 3 以降では、より新しい <a href="#demountComponent">demountComponent</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param componentID 配置解除するGUIコンポーネントのID
+ * @param componentID 現在の配置先GUIコンポーネントのID
+ */
+void removeComponent( int componentID, int parentComponentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_removeComponent( componentID, parentComponentID );
+}
+
+/**
+ * グラフィックスラベル（ 描画内容や画像を表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#newImageLabel">newImageLabel</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID 表示内容のグラフィックスID
+ * @return GUIコンポーネントID
+ */
+int newGraphicsLabel( int x, int y, int w, int h, int graphicsID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLabel( x, y, w, h, graphicsID );
+}
+
+/**
+ * GUIコンポーネントのグラフィックスデータIDを設定します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#setComponentImage">setComponentImage</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @param graphicsID グラフィックスデータID
+ */
+void setComponentGraphics( int componentID, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentGraphics( componentID, graphicsID );
+}
+
+/**
+ * GUIコンポーネントのグラフィックスデータIDを返します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#getComponentGraphics">getComponentGraphics</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param componentID 対象GUIコンポーネントのID
+ * @return graphicsID グラフィックスデータID
+ */
+int getComponentGraphics( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentGraphics( componentID );
+}
+
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setComponentVisible( int componentID, bool b ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVisible( componentID, b );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+bool getComponentVisible( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentVisible( componentID );
+}
+
+
+
+
+
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int[] getComponentInnerSize( int componentID ){
+  int size[2];
+  size = SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentInnerSize( componentID );
+  return size;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int[] getComponentInner( int componentID ){
+  int size[2];
+  size = SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentInnerSize( componentID );
+  return size;
+}
+
+
+
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setComponentValue( int componentID, float value ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFloatValue( componentID, value );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+float getComponentValue( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentFloatValue( componentID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setComponentState( int componentID, bool state ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentState( componentID, state );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+bool getComponentState( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentState( componentID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setComponentValueFloat( int componentID, float value ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFloatValue( componentID, value );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+float getComponentValueFloat( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentFloatValue( componentID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setComponentValueInt( int componentID, int value ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentIntegerValue( componentID, value );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int getComponentValueInt( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentIntegerValue( componentID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setComponentValueBool( int componentID, bool state ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentState( componentID, state );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+bool getComponentValueBool( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentState( componentID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setComponentValueString( int componentID, string text ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( componentID, text );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+string getComponentValueString( int componentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentText( componentID );
+}
+
+
+
+
+
+

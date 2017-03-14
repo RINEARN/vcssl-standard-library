@@ -65,7 +65,7 @@ echo ^<p^>離散フーリエ変換処理を提供するライブラリです。^</p^> >> DocumentIndex.
 
 
 
-echo ^<h3^>^<a href="lib/file/TextFile.html"^>data.TextFile ライブラリ^</a^>^</h3^> >> DocumentIndex.html
+echo ^<h3^>^<a href="lib/file/TextFile.html"^>file.TextFile ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>CSV/TSV形式などのテキストファイル入出力機能を提供します。^</p^> >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/graphics2d/Graphics2DFramework.html"^>graphics2d.Graphics2DFramework ライブラリ^</a^>^</h3^> >> DocumentIndex.html

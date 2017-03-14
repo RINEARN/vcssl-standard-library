@@ -1,28 +1,30 @@
+coding UTF-8;
+
 include "../../graphics2d/Graphics2DFramework.vcssl";
 
 /**
- * ���̃��C�u������ graphics2d.Graphics2DFramework �ֈړ�����܂����B
- * ���̃t�@�C���́A��L���C�u�����̒��g�����̂܂ܓW�J�����G�C���A�X�ł��B
- * �������A�Â��R�[�h�����s����ۂɌ݊�����ێ����邽�߁A�������̎������ǉ�����Ă��܂��B
+ * このライブラリは graphics2d.Graphics2DFramework へ移動されました。
+ * このファイルは、上記ライブラリの中身がそのまま展開されるエイリアスです。
+ * ただし、古いコードを実行する際に互換性を保持するため、いくつかの実装が追加されています。
  */
 
 
-/** paint�֐��i�Â��C�x���g�n���h���j����`����Ă��邩�ǂ�����ێ����܂��B */
+/** paint関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
 private bool existsPaint = false;
 
-/** update�֐��i�Â��C�x���g�n���h���j����`����Ă��邩�ǂ�����ێ����܂��B */
+/** update関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
 private bool existsUpdate = false;
 
-/** initialize�֐��i�Â��C�x���g�n���h���j����`����Ă��邩�ǂ�����ێ����܂��B */
+/** initialize関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
 private bool existsInitialize = false;
 
-/** initialize�֐��i�Â��C�x���g�n���h���j����`����Ă��邩�ǂ�����ێ����܂��B */
+/** initialize関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
 private bool existsFinalize = false;
 
-/** resize�֐��i�Â��C�x���g�n���h���j����`����Ă��邩�ǂ�����ێ����܂��B */
+/** resize関数（古いイベントハンドラ）が定義されているかどうかを保持します。 */
 private bool existsResize = false;
 
-/** �V�������̂̃C�x���g�n���h���֐����g�p����Ă��邩��ێ����܂��B */
+/** 新しい名称のイベントハンドラ関数が使用されているかを保持します。 */
 private bool existsNewEventHandler = false;
 
 
@@ -93,7 +95,7 @@ private void mainLoop(){
 
 		lastFrameTime = time();
 
-		// �E�B���h�E�����T�C�Y���ꂽ�ꍇ�͂����ŏC��
+		// ウィンドウがリサイズされた場合はここで修正
 		if(windowResized){
 			windowResized = false;
 			sleep(windowResizeWait);
@@ -111,7 +113,7 @@ private void mainLoop(){
 
 			render();
 
-			// �t�@�C���o�͗v��������΂����Ŏ��s
+			// ファイル出力要求があればここで実行
 			if(exportRequested){
 				export();
 				exportRequested = false;
@@ -121,10 +123,10 @@ private void mainLoop(){
 
 		}
 
-		// �A�j���[�V�����E�F�C�g
+		// アニメーションウェイト
 		sleep( mainLoopWait );
 
-		// �t���[�����[�g����
+		// フレームレート調整
 		currentFrameRate = 1000.0 / millisecond( time() - (lastFrameTime) );
 		mainLoopWait = getLoopWait( frameRate, currentFrameRate, mainLoopWait, mainLoopWaitMin, mainLoopWaitMax );
 

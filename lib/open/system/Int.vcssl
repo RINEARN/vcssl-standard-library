@@ -1,38 +1,40 @@
+coding UTF-8;
+
 include "../../system/Int.vcssl";
 
 /**
- * ‚±‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚Í system.Int ‚ÖˆÚ“®‚³‚ê‚Ü‚µ‚½B
- * ‚±‚Ìƒtƒ@ƒCƒ‹‚ÍAã‹Lƒ‰ƒCƒuƒ‰ƒŠ‚Ì’†g‚ª‚»‚Ì‚Ü‚Ü“WŠJ‚³‚ê‚éƒGƒCƒŠƒAƒX‚Å‚·B
- * ‚½‚¾‚µAŒÃ‚¢ƒR[ƒh‚ğÀs‚·‚éÛ‚ÉŒİŠ·«‚ğ•Û‚·‚é‚½‚ßA‚¢‚­‚Â‚©‚ÌÀ‘•‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚Ü‚·B
+ * ã“ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯ system.Int ã¸ç§»å‹•ã•ã‚Œã¾ã—ãŸã€‚
+ * ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã€ä¸Šè¨˜ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ä¸­èº«ãŒãã®ã¾ã¾å±•é–‹ã•ã‚Œã‚‹ã‚¨ã‚¤ãƒªã‚¢ã‚¹ã§ã™ã€‚
+ * ãŸã ã—ã€å¤ã„ã‚³ãƒ¼ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹éš›ã«äº’æ›æ€§ã‚’ä¿æŒã™ã‚‹ãŸã‚ã€ã„ãã¤ã‹ã®å®Ÿè£…ãŒè¿½åŠ ã•ã‚Œã¦ã„ã¾ã™ã€‚
  */
 
 
 // Override
 public bool isInt(string s){
 
-	// + ‚Æ - ‚Ån‚Ü‚éê‡‚Ííœ
+	// + ã¨ - ã§å§‹ã¾ã‚‹å ´åˆã¯å‰Šé™¤
 	if(startsWith(s,"+") || startsWith(s,"-")){
 		s = substring(s, 1, lengthOf(s));
 	}
 
 	if(startsWith(s,"0x") || startsWith(s,"0X")){
 
-		// 16i”‚Ìê‡
+		// 16é€²æ•°ã®å ´åˆ
 		return isHex(s);
 
 	}else if(startsWith(s,"0b") || startsWith(s,"0B")){
 
-		// 2i”‚Ìê‡
+		// 2é€²æ•°ã®å ´åˆ
 		return isBin(s);
 
 	}else if(startsWith(s,"0") || startsWith(s,"0") || startsWith(s,"0o") || startsWith(s,"0o")){
 
-		// 8i”‚Ìê‡
+		// 8é€²æ•°ã®å ´åˆ
 		return isOct(s);
 
 	}else{
 
-		// 10i”‚Ìê‡
+		// 10é€²æ•°ã®å ´åˆ
 		return isDec(s);
 
 	}
@@ -42,15 +44,15 @@ public bool isInt(string s){
 
 
 /**
- * •¶š—ñ‚Ì’†g‚ª8i”•\‹L‚Å‚ ‚èA‚©‚ÂintŒ^‚É•ÏŠ·‰Â”\‚©”»’è‚µ‚Ü‚·B
+ * æ–‡å­—åˆ—ã®ä¸­èº«ãŒ8é€²æ•°è¡¨è¨˜ã§ã‚ã‚Šã€ã‹ã¤intå‹ã«å¤‰æ›å¯èƒ½ã‹åˆ¤å®šã—ã¾ã™ã€‚
  *
- * @param s ”»’è‚·‚é’l
- * @return ”»’èŒ‹‰Êitrue‚È‚ç‚Î•ÏŠ·‰Â”\j
- * @author ¼ˆä•¶G
+ * @param s åˆ¤å®šã™ã‚‹å€¤
+ * @return åˆ¤å®šçµæœï¼ˆtrueãªã‚‰ã°å¤‰æ›å¯èƒ½ï¼‰
+ * @author æ¾äº•æ–‡å®
  */
 public bool isOct(string s){
 
-	// + ‚Æ - ‚Ån‚Ü‚éê‡‚Ííœ
+	// + ã¨ - ã§å§‹ã¾ã‚‹å ´åˆã¯å‰Šé™¤
 	if(startsWith(s,"+") || startsWith(s,"-")){
 		s = substring(s, 1, lengthOf(s));
 	}
@@ -58,15 +60,15 @@ public bool isOct(string s){
 
 	if(startsWith(s,"0o") || startsWith(s,"0o")){
 
-		// æ“ª‚Ì 0o ‚ğíœ
+		// å…ˆé ­ã® 0o ã‚’å‰Šé™¤
 		s = substring(s, 2, lengthOf(s));
 		
-		// ‘S•””š‚È‚çOK
+		// å…¨éƒ¨æ•°å­—ãªã‚‰OK
 		return isDec(s);
 
 	}else if(startsWith(s,"0") || startsWith(s,"0")){
 
-		// ‘S•””š‚È‚çOK
+		// å…¨éƒ¨æ•°å­—ãªã‚‰OK
 		return isDec(s);
 
 	}else{

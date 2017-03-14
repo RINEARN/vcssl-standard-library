@@ -1,0 +1,456 @@
+/**
+ * <p>
+ * VCSSL Text ライブラリ は、テキスト（文字列）処理を扱う標準ライブラリです。
+ * </p>
+ * 
+ * <p>
+ * このライブラリでは、文字列を扱う string 型の変数に対して、
+ * 長さや部分文字列の取得、検索と置換、分割などの機能を提供します。
+ * なお、検索、置換、分割では、正規表現を用いる事もできます。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_TEXT_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.TextProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.TextProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/**
+ * 文字列を、特定の文字列の位置で分割し、配列にまとめて返します。
+ *
+ * @param text 対象の文字列
+ * @param cut 分割点の文字列（結果の文字列配列の内容には含まれません）
+ * @return 分割結果を格納する配列
+ */
+string[] split( string text, string cut ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getSplittedWords( text, cut );
+}
+
+
+/**
+ * 文字列を、特定の正規表現に適合する位置で分割し、配列にまとめて返します。
+ *
+ * @param text 対象の文字列
+ * @param cut 分割点の正規表現（結果の文字列配列の内容には含まれません）
+ * @return 分割結果を格納する配列
+ */
+string[] splitPattern( string text, string cut ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getPatternSplittedWords( text, cut );
+}
+
+
+/**
+ * 文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。
+ * <br />
+ * 部分文字列の適合箇所が複数存在する場合は、全て置換されます。
+ *
+ * @param text 対象の文字列
+ * @param oldText 置換前の部分文字列
+ * @param newText 置換後の部分文字列
+ * @return 置換結果
+ */
+string replace( string text, string oldText, string newText ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getReplacedText( text, oldText, newText );
+}
+
+
+/**
+ * 文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。
+ * <br />
+ * 正規表現の適合箇所が複数存在する場合は、全て置換されます。
+ *
+ * @param text 対象の文字列
+ * @param oldText 置換箇所の正規表現
+ * @param newText 置換後の部分文字列
+ * @return 置換結果
+ */
+string replacePattern( string text, string oldText, string newText ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getPatternReplacedText( text, oldText, newText );
+}
+
+
+/**
+ * 文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。
+ * <br />
+ * 部分文字列の適合箇所が複数存在する場合は、最初のものだけが置換されます。
+ *
+ * @param text 対象の文字列
+ * @param oldText 置換前の部分文字列
+ * @param newText 置換後の部分文字列
+ * @return 置換結果
+ */
+string replaceFirst( string text, string oldText, string newText ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_replaceFirst( text, oldText, newText, 0 );
+}
+
+
+/**
+ * 文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。
+ * <br />
+ * 正規表現の適合箇所が複数存在する場合は、最初のものだけが置換されます。
+ *
+ * @param text 対象の文字列
+ * @param oldText 置換箇所の正規表現
+ * @param newText 置換後の部分文字列
+ * @return 置換結果
+ */
+string replaceFirstPattern( string text, string oldText, string newText ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_patternReplaceFirst( text, oldText, newText, 0 );
+}
+
+
+
+/**
+ * 文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。
+ * <br />
+ * 部分文字列の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。
+ *
+ * @param text 対象の文字列
+ * @param oldText 置換前の部分文字列
+ * @param newText 置換後の部分文字列
+ * @param start 探索範囲の始点インデックス
+ * @return 置換結果
+ */
+string replaceFirst( string text, string oldText, string newText, int start ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_replaceFirst( text, oldText, newText, start );
+}
+
+
+/**
+ * 文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。
+ * <br />
+ * 正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。
+ *
+ * @param text 対象の文字列
+ * @param oldText 置換箇所の正規表現
+ * @param newText 置換後の部分文字列
+ * @param start 探索範囲の始点インデックス
+ * @return 置換結果
+ */
+string replaceFirstPattern( string text, string oldText, string newText, int start ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_patternReplaceFirst( text, oldText, newText, start );
+}
+
+
+
+
+
+
+
+/**
+ * 文字列が、指定された部分文字列で始まっているかどうか判定します。
+ *
+ * @param text 対象の文字列
+ * @param word 部分文字列
+ * @return 指定された部分文字列で始まっていれば true 、そうでなければ false 
+ */
+bool startsWith( string text, string word ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_startsWith( text, word );
+}
+
+
+/**
+ * 文字列が、指定された部分文字列で終わっているかどうか判定します。
+ *
+ * @param text 対象の文字列
+ * @param word 部分文字列
+ * @return 指定された部分文字列で終わっていれば true 、そうでなければ false 
+ */
+bool endsWith( string text, string word ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_endsWith( text, word );
+}
+
+
+
+/* match will be returns array value */
+
+/**
+ * この API の使用は推奨されません。<a href="#matchFirst">matchFirst</a> を使用してください。
+ * この関数の機能は、将来的に変更が検討される可能性があります。
+ */
+string match( string text, string pattern ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getMatch( text, pattern );
+}
+
+/**
+ * この API の使用は推奨されません。<a href="#matchFirst">matchFirst</a> を使用してください。
+ * この関数の機能は、将来的に変更が検討される可能性があります。
+ */
+string match( string text, string pattern, int start ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getMatch( text, pattern, start );
+}
+
+
+
+/**
+ * 文字列全体が、正規表現に適合するかどうか判定します。
+ *
+ * @param text 対象の文字列
+ * @param pattern 正規表現
+ * @return 全体が正規表現に適合すれば true 、そうでなければ false 
+ */
+bool matchFull( string text, string pattern ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_totalMatch( text, pattern );
+}
+
+
+/**
+ * 文字列全体から、正規表現に適合する箇所を抜き出して返します。
+ * <br />
+ * 正規表現の適合箇所が複数存在する場合は、最初のものだけが選択されます。
+ *
+ * @param text 対象の文字列
+ * @param pattern 正規表現
+ * @return 正規表現に適合する箇所の部分文字列
+ */
+string matchFirst( string text, string pattern ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_firstMatch( text, pattern );
+}
+
+
+/**
+ * 文字列から、正規表現に適合する箇所を抜き出して返します。
+ * <br />
+ * 正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降から、最初のものだけが選択されます。
+ *
+ * @param text 対象の文字列
+ * @param pattern 正規表現
+ * @return 正規表現に適合する箇所の部分文字列
+ * @param start 探索範囲の始点インデックス
+ * @return 正規表現に適合する箇所の部分文字列
+ */
+string matchFirst( string text, string pattern, int start ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_firstMatch( text, pattern, start );
+}
+
+
+/**
+ * 文字列全体から、正規表現に適合する箇所を抜き出して返します。
+ * <br />
+ * 正規表現の適合箇所が複数存在する場合は、最後のものだけが選択されます。
+ *
+ * @param text 対象の文字列
+ * @param pattern 正規表現
+ * @return 正規表現に適合する箇所の部分文字列
+ */
+string matchLast( string text, string pattern ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_lastMatch( text, pattern );
+}
+
+
+/**
+ * 文字列から、正規表現に適合する箇所を抜き出して返します。
+ * <br />
+ * 正規表現の適合箇所が複数存在する場合は、引数 end に指定したインデックスの位置よりも前から、最後のものだけが選択されます。
+ *
+ * @param text 対象の文字列
+ * @param pattern 正規表現
+ * @param end 探索範囲の終点インデックス
+ * @return 正規表現に適合する箇所の部分文字列
+ */
+string matchLast( string text, string pattern, int end ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_lastMatch( text, pattern, end );
+}
+
+
+
+
+
+/**
+ * 文字列内から、指定された部分文字列の位置を取得します。
+ * <br />
+ * 複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 部分文字列
+ * @return 部分文字列の位置インデックス
+ */
+int indexOf( string text, string word ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getWordIndex( text, word );
+}
+
+
+/**
+ * 文字列内から、指定された部分文字列の位置を取得します。
+ * <br />
+ * 複数存在する場合は、引数 start に指定したインデックス以降から、最初のものが選択されます。存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 部分文字列
+ * @param start 探索範囲の始点インデックス。
+ * @return 部分文字列の位置インデックス
+ */
+int indexOf( string text, string word, int start ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getWordIndex( text, word, start );
+}
+
+
+/**
+ * 文字列内から、指定された正規表現に適合する位置を取得します。
+ * <br />
+ * 複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 正規表現
+ * @return 適合箇所の位置インデックス
+ */
+string indexOfPattern( string text, string word ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getPatternWordIndex( text, word );
+}
+
+
+/**
+ * 文字列内から、指定された正規表現に適合する位置を取得します。
+ * <br />
+ * 複数存在する場合は、最初のものが選択されます。引数 start に指定したインデックス以降から、存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 正規表現
+ * @param start 探索範囲の終点インデックス。
+ * @return 適合箇所の位置インデックス
+ */
+string indexOfPattern( string text, string word, int start ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getPatternWordIndex( text, word, start );
+}
+
+
+/**
+ * 文字列内から、指定された部分文字列の位置を取得します。
+ * <br />
+ * 複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 部分文字列
+ * @return 部分文字列の位置インデックス
+ */
+int lastIndexOf( string text, string word ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getLastWordIndex( text, word );
+}
+
+
+
+/**
+ * 文字列内から、指定された部分文字列の位置を取得します。
+ * <br />
+ * 複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 部分文字列
+ * @param end 探索範囲の終点インデックス。
+ * @return 部分文字列の位置インデックス
+ */
+int lastIndexOf( string text, string word, int end ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getLastWordIndex( text, word, end );
+}
+
+
+/**
+ * 文字列内から、指定された正規表現に適合する位置を取得します。
+ * <br />
+ * 複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 正規表現
+ * @return 部分文字列の位置インデックス
+ */
+string lastIndexOfPattern( string text, string word ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getPatternLastWordIndex( text, word );
+}
+
+
+/**
+ * 文字列内から、指定された正規表現に適合する位置を取得します。
+ * <br />
+ * 複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。
+ *
+ * @param text 対象の文字列
+ * @param word 正規表現
+ * @param end 探索範囲の終点インデックス。
+ * @return 部分文字列の位置インデックス
+ */
+string lastIndexOfPattern( string text, string word, int end ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getPatternLastWordIndex( text, word, end );
+}
+
+
+
+/**
+ * 文字列の文字数を返します。
+ *
+ * @param text 対象の文字列
+ * @return 文字数
+ */
+int lengthOf( string text ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_countTextLength( text );
+}
+
+
+/**
+ * 文字列内の、指定されたインデックスの位置にある文字を返します。
+ *
+ * @param text 対象の文字列
+ * @param index 文字の位置インデックス
+ * @return 文字
+ */
+string charAt( string text, int index ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getCharacter( text, index );
+}
+
+
+/**
+ * 文字列内の、指定されたインデックス区間にある部分文字列を返します。
+ *
+ * @param text 対象の文字列
+ * @param start 区間の始点インデックス。
+ * @param end 区間の終点インデックス + 1
+ * @return 部分文字列
+ */
+string substring( string text, int start, int end ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_getSubtext( text, start, end );
+}
+
+
+/**
+ * 文字列内を、空白またはタブ、もしくは改行区切りでトークンに分割し、配列にまとめて返します。
+ *
+ * @param text 対象の文字列
+ * @return トークン配列
+ */
+string[] tokenize( string text ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_tokenize( text );
+}
+
+
+string replaceLineFeed( string text ){
+  return SYSTEM_PROCESS_DRIVER_TEXT_replaceLineFeed( text );
+}
+
+

@@ -1,0 +1,213 @@
+/**
+ * <p>
+ * VCSSL Time ライブラリ は、時間計測や、時刻取得などの機能を提供する標準ライブラリです。
+ * </p>
+ * 
+ * <p>
+ * 時間を取得する機能は <a href="#time">time</a>() 関数によって提供されます。この関数は、プログラム実行開始からの経過時間を返します。
+ * <br />
+ * （ いくつかの言語では、こうした関数は 1970年 1月 1日 午前 0 時 からの経過時間を返しますが、VCSSL ではそうではありません。 ）
+ * </p>
+ * 
+ * <p>
+ * time 関数が返す時間の精度（単位）は処理系定義です。公式実装ではミリ秒ですが、将来的に、あらゆる処理系において常にミリ秒精度が保証されるとは限りません。
+ * <br />
+ * そうした処理系への依存性を回避するために、time 関数の戻り値を、様々な時間単位に変換する関数も提供されています。
+ * <br />
+ * 具体的には、<a href="#millisecond">millisecond</a> 関数はミリ秒単位、<a href="#second">second</a> 関数は秒単位、<a href="#minute">minute</a> 関数は分単位、<a href="#hour">hour</a> 関数は時間単位、<a href="#day">day</a> 関数は日単位に変換します。
+ * <br />
+ * 例として、適当な処理をさせて、その間の所要時間を計測するには、以下のようにします：
+ * <div class="code">
+ * int t1 = time();// 終了時間を計測<br />
+ * <br />
+ * [ ここで適当に時間のかかる処理を行う ]<br />
+ * <br />
+ * int t2 = time(); // 開始時間を計測<br />
+ * int sec = second( t2 - t1 ); // 所要時間（時間の差）を秒単位で取得<br />
+ * print( "所要時間 [ 秒 ] = " +  sec ); // 出力<br />
+ * </div>
+ * </p>
+ * 
+ * <p>
+ * また、<a href="#second">second</a> 関数、<a href="#minute">minute</a> 関数、<a href="#hour">hour</a> 関数を引数なしでコールすると、現在の時計的な時刻を返します。
+ * <br />
+ * 同様に、<a href="#day">day</a> 関数、<a href="#month">month</a> 関数、<a href="#year">year</a> 関数を引数なしでコールすると、現在のカレンダーにおける日付を返します。
+ * <br />
+ * 例として、現在の日付と時刻を表示するには、以下のようにします：
+ * <div class="code">
+ * print( year() + "年" + month() + "月" + day() + "日" + hour() + "時" + minute() + "分" + second() + "秒" );
+ * </div>
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_TIME_*",       "SYSTEM_PROCESS_DRIVER_CLOCL_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.TimeProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.TimeProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/**
+ * プログラム実行開始からの経過時間を返します。
+ * <br />
+ * 通常、単位はミリ秒ですが、仕様上は処理系です。厳密に任意の単位で測るには、<a href="#millisecond">millisecond</a> などを噛ませて変換してください。
+ */
+int time(){
+  return SYSTEM_PROCESS_CLOCK_millisecond();
+}
+
+
+/**
+ * <a href="#time">time</a> 関数が返す値などを、ミリ秒単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return ミリ秒単位に変換された値。
+ */
+int millisecond( int t ){
+  return t;
+}
+
+
+/**
+ * <a href="#time">time</a> 関数が返す値などを、秒単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 秒単位に変換された値。
+ */
+int second( int t ){
+  return t/1000;
+}
+
+
+/**
+ * <a href="#time">time</a> 関数が返す値などを、分単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 分単位に変換された値。
+ */
+int minute( int t ){
+  return t/60000;
+}
+
+
+/**
+ * <a href="#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 時間(hour)単位に変換された値。
+ */
+int hour( int t ){
+  return t/3600000;
+}
+
+
+/**
+ * <a href="#time">time</a> 関数が返す値などを、日単位に変換します。自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 日単位に変換された値。
+ */
+int day( int t ){
+  return t/86400000;
+}
+
+
+
+
+
+
+/**
+ * 西暦カレンダーにおける現在の年を返します。
+ *
+ * @return 現在の年。
+ */
+int year(){
+  return SYSTEM_PROCESS_DRIVER_TIME_getCurrentYear();
+}
+
+
+/**
+ * 西暦カレンダーにおける現在の月を返します。
+ * <br />
+ * 範囲は 1 ～ 12 の範囲で返します。0 ～ 11 でない事に注意してください。
+ *
+ * @return 現在の月。
+ */
+int month(){
+  return SYSTEM_PROCESS_DRIVER_TIME_getCurrentMonth();
+}
+
+
+/**
+ * 西暦カレンダーにおける現在の日を返します。
+ *
+ * @return 現在の日。
+ */
+int day(){
+  return SYSTEM_PROCESS_DRIVER_TIME_getCurrentDay();
+}
+
+
+/**
+ * 現在の時刻における時間を返します。
+ *
+ * @return 現在の時間。
+ */
+int hour(){
+  return SYSTEM_PROCESS_DRIVER_TIME_getCurrentHour();
+}
+
+
+/**
+ * 現在の時刻における分を返します。
+ *
+ * @return 現在の分。
+ */
+int minute(){
+  return SYSTEM_PROCESS_DRIVER_TIME_getCurrentMinute();
+}
+
+
+/**
+ * 現在の時刻における秒を返します。
+ *
+ * @return 現在の秒。
+ */
+int second(){
+  return SYSTEM_PROCESS_DRIVER_TIME_getCurrentSecond();
+}
+
+
+/**
+ * 西暦カレンダーにおける日付・時刻を表すテキストを返します。
+ * <br />
+ * 書式は現時点で仕様上未定となっており、処理系依存です。確実な書式が必要な場合は、<a href="#year">year</a> 関数や <a href="#hour">hour</a> 関数などを用いて独自に表現してください。
+ *
+ * @return 日付・時刻を表すテキスト。
+ */
+string date(){
+  return SYSTEM_PROCESS_DRIVER_TIME_getCurrentDate();
+}
+
+

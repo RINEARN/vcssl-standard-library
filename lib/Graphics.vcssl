@@ -1,0 +1,433 @@
+/**
+ * <p>
+ * VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。
+ * </p>
+ * 
+ * <p>
+ * VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。
+ * <br />
+ * その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。
+ * </p>
+ * 
+ * <p>
+ * 描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。
+ * <br />
+ * いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。
+ * <br />
+ * つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。
+ * </p>
+ * 
+ * <p>
+ * Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。
+ * <br />
+ * 例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。
+ * <div class="code">
+ * int g1 = newGraphics("input.png");  // 画像ファイルからグラフィックスデータ g1 を生成
+ * <br />
+ * int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 の黒色を透明にしたグラフィックスデータ g2 を生成
+ * <br />
+ * exportGraphics(g2, "output.png", "PNG");  // g2 を画像ファイルに出力
+ * <br />
+ * deleteGraphics(g1);  // g1 を破棄
+ * <br />
+ * deleteGraphics(g2);  // g2 を破棄
+ * </div>
+ * </p>
+ *
+ * <p>
+ * 他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。
+ * <br />
+ * より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_GRAPHICS_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.GraphicsProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.GraphicsProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/** エラーメッセージ、ファイルが見つからなかった場合。 */
+private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+
+/** エラーメッセージ、ファイルパスが空文字だった場合。 */
+private const string ERROR_EMPTY_FILE_PATH = "ファイルのパスに、空の文字列が指定されました。";
+
+/** エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 */
+private const string ERROR_FILE_IS_DIRECTORY = "このファイルはディレクトリであり、読み込みや書き込みは行えません： ";
+
+
+
+/**
+ * ファイルが普通に読み書き可能なものか確認します。
+ * ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。
+ * 
+ * @param filePath ファイル名またはパス
+ */
+private void checkFilePath(string filePath) {
+	if (filePath == "") {
+		___error(ERROR_EMPTY_FILE_PATH);
+		___exit();
+	} else if (((bool)(___isdir(filePath)[0]))) {
+		___error(ERROR_FILE_IS_DIRECTORY + filePath);
+	}
+}
+
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。
+ *
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics(){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+}
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。
+ *
+ * @param filePath 画像ファイルの名称またはパス。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics( string filePath ){
+  checkFilePath(filePath);
+  bool exist = ___exists(filePath);
+  if(!exist){
+    System.error(ERROR_FILE_NOT_FOUND + filePath);
+    System.exit();
+  }
+  
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_loadGraphics( filePath );
+}
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
+ *
+ * @param red[][] ピクセルの赤色成分（[Y][X]、0 ~ 255）。
+ * @param green[][] ピクセルの緑色成分（[Y][X]、0 ~ 255）。
+ * @param blue[][] ピクセルの青色成分（[Y][X]、0 ~ 255）。
+ * @param alpha[][] ピクセルのα値成分（[Y][X]、0 ~ 255）。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics( int red[][], int green[][], int blue[][], int alpha[][] ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int width = length(red, 1 );
+  int height = length(red, 0 );
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( id, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel( rendererID, red, green, blue, alpha );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  return id;
+}
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
+ *
+ * @param rgba[][][] ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics( int rgba[][][] ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int height = length(rgba, 0);
+  int width = length(rgba, 1);
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( id, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel3( rendererID, rgba );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  return id;
+}
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
+ *
+ * @param id 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。
+ * @param fromRed 変換対象の色の赤色成分（0 ~ 255）。
+ * @param fromGreen 変換対象の色の青色成分（0 ~ 255）。
+ * @param fromBlue 変換対象の色の緑色成分（0 ~ 255）。
+ * @param fromAlpha 変換対象の色のα値成分（0 ~ 255）。
+ * @param toRed 変換後の色の赤色成分（0 ~ 255）。
+ * @param toGreen 変換後の色の青色成分（0 ~ 255）。
+ * @param toBlue 変換後の色の緑色成分（0 ~ 255）。
+ * @param toAlpha 変換後の色のα値成分（0 ~ 255）。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ){
+
+  int pixR[][] = getGraphicsPixelRed( id );
+  int pixG[][] = getGraphicsPixelGreen( id );
+  int pixB[][] = getGraphicsPixelBlue( id );
+  int pixA[][] = getGraphicsPixelAlpha( id );
+  int width = length(pixR, 1);
+  int height = length(pixR, 0);
+  
+  for( int i=0; i<height; i++ ){
+    for( int j=0; j<width; j++ ){
+
+      if( pixR[i][j]==fromRed && pixG[i][j]==fromGreen && pixB[i][j]==fromBlue && pixA[i][j]==fromAlpha ){
+        pixR[i][j] = toRed;
+        pixG[i][j] = toGreen;
+        pixB[i][j] = toBlue;
+        pixA[i][j] = toAlpha;
+      }
+
+    }
+  }
+
+  int newID = newGraphics( pixR, pixG, pixB, pixA );
+  free pixR;
+  free pixG;
+  free pixB;
+  free pixA;
+  return newID;
+}
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
+
+ * @param id 変換元のイメージを保持するグラフィックスデータのID。
+ * @param fromColor 変換対象の色の成分を格納する配列。
+ * @param toColor 変換後の色の成分を格納する配列。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics( int id, int fromColor[], int toColor[] ){
+	int id = newGraphics( id, fromColor[0], fromColor[1], fromColor[2], fromColor[3], toColor[0], toColor[1], toColor[2], toColor[3] );
+	return id;
+}
+
+
+/**
+ * グラフィックスデータを破棄します。
+ *
+ * @param id 対象グラフィックスデータのID。
+ */
+void deleteGraphics( int id ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( id );
+}
+
+
+/**
+ * グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。
+ *
+ * @param id 対象グラフィックスデータのID。
+ * @param 対象グラフィックスデータの幅（ピクセル数）。
+ */
+int getGraphicsWidth( int id ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
+}
+
+
+/**
+ * グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。
+ *
+ * @param id 対象グラフィックスデータのID。
+ * @param 対象グラフィックスデータの高さ（ピクセル数）。
+ */
+int getGraphicsHeight( int id ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
+}
+
+
+/**
+ * グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
+ *
+ * @param id 対象グラフィックスデータのID。
+ * @param name 出力ファイル名。
+ * @param format 出力ファイルの形式。"JPEG" または "PNG"、もしくは "BMP" を指定します。
+ */
+void exportGraphics( int id, string name, string format ){
+  checkFilePath(name);
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_exportGraphics( id, name, format, 100.0 );
+}
+
+
+/**
+ * グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
+ *
+ * @param id 対象グラフィックスデータのID。
+ * @param name 出力ファイル名。
+ * @param format 出力ファイルの形式。"JPEG" または "PNG"、もしくは "BMP" を指定します。
+ * @param quality 画質（0.0  ~  100.0）。JPEG の場合に有効です。大きいほど高画質です。
+ */
+void exportGraphics( int id, string name, string format, double quality ){
+  checkFilePath(name);
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_exportGraphics( id, name, format, quality );
+}
+
+
+/**
+ * グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
+ *
+ * @param id 対象グラフィックスデータのID。
+ * @param red[][] ピクセルの赤色成分（[Y][X]、0 ~ 255）。
+ * @param green[][] ピクセルの緑色成分（[Y][X]、0 ~ 255）。
+ * @param blue[][] ピクセルの青色成分（[Y][X]、0 ~ 255）。
+ * @param alpha[][] ピクセルのα値成分（[Y][X]、0 ~ 255）。
+ */
+void setGraphicsPixel( int id, int red[][], int green[][], int blue[][], int alpha[][] ){
+  int width = length(red, 1);
+  int height = length(red, 0);
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( id, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel( rendererID, red, green, blue, alpha );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+}
+
+/**
+ * グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
+ *
+ * @param id 対象グラフィックスデータのID。
+ * @param rgba[][][] ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
+ */
+void setGraphicsPixel( int id, int rgba[][][] ){
+  int height = length( rgba, 0 );
+  int width = length( rgba, 1 );
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( id, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel3( rendererID, rgba );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+}
+
+/**
+ * イメージの全ピクセル色成分を格納する配列を返します。
+ * 
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
+ */
+int[][][] getGraphicsPixel( int id ){
+  int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
+  int height = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
+  int tmpGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( tmpGraphicsID, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, id, 0, 0 );
+  int pixel[][][] = SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixel3( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( tmpGraphicsID );
+  return pixel;
+}
+
+
+/**
+ * イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。
+ * 
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの赤色成分（[Y][X]、値の範囲は0 ~ 255）。
+ */
+int[][] getGraphicsPixelRed( int id ){
+  int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
+  int height = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
+  int tmpGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( tmpGraphicsID, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, id, 0, 0 );
+  int pixel[][] = SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelRed( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( tmpGraphicsID );
+  return pixel;
+}
+
+
+/**
+ * イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。
+ * 
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの緑色成分（[Y][X]、値の範囲は0 ~ 255）。
+ */
+int[][] getGraphicsPixelGreen( int id ){
+  int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
+  int height = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
+  int tmpGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( tmpGraphicsID, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, id, 0, 0 );
+  int pixel[][] = SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelGreen( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( tmpGraphicsID );
+  return pixel;
+}
+
+
+/**
+ * イメージの全ピクセルについて、青色成分のみを格納する配列を返します。
+ * 
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの青色成分（[Y][X]、値の範囲は0 ~ 255）。
+ */
+int[][] getGraphicsPixelBlue( int id ){
+  int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
+  int height = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
+  int tmpGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( tmpGraphicsID, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, id, 0, 0 );
+  int pixel[][] = SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelBlue( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( tmpGraphicsID );
+  return pixel;
+}
+
+
+/**
+ * イメージの全ピクセルについて、α値成分のみを格納する配列を返します。
+ * 
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。
+ */
+int[][] getGraphicsPixelAlpha( int id ){
+  int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
+  int height = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
+  int tmpGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( tmpGraphicsID, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, id, 0, 0 );
+  int pixel[][] = SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelAlpha( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( tmpGraphicsID );
+  return pixel;
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,201 @@
+/**
+ * <p>
+ * VCSSL Color ライブラリ は、色の扱いを補助するための標準ライブラリです。
+ * 主に Graphics2D や Graphics3D ライブラリなどと組み合わせて、グラフィックス関連の処理に用います。
+ * </p>
+ * <p>
+ * このライブラリでは、色を int[4] 配列として扱います。各要素は、[0] が赤色成分、[1] が緑色成分、[2] が青色成分、[3] がα値成分を格納します。
+ * <br />
+ * それぞれの色成分における値の範囲は 0 ～ 255 です。つまり int[4] 配列で 32bit のRGBAカラーを表現します。
+ * <br />
+ * このライブラリに合わせて、Graphics2D や Graphics3D ライブラリなどでも、int[4] 配列を 32bit RGBAカラーと見なして、色の設定・取得などを行えるようになっています。
+ * </p>
+ * <p>
+ * 使用例として、Graphics2D で描画色を青色に設定する例を挙げます。これはColorライブラリの機能を使用しなくても、以下のようにして可能です：
+ * <div class="code">
+ * setDrawColor( rendererID, 0, 0, 255, 255 );
+ * </div>
+ * </p>
+ * <p>
+ * しかし、Colorライブラリの機能を使用する事で、以下のように様々な形式で色設定ができるようになります：
+ * <div class="code">
+ * setDrawColor( rendererID, BLUE );  // 定数で設定
+ * <br />
+ * setDrawColor( rendererID, color(0, 0, 255) );  // 24bit RGBカラーで設定
+ * <br />
+ * setDrawColor( rendererID, color(0.0, 0.0, 1.0) ); // 0.0 ～ 1.0 の範囲のRGBカラーで設定
+ * <br />
+ * setDrawColor( rendererID, color( 0x0000ff ) ); // 16進数カラーコードで設定
+ * </div>
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/** 黒色の色成分を格納する配列です。 */
+const int BLACK[] = {0, 0, 0, 255};
+
+/** 白色の色成分を格納する配列です。 */
+const int WHITE[] = {255, 255, 255, 255};
+
+/** 赤色の色成分を格納する配列です。 */
+const int RED[] = {255, 0, 0, 255};
+
+/** 緑色の色成分を格納する配列です。 */
+const int GREEN[] = {0, 255, 0, 255};
+
+/** 青色の色成分を格納する配列です。 */
+const int BLUE[] = {0, 0, 255, 255};
+
+/** 紫色（マゼンタ）の色成分を格納する配列です。 */
+const int MAGENTA[] = {255, 0, 255, 255};
+
+/** 黄色の色成分を格納する配列です。 */
+const int YELLOW[] = {255, 255, 0, 255};
+
+/** 水色（シアン）の色成分を格納する配列です。 */
+const int CYAN[] = {0, 255, 255, 255};
+
+
+/**
+ * 0 ～ 255 の整数RGBA値から、色成分を格納する配列を生成して返します。
+ *
+ * @param red 赤色成分（0～255）。
+ * @param green 緑色成分（0～255）。
+ * @param blue 青色成分（0～255）。
+ * @param alpha 不透明度成分（0～255）。
+ * @return 色成分を格納する配列。
+ */
+int[] color(int red, int green, int blue, int alpha){
+	int c[] = {red, green, blue, alpha};
+	return c;
+}
+
+
+/**
+ * 0 ～ 255 の整数RGB値から、色成分（不透明色）を格納する配列を生成して返します。
+ *
+ * @param red 赤色成分（0～255）。
+ * @param green 緑色成分（0～255）。
+ * @param blue 青色成分（0～255）。
+ * @return 色成分を格納する配列。
+ */
+int[] color(int red, int green, int blue){
+	int c[] = {red, green, blue, 255};
+	return c;
+}
+
+
+/**
+ * 0.0 ～ 1.0 の小数RGBA値から、色成分を格納する配列を生成して返します。
+ *
+ * @param red 赤色成分（0.0 ～ 1.0）。
+ * @param green 緑色成分（0.0 ～ 1.0）。
+ * @param blue 青色成分（0.0 ～ 1.0）。
+ * @param alpha 不透明度成分（0.0 ～ 1.0）。
+ * @return 色成分を格納する配列。
+ */
+int[] color(float red, float green, float blue, float alpha){
+	float fc[] = {red, green, blue, alpha};
+	fc = fc * 255;
+	int c[4] = fc;
+	return c;
+}
+
+
+/**
+ * 0.0 ～ 1.0 の小数RGB値から、色成分（不透明色）を格納する配列を生成して返します。
+ *
+ * @param red 赤色成分（0.0 ～ 1.0）。
+ * @param green 緑色成分（0.0 ～ 1.0）。
+ * @param blue 青色成分（0.0 ～ 1.0）。
+ * @return 色成分を格納する配列。
+ */
+int[] color(float red, float green, float blue){
+	float fc[] = {red, green, blue, 1.0};
+	fc = fc * 255;
+	int c[4] = fc;
+	return c;
+}
+
+
+/**
+ * 16進数カラーコード値から、色成分（不透明色）を格納する配列を生成して返します。
+ * <br />
+ * 例として、青色である 0000ff を変換するには：
+ * <br />
+ * int rgba[] = color(0x0000ff);
+ * <br />
+ * などとします。0x は整数を16進数表記したい場合に付加するプレフィックスです。
+ *
+ * @param red 赤色成分（0.0 ～ 1.0）。
+ * @param green 緑色成分（0.0 ～ 1.0）。
+ * @param blue 青色成分（0.0 ～ 1.0）。
+ * @return 色成分を格納する配列。
+ */
+int[] color(int hexCode){
+	if(0xffffff < hexCode || hexCode < 0){
+		error("The color-code " + hexCode + " is out of range ( must be 0x000000 ~ 0xffffff )");
+	}
+
+	int reserve;
+
+	reserve = hexCode;
+	int r = reserve / (0xffff+1);
+
+	reserve -= r * (0xffff+1);
+	int g = reserve / (0xff+1);
+
+	reserve -= g * (0xff+1);
+	int b = reserve;
+
+	int c[] = {r, g, b, 255};
+	return c;
+}
+
+
+/**
+ * 色成分の配列を、カラーコード値に変換して返します。
+ * 例として、紫色（マゼンタ）をカラーコードに変換するには：
+ * <br />
+ * int rgba[] = { 255, 0, 255, 255 };
+ * <br />
+ * int colorCode = getColorCode(rgba);
+ * <br />
+ * string hexCode = hex(colorCode);
+ * <br />
+ * などとします。変数 hexCode に得られる結果は 0xff00ff です。なお、緑色の場合は 0xff00、青色の場合は 0xff を得ます。より一般的なカラーコード形式に整形するには、先頭の 0x を除去し、6桁になるよう左からゼロ詰めなどを行ってください。そういった文字列処理には Text ライブラリを使用すると便利です。
+ *
+ * @param rgba[] 色成分を格納する配列。[0] が赤色成分、[1] が緑色成分、[2] が青色成分、[3] がα値成分。色成分はそれぞれ 0 ～ 255 の範囲ですが、α値成分は必ず 255 （不透明）でなくてはいけません。
+ * @return カラーコード値の整数。16進数の文字列に変換するには <a href="System.html#hex">hex</a> 関数を使用します。
+ */
+int getColorCode(int rgba[]){
+	if(255 != rgba[3]){
+		error("The value of alpha must be 255");
+	}
+
+	int code = 0;
+	code += rgba[0] * (0xffff+1);
+	code += rgba[1] * (0xff+1);
+	code += rgba[2];
+	return code;
+}
+
+
+

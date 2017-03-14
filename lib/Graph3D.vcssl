@@ -1,0 +1,501 @@
+/**
+ * <p>
+ * tool.Graph3D ライブラリ APIライブラリ（以下、Graph3D ライブラリライブラリ）は、3次元グラフソフトウェアを制御するためのライブラリです。
+ * </p>
+ * 
+ * <p>
+ * Graph3D ライブラリ ライブラリは拡張ライブラリであり、VCSSLの言語仕様における標準ライブラリには含まれていません。従って、全てのVCSSL処理系において、必ずしもGraph3D ライブラリ ライブラリの実装がサポートされるわけではありません。
+ * </p>
+ * 
+ * <p>
+ * Graph3D ライブラリ ライブラリの仕様は、広く一般的な2次元グラフソフトウェアをVCSSLから制御する事を想定して定義されており、特定の2次元グラフソフトウェアを前提としたものではありません。 Graph3D ライブラリ ライブラリの実装において、制御対象にどのような2次元グラフソフトウェアが採用されるかは処理系依存であり、処理系の開発元（ベンダー）、バージョン、またはグラフソフトウェアとの通信機能を提供するプラグインなどに依存します。このような事情があるため、Graph3D ライブラリ ライブラリが提供する各種関数も、異なる処理系に関しては、厳密に同一の挙動を期待すべきではありません。
+ * </p>
+ * 
+ * <p>
+ * また、同一の処理系であっても、Graph3D ライブラリ ライブラリは標準ライブラリでは無いため、その実装において、恒久的に同様の挙動が保証されるものではありません。Graph3D ライブラリ ライブラリの実装は、あくまで処理系が独自にサポートする拡張機能であるという点に留意しておく必要があります。例えば、グラフソフトウェアの大幅なアップデートが行われると、 それに伴い、Graph3D ライブラリ ライブラリの挙動も微妙に変化してしまうケースなどが考えられます。
+ * </p>
+ * 
+ * <p>
+ * RINEARN VCSSLランタイム、及びそれを搭載するVCSSL対応ソフトウェア（リニアンプロセッサーなど）では、
+ * Graph3D ライブラリ ライブラリをサポートしており、その実装には科学技術分野用グラフソフトウェア「 リニアングラフ3D 」を採用しています。
+ * リニアングラフ2D本体（ RinearnGraph3D ライブラリ.jar ）はVCSSLランタイムの配布パッケージ内に同梱されているため、
+ * 別途何かを用意する必要はありません。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***",    "R1***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_GRAPH3D_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.Graph3DProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.Graph3DProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/** エラーメッセージ、ファイルが見つからなかった場合。 */
+private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+
+
+/**
+ * 3次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。
+ * 
+ * @return 生成したグラフのID
+ */
+int newGraph3D(){
+  return SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3D();
+}
+
+/**
+ * 3次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。
+ * 
+ * @param x グラフウィンドウ左上頂点のX座標
+ * @param y グラフウィンドウ左上頂点のY座標
+ * @param width グラフウィンドウの幅
+ * @param height グラフウィンドウの高さ
+ * @param title グラフウィンドウタイトル
+ * @return 生成したグラフのID
+ */
+int newGraph3D( int x, int y, int width, int height, string title ){
+  int graphID = SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3D();
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DWindowTitle( graphID, title );
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLocation( graphID, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DSize( graphID, width, height );
+  return graphID;
+}
+
+/**
+ * 処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。
+ * 
+ * @return 取得または生成したグラフID
+ */
+int getGraph3D(){
+  return SYSTEM_PROCESS_DRIVER_GRAPH3D_getGraph3DSystemDefaultInstance();
+}
+
+/**
+ * グラフを破棄します。
+ * 
+ * @param graphID 対象グラフのID
+ */
+void deleteGraph3D( int graphID ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_deleteGraph3D( graphID );
+}
+
+/**
+ * グラフの内容をクリアします。
+ * 
+ * @param graphID 対象グラフのID
+ */
+void clearGraph3D( int graphID ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_clearGraph3D( graphID );
+}
+
+/**
+ * グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。
+ * 変換されたグラフィックスデータは、2D/3Dレンダラ―などで加工できます。
+ * 
+ * @param graphID 対象グラフのID
+ * @return グラフィックスデータID
+ */
+int getGraph3DGraphics( int graphID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3DGraphics( graphID );
+}
+
+
+/**
+ * グラフウィンドウの位置を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param x グラフウィンドウ左上頂点のX座標
+ * @param y グラフウィンドウ左上頂点のY座標
+ */
+void setGraph3DLocation( int graphID, int x, int y ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLocation( graphID, x, y );
+}
+
+/**
+ * グラフウィンドウの大きさを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param width グラフウィンドウの幅
+ * @param height グラフウィンドウ高さ
+ */
+void setGraph3DSize( int graphID, int width, int height ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DSize( graphID, width, height );
+}
+
+/**
+ * グラフウィンドウを不可視化します。
+ * 
+ * @param graphID 対象グラフのID
+ */
+void hideGraph3D( int graphID ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_hideGraph3D( graphID );
+}
+
+/**
+ * グラフウィンドウを可視化します。
+ * 
+ * @param graphID 対象グラフのID
+ */
+void showGraph3D( int graphID ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_showGraph3D( graphID );
+}
+
+
+/**
+ * ファイルを読み込み、グラフにプロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param filePath プロットするファイルのファイル名またはパス
+ */
+void setGraph3DFile( int graphID, string filePath ){
+  bool exist = ___exists(filePath);
+  if(!exist){
+    error(ERROR_FILE_NOT_FOUND + filePath);
+    exit();
+  }
+  
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DFile( graphID, filePath );
+}
+
+/**
+ * 複数のファイルを読み込み、グラフにプロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param file プロットするファイルのファイル名またはパス
+ */
+void setGraph3DFile( int graphID, string file[] ){
+  int n = length(file);
+  string arg[ n + 1 ];
+  arg[ 0 ] = graphID;
+  for( int i=1; i<n+1; i++ ){
+    arg[ i ] = file[ i - 1 ];
+  }
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DFiles( arg );
+}
+
+
+/**
+ * ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param data ファイルの内容と同じ書式で記載されたテキスト
+ */
+void setGraph3DData( int graphID, string data ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DDataString( graphID, data );
+}
+
+
+/**
+ * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 点インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 点インデックス ] ）
+ * @param dataZ Z座標を格納する配列（ [ 点インデックス ] ）
+ */
+void setGraph3DData( int graphID, float dataX[], float dataY[], float dataZ[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DData( graphID, dataX, dataY, dataZ );
+}
+
+/**
+ * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataZ Z座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ */
+void setGraph3DData( int graphID, float dataX[][], float dataY[][], float dataZ[][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DData( graphID, dataX, dataY, dataZ );
+}
+
+/**
+ * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataZ Z座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ */
+void setGraph3DData( int graphID, float dataX[][][], float dataY[][][], float dataZ[][][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DData( graphID, dataX, dataY, dataZ );
+}
+
+
+
+
+/**
+ * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 点インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 点インデックス ] ）
+ * @param dataZ Z座標を格納する配列（ [ 点インデックス ] ）
+ */
+void addGraph3DData( int graphID, float dataX[], float dataY[], float dataZ[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_addGraph3DData( graphID, dataX, dataY, dataZ );
+}
+
+/**
+ * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataZ Z座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ */
+void addGraph3DData( int graphID, float dataX[][], float dataY[][], float dataZ[][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_addGraph3DData( graphID, dataX, dataY, dataZ );
+}
+
+/**
+ * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
+ * 
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ * @param dataZ Z座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ */
+void addGraph3DData( int graphID, float dataX[][][], float dataY[][][], float dataZ[][][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_addGraph3DData( graphID, dataX, dataY, dataZ );
+}
+
+
+
+/**
+ * 設定ファイルを読み込み、グラフに自動で設定を行います。
+ * 
+ * @param graphID 対象グラフのID
+ * @param file 設定ファイルのファイル名またはパス
+ */
+void setGraph3DConfigurationFile( int graphID, string file ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DConfigurationFile( graphID, file );
+}
+
+void setGraph3DBackgroundColor( int graphID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DBackgroundColor( graphID, red, green, blue, alpha );
+}
+void setGraph3DScaleColor( int graphID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DScaleColor( graphID, red, green, blue, alpha );
+}
+
+
+
+/**
+ * プロット範囲を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param xMin X軸の最小値
+ * @param xMax X軸の最大値
+ * @param yMin Y軸の最小値
+ * @param yMax Y軸の最大値
+ * @param zMin Z軸の最小値
+ * @param zMax Z軸の最大値
+ */
+void setGraph3DRange( int graphID, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRange( graphID, xMin, xMax, yMin, yMax, zMin, zMax );
+}
+
+/**
+ * X軸のプロット範囲を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param xMin X軸の最小値
+ * @param xMax X軸の最大値
+ */
+void setGraph3DRangeX( int graphID, double xMin, double xMax ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRangeX( graphID, xMin, xMax );
+}
+
+/**
+ * Y軸のプロット範囲を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param yMin Y軸の最小値
+ * @param yMax Y軸の最大値
+ */
+void setGraph3DRangeY( int graphID, double yMin, double yMax ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRangeY( graphID, yMin, yMax );
+}
+
+/**
+ * Z軸のプロット範囲を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param zMin Z軸の最小値
+ * @param zMax Z軸の最大値
+ */
+void setGraph3DRangeZ( int graphID, double zMin, double zMax ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRangeZ( graphID, zMin, zMax );
+}
+
+
+
+/**
+ * プロット範囲の自動調整機能を有効化または無効化します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param autoX X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
+ * @param autoY Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
+ * @param autoZ Z軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
+ */
+void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DAutoRange( graphID, autoX, autoY, autoZ );
+}
+
+/**
+ * グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：
+ * <dl>
+ *   <dt>WITH_POINTS</dt>
+ *     <dd>点プロット</dd>
+ *   <dt>WITH_LINES</dt>
+ *     <dd>線プロット</dd>
+ *   <dt>WITH_MESHES</dt>
+ *     <dd>メッシュプロット</dd>
+ *   <dt>WITH_MEMBRANES</dt>
+ *     <dd>曲面プロット</dd>
+
+ *   <dt>FLAT</dt>
+ *     <dd>平面化</dd>
+ *   <dt>FRAME</dt>
+ *     <dd>枠線描画</dd>
+ *   <dt>SCALE</dt>
+ *     <dd>目盛り描画</dd>
+ *   <dt>GRID_LINE</dt>
+ *     <dd>グリッドライン描画</dd>
+ *   <dt>GRADATION</dt>
+ *     <dd>Z値によるグラデーション彩色</dd>
+ *   <dt>ALPHA</dt>
+ *     <dd>半透明描画</dd>
+
+ *   <dt>LOG_X</dt>
+ *     <dd>X対数軸表示</dd>
+ *   <dt>LOG_Y</dt>
+ *     <dd>Y対数軸表示</dd>
+ *   <dt>LOG_Z</dt>
+ *     <dd>Z対数軸表示</dd>
+ *   <dt>REVERSE_X</dt>
+ *     <dd>X軸反転表示</dd>
+ *   <dt>REVERSE_Y</dt>
+ *     <dd>Y軸反転表示</dd>
+ *   <dt>REVERSE_Z</dt>
+ *     <dd>Z軸反転表示</dd>
+ * </dl>
+ * 
+ * @param graphID 対象グラフのID
+ * @param option オプション項目名
+ * @param value オプションを有効にするならtrue、無効にするにはfalse
+ */
+void setGraph3DOption( int graphID, string option, bool value ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DOption( graphID, option, value );
+}
+
+/**
+ * グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：
+ * <dl>
+ *   <dt>SET_LABEL_X</dt>
+ *     <dd>X軸ラベル</dd>
+ *   <dt>SET_LABEL_Y</dt>
+ *     <dd>Y軸ラベル</dd>
+ *   <dt>SET_LABEL_Z</dt>
+ *     <dd>Z軸ラベル</dd>
+ * </dl>
+ * 
+ * @param graphID 対象グラフのID
+ * @param option メニュー項目名
+ * @param value メニュー項目を有効にするならtrue、無効にするにはfalse
+ */
+void setGraph3DMenu( int graphID, string option, string value ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DMenu( graphID, option, value );
+}
+
+/**
+ * グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：
+ *  <dl>
+ *   <dt>TRACE</dt>
+ *     <dd>点をアニメーションし、軌跡を残す</dd>
+ *   <dt>INDEX</dt>
+ *     <dd>点をアニメーションする</dd>
+ *   <dt>INDEX-SERIES</dt>
+ *     <dd>系列をアニメーションする</dd>
+ *   <dt>INDEX-X</dt>
+ *     <dd>メッシュデータのX方向ラインをアニメーションする</dd>
+ *   <dt>INDEX-Y</dt>
+ *     <dd>メッシュデータのY方向ラインをアニメーションする</dd>
+ *   <dt>RANGE-X</dt>
+ *     <dd>プロット範囲をX方向にスライドさせる</dd>
+ *   <dt>RANGE-Y</dt>
+ *     <dd>プロット範囲をY方向にスライドさせる</dd>
+ *   <dt>RANGE-Z</dt>
+ *     <dd>プロット範囲をZ方向にスライドさせる</dd>
+ * </dl>
+ * 
+ * @param graphID 対象グラフのID
+ * @param mode アニメーションモード
+ * @param state アニメーションを有効化するならtrue、無効化するならfalse
+ */
+void setGraph3DAnimation( int graphID, string option, bool state ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DAnimation( graphID, option, state );
+}
+
+
+/**
+ * グラフを画像に出力します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param filename 出力ファイル名またはパス
+ * @param 形式（ "PNG" または "JPEG" ）
+ */
+void exportGraph3D( int graphID, string filename, string format ){
+  int graphicsID = SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3DGraphics( graphID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_exportGraphics( graphicsID, filename, format, 100.0 );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( graphicsID );
+}
+
+/**
+ * グラフを画像に出力します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param filename 出力ファイル名またはパス
+ * @param 形式（ "PNG" または "JPEG" ）
+ * @param quality 品質（ 0.0 ~ 100.0 ）
+ */
+void exportGraph3D( int graphID, string filename, string format, float quality ){
+  int graphicsID = SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3DGraphics( graphID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_exportGraphics( graphicsID, filename, format, quality );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( graphicsID );
+}
+
+
+
+void exportGraph3DData( int graphID, string filename, string format ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_exportGraph3DData( graphID, filename, format );
+}
+
+

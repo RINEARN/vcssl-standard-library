@@ -1,0 +1,1493 @@
+/**
+ * <p>
+ * VCSSL System ライブラリ は、一般的な用途において必須となるような基盤機能を提供する標準ライブラリです。
+ * </p>
+ * 
+ * <p>
+ * Systemライブラリは、実行対象のVCSSLプログラムを読み込むよりも先に、処理系によって自動で読み込まれます。
+ * このため System ライブラリは、特例的に import 不要で使用できます。
+ * <p>
+ * 
+ * </p>
+ * このような特例措置が適用される理由は、
+ * System ライブラリが提供する機能の使用頻度が、他の標準ライブラリに比べて著しく高いためです。
+ * System ライブラリは、他の標準ライブラリのように、特定の分野の機能をまとめたものではありません。
+ * 分野によらず、一般的な利用シーンにおいて、使用頻度が特に高いと思われる機能が、Systemライブラリにまとめられています。
+ * 恐らくおおよそ殆どのVCSSLプログラムにおいて、System ライブラリの提供する機能は必須となるでしょう。
+ * 逆に、VCSSLでは、System ライブラリが提供する機能だけでも（つまり他の標準ライブラリを明示的に import しなくても）、
+ * 簡易スクリプト言語としてある程度の実用範囲をカバーできるように配慮されています。
+ * <p>
+ * 
+ * <p>
+ * System ライブラリにおける具体的な機能の例としては、変数・配列に対する基本的な操作と変換、
+ * ユーザーとの入出力やファイル入出力、ファイルシステムとの単純なやり取り、
+ * オペレーティングシステムのコマンド実行などが挙げられます。
+ * これらの内のいくつかは、より高度かつ複雑な機能が、各分野に特化した標準ライブラリによっても提供されています。
+ * VCSSLにおける標準ライブラリの設計コンセプトでは、簡易用途では基本的に System ライブラリの機能を利用し、
+ * それでは機能不足が生じるような場合において、必要に応じて各種の特化したライブラリを import して利用するという使い方を想定しています。
+ * </p>
+ * 
+ * <p>
+ * System ライブラリでは、識別子の命名規則についても、他の標準ライブラリとはやや異なり、簡易用途における利便性を優先した、特例的なものとなっています。
+ * VCSSLの標準ライブラリにおける識別子の命名は、原則として、英単語を省略せずにロワーキャメルケースで綴る方針を採用しています。
+ * しかし System ライブラリにおいては、英単語を短縮してタイプ数を削り、必要に応じてプレフィックスやサフィックスで意味付けの補間をするような、略記的な識別子名称が多く採用されています。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***",    "R1***" }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_SFU_*",  "___*" }
+#     INTERFACE     { "GPCI",     "DPCI",     "DCCI"  }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.SystemProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.SystemProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/** エラーメッセージ、ファイルが見つからなかった場合。 */
+private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+
+/** エラーメッセージ、ファイルパスが空文字だった場合。 */
+private const string ERROR_EMPTY_FILE_PATH = "ファイルのパスに、空の文字列が指定されました。";
+
+/** エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 */
+private const string ERROR_FILE_IS_DIRECTORY = "このファイルはディレクトリであり、読み込みや書き込みは行えません： ";
+
+/** エラーメッセージ、verfloat/vercomplex 型のデフォルト丸め処理に未対応の丸めモードを用いた場合。 */
+private const string ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT = "指定された丸めモードは、varfloat/varcomplex型のデフォルト丸め処理には使用できません： ";
+
+
+/** 処理系が対応する、VCSSLのバージョンコードを表します。 */
+public const string VER = ___VER;
+
+/** 処理系の開発リビジョンコードを表します。 */
+public const string REV = ___REV;
+
+/** complex 型の虚数単位です。 */
+public const complex I = ___I;
+
+/** varcomplex 型の虚数単位です。 */
+public const varcomplex VCI = ___VCI;
+
+/** float 型の Inf （無限大） です。 */
+public const float INF = ___INF;
+
+/** float 型の NaN (非数) です。なお、NaN はあらゆる値と等しくありません。つまり、value == NAN といった比較で、変数 value が NaN であるかどうかを判定する事はできません。NaN の判定には <a href="#nan">nan</a> 関数を使用してください。 */
+public const float NAN = ___NAN;
+
+/** float 型の最大値です。 */
+public const float FLOAT_MAX = ___FLOAT_MAX;
+
+/** float 型の最小値です。 */
+public const float FLOAT_MIN = ___FLOAT_MIN;
+
+/** int 型の最大値です。 */
+public const int INT_MAX = ___INT_MAX;
+
+/** int 型の最小値です。 */
+public const int INT_MIN = ___INT_MIN;
+
+/** 環境依存の改行コードです。CR, LF, CR+LF などの中から、実行中の環境に適した値を保持しています。 */
+public const string EOL = ___EOL;
+
+/** 改行コード CR (0x0D) です。 */
+public const string CR = ___CR;
+
+/** 改行コード LF (0x0A) です。 */
+public const string LF = ___LF;
+
+
+
+/** 「読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string READ = "r";
+
+/** 「書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string WRITE = "w";
+
+/** 「追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string APPEND = "a";
+
+/** 「TSV読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string READ_TSV = "rtsv";
+
+/** 「TSV書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string WRITE_TSV = "wtsv";
+
+/** 「TSV追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string APPEND_TSV = "atsv";
+
+/** 「CSV読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string READ_CSV = "rcsv";
+
+/** 「CSV書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string WRITE_CSV = "wcsv";
+
+/** 「CSV追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string APPEND_CSV = "acsv";
+
+/** 「バイナリ読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string READ_BINARY = "rb";
+
+/** 「バイナリ書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string WRITE_BINARY = "wb";
+
+/** 「バイナリ追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+public const string APPEND_BINARY = "ab";
+
+/** 標準入力に対してファイル入出力関数を使用するための、特別なファイルパスです。 */
+public const string STDIN = "???//<SYSTEM_PROCESS_IO>::___STDIN___";
+
+/** 標準出力に対してファイル入出力関数を使用するための、特別なファイルパスです。 */
+public const string STDOUT = "???//<SYSTEM_PROCESS_IO>::___STDOUT___";
+
+/** 標準エラー出力に対してファイル入出力関数を使用するための、特別なファイルパスです。 */
+public const string STDERR = "???//<SYSTEM_PROCESS_IO>::___STDERR___";
+
+
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 UP 」として試験導入されていたものです。 */
+const int SIG_UP = 1;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 DOWN 」として試験導入されていたものです。 */
+const int SIG_DOWN = 2;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_UP 」として試験導入されていたものです。 */
+const int SIG_HALF_UP = 3;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_DOWN 」として試験導入されていたものです。 */
+const int SIG_HALF_DOWN = 4;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_EVEN 」として試験導入されていたものです。 */
+const int SIG_HALF_TO_EVEN = 5;
+
+
+/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+const int DEC_UP = 21;
+
+/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+const int DEC_DOWN = 22;
+
+/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+const int DEC_HALF_UP = 23;
+
+/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+const int DEC_HALF_DOWN = 24;
+
+/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+const int DEC_HALF_TO_EVEN = 25;
+
+
+
+
+/**
+ * コンソールに文字列を出力します。引数は任意型であり、自動的に文字列型に変換されます。
+ * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
+ * 恐らく通常は、空白区切りで出力されます。
+ * 
+ * @param ... (任意型、可変長引数)出力内容
+ */
+public macro print(...){
+	___print(...);
+}
+
+/**
+ * コンソールに文字列を出力し、改行します。引数は任意型であり、自動的に文字列型に変換されます。
+ * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
+ * 恐らく通常は、空白区切りで出力されます。
+ * 
+ * @param ... (任意型、可変長引数)出力内容
+ */
+public macro println(...){
+	___println(...);
+}
+
+/**
+ * プログラムの処理結果を表示するための領域に、文字列を出力します。
+ * 引数は任意型であり、自動的に文字列型に変換されます。
+ * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
+ * 恐らく通常は、空白区切りで出力されます。
+ * 
+ * @param ... (任意型、可変長引数)出力内容
+ */
+public macro output(...){
+	___output(...);
+}
+
+/**
+ * ユーザーから、任意文字列の入力を受け付けます。
+ * 引数は任意型であり、自動的に文字列型に変換され、入力項目のメッセージとして表示されます。
+ * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
+ * 恐らく通常は、改行区切りで出力されます。
+ * なお、最後の引数は、入力項目のデフォルト値として使用されます。
+ * 
+ * @param ... (任意型、可変長引数)入力項目のメッセージ(最後の引数はデフォルト値)
+ * @return (string)ユーザーの入力値
+ */
+public macro input(...){
+	___input(...);
+}
+
+/**
+ * ユーザに選択肢を提示し、選択された項目を取得します。
+ * 引数は任意型であり、自動的に文字列型に変換され、選択肢として表示されます。
+ * 
+ * @param ... (任意型、可変長引数)選択肢
+ * @return (string)選択された値
+ */
+public macro select(...){
+	___select(...);
+}
+
+
+/**
+ * 警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。
+ * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
+ * 恐らく通常は、改行区切りで出力されます。
+ * なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href="#pop">pop</a> 関数が利用できます。
+ * 今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。
+ * 
+ * @param ... (任意型、可変長引数)メッセージの内容
+ */
+public macro alert(...){
+	___alert(...);
+}
+
+
+/**
+ * ポップアップウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。
+ * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
+ * 恐らく通常は、改行区切りで出力されます。
+ * この関数は、現時点では <a href="#alert">alert</a> 関数と全く同じ動作をしますが、警告の意図のないメッセージの出力に使用するため、VCSSL 3.4 から新たにサポートされたものです。
+ * alert と使い分ける事で、表示するメッセージが警告なのか通常のメッセージなのか、コード内で意図をはっきりさせる事ができます。
+ * 将来的には、ウィンドウ上の表示アイコンなどが alert と違うものになる可能性もあります。
+ * 
+ * @param ... (任意型、可変長引数)メッセージの内容
+ */
+public macro pop(...){
+	___alert(...);
+}
+
+
+/**
+ * メッセージを出力し、ユーザーに 了承 / 拒否 の二択を提示します。
+ * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
+ * 恐らく通常は、改行区切りで出力されます。
+ * 
+ * @param ... (任意型、可変長引数)メッセージの内容
+ * @return (bool)ユーザーに了承されれば true, 拒否されれば false
+ */
+public macro confirm(...){
+	___confirm(...);
+}
+
+
+/**
+ * ユーザーにファイルを選択画面を提示し、選択されるまでプログラムの実行を待機します。
+ * 
+ * @return 選択されたファイルのパス
+ */
+public string[] choose(){
+	return ___choose();
+}
+
+/**
+ * ユーザーにファイルを選択画面を提示し、選択されるまでプログラムの実行を待機します。
+ * 
+ * @param message ファイル選択画面のメッセージ
+ * @return 選択されたファイルのパス
+ */
+public string[] choose(string message){
+	return ___choose(message);
+}
+
+/**
+ * ユーザーにファイルを選択画面を提示し、選択されるまでプログラムの実行を待機します。
+ * 
+ * @param message ファイル選択画面のメッセージ
+ * @param directory ファイル選択画面が開かれた時の表示ディレクトリ
+ * @return 選択されたファイルのパス
+ */
+public string[] choose(string message, string directory){
+	return ___choose(message, directory);
+}
+
+
+/**
+ * ビープ音を鳴らします。ただし、実際に鳴らせるかどうかは環境に依存します。
+ * 場合によっては、ビープ音でない音（オペレーティングシステムの警告音など）が鳴る事もあります。
+ */
+public void beep(){
+	___beep(1);
+}
+
+
+/**
+ * ビープ音を鳴らします。ただし、実際に鳴らせるかどうかは環境に依存します。
+ * 場合によっては、ビープ音でない音（オペレーティングシステムの警告音など）が鳴る事もあります。
+ * 
+ * @param repeat 鳴らす回数
+ */
+public void beep(int repeat){
+	___beep(repeat);
+}
+
+/**
+ * ビープ音を鳴らします。ただし、実際に鳴らせるかどうかは環境に依存します。
+ * 場合によっては、ビープ音でない音（オペレーティングシステムの警告音など）が鳴る事もあります。
+ * 
+ * @param repeat 鳴らす回数
+ * @param wait 鳴らす間隔(ミリ秒)
+ */
+public void beep(int repeat, int wait){
+	___beep(repeat, wait);
+}
+
+
+/**
+ * コンソールの内容をクリアします。ただし、この関数の挙動は処理系依存です。
+ * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
+ * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
+ */
+public void clear(){
+	___clear();
+}
+
+/**
+ * コンソールを非表示にします。ただし、この関数の挙動は処理系依存です。
+ * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
+ * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
+ */
+public void hide(){
+	___hide();
+}
+
+/**
+ * コンソールが非表示にされている場合、表示します。ただし、この関数の挙動は処理系依存です。
+ * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
+ * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
+ */
+public void show(){
+	___show();
+}
+
+
+
+
+
+
+/**
+ * プログラムの実行を一時停止します。
+ * 
+ * @param milliSecond 一時停止する時間(ミリ秒)
+ */
+public macro sleep(int milliSecond){
+	___sleep(milliSecond);
+}
+
+
+
+
+/**
+ * プログラムの実行を終了します。
+ * なお、この関数は、処理系にプログラムの終了をリクエストするものであり、必ずしも即時的に実行が終了される事が保証されるものではありません。
+ * この関数をコールするには、全てのループや分岐を抜けた後のプログラム最終行など、処理系がアイドリング状態となっているタイミングが理想的です。
+ * 処理系が高速に処理を行っているタイミングでこの関数をコールすると、強制終了に近い状態となります。
+ * 詳細は処理系の実装や最適化の方針などに依存しますが、処理系は、この関数がコールされた時点で、即時的に中断できないような一連の演算処理を行っている最中かもしれません。
+ * その場合はタイムラグが生じ、コール後も少しの間、実行が継続される場合があります。
+ */
+public void exit(){
+	___exit();
+}
+
+/**
+ * 終了ステータスコードを指定して、プログラムの実行を終了します。
+ * なお、この関数は、処理系にプログラムの終了をリクエストするものであり、必ずしも即時的に実行が終了される事が保証されるものではありません。
+ * この関数をコールするには、全てのループや分岐を抜けた後のプログラム最終行など、処理系がアイドリング状態となっているタイミングが理想的です。
+ * 処理系が高速に処理を行っているタイミングでこの関数をコールすると、強制終了に近い状態となります。
+ * 詳細は処理系の実装や最適化の方針などに依存しますが、処理系は、この関数がコールされた時点で、即時的に中断できないような一連の演算処理を行っている最中かもしれません。
+ * その場合はタイムラグが生じ、コール後も少しの間、実行が継続される場合があります。
+ * 
+ * @param code 終了ステータスコード
+ */
+public void exit(int code){
+	___exit(code);
+}
+
+/**
+ * 処理系をリセットし、別のプログラムを実行します。
+ * 
+ * @param programName プログラム名またはパス
+ * @param args main関数に渡す引数
+ */
+public void reset(string programName, string args[]){
+	___reset(programName, args);
+}
+
+
+/**
+ * エラーメッセージを出力します。
+ * エラーメッセージ出力後、プログラムの実行が終了されるか、継続されるかは、処理系に依存します。
+ * 確実に終了させたい場合は、続けて <a href="#exit">exit</a> をコールしてください。
+ * 
+ * @param ... （任意型、可変長引数）エラーメッセージ
+ */
+public macro error(...){
+	___error(...);
+}
+
+
+/**
+ * 式の値を評価し、真であれば何も行わず、偽であればエラーメッセージを出力します。
+ * プログラムの実行は恐らく終了されます。この関数はテストに使用します。
+ * 
+ * @param expression 評価対象の式
+ */
+public macro assert(bool expression){
+	___assert(expression);
+}
+
+
+
+
+
+/**
+ * オペレーティングシステムのコマンド、または外部プログラムを、別プロセスで非同期で実行します。
+ * 呼び出し元プログラムの実行は、処理の完了を待機しません。生成したプロセスと並列的に、実行を継続します。
+ * 処理の実行を待機したり、標準入出力を制御したい場合は、<a href="Process.html">Process</a> ライブラリを使用してください。
+ * 
+ * @param (string)コマンドや外部プログラムの絶対パス, (任意型)引数1, (任意型)引数2, ...
+ * @return (int)生成したプロセスの識別番号(プロセスID)
+ */
+public macro exec(...){
+	___exec(...);
+}
+
+
+/**
+ * オペレーティングシステムのコマンド、または外部プログラムを、同期実行します。
+ * 処理が完了するまで、呼び出し元プログラムの実行は待機します。
+ * 
+ * @param (string)コマンドや外部プログラムの絶対パス, (任意型)引数1, (任意型)引数2, ...
+ * @return (int)実行したコマンドや外部プログラムの終了ステータスコード
+ */
+public macro system(...){
+	___system(...);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ファイルが存在するか確認します。
+ * 
+ * @param filePath ファイル名またはパス
+ * @return ファイルが存在すれば true, 存在しなければ false
+ */
+public bool exists(string filePath){
+	return ___exists(filePath);
+}
+
+
+/**
+ * ディレクトリ（フォルダ）を新規生成します。ディレクトリが既に存在した場合は、何もしません。
+ * 
+ * @param directoryPath ディレクトリ名またはパス
+ */
+public void mkdir(string directoryPath){
+	___mkdir(directoryPath);
+}
+
+
+/**
+ * ファイルがディレクトリかどうかを確認します。
+ * 
+ * @param filePath 確認対象ファイルのファイル名またはパス
+ * @return ディレクトリであれば true, そうでなければ false
+ */
+public bool isdir(string filePath){
+	return ___isdir(filePath);
+}
+
+/**
+ * ディレクトリ内のファイル名一覧を返します。
+ * 
+ * @param directoryPath ディレクトリ名またはパス
+ * @return ディレクトリ内のファイル名一覧
+ */
+string[] listdir(string directoryPath){
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileList( directoryPath );
+}
+
+
+
+/*
+// 将来的にオブジェクトのコピーや、システム関連で使用する可能性があるため、これらは先行開発版のみで廃止されました。
+public void copy(string fromPath. string toPath) {
+  SYSTEM_PROCESS_DRIVER_FILE_copyFile( fromPath, toPath );
+}
+public void move(string fromPath. string toPath) {
+  SYSTEM_PROCESS_DRIVER_FILE_moveFile( fromPath, toPath );
+}
+*/
+
+
+
+
+
+
+
+
+
+/**
+ * 配列の次元数を返します。
+ * 例えば配列 a[11][28][32] に対して、rank(a) は 3 です。
+ * 
+ * @param ... (任意型)次元数を知りたい配列
+ * @return (int)配列の次元数
+ */
+public macro rank(...){
+	___rank(...);
+}
+
+
+/**
+ * 配列の要素数を返します。第二引数には、要素数を知りたい次元を、左から 0, 1, 2, ... と数えたインデックスを指定します。
+ * 例えば配列 a[11][28][32] に対して、length(a, 0) は 11 であり、length(a, 1) は 28 であり、 length(a, 2) は 32 です。
+ * 
+ * @param ... (任意型)要素数を知りたい配列, (int)次元インデックス
+ * @return (int)配列の要素数
+ */
+public macro length(...){
+	___length(...);
+}
+
+
+/**
+ * float 型の変数または値が、NaN (非数) かどうか判定します。
+ * 
+ * @param value 判定したい変数または値
+ * @return NaN であれば true, そうでなければ false
+ */
+public bool nan( float value ){
+  return SYSTEM_PROCESS_FPU_nanF( value );
+}
+
+
+/**
+ * float 型の変数または値が、Inf (無限大) かどうか判定します。
+ * 
+ * @param value 判定したい変数または値
+ * @return Inf であれば true, そうでなければ false
+ */
+public bool inf( float value ){
+  return SYSTEM_PROCESS_FPU_infF( value );
+}
+
+
+
+
+/**
+ * int 型の変数または値を、2進数で表した文字列を返します。先頭には 0b のプレフィックスが付加されます。
+ * 
+ * @param number 2進数で表したい変数または値
+ * @return 2進数で表した文字列
+ */
+public string bin( int number ){
+  return SYSTEM_PROCESS_FPU_binary( number );
+}
+
+/**
+ * int 型の変数または値を、8進数で表した文字列を返します。先頭には 0 のプレフィックスが付加されます。
+ * 
+ * @param number 8進数で表したい変数または値
+ * @return 8進数で表した文字列
+ */
+public string oct( int number ){
+  return SYSTEM_PROCESS_FPU_octal( number );
+}
+
+/**
+ * int 型の変数または値を、16進数で表した文字列を返します。先頭には 0x のプレフィックスが付加されます。
+ * 
+ * @param number 16進数で表したい変数または値
+ * @return 16進数で表した文字列
+ */
+public string hex( int number ){
+  return SYSTEM_PROCESS_FPU_hex( number );
+}
+
+
+/**
+ * varfloat 型または varcomplex 型の演算桁数を指定します。
+ * 
+ * @param arg 桁数
+ */
+public macro digit(arg){
+	___digit(arg);
+}
+
+/**
+ * varfloat 型または varcomplex 型の演算桁数を取得します。
+ * 
+ * @return 桁数
+ */
+public macro digit(){
+	___digit();
+}
+
+
+/**
+ * float型の値を、指定されたモードで、指定された桁数に丸めます。
+ * 
+ * @param value 丸めたい値
+ * @param digit 丸めた後の桁数
+ * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
+ * @return 丸められた値
+ */
+public float round(float value, int digit, int mode) {
+	return ___fround(value, digit, mode);
+}
+
+
+/**
+ * complex型の値を、指定されたモードで、指定された桁数に丸めます。
+ * 
+ * @param value 丸めたい値
+ * @param digit 丸めた後の桁数
+ * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
+ * @return 丸められた値
+ */
+public complex round(complex value, int digit, int mode) {
+	float realValue = SYSTEM_PROCESS_SFU_complex_real(value);
+	float imagValue = SYSTEM_PROCESS_SFU_complex_imag(value);
+	realValue = ___fround(realValue, digit, mode);
+	imagValue = ___fround(imagValue, digit, mode);
+	complex retValue = realValue + imagValue * I;
+	return retValue;
+}
+
+
+/**
+ * varfloat型の値を、指定されたモードで、指定された桁数に丸めます。
+ * 
+ * @param value 丸めたい値
+ * @param digit 丸めた後の桁数
+ * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
+ * @return 丸められた値
+ */
+public varfloat round(varfloat value, varint digit, int mode) {
+	return ___vfround(value, digit, mode);
+}
+
+
+/**
+ * varcomplex型の値を、指定されたモードで、指定された桁数に丸めます。
+ * 
+ * @param value 丸めたい値
+ * @param digit 丸めた後の桁数
+ * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
+ * @return 丸められた値
+ */
+public varcomplex round(varcomplex value, varint digit, int mode) {
+	varfloat realValue = SYSTEM_PROCESS_SFU_complex_real(value);
+	varfloat imagValue = SYSTEM_PROCESS_SFU_complex_imag(value);
+	realValue = ___vfround(realValue, digit, mode);
+	imagValue = ___vfround(imagValue, digit, mode);
+	varcomplex retValue = realValue + imagValue*VCI;
+	return retValue;
+}
+
+
+/**
+ * varfloat 型および varcomplex 型の演算における、デフォルトの丸めモードを指定します。
+ * なお、varfloat 型および varcomplex 型の丸め制御と、この関数の実装は、現在は試験的に導入されているものです。
+ * 現時点では、あらゆる演算において指定通りに丸め制御が行われる事は、必ずしも保証されません。
+ * 使用する際には、事前に検証を行って下さい。
+ * varfloat 型および varcomplex 型の丸め制御、及びこの round 関数の実装は、試験導入期間を経た上で、VCSSL 4 以降での正式導入を予定しています。
+ * 
+ * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a> )
+ */
+public void round(int mode){
+	if (mode == SIG_UP || mode == SIG_DOWN || mode == SIG_HALF_UP || mode == SIG_HALF_DOWN || mode == SIG_HALF_TO_EVEN) {
+		___round(mode);
+	} else {
+		___error(ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT, mode);
+	}
+}
+
+
+/**
+ * complex 型の実部を返します。
+ * 
+ * @param value 実部を取得したい変数または値
+ * @return 実部
+ */
+public float re( complex value ){
+  return SYSTEM_PROCESS_SFU_complex_real( value );
+}
+
+/**
+ * complex 型の虚部を返します。
+ * 
+ * @param value 虚部を取得したい変数または値
+ * @return 虚部
+ */
+public float im( complex value ){
+  return SYSTEM_PROCESS_SFU_complex_imag( value );
+}
+
+/**
+ * complex 型の実部を設定します。
+ * 
+ * @param value 実部を設定したい変数または値
+ * @param realValue 実部の値
+ */
+public void re( complex value, float realValue ){
+  SYSTEM_PROCESS_SFU_complex_realSet( value, realValue );
+}
+
+/**
+ * complex 型の虚部を設定します。
+ * 
+ * @param value 虚部を設定したい変数または値
+ * @param imagValue 虚部の値
+ */
+public void im( complex value, float imagValue ){
+  SYSTEM_PROCESS_SFU_complex_imagSet( value, imagValue );
+}
+
+
+/**
+ * varcomplex 型の実部を返します。
+ * 
+ * @param value 実部を取得したい変数または値
+ * @return 実部
+ */
+public varfloat re( varcomplex value ){
+  return SYSTEM_PROCESS_SFU_complex_real( value );
+}
+
+/**
+ * varcomplex 型の虚部を返します。
+ * 
+ * @param value 虚部を取得したい変数または値
+ * @return 虚部
+ */
+public varfloat im( varcomplex value ){
+  return SYSTEM_PROCESS_SFU_complex_imag( value );
+}
+
+/**
+ * varcomplex 型の実部を設定します。
+ * 
+ * @param value 実部を設定したい変数または値
+ * @param realValue 実部の値
+ */
+public void re( varcomplex value, varfloat realValue ){
+  SYSTEM_PROCESS_SFU_complex_realSet( value, realValue );
+}
+
+/**
+ * varcomplex 型の虚部を設定します。
+ * 
+ * @param value 虚部を設定したい変数または値
+ * @param imagValue 虚部の値
+ */
+public void im( varcomplex value, varfloat imagValue ){
+  SYSTEM_PROCESS_SFU_complex_imagSet( value, imagValue );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ファイルが普通に読み書き可能なものか確認します。
+ * ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。
+ * 
+ * @param filePath ファイル名またはパス
+ */
+private void checkFilePath(string filePath) {
+	if (filePath == "") {
+		___error(ERROR_EMPTY_FILE_PATH);
+		exit();
+	} else if (((bool)(___isdir(filePath)[0]))) {
+		___error(ERROR_FILE_IS_DIRECTORY + filePath);
+	}
+}
+
+/**
+ * 簡易ファイル出力関数です。string 変数の保持する内容を、ファイルに保存します。
+ * 
+ * @param filePath ファイル名またはパス
+ * @param text ファイルに保存する内容
+ */
+public void save(string filePath, string text){
+	checkFilePath(filePath);
+	___save(filePath, text);
+}
+
+/**
+ * 簡易ファイル出力関数です。現在コンソールに表示されている内容を、ファイルに保存します。ただし、この関数の挙動は処理系依存です。
+ * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
+ * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
+ * 
+ * @param filePath ファイル名またはパス
+ */
+public void save(string filePath){
+	checkFilePath(filePath);
+	___save(filePath);
+}
+
+
+
+/**
+ * 簡易ファイル入力関数です。ファイルの内容を全て読み込み、そのまま文字列として返します。読み込み後、ファイルは自動的に閉じられます。
+ * 
+ * @param filePath ファイル名またはパス
+ * @return 読み込んだ内容
+ */
+public string load(string filePath){
+	checkFilePath(filePath);
+	bool exist = ___exists(filePath);
+	if(!exist){
+		error(ERROR_FILE_NOT_FOUND + filePath);
+		exit();
+	}
+	return ___load(filePath);
+}
+
+/**
+ * 簡易ファイル入力関数です。現在コンソールに表示されている内容を取得し、そのまま文字列として返します。ただし、この関数の挙動は処理系依存です。
+ * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
+ * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も得られません。
+ * 
+ * @return コンソールから取得した内容
+ */
+public string load(){
+	return ___load();
+}
+
+
+
+
+
+/**
+ * ファイルを開き、固有の識別番号（ ファイルID ）を割り振って返します。
+ * 引数 filePath には、通常はファイル名またはパスを指定しますが、
+ * 代わりに <a href="#STDIN">STDIN</a> や <a href="#STDOUT">STDOUT</a>, <a href="#STDERR">STDERR</a> を指定して標準入出力に読み書きする事も可能です。
+ * 
+ * @param filePath ファイル名またはパス
+ * @param mode ファイル入出力モード（ "r" または <a href="#READ">READ</a>、 "w" または <a href="#WRITE">WRITE</a>、 "a" または <a href="#APPEND">APPEND</a>、 "rtsv" または <a href="#READ">READ_TSV</a>、 "wtsv" または <a href="#WRITE">WRITE_TSV</a>、 "atsv" または <a href="#APPEND">APPEND_TSV</a>、 "rcsv" または <a href="#READ">READ_CSV</a>、 "rcsv" または <a href="#WRITE">WRITE_CSV</a>、 "acsv" または <a href="#APPEND">APPEND_CSV</a>、 "rb" または <a href="#READ">READ_BINARY</a>、 "wb" または <a href="#WRITE">WRITE_BINARY</a>、 "ab" または <a href="#APPEND">APPEND_BINARY</a> ）
+ * @return ファイルID
+ */
+public int open(string filePath, string mode){
+	checkFilePath(filePath);
+	if (mode == READ || mode == READ_CSV || mode == READ_TSV) {
+		bool exist = ___exists(filePath);
+		if (filePath == STDIN) {
+			exist = true;
+		}
+		if (filePath == STDOUT) {
+			exist = true;
+		}
+		if (filePath == STDERR) {
+			exist = true;
+		}
+		if(!exist){
+			error(ERROR_FILE_NOT_FOUND + filePath);
+			exit();
+		}
+	}
+	return ___open(filePath, mode);
+}
+
+/**
+ * ファイルを開き、固有の識別番号（ ファイルID ）を割り振って返します。
+ * 引数 filePath には、通常はファイル名またはパスを指定しますが、
+ * 代わりに <a href="#STDIN">STDIN</a> や <a href="#STDOUT">STDOUT</a>, <a href="#STDERR">STDERR</a> を指定して標準入出力に読み書きする事も可能です。
+ * 
+ * @param filePath ファイル名またはパス
+ * @param mode ファイル入出力モード（ "r" または <a href="#READ">READ</a>、 "w" または <a href="#WRITE">WRITE</a>、 "a" または <a href="#APPEND">APPEND</a>、 "rtsv" または <a href="#READ">READ_TSV</a>、 "wtsv" または <a href="#WRITE">WRITE_TSV</a>、 "atsv" または <a href="#APPEND">APPEND_TSV</a>、 "rcsv" または <a href="#READ">READ_CSV</a>、 "rcsv" または <a href="#WRITE">WRITE_CSV</a>、 "acsv" または <a href="#APPEND">APPEND_CSV</a>、 "rb" または <a href="#READ">READ_BINARY</a>、 "wb" または <a href="#WRITE">WRITE_BINARY</a>、 "ab" または <a href="#APPEND">APPEND_BINARY</a> ）
+ * @param textEncoding 文字コード（ "Shift_JIS"、 "UTF-8"、 "EUC-JP" ）
+ * @return ファイルID
+ */
+public int open(string filePath, string mode, string textEncoding){
+	checkFilePath(filePath);
+	if (mode == READ || mode == READ_CSV || mode == READ_TSV) {
+		bool exist = ___exists(filePath);
+		if (filePath == STDIN) {
+			exist = true;
+		}
+		if (filePath == STDOUT) {
+			exist = true;
+		}
+		if (filePath == STDERR) {
+			exist = true;
+		}
+		if(!exist){
+			error(ERROR_FILE_NOT_FOUND + filePath);
+			exit();
+		}
+	}
+	return ___open(filePath, mode, textEncoding);
+}
+
+
+
+
+
+
+/**
+ * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "wtsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ */
+public macro openw(...) {
+	___openw(...);
+}
+
+/**
+ * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "wcsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ */
+public macro opencsvw(...) {
+	___opencsvw(...);
+}
+
+
+
+/**
+ * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "rtsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ */
+public macro openr(...) {
+	___openr(...);
+}
+
+/**
+ * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "rcsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ */
+public macro opencsvr(...) {
+	___opencsvr(...);
+}
+
+
+
+
+
+
+
+
+/**
+ * ファイルを閉じます。この時点で、バッファされている書き込み内容は全てフラッシュされます。
+ * 
+ * @param fileID ファイルID
+ */
+public void close(int fileID){
+	___close(fileID);
+}
+
+/**
+ * ファイルのバッファされている書き込み内容をフラッシュします。
+ * 
+ * @param fileID ファイルID
+ */
+public void flush(int fileID){
+	___flush(fileID);
+}
+
+
+/**
+ * ファイルに内容を書き込みます。書き込み内容は任意型で、書き込み時に文字列に変換されます。
+ * 書き込み内容を複数指定した場合、それがどのような形で書き込まれるかは、ファイル入出力モードに依存します。
+ * <dl>
+ *  <dt>"w" または <a href="#WRITE">WRITE</a> モードの場合</dt>
+ *   <dd>書き込み内容が、そのまま連結されて書き込まれます。</dd>
+ *  <dt>"wtsv" または <a href="#WRITE_TSV">WRITE_TSV</a> モードの場合</dt>
+ *   <dd>書き込み内容が、タブ文字区切りで連結されて書き込まれます。</dd>
+ *  <dt>"wcsv" または <a href="#WRITE_CSV">WRITE_CSV</a> モードの場合</dt>
+ *   <dd>書き込み内容が、カンマ文字区切りで連結されて書き込まれます。</dd>
+ * </dl>
+ * なおこの関数は、VCSSL2.1以前では改行されますが、2.2以降では改行されません。改行付きの機能は <a href="#writeln">writeln</a> 関数が提供します。
+ * 
+ * @param fileID ファイルID
+ * @param ... (任意型、可変長引数)書き込み内容
+ */
+public macro write(int fileID, ...){
+	___write(fileID, ...);
+}
+
+
+/**
+ * ファイルに内容を書き込み、改行します。書き込み内容は任意型で、書き込み時に文字列に変換されます。
+ * 書き込み内容を複数指定した場合、それがどのような形で書き込まれるかは、ファイル入出力モードに依存します。
+ * <dl>
+ *  <dt>"w" または <a href="#WRITE">WRITE</a> モードの場合</dt>
+ *   <dd>書き込み内容が、そのまま連結されて書き込まれます。</dd>
+ *  <dt>"wtsv" または <a href="#WRITE_TSV">WRITE_TSV</a> モードの場合</dt>
+ *   <dd>書き込み内容が、タブ文字区切りで連結されて書き込まれます。</dd>
+ *  <dt>"wcsv" または <a href="#WRITE_CSV">WRITE_CSV</a> モードの場合</dt>
+ *   <dd>書き込み内容が、カンマ文字区切りで連結されて書き込まれます。</dd>
+ * </dl>
+ * なお、改行コードには、実行環境に適切なものが自動的に採用されます。
+ * もしも、<a href="#LF">LF</a> や <a href="#CR">CR</a> などの特定の改行コードを使用したい場合は、
+ * この関数の代わりに <a href="#write">write</a> 関数を使用し、
+ * 書き込み内容に <a href="#LF">LF</a> や <a href="#CR">CR</a> を付加して書き込んでください。
+ * 
+ * @param fileID ファイルID
+ * @param ... (任意型、可変長引数)書き込み内容
+ */
+public macro writeln(int fileID, ...){
+	___writeln(fileID, ...);
+}
+
+
+/* 引数が多すぎるコードを動かすための互換措置 */
+public macro read(int fileID, ...){
+	___read(fileID, ...);
+}
+
+/* 引数が多すぎるコードを動かすための互換措置 */
+public macro readln(int fileID, ...){
+	___readln(fileID, ...);
+}
+
+
+/**
+ * ファイルの内容を全て読み込みます。
+ * 戻り値は string 型配列ですが、これに読み込み内容がどのように格納されるのかは、ファイル入出力モードに依存します。
+ * <dl>
+ *  <dt>"r" または <a href="#READ">READ</a> モードの場合</dt>
+ *   <dd>ファイルの内容がそのまま、要素数 1 の string 型配列に格納して返されます。</dd>
+ *  <dt>"rtsv" または <a href="#READ_TSV">READ_TSV</a> モードの場合</dt>
+ *   <dd>ファイルの内容が、空白及び改行区切りで、string 型配列に格納して返されます。タブ文字と半角空白は同一視されます。</dd>
+ *  <dt>"rcsv" または <a href="#READ_CSV">READ_CSV</a> モードの場合</dt>
+ *   <dd>ファイルの内容が、カンマ記号及び改行区切りで、string 型配列に格納して返されます。</dd>
+ * </dl>
+ * CSV や TSV の読み込みでは、エンクロージャやデリミタの解釈は行われず、単純に区切り文字が存在する位置で区切られます。また、TSV ではタブ文字と半角空白は区別されません。
+ * このあたりの挙動を、より厳密に制御したい場合は、<a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。
+ * なおこの関数は、VCSSL2.1以前では行単位の読み込みでしたが、VCSSL2.2以降から全体の読み込みに変更されました。行単位の、過去と同様の機能は <a href="#readln">readln</a> 関数が提供します。
+ * 
+ * @param fileID ファイルID
+ * @return (string[])読み込み内容
+ */
+public string[] read(int fileID){
+	return ___read(fileID);
+}
+
+/**
+ * ファイルから一行の内容を読み込みます。
+ * 戻り値は string 型配列ですが、これに読み込み内容がどのように格納されるのかは、ファイル入出力モードに依存します。
+ * <dl>
+ *  <dt>"r" または <a href="#READ">READ</a> モードの場合</dt>
+ *   <dd>ファイルの内容がそのまま、要素数 1 の string 型配列に格納して返されます。</dd>
+ *  <dt>"rtsv" または <a href="#READ_TSV">READ_TSV</a> モードの場合</dt>
+ *   <dd>ファイルの内容が、空白区切りで、string 型配列に格納して返されます。タブ文字と半角空白は同一視されます。</dd>
+ *  <dt>"rcsv" または <a href="#READ_CSV">READ_CSV</a> モードの場合</dt>
+ *   <dd>ファイルの内容が、カンマ記号区切りで、string 型配列に格納して返されます。</dd>
+ * </dl>
+ * なお、CSV や TSV の読み込みでは、エンクロージャやデリミタの解釈は行われず、単純に区切り文字が存在する位置で区切られます。また、TSV ではタブ文字と半角空白は区別されません。
+ * このあたりの挙動を、より厳密に制御したい場合は、<a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。
+ * 
+ * @param fileID ファイルID
+ * @return (string[])読み込み内容
+ */
+public string[] readln(int fileID){
+	return ___readln(fileID);
+}
+
+/**
+ * ファイルの内容を全て読み込み、そのまま文字列として返します。
+ * 
+ * @param fileID ファイルID
+ * @return 読み込んだ内容
+ */
+public string load(int fileID){
+	return ___load(fileID);
+}
+
+/**
+ * ファイルから一行の内容を全て読み込み、そのまま文字列として返します。
+ * 
+ * @param fileID ファイルID
+ * @return 読み込んだ内容
+ */
+public string loadln(int fileID){
+	return ___loadln(fileID);
+}
+
+
+/**
+ * ファイルの行数をカウントします。
+ * 
+ * @param fileID ファイルID
+ * @return ファイル行数
+ */
+public int countln(int fileID){
+	return ___countln(fileID);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 文字列を式として評価します。レキシカルスコープで、変数や関数へのアクセスも可能です。また、代入を行う事もできます。
+ * 戻り値には、式の値が string 型配列に変換されて返されます ( 式の値が非配列であった場合は、戻り値の要素数は 1 となります )。
+ * string 型配列は、最も変換自由度の高い型であり、あらゆるプリミティブ型の配列と非配列に代入できます ( 非配列へは要素数が1の場合に限り可能です )。
+ * 反面、繰り返し高速に評価したい場合、特に戻り値が int 型や float 型である場合においては、文字列を介する型変換がボトルベックとなります。
+ * そういった場合は、評価式の中で結果を変数に代入し、戻り値を利用せずに捨てる事で、ボトルネックを回避できます。
+ * 
+ * @param expression 評価する式
+ * @return 式の値
+ */
+public macro eval(string expression){
+	___eval(expression);
+}
+
+/**
+ * 文字列を式として評価します。引数 1 個の eval 関数と異なるのは、式中でサフィックスが明示されていない数値リテラルを、どの型と解釈するか指定できる点です。
+ * 例えば \"1 / 2\" の式は、通常は int 型同士の除算となるため、値は 0 です。これを float 型同士の除算と見なして 0.5 を得たい場合には、第二引数に float 型の値 ( 0.0 など ) を指定してください。
+ * なお第二引数は、型のみが意味を持ち、値は無視されます(しかしながら、初来的に何らかの意味づけが加えられる可能性もあるため、特に理由が無ければ 0 や 0.0 を指定する事が推奨されます)。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (string[])式の値
+ */
+public macro eval(string expression, literalType){
+	___eval(expression, literalType);
+}
+
+
+/**
+ * 文字列を式として評価し、値を float 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (float)式の値
+ */
+public macro feval(string expression){
+	___feval(expression);
+}
+
+
+/**
+ * 文字列を式として評価し、値を float 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (flaot)式の値
+ */
+public macro feval(string expression, literalType){
+	___feval(expression, literalType);
+}
+
+
+/**
+ * 文字列を式として評価し、値を int 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (int)式の値
+ */
+public macro ieval(string expression){
+	___ieval(expression);
+}
+
+/**
+ * 文字列を式として評価し、値を int 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (int)式の値
+ */
+public macro ieval(string expression, literalType){
+	___ieval(expression, literalType);
+}
+
+
+/**
+ * 文字列を式として評価し、値を complex 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (complex)式の値
+ */
+public macro ceval(string expression){
+	___ceval(expression);
+}
+
+/**
+ * 文字列を式として評価し、値を complex 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (complex)式の値
+ */
+public macro ceval(string expression, literalType){
+	___ceval(expression, literalType);
+}
+
+
+/**
+ * 文字列を式として評価し、値を bool 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (bool)式の値
+ */
+public macro beval(string expression){
+	___beval(expression);
+}
+
+/**
+ * 文字列を式として評価し、値を bool 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (bool)式の値
+ */
+public macro beval(string expression, literalType){
+	___beval(expression, literalType);
+}
+
+
+/**
+ * 文字列を式として評価し、値を string 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (string)式の値
+ */
+public macro seval(string expression){
+	___seval(expression);
+}
+
+/**
+ * 文字列を式として評価し、値を string 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (string)式の値
+ */
+public macro seval(string expression, literalType){
+	___seval(expression, literalType);
+}
+
+/**
+ * 文字列を式として評価し、値を varfloat 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (varfloat)式の値
+ */
+public macro vfeval(string expression){
+	___vfeval(expression);
+}
+
+/**
+ * 文字列を式として評価し、値を varfloat 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (varfloat)式の値
+ */
+public macro vfeval(string expression, literalType){
+	___vfeval(expression, literalType);
+}
+
+
+/**
+ * 文字列を式として評価し、値を varint 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (varint)式の値
+ */
+public macro vieval(string expression){
+	___vieval(expression);
+}
+
+/**
+ * 文字列を式として評価し、値を varint 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (varint)式の値
+ */
+public macro vieval(string expression, literalType){
+	___vieval(expression, literalType);
+}
+
+
+/**
+ * 文字列を式として評価し、値を varcomplex 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @return (varcomplex)式の値
+ */
+public macro vceval(string expression){
+	___vceval(expression);
+}
+
+/**
+ * 文字列を式として評価し、値を varcomplex 型の非配列で返します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (varcomplex)式の値
+ */
+public macro vceval(string expression, literalType){
+	___vceval(expression, literalType);
+}
+
+
+/**
+ * 式の内容が構文的に正しいかどうかを判定します。
+ * eval 関数は構文解析に失敗すると処理速度が低下するため、式を高速に繰り返し評価したい場合、事前にこの関数で式の正当性を確認しておく事が推奨されます。
+ * 
+ * @param expression 評価する式
+ * @return 式が構文的に正しければ true, そうでなければ false
+ */
+public macro evaluable(string expression){
+	(bool)(___evaluable(expression));
+}
+
+/**
+ * 式の内容が構文的に正しいかどうかを判定します。
+ * eval 関数は構文解析に失敗すると処理速度が低下するため、式を高速に繰り返し評価したい場合、事前にこの関数で式の正当性を確認しておく事が推奨されます。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return 式が構文的に正しければ true, そうでなければ false
+ */
+public macro evaluable(string expression, literalType){
+	(bool)(___evaluable(expression, literalType));
+}
+
+
+/**
+ * 文字列を式として評価し、処理系の内部処理情報を返します。内容は完全に処理系依存です。
+ * なお、利用できる式には処理系依存の制約があり、必ずしも通常の式評価と整合する内容を返すとは限りません。
+ * また、一般に副作用のある式には使用できません。この関数は、主に開発時やデバッグ時に使用します。
+ * 
+ * @param expression 評価する式
+ * @return (string[])処理系の内部処理情報
+ */
+public macro evaltr(string expression){
+	___evaltr(expression);
+}
+
+/**
+ * 文字列を式として評価し、処理系の内部処理情報を返します。内容は完全に処理系依存です。
+ * なお、利用できる式には処理系依存の制約があり、必ずしも通常の式評価と整合する内容を返すとは限りません。
+ * また、一般に副作用のある式には使用できません。この関数は、主に開発時やデバッグ時に使用します。
+ * 
+ * @param expression 評価する式
+ * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @return (string[])処理系の内部処理情報
+ */
+public macro evaltr(string expression, literalType){
+	___evaltr(expression, literalType);
+}
+
+/**
+ * 関数の処理内容を、実行時に変更します。
+ * eval 関数は、ローカル変数の宣言や、複数の文を実行できないため、そのような処理を動的評価で行いたい場合には、この関数を使用します。
+ * なお、この関数でできるのは、既存の関数の処理内容を変更する事のみであり、新しい関数を宣言する事はできません。
+ * 
+ * @param functionName 関数名
+ * @param argumentType 引数の型を文字列で記述した配列（ 例えば "int" や "float" を格納 ）
+ * @param functionCode 関数の（プログラムとしての）記述内容
+ */
+public macro override(string functionName, string argumentType[], string functionCode){
+	___override(functionName, argumentType, functionCode);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="#EOL">EOL</a> をそのまま改行コードとして使用できます。
+ * この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="#EOL">EOL</a> の使用が推奨されます。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param 環境依存の改行コード
+ */
+public string lf(){
+	return ___lf();
+}
+
+/**
+ * 環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="#EOL">EOL</a> をそのまま改行コードとして使用できます。
+ * この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="#EOL">EOL</a> の使用が推奨されます。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param 環境依存の改行コード
+ */
+public string linefeed(){
+	return ___lf();
+}
+
+
+
+
+
+
+
+
+
+

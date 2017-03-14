@@ -1,0 +1,1412 @@
+/**
+ * <p>
+ * VCSSL Graphics2D ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つであり、
+ * アニメーション対応の2次元コンピュータグラフィックス（2DCG）描画機能を提供します。
+ * </p>
+ * 
+ * <p>
+ * Graphics2Dライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。
+ * 具体的な使用方法については、「 VCSSL公式開発ガイド 」をご参照ください。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_GRAPHICS_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.Graphics2DProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.Graphics2DProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/**
+ * 2DCGレンダラーを生成し、固有の識別番号（ レンダラーID ）を割り振って返します。
+ * 
+ * @param width 描画領域の幅
+ * @param height 描画領域の高さ
+ * @param graphicsID 使用するグラフィックスリソースのID
+ * @return レンダラーID
+ */
+int newGraphics2DRenderer( int width, int height, int graphicsID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( graphicsID, width, height );
+}
+
+/**
+ * 2DCGレンダラーを破棄します。
+ * 
+ * @param rendererID 破棄するレンダラーのID
+ */
+void deleteGraphics2DRenderer( int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+}
+
+
+/**
+ * スプライトを合成し、2DCGを描画します。
+ * 
+ * @param rendererID レンダラーID
+ */
+macro paintGraphics2D( int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_repaintGraphics2D( rendererID );
+}
+
+/**
+ * 描画内容を背景色でクリアします。
+ * 
+ * @param rendererID レンダラーID
+ */
+macro clearGraphics2D( int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_clearGraphics2D( rendererID, false );
+}
+
+/**
+ * 描画内容を背景色でクリアし、必要であれば全てのスプライトを配置解除します。
+ * 
+ * @param rendererID レンダラーID
+ * @param removeAll 全てのスプライトを配置解除するかどうか
+ */
+macro clearGraphics2D( int rendererID, bool removeAll ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_clearGraphics2D( rendererID, removeAll );
+}
+
+/**
+ * 背景色を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param red 赤色成分（ 0 - 255 ）
+ * @param green 緑色成分（ 0 - 255 ）
+ * @param blue 青色成分（ 0 - 255 ）
+ * @param alpha α値成分（ 0 - 255 ）
+ */
+macro setGraphics2DColor( int rendererID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsBackground2D( rendererID, red, green, blue, alpha );
+}
+
+/**
+ * 背景色を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+void setGraphics2DColor( int rendererID, int rgba[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsBackground2D( rendererID, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+
+/**
+ * 描画領域の大きさを設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param width 幅
+ * @param height 高さ
+ */
+macro setGraphics2DSize( int rendererID, int width, int height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsSize2D( rendererID, width, height );
+}
+
+
+/**
+ * 描画色を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param red 赤色成分（ 0 - 255 ）
+ * @param green 緑色成分（ 0 - 255 ）
+ * @param blue 青色成分（ 0 - 255 ）
+ * @param alpha α値成分（ 0 - 255 ）
+ */
+macro setDrawColor( int rendererID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsForeground2D( rendererID, red, green, blue, alpha );
+}
+
+/**
+ * 描画色を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+void setDrawColor( int rendererID, int rgba[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsForeground2D( rendererID, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+
+
+
+/**
+ * テキスト描画に使用するフォントを設定します
+ * 
+ * @param rendererID レンダラーID
+ * @param name フォント名（処理系依存、環境依存）
+ */
+void setDrawFont( int rendererID, string name ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFont( rendererID, name );
+}
+
+/**
+ * テキスト描画に使用するフォントのサイズを設定します
+ * 
+ * @param rendererID レンダラーID
+ * @param size フォントサイズ
+ */
+void setDrawFontSize( int rendererID, int size ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFontSize( rendererID, size );
+}
+
+/**
+ * テキスト描画に使用するフォントを太字に設定または解除します。イタリック体と併用はできません。
+ * 
+ * @param rendererID レンダラーID
+ * @param isBold 太字設定
+ */
+void setDrawFontBold( int rendererID, bool isBold ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFontBold( rendererID, isBold );
+}
+
+/**
+ * テキスト描画に使用するフォントをイタリック体に設定または解除します。太字と併用はできません。
+ * 
+ * @param rendererID レンダラーID
+ * @param isItalic イタリック体設定
+ */
+void setDrawFontItalic( int rendererID, bool isItalic ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFontItalic( rendererID, isItalic );
+}
+
+
+
+/**
+ * 点を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 中心のX座標
+ * @param vartex_y 中心のY座標
+ * @param radius 半径
+ * @param fill 塗りつぶすかどうか
+ */
+macro drawPoint( int rendererID, int vertex_x, int vertex_y, int radius, bool fill ){
+  int ellipseX = vertex_x - radius;
+  int ellipseY = vertex_y - radius;
+  int ellipseWight  = 2 * radius;
+  int ellipseHeight = 2 * radius;
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawEllipse( rendererID, ellipseX, ellipseY, ellipseWight, ellipseHeight, fill );
+}
+
+/**
+ * 直線（線分）を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x1 頂点1のX座標
+ * @param vartex_y1 頂点1のY座標
+ * @param vartex_x2 頂点2のX座標
+ * @param vartex_y2 頂点2のY座標
+ */
+macro drawLine( int rendererID, int vertex_x1, int vertex_y1, int vertex_x2, int vertex_y2 ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawLine( rendererID, vertex_x1, vertex_y1, vertex_x2, vertex_y2 );
+}
+
+/**
+ * 任意の太さで、直線（線分）を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x1 頂点1のX座標
+ * @param vartex_y1 頂点1のY座標
+ * @param vartex_x2 頂点2のX座標
+ * @param vartex_y2 頂点2のY座標
+ * @param lineWidth 線の太さ
+ */
+macro drawLine( int rendererID, int vertex_x1, int vertex_y1, int vertex_x2, int vertex_y2, int lineWidth ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawLineW( rendererID, vertex_x1, vertex_y1, vertex_x2, vertex_y2, lineWidth );
+}
+
+/**
+ * 楕円を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 外接長方形の左上頂点X座標
+ * @param vartex_y 外接長方形の左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ */
+macro drawEllipse( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawEllipse( rendererID, vertex_x, vertex_y, width, height, fill );
+}
+
+/**
+ * 長方形を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ */
+macro drawRectangle( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawRectangle( rendererID, vertex_x, vertex_y, width, height, fill );
+}
+
+/**
+ * 折れ線を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 頂点のX座標を格納する配列
+ * @param vartex_y 頂点のY座標を格納する配列
+ */
+macro drawPolyline( int rendererID, int vertex_x[], int vertex_y[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolyline( rendererID, vertex_x, vertex_y );
+}
+
+/**
+ * 任意の太さで、折れ線を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 頂点のX座標を格納する配列
+ * @param vartex_y 頂点のY座標を格納する配列
+ * @param lineWidth 線の太さ
+ */
+macro drawPolyline( int rendererID, int vertex_x[], int vertex_y[], int lineWidth ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolylineW( rendererID, vertex_x, vertex_y, lineWidth );
+}
+
+
+/**
+ * 多角形を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 頂点のX座標を格納する配列
+ * @param vartex_y 頂点のY座標を格納する配列
+ * @param fill 塗りつぶすかどうか
+ */
+macro drawPolygon( int rendererID, int vertex_x[], int vertex_y[], bool fill ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolygon( rendererID, vertex_x, vertex_y, fill );
+}
+
+/**
+ * 任意の太さで、多角形を描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 頂点のX座標を格納する配列
+ * @param vartex_y 頂点のY座標を格納する配列
+ * @param lineWidth 線の太さ
+ */
+macro drawPolygon( int rendererID, int vertex_x[], int vertex_y[], int lineWidth ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolygonW( rendererID, vertex_x, vertex_y, lineWidth );
+}
+
+
+
+
+/**
+ * テキストを1行で描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x テキスト始点X座標
+ * @param vartex_y テキスト始点Y座標
+ * @param textString テキストの内容
+ */
+macro drawText( int rendererID, int vertex_x, int vertex_y, string textString ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawText( rendererID, textString, vertex_x, vertex_y );
+}
+
+/**
+ * テキストを、折り返しながら複数行で描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x テキスト始点X座標
+ * @param vartex_y テキスト始点Y座標
+ * @param width 行の幅
+ * @param height 行の高さ
+ * @param textString テキストの内容
+ */
+macro drawText( int rendererID, int vertex_x, int vertex_y, int width, int height, string textString ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawText( rendererID, textString, vertex_x, vertex_y, width, height );
+}
+
+
+
+/**
+ * 画像を描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ */
+macro drawImage( int rendererID, int vertex_x, int vertex_y, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y );
+}
+
+/**
+ * 画像をリサイズして描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ */
+macro drawImage( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y, width, height );
+}
+
+/**
+ * 画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param width 幅
+ * @param height 高さ
+ * @param baseX 元の画像から抜き出す領域の左上頂点X座標
+ * @param baseY 元の画像から抜き出す領域の左上頂点Y座標
+ * @param baseWidth 元の画像から抜き出す領域の幅
+ * @param baseHeight 元の画像から抜き出す領域の高さ
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ */
+void drawImage( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, x, y, width, height, baseX, baseY, baseWidth, baseHeight );
+}
+
+
+
+
+
+
+
+
+/**
+ * 描画内容を、ピクセル色成分配列で直接的に設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+macro setPixel( int rendererID, int red[][], int green[][], int blue[][], int alpha[][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel( rendererID, red, green, blue, alpha );
+}
+
+/**
+ * 描画内容を、ピクセル色成分配列で直接的に設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ */
+macro setPixel( int rendererID, int rgba[][][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel3( rendererID, rgba );
+}
+
+
+/**
+ * 現在の描画内容の上に、ピクセル色成分配列の内容を重ねて描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+void drawPixel( int rendererID, int x, int y, int red[][], int green[][], int blue[][], int alpha[][] ){
+
+  int buffGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int size[] = length( red );
+  int bgWidth = size[ 0 ];
+  int bgHeight = size[ 1 ];
+  int buffRendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( buffGraphicsID, bgWidth, bgHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel( buffRendererID, red, green, blue, alpha );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( buffRendererID );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, buffGraphicsID, x, y, bgWidth, bgHeight );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( buffGraphicsID );
+}
+
+/**
+ * 現在の描画内容の上に、ピクセル色成分配列の内容を重ねて描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ */
+void drawPixel( int rendererID, int x, int y, int rgba[][][] ){
+
+  int buffGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int bgHeight = length( rgba, 0 );
+  int bgWidth = length( rgba, 1 );
+  int buffRendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( buffGraphicsID, bgWidth, bgHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel3( buffRendererID, rgba );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( buffRendererID );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, buffGraphicsID, x, y, bgWidth, bgHeight );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( buffGraphicsID );
+}
+
+/**
+ * 現在の描画内容の上に、ピクセル色成分配列の内容をリサイズした上で、重ねて描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+void drawPixel( int rendererID, int x, int y, int width, int height, int red[][], int green[][], int blue[][], int alpha[][] ){
+
+  int buffGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int size[] = length( red );
+  int bgWidth = size[ 0 ];
+  int bgHeight = size[ 1 ];
+  int buffRendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( buffGraphicsID, bgWidth, bgHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel( buffRendererID, red, green, blue, alpha );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( buffRendererID );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, buffGraphicsID, x, y, width, height );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( buffGraphicsID );
+}
+
+/**
+ * 現在の描画内容の上に、ピクセル色成分配列の内容をリサイズした上で、重ねて描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ */
+void drawPixel( int rendererID, int x, int y, int width, int height, int rgba[][][] ){
+
+  int buffGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int bgHeight = length( rgba, 0 );
+  int bgWidth = length( rgba, 1 );
+  int buffRendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( buffGraphicsID, bgWidth, bgHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel3( buffRendererID, rgba );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( buffRendererID );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, buffGraphicsID, x, y, width, height );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( buffGraphicsID );
+}
+
+/**
+ * 現在の描画内容の上に、ピクセル色成分配列の内容から指定領域を抜き出し、重ねて描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param baseX 抜き出す領域の左上頂点X座標
+ * @param baseY 抜き出す領域の左上頂点Y座標
+ * @param baseWidth 抜き出す領域の幅
+ * @param baseHeight 抜き出す領域の高さ
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+void drawPixel( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int red[][], int green[][], int blue[][], int alpha[][] ){
+
+  int buffGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int size[] = length( red );
+  int bgWidth = size[ 0 ];
+  int bgHeight = size[ 1 ];
+  int buffRendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( buffGraphicsID, bgWidth, bgHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel( buffRendererID, red, green, blue, alpha );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( buffRendererID );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, buffGraphicsID, x, y, width, height, baseX, baseY, baseWidth, baseHeight );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( buffGraphicsID );
+}
+
+/**
+ * 現在の描画内容の上に、ピクセル色成分配列の内容から指定領域を抜き出し、重ねて描画します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点のX座標
+ * @param y 左上頂点のY座標
+ * @param width 幅
+ * @param height 高さ
+ * @param baseX 抜き出す領域の左上頂点X座標
+ * @param baseY 抜き出す領域の左上頂点Y座標
+ * @param baseWidth 抜き出す領域の幅
+ * @param baseHeight 抜き出す領域の高さ
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ */
+void drawPixel( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int rgba[][][] ){
+
+  int buffGraphicsID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
+  int bgHeight = length( rgba, 0 );
+  int bgWidth = length( rgba, 1 );
+  int buffRendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( buffGraphicsID, bgWidth, bgHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel3( buffRendererID, rgba );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( buffRendererID );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, buffGraphicsID, x, y, width, height, baseX, baseY, baseWidth, baseHeight );
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( buffGraphicsID );
+}
+
+
+
+/**
+ * 描画領域の保持する内容を、ピクセル色成分配列に変換して返します。
+ * 
+ * @param rendererID レンダラーID
+ * @return ピクセル色成分配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ */
+int[][][] getPixel( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixel3( rendererID );
+}
+
+/**
+ * 描画領域の保持する内容を、ピクセルの赤色成分配列に変換して返します。
+ * 
+ * @param rendererID レンダラーID
+ * @return ピクセルの赤色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+int[][] getPixelRed( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelRed( rendererID );
+}
+
+/**
+ * 描画領域の保持する内容を、ピクセルの緑色成分配列に変換して返します。
+ * 
+ * @param rendererID レンダラーID
+ * @return ピクセルの緑色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+int[][] getPixelGreen( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelGreen( rendererID );
+}
+
+/**
+ * 描画領域の保持する内容を、ピクセルの青色成分配列に変換して返します。
+ * 
+ * @param rendererID レンダラーID
+ * @return ピクセルの青色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+int[][] getPixelBlue( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelBlue( rendererID );
+}
+
+/**
+ * 描画領域の保持する内容を、ピクセルのα値成分配列に変換して返します。
+ * 
+ * @param rendererID レンダラーID
+ * @return ピクセルのα値成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+int[][] getPixelAlpha( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelAlpha( rendererID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 直線（線分）スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x1 頂点1のX座標
+ * @param y1 頂点1のY座標
+ * @param x2 頂点2のX座標
+ * @param y2 頂点2のY座標
+ * @return スプライトID
+ */
+int newLineSprite( int x1, int y1, int x2, int y2 ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineLayer();
+  int x[2];
+  int y[2];
+  x[0] = x1;
+  y[0] = y1;
+  x[1] = x2;
+  y[1] = y2;
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerVector( index, x, y );
+  return index;
+}
+
+/**
+ * 楕円スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * 
+ * @param x 外接長方形の左上頂点X座標
+ * @param y 外接長方形の左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ * @return スプライトID
+ */
+int newEllipseSprite( int x, int y, int width, int height, bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createEllipseLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+/**
+ * 長方形スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点X座標
+ * @param y 左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ * @return スプライトID
+ */
+int newRectangleSprite( int x, int y, int width, int height, bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createRectangleLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+/**
+ * 折れ線スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 頂点のX座標を格納する配列
+ * @param y 頂点のY座標を格納する配列
+ * @return スプライトID
+ */
+int newPolylineSprite( int x[], int y[] ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolylineLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerVector( index, x, y );
+  return index;
+}
+
+/**
+ * 多角形スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 頂点のX座標を格納する配列
+ * @param y 頂点のY座標を格納する配列
+ * @param fill 塗りつぶすかどうか
+ * @return スプライトID
+ */
+int newPolygonSprite( int x[], int y[], bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolygonLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerVector( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+/**
+ * 画像スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点X座標
+ * @param y 左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ * @return スプライトID
+ */
+int newImageSprite( int x, int y, int width, int height, int graphicsID ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( index, graphicsID );
+  return index;
+}
+
+/**
+ * テキストプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * 
+ * @param rendererID レンダラーID
+ * @param x テキスト始点X座標
+ * @param y テキスト始点Y座標
+ * @param width 行の幅
+ * @param height 行の高さ
+ * @param テキストの内容
+ * @return スプライトID
+ */
+int newTextSprite( int x, int y, int width, int height, string text ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerText( index, text );
+  return index;
+}
+
+
+
+
+
+
+
+/**
+ * スプライトを破棄します。
+ * 
+ * @param spriteID 対象スプライトのID
+ */
+void deleteSprite( int spriteID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeLayer( spriteID );
+}
+
+/**
+ * スプライトを配置します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param rendererID レンダラーID
+ */
+void mountSprite( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
+}
+
+/**
+ * スプライトを配置解除します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param rendererID レンダラーID
+ */
+void demountSprite( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
+}
+
+
+/**
+ * スプライトの深度を設定します。スプライトは、深度の値が大きいほど奥に、小さいほど手前に表示されます。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param vartex_z 深度
+ */
+macro setSpriteDepth( int spriteID, double vertex_z ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerZ( spriteID, vertex_z );
+}
+
+/**
+ * スプライトの位置を設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param vartex_x 左上頂点のX座標
+ * @param vartex_y 左上頂点のY座標
+ */
+macro setSpriteLocation( int spriteID, int vertex_x, int vertex_y ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( spriteID, vertex_x, vertex_y );
+}
+
+/**
+ * スプライトの大きさを設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param width 幅
+ * @param height 高さ
+ */
+macro setSpriteSize( int spriteID, int width, int height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( spriteID, width, height );
+}
+
+/**
+ * スプライトのクリップ情報を設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param clip_x クリップ領域のX座標
+ * @param clip_y クリップ領域のY座標
+ * @param clip_width クリップ領域の幅
+ * @param clip_height クリップ領域の高さ
+ */
+macro setSpriteClip( int spriteID, int clip_x, int clip_y, int clip_width, int clip_height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerClipping( spriteID, clip_x, clip_y, clip_width, clip_height );
+}
+
+/**
+ * スプライトの色を設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ */
+macro setSpriteColor( int spriteID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerColor( spriteID, red, green, blue, alpha );
+}
+
+/**
+ * スプライトの色を設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+void setSpriteColor( int spriteID, int rgba[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerColor( spriteID, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+/**
+ * スプライトを塗りつぶすかどうか設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param fillState スプライトを塗りつぶすかどうか
+ */
+macro setSpriteFill( int spriteID, bool fillState ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( spriteID, fillState );
+}
+
+/**
+ * スプライトのテキストを設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param text テキストの内容
+ */
+macro setSpriteText( int spriteID, string textString ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerText( spriteID, textString );
+}
+
+/**
+ * スプライトの画像を設定します。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ */
+macro setSpriteImage( int spriteID, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( spriteID, graphicsID );
+}
+
+
+
+
+
+/**
+ * スプライトのテキスト描画に使用するフォントを設定します
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param name フォント名（処理系依存、環境依存）
+ */
+void setSpriteFont( int spriteID, string name ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFont( spriteID, name );
+}
+
+/**
+ * スプライトのテキスト描画に使用するフォントのサイズを設定します
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param size フォントサイズ
+ */
+void setSpriteFontSize( int spriteID, int size ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontSize( spriteID, size );
+}
+
+/**
+ * スプライトのテキスト描画に使用するフォントを太字に設定または解除します。イタリック体と併用はできません。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param isBold 太字設定
+ */
+void setSpriteFontBold( int spriteID, bool isBold ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontBold( spriteID, isBold );
+}
+
+/**
+ * スプライトのテキスト描画に使用するフォントをイタリック体に設定または解除します。太字と併用はできません。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param isItalic イタリック体設定
+ */
+void setSpriteFontItalic( int spriteID, bool isItalic ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontItalic( spriteID, isItalic );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 楕円を描画します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#drawEllipse">drawEllipse</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 外接長方形の左上頂点X座標
+ * @param vartex_y 外接長方形の左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ */
+macro drawOval( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawEllipse( rendererID, vertex_x, vertex_y, width, height, fill );
+}
+
+/**
+ * 長方形を描画します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#drawRectangle">drawRectangle</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ */
+macro drawRect( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawRectangle( rendererID, vertex_x, vertex_y, width, height, fill );
+}
+
+
+
+
+/**
+ * 別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容を描画します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param graphicsID グラフィックスデータのID
+ */
+macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y );
+}
+
+/**
+ * 別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容をリサイズして描画します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID グラフィックスデータのID
+ */
+macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y, width, height );
+}
+
+/**
+ * 別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param vartex_x 左上頂点X座標
+ * @param vartex_y 左上頂点Y座標
+ * @param width 幅
+ * @param height 高さ
+ * @param baseX 元のイメージから抜き出す領域の左上頂点X座標
+ * @param baseY 元のイメージから抜き出す領域の左上頂点Y座標
+ * @param baseWidth 元のイメージから抜き出す領域の幅
+ * @param baseHeight 元のイメージから抜き出す領域の高さ
+ * @param graphicsID グラフィックスデータのID
+ */
+void drawGraphics( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, x, y, width, height, baseX, baseY, baseWidth, baseHeight );
+}
+
+
+
+
+/**
+ * 楕円スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#newEllipseSprite">newEllipseSprite</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param x 外接長方形の左上頂点X座標
+ * @param y 外接長方形の左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ * @return スプライトID
+ */
+int newOvalSprite( int x, int y, int width, int height, bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createEllipseLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+/**
+ * 長方形スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#newRectangleSprite">newRectangleSprite</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点X座標
+ * @param y 左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param fill 塗りつぶすかどうか
+ * @return スプライトID
+ */
+int newRectSprite( int x, int y, int width, int height, bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createRectangleLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+
+
+/**
+ * 画像スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#newImageSprite">newImageSprite</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 左上頂点X座標
+ * @param y 左上頂点Y座標
+ * @param width 外接長方形の幅
+ * @param height 外接長方形の高さ
+ * @param graphicsID グラフィックスデータのID
+ * @return スプライトID
+ */
+int newGraphicsSprite( int x, int y, int width, int height, int graphicsID ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( index, graphicsID );
+  return index;
+}
+
+
+/**
+ * スプライトを配置します。VCSSL 3 以降では、より新しい <a href="#mountSprite">mountSprite</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param rendererID レンダラーID
+ */
+void addSprite( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
+}
+
+/**
+ * スプライトを配置解除します。VCSSL 3 以降では、より新しい <a href="#demountSprite">demountSprite</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param rendererID レンダラーID
+ */
+void removeSprite( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
+}
+
+
+
+
+/**
+ * スプライトのグラフィックスデータを設定します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#setSpriteImage">setSpriteImage</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param spriteID 対象スプライトのID
+ * @param graphicsID グラフィックスデータのID
+ */
+macro setSpriteGraphics( int spriteID, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( spriteID, graphicsID );
+}
+
+
+
+
+
+
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newLayer(){
+  return -1;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void deleteLayer( int spriteID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeLayer( spriteID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void mountLayer( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void addLayer( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void demountLayer( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void removeLayer( int spriteID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
+}
+
+
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerDepth( int spriteID, double vertex_z ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerZ( spriteID, vertex_z );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerLocation( int spriteID, int vertex_x, int vertex_y ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( spriteID, vertex_x, vertex_y );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerSize( int spriteID, int width, int height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( spriteID, width, height );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerClipping( int spriteID, int clip_x, int clip_y, int clip_width, int clip_height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerClipping( spriteID, clip_x, clip_y, clip_width, clip_height );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerColor( int spriteID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerColor( spriteID, red, green, blue, alpha );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerFill( int spriteID, bool fillState ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( spriteID, fillState );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerText( int spriteID, string textString ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerText( spriteID, textString );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setLayerGraphics( int spriteID, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( spriteID, graphicsID );
+}
+
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setLayerFont( int spriteID, string name ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFont( spriteID, name );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setLayerFontSize( int spriteID, int size ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontSize( spriteID, size );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setLayerFontBold( int spriteID, bool b ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontBold( spriteID, b );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setLayerFontItalic( int spriteID, bool b ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontItalic( spriteID, b );
+}
+
+
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newOvalLayer( int x, int y, int width, int height, bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createEllipseLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newRectLayer( int x, int y, int width, int height, bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createRectangleLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newLineLayer( int x1, int y1, int x2, int y2 ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineLayer();
+  int x[2];
+  int y[2];
+  x[0] = x1;
+  y[0] = y1;
+  x[1] = x2;
+  y[1] = y2;
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerVector( index, x, y );
+  return index;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newPolylineLayer( int x[], int y[] ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolylineLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerVector( index, x, y );
+  return index;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newPolygonLayer( int x[], int y[], bool fill ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolygonLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerVector( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( index, fill );
+  return index;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newGraphicsLayer( int x, int y, int width, int height, int graphicsID ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( index, graphicsID );
+  return index;
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+int newTextLayer( int x, int y, int width, int height, string text ){
+  int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextLayer();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( index, x, y );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( index, width, height );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerText( index, text );
+  return index;
+}
+
+
+
+
+
+
+
+
+

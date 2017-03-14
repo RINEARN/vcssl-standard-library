@@ -1,0 +1,439 @@
+
+/**
+ * <p>
+ * VCSSL File ライブラリ は、ファイルパスの取得や、ディレクトリ内のファイル名リスト取得など、ファイルに関する各種機能を提供する標準ライブラリです。
+ * <br />
+ * ただし、このライブラリではファイルI/Oは扱いません。ファイルI/Oについては、<a href="System.html">System</a> ライブラリや <a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_FILE_*" }
+#     INTERFACE     { "GPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.FileProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.FileProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/** 絶対パスを意味する設定値です。 */
+public const int ABSOLUTE = 2;
+
+/** 相対パスを意味する設定値です。 */
+public const int RELATIVE = 1;
+
+/** 親階層を意味する設定値です。 */
+public const int PARENT = 3;
+
+/** ホームディレクトリを意味する設定値です。 */
+public const int HOME = 4;
+
+/** ルートディレクトリを意味する設定値です。 */
+public const int ROOT = 5;
+
+
+public const int RUNTIME_HOME = 6;
+
+
+/** 特に整列されていないファイル順序を意味する設定値です。 */
+public const int UNORDERED = 20;
+
+/** 辞書順に整列されたファイル順序を意味する設定値です。 */
+public const int LEXICAL = 21;
+
+
+/** エラーメッセージ、ファイルが見つからなかった場合。 */
+private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+
+/** 警告メッセージ、ファイルが見つからなかった場合。 */
+private const string WARNING_FILE_NOT_FOUND = "このプログラムは、存在しないファイルに対して操作を行おうとしています。この操作は実行できません。" + EOL + "ただし、過去のプログラムに対して互換性を維持するため、この操作をスキップし、処理を続行する事ができます。" + EOL + "処理を続行しますか ? (「いいえ」を選択するとエラーを出力して停止)";
+
+private bool skipFileNotFound = false;
+
+
+/**
+ * ファイルが存在しなかった場合、警告を表示し、続行するかどうかをユーザーに尋ねます。
+ * 
+ * @return 続行する場合は true、停止する場合は false
+ */
+private bool warnFileNotFound(string pathOrName) {
+  if ((bool)(___exists(pathOrName)[0])) {
+    return true;
+  }
+  if (skipFileNotFound) {
+    return true;
+  }
+  if ((bool)(___confirm(WARNING_FILE_NOT_FOUND))) {
+    skipFileNotFound = true;
+    return true;
+  }
+  error(ERROR_FILE_NOT_FOUND + pathOrName);
+  exit();
+}
+
+
+/**
+ * ファイルがディレクトリであるかどうかを判定します。
+ *
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @return ディレクトリであれば true 、そうでなければ false。
+ */
+bool isDirectory( string pathOrName ){
+  return System.isdir( pathOrName );
+}
+
+
+/**
+ * ディレクトリを新規作成します。
+ *
+ * @param pathOrName 作成するディレクトリの名称またはパス。
+ */
+void makeDirectory( string pathOrName ){
+  System.mkdir( pathOrName );
+}
+
+
+/**
+ * 指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の順序は特に整列されず、環境や処理系に依存します。
+ *
+ * @param pathOrName 対象ディレクトリの名称またはパス。
+ * @return ディレクトリ直下にあるファイル名の一覧。
+ */
+string[] listDirectory( string pathOrName ){
+  warnFileNotFound(pathOrName);
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileList( pathOrName );
+}
+
+
+/**
+ * 指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の整列オプションを指定できます。
+ *
+ * @param pathOrName 対象ディレクトリの名称またはパス。
+ * @param sortByIgnoreCase 整列時に大文字/小文字を区別するかどうか。true なら無視されます。
+ * @param sortOption 整列オプション。<a href="#UNORDERED">UNORDERED</a> または <a href="#LEXICAL">LEXICAL</a> を指定します。
+ * @return ディレクトリ直下にあるファイル名の一覧。
+ */
+string[] listDirectory( string pathOrName, bool sortByIgnoreCase, int sortOption ){
+  warnFileNotFound(pathOrName);
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileList( pathOrName, sortByIgnoreCase, sortOption );
+}
+
+
+/**
+ * ファイルを新規作成します。
+ *
+ * @param pathOrName 作成するファイルの名称またはパス。
+ */
+void makeFile( string pathOrName ){
+  SYSTEM_PROCESS_DRIVER_FILE_makeFile( pathOrName );
+}
+
+
+/**
+ * ファイルパスから、ファイル名の部分を取得します。
+ *
+ * @param path 対象ファイルのパス。
+ * @return ファイル名
+ */
+string getFileName( string path ){
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileName( path );
+}
+
+
+/**
+ * ファイルを削除します。
+ * <br />対象がディレクトリの場合、中身が空でなければ削除できないため、先に中身を削除する必要があります。
+ *
+ * @param path 対象ファイルの名称またはパス。
+ */
+void removeFile( string pathOrName ){
+  warnFileNotFound(pathOrName);
+  SYSTEM_PROCESS_DRIVER_FILE_removeFile( pathOrName );
+}
+
+
+/**
+ * ファイルの移動や、ファイル名の変更を行います。
+ * 引数が、共にファイル名のみの場合や、共に同じディレクトリ内のファイルパスである場合には、
+ * 処理内容はファイル名の変更になります。引数が、互いに異なるディレクトリ内のファイルパスである場合には、処理内容はファイルの移動になります。
+ * ファイルは移動されます。ドライブをまたぐ移動はできない場合があります。
+ *
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @param newName 変更後の名称またはパス。
+ */
+void moveFile( string pathOrName, string newName ){
+  warnFileNotFound(pathOrName);
+  SYSTEM_PROCESS_DRIVER_FILE_moveFile( pathOrName, newName );
+}
+
+/**
+ * ファイル名を変更します。変更先にファイル名ではなくパスを指定した場合、
+ * ファイルは移動されます。ただし環境によっては、ドライブをまたぐ移動はできない場合があります。
+ * <br />
+ * <div style="font-weight:bold;">
+ * ※ このAPIの使用は推奨されません。このAPIの動作は処理系やバージョンに依存します。VCSSL 3.3 以降では、代わりに同機能の <a href="#moveFile">moveFile</a> を使用してください。
+ * やむを得ずこの API を使用する必要があり、依存性を回避したい場合には、変更後のファイルパス newPath を絶対パスで指定してください。相対パスやファイル名のみを指定した場合の挙動は、処理系やバージョンに依存します。
+ * 現在の標準VCSSLランタイムでは、newPath にファイル名や相対パスを指定した場合、実行プログラムの場所を基準とするものと解釈されますが、VCSSL 3.2 以前の古いバージョンなどでは、処理系の場所を基準として解釈される場合があります。
+ * 絶対パスを指定すればバージョンへの依存性を回避できます。 
+ * 例えば、renameFile("Test1.txt", "Test2.txt"); と記述した場合、現在の標準VCSSLランタイムでは、同じディレクトリ内で Test1.txt のファイルが Test2.txt に名称変更されます。しかし古いバージョンでは、"Test2.txt" は処理系からみた相対パスと解釈されるため、ファイルは処理系のディレクトリ（ VCSSL.jar のある場所 ）に移動されます。古いバージョンにおいても、同じディレクトリ内における名称変更を行いたい場合は、 renameFile("hoge1.txt", getFilePath("hoge2.txt", getFilePath(".")) ); などと記述します。
+ * </div>
+ *
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @param newName 変更後の名称またはパス。古いバージョンや処理系への依存性を回避するため、絶対パスでの指定が推奨されます。
+ */
+void renameFile( string pathOrName, string newName ){
+  warnFileNotFound(pathOrName);
+  SYSTEM_PROCESS_DRIVER_FILE_renameFile( pathOrName, newName );
+}
+
+
+/**
+ * ファイルをコピーします。
+ *
+ * @param pathOrName コピー元ファイルの名称またはパス。
+ * @param newName コピー先ファイルの名称またはパス。
+ */
+void copyFile( string inputPath, string outputPath ){
+  warnFileNotFound(inputPath);
+  SYSTEM_PROCESS_DRIVER_FILE_copyFile( inputPath, outputPath );
+}
+
+
+/**
+ * ファイル名または相対パスから、絶対パスを取得して返します。
+ *
+ * @param pathOrName 対象ファイルの名称または相対パス。
+ * @param newName 対象ファイルの絶対パス。
+ */
+string getFilePath( string pathOrName ){
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName );
+}
+
+
+/**
+ * ファイル名またはパスから、絶対パスまたは相対パス、もしくは親階層パスを取得して返します。
+ *
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @param type 取得するパスの種類。<a href="#ABSOLUTE">ABSOLUTE</a> または <a href="#RELATIVE">RELATIVE</a> もしくは <a href="#PARENT">PARENT</a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。
+ * @return 対象ファイルのパス。パスの種類は引数 type で指定します。
+ */
+string getFilePath( string pathOrName, int type ){
+  if(type == RELATIVE){
+    return SYSTEM_PROCESS_DRIVER_FILE_getFileRelativePath( pathOrName );
+  }else if(type == ABSOLUTE){
+    return SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName );
+  }else if(type == PARENT){
+    /* string target = SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName ); */
+    string target = SYSTEM_PROCESS_DRIVER_FILE_getFileRelativePath( pathOrName );
+    string parent = SYSTEM_PROCESS_DRIVER_FILE_getParentDirectory( target );
+    /* string path = SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath(parent); */
+    /* return path; */
+    return parent;
+  }else{
+    error("Unknown path type: " + type);
+    return NULL;
+  }
+}
+
+
+
+/**
+ * 指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスに変換取得して返します。
+ *
+ * @param pathOrName 基準ディレクトリから見た、対象ファイルの名称または相対パス。
+ * @param directory 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。
+ * @param newName 対象ファイルの絶対パス。
+ */
+ string getFilePath( string pathOrName, string directory ){
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName, directory );
+}
+
+
+/**
+ * 指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスまたは（実行プログラム基準の）相対パス、もしくは（実行プログラム基準の）親階層パスに変換して返します。
+ *
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @param directory 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。
+ * @param type 取得するパスの種類。<a href="#ABSOLUTE">ABSOLUTE</a> または <a href="#RELATIVE">RELATIVE</a> もしくは <a href="#PARENT">PARENT</a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。
+ * @return 対象ファイルのパス。パスの種類は引数 type で指定します。
+ */
+string getFilePath( string pathOrName, string directory, int type ){
+  if(type == RELATIVE){
+    return SYSTEM_PROCESS_DRIVER_FILE_getFileRelativePath( pathOrName, directory );
+  }else if(type == ABSOLUTE){
+    return SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName, directory );
+  }else if(type == PARENT){
+    /* string target = SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName, directory ); */
+    string target = SYSTEM_PROCESS_DRIVER_FILE_getFileRelativePath( pathOrName, directory );
+    string parent = SYSTEM_PROCESS_DRIVER_FILE_getParentDirectory( target );
+    /* string path = SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath(parent); */
+    /* return path; */
+    return parent;
+  }else{
+    error("Unknown path type: " + type);
+    return NULL;
+  }
+}
+
+
+
+
+/**
+ * 実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。
+ *
+ * @param target 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> を指定します。それぞれルートディレクトリ、ホームディレクトリを意味します。
+ * @return 特別な場所のパス。場所は引数 target で指定します。target に <a href="#ROOT">ROOT</a> を取得した場合の挙動はオペレーティングシステムに依存します。単一のルートが存在しないオペレーティングシステムでは、恐らくドライブ名が配列で返されます。
+ */
+string[] getFilePath( int target ){
+	string path[1];
+	path[0] = NULL;
+	if(target == RUNTIME_HOME){
+		path[0] = SYSTEM_PROCESS_DRIVER_FILE_getCurrentDirectory();
+	}else if(target == HOME){
+		path[0] = SYSTEM_PROCESS_DRIVER_FILE_getHomeDirectory();
+	}else if(target == ROOT){
+		path = SYSTEM_PROCESS_DRIVER_FILE_getRootDirectory();
+	/*
+	}else if(target == LIBRARY){
+		path = SYSTEM_PROCESS_DRIVER_FILE_getLibraryDirectory();
+	*/
+	}else{
+		error("Unknown path: " + target);
+	}
+	return path;
+}
+
+
+
+
+
+
+
+
+
+
+string getCurrentDirectory(){
+  return SYSTEM_PROCESS_DRIVER_FILE_getCurrentDirectory();
+}
+
+
+/**
+ * 実行プログラムがあるディレクトリのパスを返します。
+ * <br />
+ * 現在は <a href="#getFilePath">getFilePath</a>(".") で取得できます。この関数は互換目的でサポートされています。
+ *
+ * @return 実行プログラムがあるディレクトリのパス。
+ */
+string getMainDirectory(){
+  return SYSTEM_PROCESS_DRIVER_FILE_getMainDirectory();
+}
+
+
+/**
+ * ホームディレクトリのパスを返します。
+ * <br />
+ * 現在は <a href="#getFilePath">getFilePath</a>( <a href="#HOME">HOME</a> ) で取得できます。この関数は互換目的でサポートされています。
+ *
+ * @return ホームディレクトリのパス。
+ */
+string getHomeDirectory(){
+  return SYSTEM_PROCESS_DRIVER_FILE_getHomeDirectory();
+}
+
+
+/**
+ * ルートディレクトリのパスを返します。
+ * <br />
+ * 現在は <a href="#getFilePath">getFilePath</a>( <a href="#ROOT">ROOT</a> ) で取得できます。この関数は互換目的でサポートされています。
+ *
+ * @return ルートディレクトリのパス。
+ */
+string[] getRootDirectory(){
+  return SYSTEM_PROCESS_DRIVER_FILE_getRootDirectory();
+}
+
+/*
+string[] getLibraryDirectory(){
+  return SYSTEM_PROCESS_DRIVER_FILE_getLibraryDirectory();
+}
+*/
+
+
+
+
+
+
+/**
+ * 親階層のパスを返します。
+ * <br />
+ * 現在は <a href="#getFilePath">getFilePath</a>( pathOrName, <a href="#PARENT">PARENT</a> ) で取得できます。この関数は互換目的でサポートされています。
+ *
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @return 親階層のパス。
+ */
+string getParentDirectory( string pathOrName ){
+  return SYSTEM_PROCESS_DRIVER_FILE_getParentDirectory( pathOrName );
+}
+
+string getFileRelativePath( string pathOrName ){
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileRelativePath( pathOrName );
+}
+
+/**
+ * 指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。
+ * <br />
+ * 現在は <a href="#getFilePath">getFilePath</a>( pathOrName, directory, <a href="#RELATIVE">RELARIVE</a> ) で取得できます。この関数は互換目的でサポートされています。
+ *
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @param directory 基準ディレクトリのパス。
+ * @return 親階層のパス。
+ */
+string getFileRelativePath( string pathOrName, string directory ){
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileRelativePath( pathOrName, directory );
+}
+
+
+
+
+
+
+/**
+ * 指定ディレクトリ直下のファイル名一覧を取得します。
+ * <br />
+ * 現在は <a href="#getFilePath">listFile</a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。
+ * <br />
+ * この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href="#getFilePath">listFile</a>( pathOrName ) は整列オプションを指定できます。
+ *
+ * @param pathOrName 対象ディレクトリの名称またはパス。
+ * @return 指定ディレクトリ直下のファイル名一覧（順序は環境依存）
+ */
+string[] getFileList( string pathOrName ){
+  return SYSTEM_PROCESS_DRIVER_FILE_getFileList( pathOrName );
+}
+
+
+

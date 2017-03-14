@@ -1,0 +1,190 @@
+/**
+ * <p>
+ * VCSSL Sound ライブラリ は、サウンドを扱う標準ライブラリです。
+ * </p>
+ * 
+ * <p>
+ * VCSSL におけるサウンド再生の基本的な流れは、以下の通りです。
+ * </p>
+ * 
+ * <p>
+ * まず、<a href="#newSound">newSound</a> 関数でファイルからサウンドデータを読み込みます。
+ * 現在VCSSL で利用可能なサウンド形式としては、WAVE 形式（ 拡張子 .wav ）のみがサポートされています。
+ * </p>
+ * 
+ * <p>
+ * 続いて、<a href="#setSoundGain">setSoundGain</a> 関数で音量を設定した後、
+ * <a href="#startSound">startSound</a> 関数で再生を開始します。
+ * サウンドの再生は、VCSSLプログラムの実行とは非同期で行われます。
+ * つまり、サウンドの再生終了を待つことなく、VCSSL の処理も引き続き実行されていきます。
+ * これは複数のサウンドを再生する場合も同様で、サウンドは互いの終了を待つ事なく、非同期に再生されます。
+ * </p>
+ * 
+ * <p>
+ * サウンドの再生が終了すると、<a href="#onSoundEnd">onSoundEnd</a> イベントハンドラがコールされます。
+ * サウンドをリピート再生したい場合は、ここで <a href="#setSoundFrame">setSoundFrame</a>
+ * 関数にフレーム値 0 を指定してサウンドを巻き戻し、再び <a href="#startSound">startSound</a> 関数で再生します。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_SOUND_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.SoundProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.SoundProcessLibrary" }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+/** エラーメッセージ、ファイルが見つからなかった場合。 */
+private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+
+
+
+/**
+ * サウンドファイルを読み込んでサウンドデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ *
+ * @param filePath 読み込むサウンドファイルの名称またはパス（現時点でWAV形式のみ対応）
+ * @return 生成したサウンドデータに割り振られたサウンドデータID（識別番号）
+ */
+int newSound(string filePath){
+	bool exist = ___exists(filePath);
+	if(!exist){
+		error(ERROR_FILE_NOT_FOUND + filePath);
+		exit();
+	}
+	
+	return SYSTEM_PROCESS_DRIVER_SOUND_newSound(filePath);
+}
+
+
+/**
+ * サウンドデータを破棄します。
+ *
+ * @param soundID 対象サウンドデータのID
+ */
+void deleteSound(int soundID){
+	SYSTEM_PROCESS_DRIVER_SOUND_deleteSound(soundID);
+}
+
+
+/**
+ * サウンドの再生を開始します。
+ *
+ * @param soundID 対象サウンドデータのID
+ */
+void startSound(int soundID){
+	SYSTEM_PROCESS_DRIVER_SOUND_startSound(soundID);
+}
+
+
+/**
+ * サウンドの再生を一時停止します。
+ *
+ * @param soundID 対象サウンドデータのID
+ */
+void stopSound(int soundID){
+	SYSTEM_PROCESS_DRIVER_SOUND_stopSound(soundID);
+}
+
+
+/**
+ * サウンドの音量ゲインを設定します。
+ *
+ * @param soundID 対象サウンドデータのID
+ * @param gain 音量ゲイン。
+ */
+void setSoundGain(int soundID, float gain){
+	SYSTEM_PROCESS_DRIVER_SOUND_setSoundVolumeGain(soundID, gain);
+}
+
+
+/**
+ * サウンドの再生位置をフレーム単位で設定します。
+ *
+ * @param soundID 対象サウンドデータのID
+ * @param gain 再生位置フレーム
+ */
+void setSoundFrame(int soundID, int frame){
+	SYSTEM_PROCESS_DRIVER_SOUND_setSoundFrame(soundID, frame);
+}
+
+
+/**
+ * サウンドの再生位置をフレーム単位で取得します。
+ *
+ * @param soundID 対象サウンドデータのID
+ * @return 現在の再生位置フレーム
+ */
+int getSoundFrame(int soundID){
+	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundFrame(soundID);
+}
+
+/**
+ * サウンドの長さをフレーム数単位で取得します。
+ *
+ * @param soundID 対象サウンドデータのID
+ * @return 総フレーム数
+ */
+int getSoundFrameLength(int soundID){
+	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundFrameLength(soundID);
+}
+
+
+/**
+ * サウンドの再生位置を時間単位（ミリ秒）で設定します。
+ *
+ * @param soundID 対象サウンドデータのID
+ * @param milliSec 再生位置時間（ミリ秒）
+ */
+void setSoundTime(int soundID, int milliSec){
+	int frame = getSoundFrameLength(soundID) * ( (double)milliSec / getSoundTimeLength(soundID) );
+	setSoundFrame(soundID, frame);
+}
+
+
+/**
+ * サウンドの再生位置を時間単位（ミリ秒）で取得します。
+ *
+ * @param soundID 対象サウンドデータのID
+ * @return 再生位置時間（ミリ秒）
+ */
+int getSoundTime(int soundID){
+	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundTime(soundID);
+}
+
+
+/**
+ * サウンドの長さを時間単位（ミリ秒）で取得します。
+ *
+ * @param soundID 対象サウンドデータのID
+ * @return 総ミリ秒数
+ */
+int getSoundTimeLength(int soundID){
+	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundTimeLength(soundID);
+}
+

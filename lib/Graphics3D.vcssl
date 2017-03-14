@@ -1,0 +1,5251 @@
+/**
+ * <p>
+ * VCSSL Graphics3D ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つであり、
+ * アニメーション対応の3次元コンピュータグラフィックス（3DCG）描画機能を提供します。
+ * </p>
+ * 
+ * <p>
+ * Graphics3Dライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。
+ * 具体的な使用方法については、「 VCSSL公式開発ガイド 」をご参照ください。
+ * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
+ */
+
+
+
+/*
+# ====================================================================================================
+# 
+# PRAGMA COMPILE    DYNAMIC_REFERRED
+# PRAGMA COMPILE    STATIC_REFERRED
+# PRAGMA RESERVE    NOT_REFERRED
+# 
+# PRAGMA INTERNAL   RINEARN  {
+#     
+#     MAINSTREAM    { "R4***",    "OR_LATER" }
+#     COMPATIBLE    { "R3***",    "R2***"    }
+#     
+#     SYSTEMCALL    { "SYSTEM_PROCESS_DRIVER_GRAPHICS_*" }
+#     INTERFACE     { "GPCI",     "DPCI" }
+#     
+#     CONNECT       { "ONLOAD",   "STATIC",   "rxvesapi.process.driver.Graphics3DProcessDriver"   }
+#     ARCHIVE       { "ONBUILD",  "STATIC",   "rxvesapi.process.library.Graphics3DProcessLibrary" }
+#     REQUIRE       { "ONBUILD",  "STATIC",   "rxvesapi.system3d.renderer.*"                      }
+#     REQUIRE       { "ONBUILD",  "STATIC",   "rxvesapi.system3d.model.*"                         }
+#     REQUIRE       { "ONBUILD",  "STATIC",   "rxvesapi.system3d.geometry.*"                      }
+#     
+# }
+# 
+# PRAGMA INTERNAL   END
+# PRAGMA END
+# 
+# ====================================================================================================
+*/
+
+
+
+
+/** 四角形ポリゴン集合の座標値を素直に配列化した座標値配列形式です。<a href="#newModel">newModel</a> 関数などで使用します。 */
+const int QUADRANGLE_LIST = 400;
+
+/** 面状に並ぶ四角形ポリゴンにおいて、格子点の座標値を配列化した座標値配列形式です。<a href="#newModel">newModel</a> 関数などで使用します。 */
+const int QUADRANGLE_GRID = 401;
+
+/** 三角形ポリゴン集合の座標値を素直に配列化した座標値配列形式です。<a href="#newModel">newModel</a> 関数などで使用します。 */
+const int TRIANGLE_LIST = 300;
+
+/** 扇状に並ぶ三角形ポリゴンにおいて、中心と弧の座標値を配列化した座標値配列形式です。<a href="#newModel">newModel</a> 関数などで使用します。 */
+const int TRIANGLE_FAN = 302;
+
+/** 連なって並列する三角形ポリゴンにおいて、隣接三角形が頂点を共有する座標値配列形式です。<a href="#newModel">newModel</a> 関数などで使用します。 */
+const int TRIANGLE_STRIP = 301;
+
+
+// これらの定数は、互換性維持のためにしばらく置いていますが、将来的には削除が検討される可能性があります。
+const int VERTEX_QUADRANGLE_LIST = 400;
+const int VERTEX_QUADRANGLE_GRID = 401;
+const int VERTEX_TRIANGLE_LIST = 300;
+const int VERTEX_TRIANGLE_STRIP = 301;
+const int VERTEX_TRIANGLE_FAN = 302;
+
+
+
+
+/**
+ * 3DCGレンダラーを生成し、固有の識別番号（ レンダラーID ）を割り振って返します。
+ * 
+ * @param width 描画領域の幅
+ * @param height 描画領域の高さ
+ * @param graphicsID 使用するグラフィックスリソースのID
+ * @return レンダラーID
+ */
+int newGraphics3DRenderer( int width, int height, int graphicsID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine3D( graphicsID, width, height );
+}
+
+/**
+ * 2DCGレンダラーを破棄します。
+ * 
+ * @param rendererID 破棄するレンダラーのID
+ */
+void deleteGraphics3DRenderer( int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine3D( rendererID );
+}
+
+
+
+/**
+ * 3DCGを描画します。
+ * 
+ * @param rendererID レンダラーID
+ */
+macro paintGraphics3D( int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_repaintGraphics3D( rendererID );
+}
+
+
+/**
+ * 描画内容を背景色でクリアし、必要であれば全ての立体（ モデル及びポリゴン ）、光源、座標系を配置解除します。
+ * 
+ * @param rendererID レンダラーID
+ */
+macro clearGraphics3D( int rendererID, bool removeModel, bool removeLight, bool removeCoordinate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS3D_clearGraphics3D(
+    rendererID,
+    getWorldCoordinate(rendererID),
+    getViewCoordinate(rendererID),
+	removeModel,
+	removeLight,
+	removeCoordinate
+  );
+}
+
+
+/**
+ * 描画倍率を設定します。視点から 1.0 の距離にある、長さ 1.0 の直線が、magnification ピクセルの長さになるように描画されます。 
+ * <a href="#setGraphics3DDistance">setGraphics3DDistance</a> 関数と組み合わせる事で、遠近感の強弱を調整する事もできます。近くのものを縮小して表示すると、遠近感が強調されます。遠くの物を拡大して表示すると、遠近感が弱まります。
+ * 
+ * @param rendererID レンダラーID
+ * @param magnification 描画倍率
+ */
+void setGraphics3DMagnification( int rendererID, float magnification ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setScreenMagnification( rendererID, magnification );
+}
+
+/**
+ * 画角を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 画角
+ */
+void setGraphics3DAngle( int rendererID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setScreenPerspectiveAngle( rendererID, angle );
+}
+
+/**
+ * 画面と注視点との間の距離を設定します。この関数をコールすると、ワールド座標系の原点が、必ずビュー座標系のZ軸上にあるように配置調整されます。そして、ワールド座標系とビュー座標系との原点間距離が、引数 distance に指定された値となります。
+ * <a href="#setGraphics3DMagnification">setGraphics3DMagnification</a> 関数と組み合わせる事で、遠近感の強弱を調整する事もできます。近くのものを縮小して表示すると、遠近感が強調されます。遠くの物を拡大して表示すると、遠近感が弱まります。
+ * 
+ * @param rendererID レンダラーID
+ * @param distance カメラ距離
+ */
+void setGraphics3DDistance( int rendererID, float distance ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setScreenDistance( rendererID, distance );
+}
+
+/**
+ * 描画中心座標を設定します。ここでの描画中心座標とは、画面上において、ビュー座標系の原点と一致する位置であり、「絵」としてはいわゆる「（一点透視法の）消失点」の位置です。
+ * 例えば、カメラアングルが同じでも、画面中心を下寄り ( 小さめのY座標 ) に設定すると、空が多めに映ります。逆に上寄り（ 大きめのY座標 ）に設定すると、地面が多めに映ります。
+ * 
+ * @param rendererID レンダラーID
+ * @param x 中心のX座標（ 描画領域左下頂点が 0 ）
+ * @param y 中心のY座標（ 描画領域左下頂点が 0 ）
+ */
+void setGraphics3DCenter( int rendererID, int x, int y ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setScreenCenter( rendererID, x, y );
+}
+
+
+
+/**
+ * 遠近クリップを設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param frontClipZ 近距離クリップZ座標
+ * @param backClipZ 遠距離クリップZ座標
+ */
+void setGraphics3DClip( int rendererID, float frontClipZ, float backClipZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS3D_setGraphics3DFrontClip( rendererID, frontClipZ );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS3D_setGraphics3DBackClip( rendererID, backClipZ );
+}
+
+macro setGraphics3DClipFront( int rendererID, float clipZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS3D_setGraphics3DFrontClip( rendererID, clipZ );
+}
+macro setGraphics3DClipBack( int rendererID, float clipZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS3D_setGraphics3DBackClip( rendererID, clipZ );
+}
+
+macro setGraphics3DFrontClip( int rendererID, float clipZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS3D_setGraphics3DFrontClip( rendererID, clipZ );
+}
+macro setGraphics3DBackClip( int rendererID, float clipZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS3D_setGraphics3DBackClip( rendererID, clipZ );
+}
+
+
+
+/**
+ * 背景色を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param red 赤色成分（ 0 - 255 ）
+ * @param green 緑色成分（ 0 - 255 ）
+ * @param blue 青色成分（ 0 - 255 ）
+ * @param alpha α値成分（ 0 - 255 ）
+ */
+void setGraphics3DColor( int rendererID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setScreenColor( rendererID, red, green, blue, alpha );
+}
+
+/**
+ * 背景色を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+void setGraphics3DColor( int rendererID, int rgba[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setScreenColor( rendererID, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+
+
+/**
+ * 描画領域の大きさを設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param width 幅
+ * @param height 高さ
+ */
+void setGraphics3DSize( int rendererID, int width, int height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsSize3D( rendererID, width, height );
+}
+
+
+/**
+ * 指定された画面表示用GUIコンポーネントに対するマウス/キー操作を、3DCG映像の直感的な操作に関連付ける、デフォルトのイベントハンドラを自動生成します。
+ * 
+ * @param rendererID レンダラーID
+ * @param componentID ベントを関連付けるGUIコンポーネントのID
+ */
+void setGraphics3DDefaultEventHandler( int rendererID, int componentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphics3DEventSource( rendererID, componentID );
+}
+
+void setGraphics3DDefaultEventSource( int rendererID, int componentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphics3DEventSource( rendererID, componentID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 四角形ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param ax 頂点AのX座標
+ * @param ay 頂点AのY座標
+ * @param az 頂点AのZ座標
+ * @param bx 頂点BのX座標
+ * @param by 頂点BのY座標
+ * @param bz 頂点BのZ座標
+ * @param cx 頂点CのX座標
+ * @param cy 頂点CのY座標
+ * @param cz 頂点CのZ座標
+ * @param dx 頂点DのX座標
+ * @param dy 頂点DのY座標
+ * @param dz 頂点DのZ座標
+ * @return 生成したポリゴンのID
+ */
+int newQuadranglePolygon( float ax, float ay, float az, float bx, float by, float bz, float cx, float cy, float cz, float dx, float dy, float dz ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createQuadrangleElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az, bx, by, bz, cx, cy, cz, dx, dy, dz );
+  return id;
+}
+
+/**
+ * 四角形ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param aVectorID 頂点AのベクトルID
+ * @param bVectorID 頂点BのベクトルID
+ * @param cVectorID 頂点CのベクトルID
+ * @param dVectorID 頂点DのベクトルID
+ * @return 生成したポリゴンのID
+ */
+int newQuadranglePolygon( int aVectorID, int bVectorID, int cVectorID, int dVectorID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createQuadrangleElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, aVectorID, bVectorID, cVectorID, dVectorID );
+  return id;
+}
+
+
+
+
+/**
+ * 三角形ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param ax 頂点AのX座標
+ * @param ay 頂点AのY座標
+ * @param az 頂点AのZ座標
+ * @param bx 頂点BのX座標
+ * @param by 頂点BのY座標
+ * @param bz 頂点BのZ座標
+ * @param cx 頂点CのX座標
+ * @param cy 頂点CのY座標
+ * @param cz 頂点CのZ座標
+ * @return 生成したポリゴンのID
+ */
+int newTrianglePolygon( float ax, float ay, float az, float bx, float by, float bz, float cx, float cy, float cz ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTriangleElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az, bx, by, bz, cx, cy, cz );
+  return id;
+}
+
+/**
+ * 三角形ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param aVectorID 頂点AのベクトルID
+ * @param bVectorID 頂点BのベクトルID
+ * @param cVectorID 頂点CのベクトルID
+ * @return 生成したポリゴンのID
+ */
+int newTrianglePolygon( int aVectorID, int bVectorID, int cVectorID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTriangleElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, aVectorID, bVectorID, cVectorID );
+  return id;
+}
+
+
+
+/**
+ * 線ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param ax 頂点AのX座標
+ * @param ay 頂点AのY座標
+ * @param az 頂点AのZ座標
+ * @param bx 頂点BのX座標
+ * @param by 頂点BのY座標
+ * @param bz 頂点BのZ座標
+ * @return 生成したポリゴンのID
+ */
+int newLinePolygon( float ax, float ay, float az, float bx, float by, float bz ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az, bx, by, bz );
+  return id;
+}
+
+/**
+ * 線ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param ax 頂点AのX座標
+ * @param ay 頂点AのY座標
+ * @param az 頂点AのZ座標
+ * @param bx 頂点BのX座標
+ * @param by 頂点BのY座標
+ * @param bz 頂点BのZ座標
+ * @param width 線の太さ
+ * @return 生成したポリゴンのID
+ */
+int newLinePolygon( float ax, float ay, float az, float bx, float by, float bz, float width ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az, bx, by, bz );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, width );
+  return id;
+}
+
+/**
+ * 線ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param aVectorID 頂点AのベクトルID
+ * @param bVectorID 頂点BのベクトルID
+ * @return 生成したポリゴンのID
+ */
+int newLinePolygon( int aVectorID, int bVectorID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, aVectorID, bVectorID );
+  return id;
+}
+
+/**
+ * 線ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param aVectorID 頂点AのベクトルID
+ * @param bVectorID 頂点BのベクトルID
+ * @param width 線の太さ
+ * @return 生成したポリゴンのID
+ */
+int newLinePolygon( int aVectorID, int bVectorID, float width ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, aVectorID, bVectorID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, width );
+  return id;
+}
+
+/**
+ * 点ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param ax 頂点AのX座標
+ * @param ay 頂点AのY座標
+ * @param az 頂点AのZ座標
+ * @param size 点の半径
+ * @return 生成したポリゴンのID
+ */
+int newPointPolygon( float ax, float ay, float az, float size ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPointElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, size );
+  return id;
+}
+
+/**
+ * 点ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param vectorID 頂点AのベクトルID
+ * @param size 点の半径
+ * @return 生成したポリゴンのID
+ */
+int newPointPolygon( int vectorID, float size ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPointElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, vectorID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, size );
+  return id;
+}
+
+
+/**
+ * テキストポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param ax テキスト描画始点のX座標
+ * @param ay テキスト描画始点のY座標
+ * @param az テキスト描画始点のZ座標
+ * @param size 大きさ
+ * @param text テキスト内容
+ * @return 生成したポリゴンのID
+ */
+int newTextPolygon( float ax, float ay, float az, float size, string text ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DText( id, text );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, size );
+  return id;
+}
+
+/**
+ * テキストポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param vectorID テキスト描画開始点のベクトルID
+ * @param size 大きさ
+ * @param text テキスト内容
+ * @return 生成したポリゴンのID
+ */
+int newTextPolygon( int vectorID, float size, string text ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, vectorID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DText( id, text );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, size );
+  return id;
+}
+
+
+/**
+ * 画像ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param ax X座標
+ * @param ay Y座標
+ * @param az Z座標
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ * @return 生成したポリゴンのID
+ */
+int newImagePolygon( float ax, float ay, float az, float width, float height, int graphicsID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createImageElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DImage( id, graphicsID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, width, height );
+  return id;
+}
+
+/**
+ * 画像ポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param vectorID 描画開始点のベクトルID
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ * @return 生成したポリゴンのID
+ */
+int newImagePolygon( int vectorID, float width, float height, int graphicsID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createImageElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, vectorID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DImage( id, graphicsID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, width, height );
+  return id;
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * 既存ポリゴンのコピーを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * 
+ * @param copyID コピーするポリゴンのID
+ * @return 生成したポリゴンのID
+ */
+int newPolygon( int copyID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_copyElement3D( copyID );
+}
+
+/**
+ * ポリゴンを破棄します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ */
+void deletePolygon( int polygonID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeElement3D( polygonID );
+}
+
+/**
+ * ポリゴンをワールド座標系上に配置登録します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ */
+void mountPolygon( int polygonID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( polygonID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ポリゴンを任意の座標系上に配置登録します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void mountPolygon( int polygonID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( polygonID, rendererID, coordinateID );
+}
+
+/**
+ * ポリゴンをワールド座標系上から配置解除します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ */
+int demountPolygon( int polygonID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( polygonID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ポリゴンを任意の座標系上から配置解除します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int demountPolygon( int polygonID, int rendererID, int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( polygonID, rendererID, coordinateID );
+}
+
+
+
+
+
+
+
+/**
+ * ポリゴンを平行移動させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+macro movePolygon( int polygonID, float deltaX, float deltaY, float deltaZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveElement3D( polygonID, deltaX, deltaY, deltaZ );
+}
+
+/**
+ * ポリゴンを平行移動させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param deltaVector 変位ベクトルのID
+ */
+void movePolygon( int polygonID, int deltaVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveElement3D( polygonID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+/**
+ * ポリゴンをX軸まわりに回転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotPolygonX( int polygonID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXElement3D( polygonID, angle );
+}
+
+/**
+ * ポリゴンをY軸まわりに回転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotPolygonY( int polygonID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYElement3D( polygonID, angle );
+}
+
+/**
+ * ポリゴンをZ軸まわりに回転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotPolygonZ( int polygonID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZElement3D( polygonID, angle );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ポリゴンを回転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+macro rotPolygon( int polygonID, float angle, float vectorX, float vectorY, float vectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( polygonID, angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ポリゴンを回転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void rotPolygon( int polygonID, float angle, int dirVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( polygonID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID)
+  );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ポリゴンを回転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+macro rotPolygon( int polygonID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( polygonID, angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ポリゴンを回転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void rotPolygon( int polygonID, float angle, int dirVectorID, int pointVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( polygonID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID),
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(pointVectorID)
+  );
+}
+
+/**
+ * ポリゴンを拡大または縮小します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rateX X軸方向の拡大率
+ * @param rateY Y軸方向の拡大率
+ * @param rateZ Z軸方向の拡大率
+ */
+macro scalePolygon( int polygonID, float rateX, float rateY, float rateZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_scaleElement3D( polygonID, rateX, rateY, rateZ );
+}
+
+
+/**
+ * ポリゴンの裏表を反転させます。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ */
+void reversePolygon( int polygonID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_reverseElement3D( polygonID );
+}
+
+/**
+ * ポリゴンの頂点座標値を鏡像反転させます。
+ * なお、1つの軸方向に鏡像反転させるごとに、ポリゴンの裏表が反転するため、<a href="#reversePolygon">reversePolygon</a> 関数で面の向きを補正してください。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ */
+void mirrorPolygon( int polygonID, bool mx, bool my, bool mz ){
+  if( mx ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorXElement3D( polygonID );
+  }
+  if( my ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorYElement3D( polygonID );
+  }
+  if( mz ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorZElement3D( polygonID );
+  }
+}
+
+
+
+
+
+
+
+
+/**
+ * ポリゴンの頂点座標値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ */
+macro setPolygonVertex( int polygonID, float vertex_ax, float vertex_ay, float vertex_az ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_ax, vertex_ay, vertex_az );
+}
+
+/**
+ * ポリゴンの頂点座標値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ * @param vertex_bx 頂点BのX座標
+ * @param vertex_by 頂点BのY座標
+ * @param vertex_bz 頂点BのZ座標
+ */
+macro setPolygonVertex( int polygonID, float vertex_ax, float vertex_ay, float vertex_az, float vertex_bx, float vertex_by, float vertex_bz ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_ax, vertex_ay, vertex_az, vertex_bx, vertex_by, vertex_bz );
+}
+
+/**
+ * ポリゴンの頂点座標値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ * @param vertex_bx 頂点BのX座標
+ * @param vertex_by 頂点BのY座標
+ * @param vertex_bz 頂点BのZ座標
+ * @param vertex_cx 頂点CのX座標
+ * @param vertex_cy 頂点CのY座標
+ * @param vertex_cz 頂点CのZ座標
+ */
+macro setPolygonVertex( int polygonID, float vertex_ax, float vertex_ay, float vertex_az, float vertex_bx, float vertex_by, float vertex_bz, float vertex_cx, float vertex_cy, float vertex_cz ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_ax, vertex_ay, vertex_az, vertex_bx, vertex_by, vertex_bz, vertex_cx, vertex_cy, vertex_cz );
+}
+
+/**
+ * ポリゴンの頂点座標値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ * @param vertex_bx 頂点BのX座標
+ * @param vertex_by 頂点BのY座標
+ * @param vertex_bz 頂点BのZ座標
+ * @param vertex_cx 頂点CのX座標
+ * @param vertex_cy 頂点CのY座標
+ * @param vertex_cz 頂点CのZ座標
+ * @param vertex_dx 頂点DのX座標
+ * @param vertex_dy 頂点DのY座標
+ * @param vertex_dz 頂点DのZ座標
+ */
+ macro setPolygonVertex( int polygonID, float vertex_ax, float vertex_ay, float vertex_az, float vertex_bx, float vertex_by, float vertex_bz, float vertex_cx, float vertex_cy, float vertex_cz, float vertex_dx, float vertex_dy, float vertex_dz ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_ax, vertex_ay, vertex_az, vertex_bx, vertex_by, vertex_bz, vertex_cx, vertex_cy, vertex_cz, vertex_dx, vertex_dy, vertex_dz );
+}
+
+/**
+ * ポリゴンの頂点座標値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vertex 頂点座標配列 （ [ 頂点番号 ][ 0:X、1:Y、2:Z ] ）
+ */
+void setPolygonVertex( int polygonID, float vertex[][] ){
+	int n = length(vertex, 0);
+	if(n==1){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex[0][0], vertex[0][1], vertex[0][2] );
+	}else if(n==2){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex[0][0], vertex[0][1], vertex[0][2], vertex[1][0], vertex[1][1], vertex[1][2] );
+	}else if(n==3){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex[0][0], vertex[0][1], vertex[0][2], vertex[1][0], vertex[1][1], vertex[1][2], vertex[2][0], vertex[2][1], vertex[2][2] );
+	}else if(n==4){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex[0][0], vertex[0][1], vertex[0][2], vertex[1][0], vertex[1][1], vertex[1][2], vertex[2][0], vertex[2][1], vertex[2][2], vertex[3][0], vertex[3][1], vertex[3][2] );
+	}
+}
+
+/**
+ * ポリゴンの頂点座標値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vectorID 頂点座標値を格納するベクトルのID配列 （ [ 頂点番号 ] ）
+ */
+void setPolygonVertex( int polygonID, ... int vectorID[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( polygonID, vectorID );
+}
+
+/**
+ * ポリゴンの頂点座標値を取得します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @return 頂点座標配列 （ [ 頂点番号 ][ 0:X、1:Y、2:Z ] ）
+ */
+float[][] getPolygonVertex( int polygonID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertex2( polygonID );
+}
+
+/**
+ * ポリゴンの頂点座標値を取得し、引数に指定されたベクトルに代入します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vectorID 頂点座標値を格納するベクトルのID配列 （ [ 頂点番号 ] ）
+ */
+void getPolygonVertex( int polygonID, ... int vectorID[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertexVector( polygonID, vectorID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ポリゴンの色を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param red 赤色成分（ 0 - 255 ）
+ * @param green 緑色成分（ 0 - 255 ）
+ * @param blue 青色成分（ 0 - 255 ）
+ * @param alpha α値成分（ 0 - 255 ）
+ */
+void setPolygonColor( int polygonID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DColor( polygonID, red, green, blue, alpha );
+}
+
+/**
+ * ポリゴンの色を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+void setPolygonColor( int polygonID, int rgba[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DColor( polygonID, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+/**
+ * ポリゴンの色を取得します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @return 色成分を格納する配列（ [ 頂点番号 ][ 0:赤、1:緑、2:青、3:α ] ）
+ */
+int[][] getPolygonColor( int polygonID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DColor( polygonID );
+}
+
+
+/**
+ * ポリゴンの大きさ情報を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param value 大きさ情報
+ */
+macro setPolygonSize( int polygonID, float value ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( polygonID, value );
+}
+
+/**
+ * ポリゴンの幅および高さを設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param width 幅
+ * @param height 高さ
+ */
+macro setPolygonSize( int polygonID, float width, float height ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( polygonID, width, height );
+}
+
+/**
+ * ポリゴンのテキスト情報を設定します。この設定は、テキストポリゴンのみに有効です。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param textString テキスト情報
+ */
+macro setPolygonText( int polygonID, string textString ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DText( polygonID, textString );
+}
+
+/**
+ * ポリゴンの画像を設定します。この設定は、画像ポリゴンのみに有効です。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param graphicsID 画像を格納するグラフィックスデータのID
+ */
+macro setPolygonImage( int polygonID, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DImage( polygonID, graphicsID );
+}
+
+/**
+ * ポリゴンの塗りつぶし情報を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param fillState 塗りつぶす場合はtrue、塗りつぶさない場合はfalse
+ */
+macro setPolygonFill( int polygonID, bool fillState ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DFill( polygonID, fillState );
+}
+
+/**
+ * ポリゴンのカリング情報を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param frontCulling 表面をカリングする場合はtrue、しない場合はfalse
+ * @param backCulling 裏面をカリングする場合はtrue、しない場合はfalse
+ */
+void setPolygonCull( int polygonID, bool frontCulling, bool backCulling ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DFrontCulling( polygonID, frontCulling );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DBackCulling( polygonID, backCulling );
+}
+macro setPolygonCullFront( int polygonID, bool culling ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DFrontCulling( polygonID, culling );
+}
+macro setPolygonCullBack( int polygonID, bool culling ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DBackCulling( polygonID, culling );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** ビュー座標系でを表す定数です。<a href="#setPolygonVertexOffset">setPolygonVertexOffset</a> 関数や <a href="#setModelVertexOffset">setModelVertexOffset</a> 関数で使用します。 */
+const int VIEW = -1;
+
+/** ローカル座標系を表す定数です。<a href="#setPolygonVertexOffset">setPolygonVertexOffset</a> 関数や <a href="#setModelVertexOffset">setModelVertexOffset</a> 関数で使用します。 */
+const int LOCAL = -2;
+
+/**
+ * ポリゴンの位置をずらして描画するための、オフセット値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param offsetX X軸方向のオフセット値
+ * @param offsetY Y軸方向のオフセット値
+ * @param offsetZ Z軸方向のオフセット値
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+void setPolygonVertexOffset( int polygonID, float offsetX, float offsetY, float offsetZ, int offsetMode ){
+	if(offsetMode == LOCAL){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DOffsetVector( polygonID, offsetX, offsetY, offsetZ );
+	}else if(offsetMode == VIEW){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DOffsetVectorView( polygonID, offsetX, offsetY, offsetZ );
+	}else{
+		error("オフセット座標系が不正です。VIEW または LOCAL を指定してください。");
+	}
+}
+
+/**
+ * ポリゴンの位置をずらして描画するための、オフセット値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vectorID オフセット値を格納するベクトルのID
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+macro setPolygonVertexOffset( int polygonID, int vectorID, int offsetMode ){
+	setPolygonVertexOffset(polygonID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(vectorID), offsetMode);
+}
+
+
+
+/**
+ * ポリゴンの前後判定において、ポリゴンが本来よりもずれた位置にあると見なして、前後関係を計算するための、オフセット値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param offsetX ポリゴン前後判定におけるX方向のオフセット値
+ * @param offsetY ポリゴン前後判定におけるY方向のオフセット値
+ * @param offsetZ ポリゴン前後判定におけるZ方向のオフセット値
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+void setPolygonDepthOffset( int polygonID, float offsetX, float offsetY, float offsetZ, int offsetMode ){
+	if(offsetMode == LOCAL){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DDepthOffsetVector( polygonID, offsetX, offsetY, offsetZ );
+	}else if(offsetMode == VIEW){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DDepthOffsetVectorView( polygonID, offsetX, offsetY, offsetZ );
+	}else{
+		error("オフセット座標系が不正です。VIEW または LOCAL を指定してください。");
+	}
+}
+
+/**
+ * ポリゴンの前後判定において、ポリゴンが本来よりもずれた位置にあると見なして、前後関係を計算するための、オフセット値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vectorID ポリゴン前後判定におけるオフセット値を格納するベクトルのID
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+macro setPolygonDepthOffset( int polygonID, int vectorID, int offsetMode ){
+	setPolygonDepthOffset(polygonID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(vectorID), offsetMode);
+}
+
+
+
+
+
+
+/**
+ * ポリゴンの拡散光反射係数を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rate 拡散光反射係数
+ */
+void setPolygonDiffuse( int polygonID, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DDirectionalReflection( polygonID, rate );
+}
+
+/**
+ * ポリゴンの回折光反射係数を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rate 回折光反射係数
+ */
+void setPolygonDiffractive( int polygonID, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DDiffractionalReflection( polygonID, rate );
+}
+
+/**
+ * ポリゴンの環境光反射係数を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rate 環境光反射係数
+ */
+void setPolygonAmbient( int polygonID, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DAmbientReflection( polygonID, rate );
+}
+
+/**
+ * ポリゴンの自発光係数を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rate 自発光係数
+ */
+void setPolygonEmissive( int polygonID, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DEmission( polygonID, rate );
+}
+
+/**
+ * ポリゴンのスペキュラ反射係数を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rate スペキュラ反射係数
+ * @param angle スペキュラの角度
+ */
+void setPolygonSpecular( int polygonID, float rate, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DShinyReflection( polygonID, rate );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DShinyAngle( polygonID, angle );
+}
+
+
+
+/**
+ * ポリゴンを座標変換し、結果を引数に指定されたポリゴンに代入します。
+ * なお、対象ポリゴンと、結果を代入するポリゴンは、必ず頂点数が等しい同型のポリゴンである必要があります。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param transformedPolygonID 座標変換結果を代入するポリゴンのID
+ * @param rendererID レンダラーID
+ */
+void transformPolygon( int polygonID, int transformedPolygonID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_transformElement3D( polygonID, transformedPolygonID, coordinateID );
+}
+
+/**
+ * ポリゴンと半直線との交点と法線を求め、結果を引数に指定されたベクトルに代入します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param directionalVectorID 半直線の方向ベクトルID
+ * @param pointVectorID 半直線の始点ベクトルID
+ * @param intersectionVectorID 交点があった場合に、交点の座標値を格納するベクトルのID
+ * @param normalVectorID 交点があった場合に、交点における法線を格納するベクトルのID
+ * @return 交点が存在すればtrue、なければfalse
+ */
+bool getPolygonIntersection( int polygonID, int directionalVectorID, int pointVectorID, int intersectionVectorID, int normalVectorID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getElementIntersection3D( polygonID, directionalVectorID, pointVectorID, intersectionVectorID, normalVectorID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 座標軸モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param lx X軸方向の長さ
+ * @param ly Y軸方向の長さ
+ * @param lz Z軸方向の長さ
+ * @param 生成したモデルのID
+ */
+int newAxisModel( float lx, float ly, float lz ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createAxisModel3D( 5, 5, 5 );
+  setModelSize( id, lx, ly, lz );
+  return id;
+}
+
+
+/* 未実装、newAxisModel(lx, ly, lz) と同じ挙動 */
+int newAxisModel( float lx, float ly, float lz, int n1, int n2, int n3 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createAxisModel3D( 5, 5, 5 );
+  setModelSize( id, lx, ly, lz );
+  return id;
+}
+
+
+
+/**
+ * 球モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param rx X軸方向の半径
+ * @param ry Y軸方向の半径
+ * @param rz Z軸方向の半径
+ * @param n1 同一緯度方向のポリゴン分割数（ = 経線の数 ）
+ * @param n2 同一経度方向のポリゴン分割数（ = 緯線の数 ）
+ * @param 生成したモデルのID
+ */
+int newSphereModel( float rx, float ry, float rz, int n1, int n2 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createSphereModel3D( n1, n2 );
+  setModelSize( id, rx, ry, rz );
+  return id;
+}
+
+
+/**
+ * 箱型モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param lx X軸方向の長さ
+ * @param ly Y軸方向の長さ
+ * @param lz Z軸方向の長さ
+ * @param 生成したモデルのID
+ */
+int newBoxModel( float lx, float ly, float lz ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createBoxModel3D( 1, 1, 1 );
+  setModelSize( id, lx, ly, lz );
+  return id;
+}
+
+/**
+ * 箱型モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param lx X軸方向の長さ
+ * @param ly Y軸方向の長さ
+ * @param lz Z軸方向の長さ
+ * @param nx X軸方向のポリゴン分割数
+ * @param ny Y軸方向のポリゴン分割数
+ * @param nz Z軸方向のポリゴン分割数
+ * @param 生成したモデルのID
+ */
+int newBoxModel( float lx, float ly, float lz, int nx, int ny, int nz ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createBoxModel3D( nx, ny, nz );
+  setModelSize( id, lx, ly, lz );
+  return id;
+}
+
+int newBoxModel( float s1, float s2, float s3, int n1, int n2 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createBoxModel3D( n1, n2, 1 );
+  setModelSize( id, s1, s2, s3 );
+  return id;
+}
+
+
+
+/**
+ * 底付きの円筒モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param rx X軸方向の半径
+ * @param ry Y軸方向の半径
+ * @param height Z軸方向の高さ
+ * @param n1 円周方向のポリゴン分割数
+ * @param n2 高さ方向のポリゴン分割数
+ * @param 生成したモデルのID
+ */
+int newCylinderModel( float rx, float ry, float height, int n1, int n2 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createCylinderModel3D( n1, n2 );
+  setModelSize( id, rx, ry, height );
+  return id;
+}
+
+
+/**
+ * 底なしの円筒モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param rx X軸方向の半径
+ * @param ry Y軸方向の半径
+ * @param height Z軸方向の高さ
+ * @param n1 円周方向のポリゴン分割数
+ * @param n2 高さ方向のポリゴン分割数
+ * @param 生成したモデルのID
+ */
+int newTubeModel( float rx, float ry, float height,  int n1, int n2 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTubeModel3D( n1, n2 );
+  setModelSize( id, rx, ry, height );
+  return id;
+}
+
+
+/**
+ * 底付きの円錐モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param rx X軸方向の半径
+ * @param ry Y軸方向の半径
+ * @param height Z軸方向の高さ
+ * @param n1 円周方向のポリゴン分割数
+ * @param n2 高さ方向のポリゴン分割数
+ * @param 生成したモデルのID
+ */
+int newConeModel( float rx, float ry, float height,  int n1, int n2 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createConeModel3D( n1, n2 );
+  setModelSize( id, rx, ry, height );
+  return id;
+}
+
+
+/**
+ * 底なしの円錐モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param rx X軸方向の半径
+ * @param ry Y軸方向の半径
+ * @param height Z軸方向の高さ
+ * @param n1 円周方向のポリゴン分割数
+ * @param n2 高さ方向のポリゴン分割数
+ * @param 生成したモデルのID
+ */
+int newShadeModel( float rx, float ry, float height,  int n1, int n2 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createShadeModel3D( n1, n2 );
+  setModelSize( id, rx, ry, height );
+  return id;
+}
+
+/**
+ * 円盤モデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param rx X軸方向の半径
+ * @param ry Y軸方向の半径
+ * @param n 円周方向のポリゴン分割数
+ * @param 生成したモデルのID
+ */
+int newDiskModel( float rx, float ry, int n1 ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createDiskModel3D( n1, 1 );
+  setModelSize( id, rx, ry );
+  return id;
+}
+
+
+
+
+
+
+/**
+ * 既存モデルのコピーを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param copyID コピーするモデルのID
+ * @return 生成したモデルのID
+ */
+int newModel( int copyID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_copyModel3D( copyID );
+}
+
+/**
+ * ポリゴンの配列からモデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param polygonID モデルを構成するポリゴンのID配列
+ * @return 生成したモデルのID
+ */
+int newModel( int polygonID[] ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createModel3D( polygonID );
+}
+
+/**
+ * 座標値配列からモデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param vertex モデルの頂点座標値を格納する配列
+ * @param format 座標値配列形式（ <a href="#QUADRANGLE_LIST">QUADRANGLE_LIST</a>、<a href="#TRIANGLE_LIST">TRIANGLE_LIST</a>、<a href="#TRIANGLE_FAN">TRIANGLE_FAN</a>、<a href="#TRIANGLE_STRIP">TRIANGLE_STRIP</a> など ）
+ * @return 生成したモデルのID
+ */
+macro newModel( float vertex[][], int format ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createModel3DVertexArray2( format, vertex );
+}
+
+/**
+ * 座標値配列からモデルを生成し、固有の識別番号（ モデルID ）を割り振って返します。
+ * 
+ * @param vertex モデルの頂点座標値を格納する配列
+ * @param format 座標値配列形式（ <a href="#QUADRANGLE_GRID">QUADRANGLE_GRID</a> など ）
+ * @return 生成したモデルのID
+ */
+macro newModel( float vertex[][][], int format ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createModel3DVertexArray3( format, vertex );
+}
+
+
+// here are not recommended. bad arguments ordering.
+macro newModel( int format, float vertex[][][] ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createModel3DVertexArray3( format, vertex );
+}
+macro newModel( int format, float vertex[][] ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createModel3DVertexArray2( format, vertex );
+}
+
+
+
+/**
+ * モデルを破棄します。
+ * 
+ * @param modelID 対象モデルのID
+ */
+void deleteModel( int modelID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeModel3D( modelID );
+}
+
+
+
+
+/**
+ * モデルをワールド座標系上に配置登録します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ */
+void mountModel( int modelID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addModel3D( modelID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * モデルを任意の座標系上に配置登録します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void mountModel( int modelID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addModel3D( modelID, rendererID, coordinateID );
+}
+
+/**
+ * モデルをワールド座標系上から配置解除します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ */
+int demountModel( int modelID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeModel3D( modelID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * モデルを任意の座標系上から配置解除します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int demountModel( int modelID, int rendererID, int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeModel3D( modelID, rendererID, coordinateID );
+}
+
+
+
+
+/**
+ * モデルを平行移動させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+macro moveModel( int modelID, float deltaX, float deltaY, float deltaZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveModel3D( modelID, deltaX, deltaY, deltaZ );
+}
+
+/**
+ * モデルを平行移動させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param deltaVector 変位ベクトルのID
+ */
+void moveModel( int modelID, int deltaVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveModel3D( modelID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+
+/**
+ * モデルをX軸まわりに回転させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotModelX( int modelID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXModel3D( modelID, angle );
+}
+
+/**
+ * モデルをY軸まわりに回転させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotModelY( int modelID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYModel3D( modelID, angle );
+}
+
+/**
+ * モデルをZ軸まわりに回転させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotModelZ( int modelID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZModel3D( modelID, angle );
+}
+
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、モデルを回転させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+macro rotModel( int modelID, float angle, float vectorX, float vectorY, float vectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotModel3D( modelID, angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、モデルを回転させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void rotModel( int modelID, float angle, int dirVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotModel3D( modelID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID)
+  );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、モデルを回転させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+macro rotModel( int modelID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotModel3D( modelID, angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、モデルを回転させます。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void rotModel( int modelID, float angle, int dirVectorID, int pointVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotModel3D( modelID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID),
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(pointVectorID)
+  );
+}
+
+
+/**
+ * モデルを拡大または縮小します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rateX X軸方向の拡大率
+ * @param rateY Y軸方向の拡大率
+ * @param rateZ Z軸方向の拡大率
+ */
+macro scaleModel( int modelID, float rateX, float rateY, float rateZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_scaleModel3D( modelID, rateX, rateY, rateZ );
+}
+
+
+/**
+ * モデルを構成するポリゴンの裏表を反転させます。
+ * 
+ * @param polygonID 対象モデルのID
+ */
+void reverseModel( int modelID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_reverseModel3D( modelID );
+}
+
+/**
+ * モデルの頂点座標値を鏡像反転させます。
+ * なお、1つの軸方向に鏡像反転させるごとに、モデルを構成するポリゴンの裏表が反転するため、<a href="#reverseModel">reverseModel</a> 関数で面の向きを補正してください。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ */
+ void mirrorModel( int modelID, bool mx, bool my, bool mz ){
+  if( mx ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorXModel3D( modelID );
+  }
+  if( my ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorYModel3D( modelID );
+  }
+  if( mz ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorZModel3D( modelID );
+  }
+}
+
+
+
+
+
+
+
+/**
+ * モデルの色を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param red 赤色成分（ 0 - 255 ）
+ * @param green 緑色成分（ 0 - 255 ）
+ * @param blue 青色成分（ 0 - 255 ）
+ * @param alpha α値成分（ 0 - 255 ）
+ */
+void setModelColor( int modelID, int r, int g, int b, int a ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DColor( modelID, r, g, b, a );
+}
+
+/**
+ * モデルの色を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+void setModelColor( int modelID, int rgba[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DColor( modelID, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+
+/**
+ * モデルの色を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param color モデルを構成する全ポリゴンの色成分を格納する配列（ [ ポリゴンインデックス ][ 0:赤、1:緑、2:青、3:α ] ）
+ */
+macro setModelColor( int modelID, int color[][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DColorArray2( modelID, color );
+}
+
+/* implements in future. set Color of Vertex, not polygon. */
+macro setModelColor( int modelID, int color[][][] ){
+}
+
+
+
+/**
+ * モデルを構成するポリゴンの色を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param red 赤色成分（ 0 - 255 ）
+ * @param green 緑色成分（ 0 - 255 ）
+ * @param blue 青色成分（ 0 - 255 ）
+ * @param alpha α値成分（ 0 - 255 ）
+ */
+void setModelPolygonColor( int modelID, int polygonIndex, int red, int green, int blue, int alpha ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementColor( modelID, polygonIndex, red, green, blue, alpha );
+}
+
+/**
+ * モデルを構成するポリゴンの色を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @return 色成分を格納する配列（ [ 頂点番号 ][ 0:赤、1:緑、2:青、3:α ] ）
+ */
+void setModelPolygonColor( int modelID, int polygonIndex, int rgba[] ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementColor( modelID, polygonIndex, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+/**
+ * モデルを構成するポリゴンの色を取得します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @return 色成分を格納する配列（ [ 頂点番号 ][ 0:赤、1:緑、2:青、3:α ] ）
+ */
+float[][] getModelPolygonColor( int modelID, int polygonIndex ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getModel3DPolygonColor( modelID, polygonIndex );
+}
+
+
+
+
+
+/**
+ * モデルの塗りつぶし情報を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param fillState 塗りつぶす場合はtrue、塗りつぶさない場合はfalse
+ */
+void setModelFill( int polygonID, bool fill ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DFill( polygonID, fill );
+}
+
+
+
+/**
+ * モデルのカリング情報を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param frontCulling 表面をカリングする場合はtrue、しない場合はfalse
+ * @param backCulling 裏面をカリングする場合はtrue、しない場合はfalse
+ */
+void setModelCull( int modelID, bool frontCulling, bool backCulling ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DFrontCulling( modelID, frontCulling );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DBackCulling( modelID, backCulling );
+}
+macro setModelCullFront( int modelID, bool culling ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DFrontCulling( modelID, culling );
+}
+macro setModelCullBack( int modelID, bool culling ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DBackCulling( modelID, culling );
+}
+
+
+
+
+
+
+/**
+ * モデルのサイズ情報を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param size （可変長引数）モデルのサイズ情報
+ */
+void setModelSize( int modelID, ... float size[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DSize( modelID, size );
+}
+
+
+
+
+
+/**
+ * モデルの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param vertex モデルの頂点座標値を格納する配列
+ * @param format 座標値配列形式（ <a href="#QUADRANGLE_LIST">QUADRANGLE_LIST</a>、<a href="#TRIANGLE_LIST">TRIANGLE_LIST</a>、<a href="#TRIANGLE_FAN">TRIANGLE_FAN</a>、<a href="#TRIANGLE_STRIP">TRIANGLE_STRIP</a> など ）
+ */
+macro setModelVertex( int modelID, float vertex[][], int format ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DVertexArray2( modelID, format, vertex );
+}
+
+/**
+ * モデルの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param vertex モデルの頂点座標値を格納する配列
+ * @param format 座標値配列形式（ <a href="#QUADRANGLE_GRID">QUADRANGLE_GRID</a> など ）
+ */
+macro setModelVertex( int modelID, float vertex[][][], int format ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DVertexArray3( modelID, format, vertex );
+}
+
+// here are not recommended. bad arguments ordering.
+macro setModelVertex( int modelID, int format, float vertex[][][] ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DVertexArray3( modelID, format, vertex );
+}
+macro setModelVertex( int modelID, int format, float vertex[][] ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DVertexArray2( modelID, format, vertex );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param vertex ポリゴンの頂点座標値配列（ [ 頂点番号 ][ 0:X、1:Y、2:Z ] ）
+ */
+void setModelPolygonVertex( int modelID, int polygonIndex, float vertex[][] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementVertex2( modelID, polygonIndex, vertex );
+}
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ */
+void setModelPolygonVertex( int modelID, int polygonIndex, float vertex_ax, float vertex_ay, float vertex_az ){
+	float vertex[][] = { {vertex_ax, vertex_ay, vertex_az} };
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementVertex2( modelID, polygonIndex, vertex );
+}
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ * @param vertex_bx 頂点BのX座標
+ * @param vertex_by 頂点BのY座標
+ * @param vertex_bz 頂点BのZ座標
+ */
+void setModelPolygonVertex( int modelID, int polygonIndex, float vertex_ax, float vertex_ay, float vertex_az, float vertex_bx, float vertex_by, float vertex_bz ){
+	float vertex[][] = { {vertex_ax, vertex_ay, vertex_az}, {vertex_bx, vertex_by, vertex_bz} };
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementVertex2( modelID, polygonIndex, vertex );
+}
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ * @param vertex_bx 頂点BのX座標
+ * @param vertex_by 頂点BのY座標
+ * @param vertex_bz 頂点BのZ座標
+ * @param vertex_cx 頂点CのX座標
+ * @param vertex_cy 頂点CのY座標
+ * @param vertex_cz 頂点CのZ座標
+ */
+void setModelPolygonVertex( int modelID, int polygonIndex, float vertex_ax, float vertex_ay, float vertex_az, float vertex_bx, float vertex_by, float vertex_bz, float vertex_cx, float vertex_cy, float vertex_cz ){
+	float vertex[][] = { {vertex_ax, vertex_ay, vertex_az}, {vertex_bx, vertex_by, vertex_bz}, {vertex_cx, vertex_cy, vertex_cz} };
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementVertex2( modelID, polygonIndex, vertex );
+}
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param vertex_ax 頂点AのX座標
+ * @param vertex_ay 頂点AのY座標
+ * @param vertex_az 頂点AのZ座標
+ * @param vertex_bx 頂点BのX座標
+ * @param vertex_by 頂点BのY座標
+ * @param vertex_bz 頂点BのZ座標
+ * @param vertex_cx 頂点CのX座標
+ * @param vertex_cy 頂点CのY座標
+ * @param vertex_cz 頂点CのZ座標
+ * @param vertex_dx 頂点DのX座標
+ * @param vertex_dy 頂点DのY座標
+ * @param vertex_dz 頂点DのZ座標
+ */
+void seModeltPolygonVertex( int modelID, int polygonIndex, float vertex_ax, float vertex_ay, float vertex_az, float vertex_bx, float vertex_by, float vertex_bz, float vertex_cx, float vertex_cy, float vertex_cz, float vertex_dx, float vertex_dy, float vertex_dz ){
+	float vertex[][] = { {vertex_ax, vertex_ay, vertex_az}, {vertex_bx, vertex_by, vertex_bz}, {vertex_cx, vertex_cy, vertex_cz}, {vertex_dx, vertex_dy, vertex_dz} };
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementVertex2( modelID, polygonIndex, vertex );
+}
+
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param vectorID 頂点座標値を格納するベクトルのID配列 （ [ 頂点番号 ] ）
+ */
+void setModelPolygonVertex( int modelID, int polygonIndex, ... int vectorID[] ){
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DElementVertexVector( modelID, polygonIndex, vectorID );
+}
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を取得し、引数に指定されたベクトルに代入します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @param vectorID 頂点座標値を格納するベクトルのID配列 （ [ 頂点番号 ] ）
+ */
+void getModelPolygonVertex( int modelID, int polygonIndex, ... int vectorID[] ){
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_getModel3DElementVertexVector( modelID, polygonIndex, vectorID );
+}
+
+
+/**
+ * モデルを構成するポリゴンの頂点座標値を取得します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param polygonIndex 対象ポリゴンのモデル内部でのインデックス
+ * @return ポリゴンの頂点座標値配列
+ */
+float[][] getModelPolygonVertex( int modelID, int polygonIndex ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getModel3DElementVertex2( modelID, polygonIndex );
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * モデルの位置をずらして描画するための、オフセット値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param offsetX X軸方向のオフセット値
+ * @param offsetY Y軸方向のオフセット値
+ * @param offsetZ Z軸方向のオフセット値
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+void setModelVertexOffset( int modelID, float offsetX, float offsetY, float offsetZ, int offsetMode ){
+	if(offsetMode == LOCAL){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DVertexOffsetVector( modelID, offsetX, offsetY, offsetZ );
+	}else if(offsetMode == VIEW){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DVertexOffsetVectorView( modelID, offsetX, offsetY, offsetZ );
+	}else{
+		error("オフセット座標系が不正です。VIEW または LOCAL を指定してください。");
+	}
+}
+
+/**
+ * モデルの位置をずらして描画するための、オフセット値を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param vectorID オフセット値を格納するベクトルのID
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+macro setModelVertexOffset( int modelID, int vectorID, int offsetMode ){
+	setModelVertexOffset(modelID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(vectorID), offsetMode);
+}
+
+
+/**
+ * モデルを構成するポリゴンの前後判定において、ポリゴンが本来よりもずれた位置にあると見なして、前後関係を計算するための、オフセット値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param offsetX 前後判定におけるX方向のオフセット値
+ * @param offsetY 前後判定におけるY方向のオフセット値
+ * @param offsetZ 前後判定におけるZ方向のオフセット値
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+void setModelDepthOffset( int modelID, float offsetX, float offsetY, float offsetZ, int offsetMode ){
+	if(offsetMode == LOCAL){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DDepthOffsetVector( modelID, offsetX, offsetY, offsetZ );
+	}else if(offsetMode == VIEW){
+		SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DDepthOffsetVectorView( modelID, offsetX, offsetY, offsetZ );
+	}else{
+		error("オフセット座標系が不正です。VIEW または LOCAL を指定してください。");
+	}
+}
+
+/**
+ * モデルを構成するポリゴンの前後判定において、ポリゴンが本来よりもずれた位置にあると見なして、前後関係を計算するための、オフセット値を設定します。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param vectorID オフセット値を格納するベクトルのID
+ * @param offsetMode オフセット方向の基準とする座標系（ <a href="#VIEW">VIEW</a> または <a href="#LOCAL">LOCAL</a> ）
+ */
+macro setModelDepthOffset( int modelID, int vectorID, int offsetMode ){
+	setModelDepthOffset(modelID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(vectorID), offsetMode);
+}
+
+
+
+
+
+
+
+
+
+/**
+ * モデルの拡散光反射係数を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rate 拡散光反射係数
+ */
+void setModelDiffuse( int id, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DDirectionalReflection( id, rate );
+}
+
+/**
+ * モデルの回折光反射係数を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rate 回折光反射係数
+ */
+void setModelDiffractive( int id, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DDiffractionalReflection( id, rate );
+}
+
+/**
+ * モデルの環境光反射係数を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rate 環境光反射係数
+ */
+void setModelAmbient( int id, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DAmbientReflection( id, rate );
+}
+
+/**
+ * モデルの自発光係数を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rate 自発光係数
+ */
+void setModelEmissive( int id, float rate ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DEmission( id, rate );
+}
+
+/**
+ * モデルのスペキュラ反射係数を設定します。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rate スペキュラ反射係数
+ * @param angle スペキュラの角度
+ */
+void setModelSpecular( int id, float rate, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DShinyReflection( id, rate );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DShinyAngle( id, angle );
+}
+
+
+
+
+/**
+ * モデルを座標変換し、結果を引数に指定されたモデルに代入します。
+ * なお、対象モデルと、結果を代入するモデルは、必ず頂点数が等しい同型のモデルである必要があります。
+ * 
+ * @param modelID 対象モデルのID
+ * @param transformedModelID 座標変換結果を代入するモデルのID
+ * @param rendererID レンダラーID
+ */
+void transformModel( int modelID, int transformedModelID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_transformModel3D( modelID, transformedModelID, coordinateID );
+}
+
+/**
+ * モデルと半直線との交点と法線を求め、結果を引数に指定されたベクトルに代入します。
+ * 
+ * @param polygonID 対象モデルのID
+ * @param directionalVectorID 半直線の方向ベクトルID
+ * @param pointVectorID 半直線の始点ベクトルID
+ * @param intersectionVectorID 交点があった場合に、交点の座標値を格納するベクトルのID
+ * @param normalVectorID 交点があった場合に、交点における法線を格納するベクトルのID
+ * @return 交点が存在すればtrue、なければfalse
+ */
+bool getModelIntersection( int modelID, int directionalVectorID, int pointVectorID, int intersectionVectorID, int normalVectorID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getModelIntersection3D( modelID, directionalVectorID, pointVectorID, intersectionVectorID, normalVectorID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ライトを生成し、固有のID番号（ ライトID ）を割り振って返します。
+ * なお、この関数では <a href="#newDirectionalLight">newDirectionalLight</a> 関数で生成される方向性ライトと同じものが生成されます。
+ * 将来的には、より拡張されたライトを生成するようになるかもしれませんが、現状では全く違いはありません。
+ * 
+ * @param x ライト方向ベクトルのX成分
+ * @param y ライト方向ベクトルのY成分
+ * @param z ライト方向ベクトルのZ成分
+ * @param power 光の強さ
+ * @return 生成したライトのID
+ */
+int newLight( float x, float y, float z, float power ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLightElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, x, y, z );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DBrightness( id, power );
+  return id;
+}
+
+/**
+ * ライトのコピーを生成し、固有のID番号（ ライトID ）を割り振って返します。
+ * 
+ * @param copyID コピーするライトのID
+ * @return 生成したライトのID
+ */
+int newLight( int copyID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_copyElement3D( copyID );
+  return id;
+}
+
+/**
+ * 方向性ライトを生成し、固有のID番号（ ライトID ）を割り振って返します。
+ * 
+ * @param x ライト方向ベクトルのX成分
+ * @param y ライト方向ベクトルのY成分
+ * @param z ライト方向ベクトルのZ成分
+ * @param power 光の強さ
+ * @return 生成したライトのID
+ */
+int newDirectionalLight( float x, float y, float z, float power ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLightElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, x, y, z );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DBrightness( id, power );
+  return id;
+}
+
+/**
+ * 点ライトを生成し、固有のID番号（ ライトID ）を割り振って返します。
+ * 
+ * @param x ライト位置座標のX成分
+ * @param y ライト位置座標のY成分
+ * @param z ライト位置座標のZ成分
+ * @param power 光の強さ
+ * @return 生成したライトのID
+ */
+int newPointLight( float x, float y, float z, float power ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPointLightElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, x, y, z );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DBrightness( id, power );
+  return id;
+}
+
+/**
+ * 環境光ライトを生成し、固有のID番号（ ライトID ）を割り振って返します。
+ * 
+ * @param x 将来的には意味を持つ可能性がありますが、現状では無視されます。特に理由が無ければ 0.0 を指定してください。
+ * @param y 将来的には意味を持つ可能性がありますが、現状では無視されます。特に理由が無ければ 0.0 を指定してください。
+ * @param z 将来的には意味を持つ可能性がありますが、現状では無視されます。特に理由が無ければ 0.0 を指定してください。
+ * @param power 光の強さ
+ * @return 生成したライトのID
+ */
+int newAmbientLight( float x, float y, float z, float power ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createAmbientLightElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, x, y, z );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DBrightness( id, power );
+  return id;
+}
+
+/**
+ * ライトを破棄します。
+ * 
+ * @param lightID 対象ライトのID
+ */
+void deleteLight( int lightID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeElement3D( lightID );
+}
+
+/**
+ * ライトをワールド座標系上に配置登録します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ */
+void mountLight( int lightID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( lightID, rendererID, getWorldCoordinate(rendererID) );
+}
+/**
+ * ライトを任意の座標系上に配置登録します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void mountLight( int lightID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( lightID, rendererID, coordinateID );
+}
+
+/**
+ * ライトをワールド座標系上から配置解除します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ */
+int demountLight( int lightID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( lightID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ライトを任意の座標系上から配置解除します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int demountLight( int lightID, int rendererID, int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( lightID, rendererID, coordinateID );
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ライトを平行移動させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+macro moveLight( int lightID, float deltaX, float deltaY, float deltaZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveElement3D( lightID, deltaX, deltaY, deltaZ );
+}
+
+/**
+ * ライトを平行移動させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param deltaVector 変位ベクトルのID
+ */
+void moveLight( int lightID, int deltaVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveElement3D( lightID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+/**
+ * ライトをX軸まわりに回転させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotLightX( int lightID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXElement3D( lightID, angle );
+}
+
+/**
+ * ライトをY軸まわりに回転させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotLightY( int lightID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYElement3D( lightID, angle );
+}
+
+/**
+ * ライトをZ軸まわりに回転させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotLightZ( int lightID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZElement3D( lightID, angle );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ライトを回転させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+macro rotLight( int lightID, float angle, float vectorX, float vectorY, float vectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( lightID, angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ライトを回転させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void rotLight( int lightID, float angle, int dirVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( lightID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID)
+  );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ライトを回転させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+macro rotLight( int lightID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( lightID, angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ライトを回転させます。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void rotLight( int lightID, float angle, int dirVectorID, int pointVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotElement3D( lightID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID),
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(pointVectorID)
+  );
+}
+
+/**
+ * ライトを拡大または縮小します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rateX X軸方向の拡大率
+ * @param rateY Y軸方向の拡大率
+ * @param rateZ Z軸方向の拡大率
+ */
+void scaleLight( int lightID, float sx, float sy, float sz ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_scaleElement3D( lightID, sx, sy, sz );
+}
+
+/**
+ * ライトの座標値を鏡像反転させます。
+ * 
+ * @param lightID 対象ライトのID
+ */
+void mirrorLight( int lightID, bool mx, bool my, bool mz ){
+  if( mx ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorXElement3D( lightID );
+  }
+  if( my ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorYElement3D( lightID );
+  }
+  if( mz ){
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorZElement3D( lightID );
+  }
+}
+
+
+
+
+
+
+
+/**
+ * ライトの光強度を設定します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param power 光の強さ
+ */
+macro setLightBrightness( int lightID, float power ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DBrightness( lightID, power );
+}
+
+/**
+ * ライトの光強度を取得します。
+ * 
+ * @param lightID 対象ライトのID
+ * @return 光の強さ
+ */
+macro getLightBrightness( int lightID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DBrightness( lightID );
+}
+
+/**
+ * ライトの色を設定します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param red 赤色成分（ 0 - 255 ）
+ * @param green 緑色成分（ 0 - 255 ）
+ * @param blue 青色成分（ 0 - 255 ）
+ * @param alpha α値成分（ 0 - 255 ）
+ */
+macro setLightColor( int lightID, int red, int green, int blue, int alpha ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DColor( lightID, red, green, blue, alpha );
+}
+
+/**
+ * ライトの色を設定します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ */
+macro setLightColor( int lightID, int rgba[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DColor( lightID, rgba[0], rgba[1], rgba[2], rgba[3] );
+}
+
+/**
+ * ライトの色を取得します。
+ * 
+ * @param lightID 対象ライトのID
+ * @return 色成分を格納する配列（ [ 頂点番号 ][ 0:赤、1:緑、2:青、3:α ] ）
+ */
+float[] getLightColor( int lightID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DColor( lightID );
+}
+
+
+
+/**
+ * ライトの位置または方向ベクトルを設定します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param locationX 位置または方向のX成分
+ * @param locationY 位置または方向のY成分
+ * @param locationZ 位置または方向のZ成分
+ */
+macro setLightLocation( int lightID, float locationX, float locationY, float locationZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( lightID, locationX, locationY, locationZ );
+}
+
+
+/**
+ * ライトの位置または方向ベクトルを設定します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param vectorID 位置または方向ベクトルのID
+ */
+void setLightLocation( int lightID, int vectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( lightID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(vectorID) );
+}
+
+
+/**
+ * ライトの位置または方向を取得します。
+ * 
+ * @param lightID 対象ライトのID
+ * @return 位置または方向（ [0]がX成分、[1]がY成分、[2]がZ成分 ）
+ */
+float[] getLightLocation( int lightID ){
+	float[][] vertex = SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertex2( lightID );
+	float vector[3];
+	vector[0] = vertex[0][0];
+	vector[1] = vertex[0][1];
+	vector[2] = vertex[0][2];
+	return vector;
+}
+
+/**
+ * ライトの位置または方向を取得し、引数に指定されたベクトルに代入します。
+ * 
+ * @param lightID 対象ライトのID
+ * @param vectorID 位置または方向を格納するベクトルのID
+ */
+void getLightLocation( int lightID, int vectorID ){
+	float[][] vertex = SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertex2( lightID );
+	float vector[3];
+	vector[0] = vertex[0][0];
+	vector[1] = vertex[0][1];
+	vector[2] = vertex[0][2];
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3D(vectorID, vector[0], vector[1], vector[2]);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ベクトルを生成し、固有の識別番号（ ベクトルID ）を割り振って返します。
+ * 
+ * @return 生成したベクトルのID
+ */
+int newVector(){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createVector3D();
+}
+
+/**
+ * ベクトルを生成し、固有の識別番号（ ベクトルID ）を割り振って返します。
+ * 
+ * @param x ベクトルのX成分
+ * @param y ベクトルのY成分
+ * @param z ベクトルのZ成分
+ * @return 生成したベクトルのID
+ */
+int newVector( float x, float y, float z ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createVector3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3D( id, x, y, z );
+  return id;
+}
+
+/**
+ * ベクトルを生成し、固有の識別番号（ ベクトルID ）を割り振って返します。
+ * 
+ * @param vertex ベクトルの成分を格納する配列（ [0] がX成分、[1] がX成分、[2] がX成分 ）
+ * @return 生成したベクトルのID
+ */
+int newVector( float vertex[] ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createVector3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3D( id, vertex[0], vertex[1], vertex[2] );
+  return id;
+}
+
+/**
+ * ベクトルのコピーを生成し、固有の識別番号（ ベクトルID ）を割り振って返します。
+ * 
+ * @return 生成したベクトルのID
+ */
+int newVector( int copyID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_copyVector3D( copyID );
+}
+
+/**
+ * ベクトルを破棄します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ */
+void deleteVector( int vectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeVector3D( vectorID );
+}
+
+
+
+/**
+ * ベクトルをワールド座標系上に配置登録します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ */
+void mountVector( int vectorID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addVector3D( vectorID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ベクトルを任意の座標系上に配置登録します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void mountVector( int vectorID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addVector3D( vectorID, rendererID, coordinateID );
+}
+
+/**
+ * ベクトルをワールド座標系上から配置解除します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ */
+int demountVector( int id, int rendererID ){
+}
+
+/**
+ * ベクトルを任意の座標系上から配置解除します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int demountVector( int id, int rendererID, int coordinateID ){
+}
+
+
+
+
+
+/**
+ * ベクトルを平行移動させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+macro moveVector( int vectorID, float deltaX, float deltaY, float deltaZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveVector3D( vectorID, deltaX, deltaY, deltaZ );
+}
+
+/**
+ * ベクトルを平行移動させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param deltaVector 変位ベクトルのID
+ */
+void moveVector( int vectorID, int deltaVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveVector3D( vectorID,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID)
+  );
+}
+
+
+/**
+ * ベクトルをX軸まわりに回転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotVectorX( int vectorID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXVector3D( vectorID, angle );
+}
+
+/**
+ * ベクトルをY軸まわりに回転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotVectorY( int vectorID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYVector3D( vectorID, angle );
+}
+
+/**
+ * ベクトルをZ軸まわりに回転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotVectorZ( int vectorID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZVector3D( vectorID, angle );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ベクトルを回転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+macro rotVector( int vectorID, float angle, float vectorX, float vectorY, float vectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotVector3D( vectorID, angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ベクトルを回転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void rotVector( int vectorID, float angle, int dirVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotVector3D( vectorID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID)
+  );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ベクトルを回転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+macro rotVector( int vectorID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotVector3D( vectorID, angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ベクトルを回転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void rotVector( int vectorID, float angle, int dirVectorID, int pointVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotVector3D( vectorID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID),
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(pointVectorID)
+  );
+}
+
+
+/**
+ * ベクトルを拡大または縮小します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rateX X軸方向の拡大率
+ * @param rateY Y軸方向の拡大率
+ * @param rateZ Z軸方向の拡大率
+ */
+macro scaleVector( int vectorID, float rateX, float rateY, float rateZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_scaleVector3D( vectorID, rateX, rateY, rateZ );
+}
+
+/**
+ * ベクトルの成分を鏡像反転させます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ */
+macro mirrorVector( int vectorID, bool mirrorX, bool mirrorY, bool mirrorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_mirrorVector3D( vectorID, mirrorX, mirrorY, mirrorZ );
+}
+
+
+
+
+
+/**
+ * ベクトルの成分を設定します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param vectorComponentX X成分
+ * @param vectorComponentY Y成分
+ * @param vectorComponentZ Z成分
+ */
+macro setVector( int vectorID, float vectorComponentX, float vectorComponentY, float vectorComponentZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3D( vectorID, vectorComponentX, vectorComponentY, vectorComponentZ );
+}
+
+/**
+ * ベクトルの成分を設定します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param vectorComponent 成分を格納する配列（ [0] がX成分、[1] がY成分、[2] がZ成分 ）
+ */
+void setVector( int vectorID, float vectorComponent[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3D( vectorID, vectorComponent[0], vectorComponent[1], vectorComponent[2] );
+}
+
+/**
+ * ベクトルの成分を設定します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param vectorComponent 成分を格納するベクトルのID
+ */
+void setVector( int vectorID, int vertexVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3D( vectorID,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(vertexVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(vertexVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(vertexVectorID)
+  );
+}
+
+
+/**
+ * ベクトルのX成分を設定します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param value X成分
+ */
+macro setVectorX( int vectorID, float value ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3DX( vectorID, value );
+}
+
+/**
+ * ベクトルのY成分を設定します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param value Y成分
+ */
+macro setVectorY( int vectorID, float value ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3DY( vectorID, value );
+}
+
+/**
+ * ベクトルのZ成分を設定します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param value Z成分
+ */
+macro setVectorZ( int vectorID, float value ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3DZ( vectorID, value );
+}
+
+
+
+/**
+ * ベクトルのX成分を取得します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @return X成分
+ */
+macro getVectorX( int vectorID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX( vectorID );
+}
+
+/**
+ * ベクトルのY成分を取得します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @return Y成分
+ */
+macro getVectorY( int vectorID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY( vectorID );
+}
+
+/**
+ * ベクトルのZ成分を取得します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @return Z成分
+ */
+macro getVectorZ( int vectorID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ( vectorID );
+}
+
+
+/**
+ * ベクトルの大きさ（ 絶対値 ）を設定します。この操作において、ベクトルの方向、つまりXYZ各成分の比率は保たれます。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @return 大きさ
+ */
+macro setVectorLength( int vectorID, float newlength ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3DLength( vectorID, newlength );
+}
+
+/**
+ * ベクトルの大きさ（ 絶対値 ）を取得します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @return 大きさ
+ */
+macro getVectorLength( int vectorID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DLength( vectorID );
+}
+
+/**
+ * ベクトルの内積を取得します。
+ * 
+ * @param vector1 内積を計算するベクトルのID
+ * @param vector2 内積を計算するベクトルのID
+ * @return 内積
+ */
+float getVectorInnerProduct( int vector1, int vector2 ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getVectorInnerProduct3D( vector1, vector2 );
+}
+
+/**
+ * ベクトルの外積を取得し、引数に指定されたベクトルに代入します。
+ * 
+ * @param vector1 外積を計算するベクトルのID
+ * @param vector2 外積を計算するベクトルのID
+ * @param crossVector 外積を代入するベクトルのID
+ */
+float getVectorCrossProduct( int vector1, int vector2, int crossVector ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_setBufferVectorCrossProduct3D( vector1, vector2, crossVector );
+}
+
+/**
+ * ベクトルの外積を取得し、新しく生成したベクトルに代入して返します。
+ * 
+ * @param vector1 外積を計算するベクトルのID
+ * @param vector2 外積を計算するベクトルのID
+ * @return 外積を代入するベクトルのID
+ */
+int getVectorCrossProduct( int vector1, int vector2 ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getVectorCrossProduct3D( vector1, vector2 );
+}
+
+/**
+ * ベクトルの画面射影におけるX成分を取得します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ * @return 描画領域におけるベクトル射影のX座標（ 描画領域左下頂点が 0 ）
+ */
+int projectVectorX( int vectorID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_projectVector3DX( vectorID, rendererID );
+}
+
+/**
+ * ベクトルの画面射影におけるY成分を取得します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ * @return 描画領域におけるベクトル射影のY座標（ 描画領域左下頂点が 0 ）
+ */
+int projectVectorY( int vectorID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_projectVector3DY( vectorID, rendererID );
+}
+
+
+/**
+ * ベクトルを座標変換し、引数に指定されたベクトルに代入します。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param transformedVectorID 座標変換結果を格納するベクトルのID
+ * @param rendererID レンダラーID
+ */
+void transformVector( int vectorID, int transformedVectorID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_transformVector3D( vectorID, transformedVectorID, coordinateID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 座標系を生成し、固有の識別番号（ 座標系ID ）を割り振って返します。
+ * 
+ * @return 生成した座標系のID
+ */
+int newCoordinate(){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_createCoordinateSystem3D();
+}
+
+/**
+ * 座標系を破棄します。
+ * 
+ * @param coordinateID 対象座標系のID
+ */
+void deleteCoordinate( int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeCoordinateSystem3D( coordinateID );
+}
+
+
+/**
+ * 座標系をワールド座標系上に配置登録します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ */
+void mountCoordinate( int coordinateID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addCoordinateSystem3D( coordinateID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * 座標系を他の座標系上に配置登録します。
+ * 
+ * @param cooedinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ * @param parentID 配置先座標系（ 親座標系 ）のID
+ */
+void mountCoordinate( int coordinateID, int rendererID, int parentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addCoordinateSystem3D( coordinateID, rendererID, parentID );
+}
+
+/**
+ * 座標系をワールド座標系上から配置解除します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ */
+int demountCoordinate( int coordinateID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeCoordinateSystem3D( coordinateID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * 座標系を他の座標系上から配置解除します。
+ * 
+ * @param cooedinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ * @param parentID 配置先座標系（ 親座標系 ）のID
+ */
+int demountCoordinate( int coordinateID, int rendererID, int parentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeCoordinateSystem3D( coordinateID, rendererID, parentID );
+}
+
+
+
+
+/**
+ * レンダラーによって確保されている、ワールド座標系のIDを取得します。
+ * 
+ * @param rendererID レンダラーID
+ * @return ワールド座標系のID
+ */
+int getWorldCoordinate( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D( rendererID );
+}
+
+/**
+ * レンダラーによって確保されている、ビュー座標系のIDを取得します。
+ * 
+ * @param rendererID レンダラーID
+ * @return ビュー座標系のID
+ */
+int getViewCoordinate( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getScreenSystem3D( rendererID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、平行移動させます。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+macro moveCoordinate( int coordinateID, float deltaX, float deltaY, float deltaZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveCoordinateSystem3D( coordinateID, deltaX, deltaY, deltaZ );
+}
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、平行移動させます。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param deltaVector 変位ベクトルのID
+ */
+void moveCoordinate( int coordinateID, int deltaVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_moveCoordinateSystem3D( coordinateID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+/**
+ * 座標系を、自身の座標軸を基準として、平行移動させます（ VCSSL ではこのような移動を「歩行」と呼びます ）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+macro walkCoordinate( int coordinateID, float deltaX, float deltaY, float deltaZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_walkCoordinateSystem3D( coordinateID, deltaX, deltaY, deltaZ );
+}
+
+/**
+ * 座標系を、自身の座標軸を基準として、平行移動させます（ VCSSL ではこのような移動を「歩行」と呼びます ）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param deltaVector 変位ベクトルのID
+ */
+void walkCoordinate( int coordinateID, int deltaVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_walkCoordinateSystem3D( coordinateID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、X軸まわりに回転させます。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotCoordinateX( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、Y軸まわりに回転させます。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotCoordinateY( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、Z軸まわりに回転させます。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotCoordinateZ( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（親座標系の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+macro rotCoordinate( int coordinateID, float angle, float vectorX, float vectorY, float vectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotCoordinateSystem3D( coordinateID, angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（親座標系の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void rotCoordinate( int coordinateID, float angle, int dirVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotCoordinateSystem3D( coordinateID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID)
+  );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（親座標系の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+macro rotCoordinate( int coordinateID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotCoordinateSystem3D( coordinateID, angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（親座標系の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void rotCoordinate( int coordinateID, float angle, int dirVectorID, int pointVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotCoordinateSystem3D( coordinateID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID),
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(pointVectorID)
+  );
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * 座標系を、自身の座標軸を基準として、X軸まわりに回転させます（ VCSSL ではこのような回転を「自転」と呼びます ）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro spinCoordinateX( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinXCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、自身の座標軸を基準として、Y軸まわりに回転させます（ VCSSL ではこのような回転を「自転」と呼びます ）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro spinCoordinateY( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinYCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、自身の座標軸を基準として、Z軸まわりに回転させます（ VCSSL ではこのような回転を「自転」と呼びます ）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro spinCoordinateZ( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinZCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+macro spinCoordinate( int coordinateID, float angle, float vectorX, float vectorY, float vectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinCoordinateSystem3D( coordinateID, angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void spinCoordinate( int coordinateID, float angle, int dirVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinCoordinateSystem3D( coordinateID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID)
+  );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+macro spinCoordinate( int coordinateID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinCoordinateSystem3D( coordinateID, angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void spinCoordinate( int coordinateID, float angle, int dirVectorID, int pointVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinCoordinateSystem3D( coordinateID, angle,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(dirVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(dirVectorID),
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(pointVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(pointVectorID)
+  );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標を設定します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param locationX 原点位置座標のX成分
+ * @param locationY 原点位置座標のY成分
+ * @param locationZ 原点位置座標のZ成分
+ */
+macro setCoordinateLocation( int coordinateID, float locationX, float locationY, float locationZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DOrigin( coordinateID, locationX, locationY, locationZ );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標を設定します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param localocationVector 原点位置座標を格納する配列
+ */
+macro setCoordinateLocation( int coordinateID, float locationVector[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DOrigin( coordinateID, locationVector[0], locationVector[1], locationVector[2] );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標を設定します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param localocationVectorID 原点位置座標を格納するベクトルのID
+ */
+void setCoordinateLocation( int coordinateID, int localocationVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DOrigin( coordinateID,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(localocationVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(localocationVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(localocationVectorID)
+  );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標を取得します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @return (float[])原点位置座標を格納するベクトルのID
+ */
+macro getCoordinateLocation( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DOrigin( coordinateID );
+}
+
+
+
+
+
+/**
+ * 座標系の角度を Z-X-Z オイラー角で設定します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param alpha Z-X-Z オイラー角のα角
+ * @param beta Z-X-Z オイラー角のβ角
+ * @param gamma Z-X-Z オイラー角のγ角
+ */
+void setCoordinateAngle( int coordinateID, float alpha, float beta, float gamma ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DEulerAngle( coordinateID, alpha, beta, gamma );
+}
+
+/**
+ * 座標系の角度を Z-X-Z オイラー角で設定します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle Z-X-Z オイラー角を格納する配列（ [0] がα、[1] がβ、[2] がγ ）
+ */
+void setCoordinateAngle( int coordinateID, float angle[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DEulerAngle( coordinateID, angle[0], angle[1], angle[2] );
+}
+
+/**
+ * 座標系の角度を Z-X-Z オイラー角で取得します。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @return Z-X-Z オイラー角を格納する配列（ [0] がα、[1] がβ、[2] がγ ）
+ */
+float[] getCoordinateAngle( int coordinateID ){
+  float angle[] = { SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DEulerAngleAlpha( coordinateID ), SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DEulerAngleBeta( coordinateID ), SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DEulerAngleGamma( coordinateID ) };
+  return angle;
+}
+
+
+
+
+
+
+
+macro setCoordinateBaseX( int coordinateID, float baseVectorX, float baseVectorY, float baseVectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseX( coordinateID, baseVectorX, baseVectorY, baseVectorZ );
+}
+void setCoordinateBaseX( int coordinateID, int baseVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseX( coordinateID,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(baseVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(baseVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(baseVectorID)
+  );
+}
+
+macro setCoordinateBaseY( int coordinateID, float baseVectorX, float baseVectorY, float baseVectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseY( coordinateID, baseVectorX, baseVectorY, baseVectorZ );
+}
+void setCoordinateBaseY( int coordinateID, int baseVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseY( coordinateID,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(baseVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(baseVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(baseVectorID)
+  );
+}
+
+macro setCoordinateBaseZ( int coordinateID, float baseVectorX, float baseVectorY, float baseVectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseZ( coordinateID, baseVectorX, baseVectorY, baseVectorZ );
+}
+void setCoordinateBaseZ( int coordinateID, int baseVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseZ( coordinateID,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(baseVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(baseVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(baseVectorID)
+  );
+}
+
+macro getCoordinateBaseX( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseX( coordinateID );
+}
+macro getCoordinateBaseY( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseY( coordinateID );
+}
+macro getCoordinateBaseZ( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseZ( coordinateID );
+}
+
+
+
+
+macro setCoordinateMatrixL( int coordinateID, float[][] matrixArray ){
+	setCoordinateTransformL( coordinateID, matrixArray );
+}
+macro setCoordinateMatrixR( int coordinateID, float[][] matrixArray ){
+	setCoordinateTransformR( coordinateID, matrixArray );
+}
+macro getCoordinateMatrixL( int coordinateID ){
+	getCoordinateTransformL( coordinateID );
+}
+macro getCoordinateMatrixR( int coordinateID ){
+	getCoordinateTransformR( coordinateID );
+}
+
+
+
+void setCoordinateTransformL( int coordinateID, float[][] matrix ){
+  float baseX[3];
+  float baseY[3];
+  float baseZ[3];
+  float origin[3];
+  float wTransform[4];
+  baseX[0] = matrix[0][0];
+  baseX[1] = matrix[1][0];
+  baseX[2] = matrix[2][0];
+  baseY[0] = matrix[0][1];
+  baseY[1] = matrix[1][1];
+  baseY[2] = matrix[2][1];
+  baseZ[0] = matrix[0][2];
+  baseZ[1] = matrix[1][2];
+  baseZ[2] = matrix[2][2];
+  origin[0] = matrix[0][3];
+  origin[1] = matrix[1][3];
+  origin[2] = matrix[2][3];
+
+  wTransform[0] = matrix[3][0];
+  wTransform[1] = matrix[3][1];
+  wTransform[2] = matrix[3][2];
+  wTransform[3] = matrix[3][3];
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseX( coordinateID, baseX[0], baseX[1], baseX[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseY( coordinateID, baseY[0], baseY[1], baseY[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseZ( coordinateID, baseZ[0], baseZ[1], baseZ[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DOrigin( coordinateID, origin[0], origin[1], origin[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DWTransformLine( coordinateID, wTransform[0], wTransform[1], wTransform[2], wTransform[3] );
+}
+
+float[][] getCoordinateTransformL( int coordinateID ){
+  float baseX[3];
+  float baseY[3];
+  float baseZ[3];
+  float origin[3];
+  float wTransform[4]
+  wTransform = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DWTransformLine( coordinateID );
+  baseX = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseX( coordinateID );
+  baseY = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseY( coordinateID );
+  baseZ = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseZ( coordinateID );
+  origin = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DOrigin( coordinateID );
+  float matrix[4][4];
+  matrix = 0.0;
+  matrix[0][0] = baseX[0];
+  matrix[1][0] = baseX[1];
+  matrix[2][0] = baseX[2];
+  matrix[0][1] = baseY[0];
+  matrix[1][1] = baseY[1];
+  matrix[2][1] = baseY[2];
+  matrix[0][2] = baseZ[0];
+  matrix[1][2] = baseZ[1];
+  matrix[2][2] = baseZ[2];
+  matrix[0][3] = origin[0];
+  matrix[1][3] = origin[1];
+  matrix[2][3] = origin[2];
+
+  matrix[3][0] = wTransform[0];
+  matrix[3][1] = wTransform[1];
+  matrix[3][2] = wTransform[2];
+  matrix[3][3] = wTransform[3];
+
+  return matrix;
+}
+
+
+void setCoordinateTransformR( int coordinateID, float[][] matrix ){
+  float baseX[3];
+  float baseY[3];
+  float baseZ[3];
+  float origin[3];
+  float wTransform[4];
+  baseX[0] = matrix[0][0];
+  baseX[1] = matrix[0][1];
+  baseX[2] = matrix[0][2];
+  baseY[0] = matrix[1][0];
+  baseY[1] = matrix[1][1];
+  baseY[2] = matrix[1][2];
+  baseZ[0] = matrix[2][0];
+  baseZ[1] = matrix[2][1];
+  baseZ[2] = matrix[2][2];
+  origin[0] = matrix[3][0];
+  origin[1] = matrix[3][1];
+  origin[2] = matrix[3][2];
+
+  wTransform[0] = matrix[0][3];
+  wTransform[1] = matrix[1][3];
+  wTransform[2] = matrix[2][3];
+  wTransform[3] = matrix[3][3];
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseX( coordinateID, baseX[0], baseX[1], baseX[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseY( coordinateID, baseY[0], baseY[1], baseY[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DBaseZ( coordinateID, baseZ[0], baseZ[1], baseZ[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DOrigin( coordinateID, origin[0], origin[1], origin[2] );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DWTransformLine( coordinateID, wTransform[0], wTransform[1], wTransform[2], wTransform[3] );
+}
+
+float[][] getCoordinateTransformR( int coordinateID ){
+  float baseX[3];
+  float baseY[3];
+  float baseZ[3];
+  float origin[3];
+  float wTransform[4];
+  wTransform = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DWTransformLine( coordinateID );
+  baseX = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseX( coordinateID );
+  baseY = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseY( coordinateID );
+  baseZ = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBaseZ( coordinateID );
+  origin = SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DOrigin( coordinateID );
+  float matrix[4][4];
+  matrix = 0.0;
+  matrix[3][3] = 1.0;
+  matrix[0][0] = baseX[0];
+  matrix[0][1] = baseX[1];
+  matrix[0][2] = baseX[2];
+  matrix[1][0] = baseY[0];
+  matrix[1][1] = baseY[1];
+  matrix[1][2] = baseY[2];
+  matrix[2][0] = baseZ[0];
+  matrix[2][1] = baseZ[1];
+  matrix[2][2] = baseZ[2];
+  matrix[3][0] = origin[0];
+  matrix[3][1] = origin[1];
+  matrix[3][2] = origin[2];
+
+  matrix[0][3] = wTransform[0];
+  matrix[1][3] = wTransform[1];
+  matrix[2][3] = wTransform[2];
+  matrix[3][3] = wTransform[3];
+  return matrix;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、平行移動させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+void moveView( int rendererID, float dx, float dy, float dz ){
+  walkCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -dx, -dy, -dz );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、平行移動させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param deltaVectorID 変位ベクトルのID
+ */
+void moveView( int rendererID, int deltaVectorID ){
+  walkCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、平行移動させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param deltaX X軸方向の変位
+ * @param deltaY Y軸方向の変位
+ * @param deltaZ Z軸方向の変位
+ */
+void walkView( int rendererID, float deltaX, float deltaY, float deltaZ ){
+  moveCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -deltaX, -deltaY, -deltaZ );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、平行移動させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param deltaVector 変位ベクトルのID
+ */
+void walkView( int rendererID, int deltaVectorID ){
+  moveCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、X軸まわりに回転させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotViewX( int rendererID, float angle ){
+  spinXCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Y軸まわりに回転させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotViewY( int rendererID, float angle ){
+  spinYCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Z軸まわりに回転させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotViewZ( int rendererID, float angle ){
+  spinZCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+void rotView( int rendererID, float angle, float vectorX, float vectorY, float vectorZ ){
+  spinCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void rotView( int rendererID, float angle, int dirVectorID ){
+  spinCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, dirVectorID );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+void rotView( int rendererID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  spinCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void rotView( int rendererID, float angle, int dirVectorID, int pointVectorID ){
+  spinCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, dirVectorID, pointVectorID );
+}
+
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、X軸まわりに回転させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinViewX( int rendererID, float angle ){
+  rotXCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、Y軸まわりに回転させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinViewY( int rendererID, float angle ){
+  rotYCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、Z軸まわりに回転させます。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinViewZ( int rendererID, float angle ){
+  rotZCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+void spinView( int rendererID, float angle, float vectorX, float vectorY, float vectorZ ){
+  rotCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, vectorX, vectorY, vectorZ );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void spinView( int rendererID, float angle, int dirVectorID ){
+  rotCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, dirVectorID );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+void spinView( int rendererID, float angle, float vectorX, float vectorY, float vectorZ, float pointX, float pointY, float pointZ ){
+  rotCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, vectorX, vectorY, vectorZ, pointX, pointY, pointZ );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void spinView( int rendererID, float angle, int dirVectorID, int pointVectorID ){
+  rotCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle, dirVectorID, pointVectorID );
+}
+
+
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param locationX 原点位置座標のX成分
+ * @param locationY 原点位置座標のY成分
+ * @param locationZ 原点位置座標のZ成分
+ */
+void setViewLocation( int rendererID, float x, float y, float z ){
+  setCoordinateLocation( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), 0.0, 0.0, 0.0 );
+  walkCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -x, -y, -z );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param localocationVector 原点位置座標を格納する配列
+ */
+void setViewLocation( int rendererID, float locationVector[] ){
+  setCoordinateLocation( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), 0.0, 0.0, 0.0 );
+  walkCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -locationVector[0], -locationVector[1], -locationVector[2] );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param localocationVectorID 原点位置座標を格納するベクトルのID
+ */
+void setViewLocation( int rendererID, int locationVectorID ){
+  setCoordinateLocation( getWorldCoordinate(rendererID), 0.0, 0.0, 0.0 );
+  walkCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(locationVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(locationVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(locationVectorID) );
+}
+
+
+
+/**
+ * ビュー座標系の角度を Z-X-Z オイラー角で設定します。
+ * 
+ * @param rendererID レンダラーID
+ * @param alpha Z-X-Z オイラー角のα角
+ * @param beta Z-X-Z オイラー角のβ角
+ * @param gamma Z-X-Z オイラー角のγ角
+ */
+void setViewAngle( int rendererID, float alpha, float beta, float gamma ){
+  setCoordinateEulerAngle( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), 0.0, 0.0, 0.0 );
+  rotZCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -alpha );
+  rotXCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -beta );
+  rotZCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -gamma );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * グラフィックスポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#newImagePolygon">newImagePolygon</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param ax X座標
+ * @param ay Y座標
+ * @param az Z座標
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID 描画内容のグラフィックスデータID
+ * @return 生成したポリゴンのID
+ */
+int newGraphicsPolygon( float ax, float ay, float az, float width, float height, int graphicsID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createImageElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( id, ax, ay, az );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DImage( id, graphicsID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, width, height );
+  return id;
+}
+
+/**
+ * グラフィックスポリゴンを生成し、固有の識別番号（ ポリゴンID ）を割り振って返します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#newImagePolygon">newImagePolygon</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 描画開始点のベクトルID
+ * @param width 幅
+ * @param height 高さ
+ * @param graphicsID 描画内容のグラフィックスデータID
+ * @return 生成したポリゴンのID
+ */
+int newGraphicsPolygon( int vectorID, float width, float height, int graphicsID ){
+  int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createImageElement3D();
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( id, vectorID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DImage( id, graphicsID );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSize( id, width, height );
+  return id;
+}
+
+/**
+ * ポリゴンのグラフィックスデータを設定します。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#setPolygonImage">setPolygonImage</a> 関数がサポートされています。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param graphicsID グラフィックスデータのID
+ */
+macro setPolygonGraphics( int polygonID, int graphicsID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DImage( polygonID, graphicsID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setPolygonVector( int polygonID, float vertex_a1, float vertex_a2, float vertex_a3 ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_a1, vertex_a2, vertex_a3 );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setPolygonVector( int polygonID, float vertex_a1, float vertex_a2, float vertex_a3, float vertex_b1, float vertex_b2, float vertex_b3 ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_a1, vertex_a2, vertex_a3, vertex_b1, vertex_b2, vertex_b3 );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setPolygonVector( int polygonID, float vertex_a1, float vertex_a2, float vertex_a3, float vertex_b1, float vertex_b2, float vertex_b3, float vertex_c1, float vertex_c2, float vertex_c3 ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_a1, vertex_a2, vertex_a3, vertex_b1, vertex_b2, vertex_b3, vertex_c1, vertex_c2, vertex_c3 );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+macro setPolygonVector( int polygonID, float vertex_a1, float vertex_a2, float vertex_a3, float vertex_b1, float vertex_b2, float vertex_b3, float vertex_c1, float vertex_c2, float vertex_c3, float vertex_d1, float vertex_d2, float vertex_d3 ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( polygonID, vertex_a1, vertex_a2, vertex_a3, vertex_b1, vertex_b2, vertex_b3, vertex_c1, vertex_c2, vertex_c3, vertex_d1, vertex_d2, vertex_d3 );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+float[] getPolygonVector( int polygonID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertex( polygonID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void getPolygonVector( int polygonID, ... int vectorID[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertexVector( polygonID, vectorID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ */
+void setPolygonVector( int polygonID, ... int vectorID[] ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertexVector( polygonID, vectorID );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ポリゴンをワールド座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountPolygon">mountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ */
+void addPolygon( int polygonID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( polygonID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ポリゴンを任意の座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountPolygon">mountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void addPolygon( int polygonID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( polygonID, rendererID, coordinateID );
+}
+
+
+/**
+ * ポリゴンをワールド座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountPolygon">demountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ */
+int removePolygon( int polygonID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( polygonID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ポリゴンを任意の座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountPolygon">demountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int removePolygon( int polygonID, int rendererID, int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( polygonID, rendererID, coordinateID );
+}
+
+
+/**
+ * ポリゴンをX軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotPolygonX">rotPolygonX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotXPolygon( int polygonID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXElement3D( polygonID, angle );
+}
+
+/**
+ * ポリゴンをY軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotPolygonY">rotPolygonY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotYPolygon( int polygonID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYElement3D( polygonID, angle );
+}
+
+/**
+ * ポリゴンをZ軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotPolygonZ">rotPolygonZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotZPolygon( int polygonID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZElement3D( polygonID, angle );
+}
+
+
+
+
+/**
+ * Zソート法での描画において、ポリゴン前後判定を補正するためのオフセット値を設定します。
+ * 現在は、より新しく高機能な <a href="#setPolygonDepthOffset">setPolygonDepthOffset</a> 関数が利用可能です。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param polygonID 対象ポリゴンのID
+ * @param offset ポリゴン前後判定におけるオフセット値
+ */
+macro setPolygonSortOffset( int polygonID, float offset ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DSortOffset( polygonID, offset );
+}
+
+
+
+
+
+/**
+ * モデルをワールド座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountModel">mountModel</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ */
+void addModel( int modelID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addModel3D( modelID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * モデルを任意の座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountModel">mountModel</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void addModel( int modelID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addModel3D( modelID, rendererID, coordinateID );
+}
+
+/**
+ * モデルをワールド座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountModel">demountModel</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ */
+int removeModel( int modelID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeModel3D( modelID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * モデルを任意の座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountModel">demountModel</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int removeModel( int modelID, int rendererID, int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeModel3D( modelID, rendererID, coordinateID );
+}
+
+
+
+
+/**
+ * モデルをX軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotModelX">rotModelX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotXModel( int modelID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXModel3D( modelID, angle );
+}
+
+/**
+ * モデルをY軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotModelY">rotModelY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotYModel( int modelID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYModel3D( modelID, angle );
+}
+
+/**
+ * モデルをZ軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotModelZ">rotModelZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotZModel( int modelID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZModel3D( modelID, angle );
+}
+
+
+
+/**
+ * Zソート法での描画において、モデル前後判定を補正するためのオフセット値を設定します。
+ * 現在は、より新しく高機能な <a href="#setModelDepthOffset">setModelDepthOffset</a> 関数が利用可能です。
+ * この関数は互換目的でサポートされています。
+ * 
+ * @param modelID 対象モデルのID
+ * @param offset ポリゴン前後判定におけるオフセット値
+ */
+macro setModelSortOffset( int modelID, float offset ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setModel3DSortOffset( modelID, offset );
+}
+
+
+
+
+/**
+ * ライトをワールド座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountPolygon">mountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ */
+void addLight( int lightID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( lightID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ライトを任意の座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountPolygon">mountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void addLight( int lightID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addElement3D( lightID, rendererID, coordinateID );
+}
+
+/**
+ * ライトをワールド座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountPolygon">demountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ */
+int removeLight( int lightID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( lightID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ライトを任意の座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountPolygon">demountPolygon</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int removeLight( int lightID, int rendererID, int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeElement3D( lightID, rendererID, coordinateID );
+}
+
+
+
+/**
+ * ライトをX軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotLightX">rotLightX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotXLight( int lightID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXElement3D( lightID, angle );
+}
+
+/**
+ * ライトをY軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotLightY">rotLightY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotYLight( int lightID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYElement3D( lightID, angle );
+}
+
+/**
+ * ライトをZ軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotLightZ">rotLightZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotZLight( int lightID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZElement3D( lightID, angle );
+}
+
+
+
+/**
+ * ライトの位置または方向ベクトルを設定します。
+ * 現在は、より新しい <a href="#setLightLocation">setLightLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param locationX 位置または方向のX成分
+ * @param locationY 位置または方向のY成分
+ * @param locationZ 位置または方向のZ成分
+ */
+macro setLightVector( int lightID, float locationX, float locationY, float locationZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( lightID, locationX, locationY, locationZ );
+}
+
+/**
+ * ライトの位置または方向ベクトルを設定します。
+ * 現在は、より新しい <a href="#setLightLocation">setLightLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param vectorID 位置または方向ベクトルのID
+ */
+void setLightVector( int lightID, int vectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setElement3DVertex( lightID, SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(vectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(vectorID) );
+}
+
+/**
+ * ライトの位置または方向を取得します。
+ * 現在は、より新しい <a href="#getLightLocation">getLightLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @return 位置または方向（ [0]がX成分、[1]がY成分、[2]がZ成分 ）
+ */
+float[] getLightVector( int lightID ){
+	float[][] vertex = SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertex2( lightID );
+	float vector[3];
+	vector[0] = vertex[0][0];
+	vector[1] = vertex[0][1];
+	vector[2] = vertex[0][2];
+	return vector;
+}
+
+/**
+ * ライトの位置または方向を取得し、引数に指定されたベクトルに代入します。
+ * 現在は、より新しい <a href="#getLightLocation">getLightLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param lightID 対象ライトのID
+ * @param vectorID 位置または方向を格納するベクトルのID
+ */
+void getLightVector( int lightID, int vectorID ){
+	float[][] vertex = SYSTEM_PROCESS_DRIVER_GRAPHICS_getElement3DVertex2( lightID );
+	float vector[3];
+	vector[0] = vertex[0][0];
+	vector[1] = vertex[0][1];
+	vector[2] = vertex[0][2];
+	SYSTEM_PROCESS_DRIVER_GRAPHICS_setVector3D(vectorID, vector[0], vector[1], vector[2]);
+}
+
+
+
+/**
+ * ベクトルをワールド座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountVector">mountVector</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ */
+void addVector( int vectorID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addVector3D( vectorID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * ベクトルをワールド座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountVector">mountVector</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+void addVector( int vectorID, int rendererID, int coordinateID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addVector3D( vectorID, rendererID, coordinateID );
+}
+
+/**
+ * ベクトルをワールド座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountVector">demountVector</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ */
+int removeVector( int id, int rendererID ){
+}
+
+/**
+ * ベクトルをワールド座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountVector">demountVector</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param rendererID レンダラーID
+ * @param coordinateID 配置先座標系のID
+ */
+int removeVector( int id, int rendererID, int coordinateID ){
+}
+
+/**
+ * ベクトルをX軸まわりに回転させます。
+ * 現在では、より新しい <a href="#rotVectorX">rotVectorX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotXVector( int vectorID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXVector3D( vectorID, angle );
+}
+
+/**
+ * ベクトルをY軸まわりに回転させます。
+ * 現在では、より新しい <a href="#rotVectorY">rotVectorY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotYVector( int vectorID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYVector3D( vectorID, angle );
+}
+
+/**
+ * ベクトルをZ軸まわりに回転させます。
+ * 現在では、より新しい <a href="#rotVectorZ">rotVectorZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param vectorID 対象ベクトルのID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotZVector( int vectorID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZVector3D( vectorID, angle );
+}
+
+
+/**
+ * レンダラーによって確保されている、ビュー座標系のIDを取得します。
+ * この関数は名称が紛らわしいため、使用は推奨されません。新しいプログラムでは、代わりに <a href="#getViewCoordinate">getViewCoordinate</a> 関数を使用してください。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @return ビュー座標系のID
+ */
+int getScreenCoordinate( int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getScreenSystem3D( rendererID );
+}
+
+
+/**
+ * 座標系をワールド座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountCoordinate">mountCoordinate</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ */
+void addCoordinate( int coordinateID, int rendererID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addCoordinateSystem3D( coordinateID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * 座標系を他の座標系上に配置登録します。
+ * VCSSL 3 以降では、より新しい <a href="#mountCoordinate">mountCoordinate</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param cooedinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ * @param parentID 配置先座標系（ 親座標系 ）のID
+ */
+void addCoordinate( int coordinateID, int rendererID, int parentID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_addCoordinateSystem3D( coordinateID, rendererID, parentID );
+}
+
+/**
+ * 座標系をワールド座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountCoordinate">demountCoordinate</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ */
+int removeCoordinate( int coordinateID, int rendererID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeCoordinateSystem3D( coordinateID, rendererID, getWorldCoordinate(rendererID) );
+}
+
+/**
+ * 座標系を他の座標系上から配置解除します。
+ * VCSSL 3 以降では、より新しい <a href="#demountCoordinate">demountCoordinate</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param cooedinateID 対象座標系のID
+ * @param rendererID レンダラーID
+ * @param parentID 配置先座標系（ 親座標系 ）のID
+ */
+int removeCoordinate( int coordinateID, int rendererID, int parentID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_removeCoordinateSystem3D( coordinateID, rendererID, parentID );
+}
+
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotCoordinateX">rotCoordinateX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotXCoordinate( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotXCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、Y軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotCoordinateY">rotCoordinateY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotYCoordinate( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotYCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、親座標系の座標軸を基準として、Z軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotCoordinateZ">rotCoordinateZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro rotZCoordinate( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_rotZCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、自身の座標軸を基準として、X軸まわりに回転させます（ VCSSL ではこのような回転を「自転」と呼びます ）。
+ * 現在は、より新しい <a href="#spinCoordinateX">spinCoordinateX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro spinXCoordinate( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinXCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、自身の座標軸を基準として、Y軸まわりに回転させます（ VCSSL ではこのような回転を「自転」と呼びます ）。
+ * 現在は、より新しい <a href="#spinCoordinateY">spinCoordinateY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro spinYCoordinate( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinYCoordinateSystem3D( coordinateID, angle );
+}
+
+/**
+ * 座標系を、自身の座標軸を基準として、Z軸まわりに回転させます（ VCSSL ではこのような回転を「自転」と呼びます ）。
+ * 現在は、より新しい <a href="#spinCoordinateZ">spinCoordinateZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+macro spinZCoordinate( int coordinateID, float angle ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_spinZCoordinateSystem3D( coordinateID, angle );
+}
+
+
+
+/**
+ * 座標系の、親座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setCoordinateLocation">setCoordinateLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param originVectorX 原点位置座標のX成分
+ * @param originVectorY 原点位置座標のY成分
+ * @param originVectorZ 原点位置座標のZ成分
+ */
+macro setCoordinateOrigin( int coordinateID, float originVectorX, float originVectorY, float originVectorZ ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DOrigin( coordinateID, originVectorX, originVectorY, originVectorZ );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setCoordinateLocation">setCoordinateLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param originVectorID 原点位置座標を格納するベクトルのID
+ */
+void setCoordinateOrigin( int coordinateID, int originVectorID ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DOrigin( coordinateID,
+    SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(originVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(originVectorID), SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(originVectorID)
+  );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標のX成分を取得します。
+ * 現在は、より新しい <a href="#getCoordinateLocation">getCoordinateLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @return 原点位置座標のX成分
+ */
+macro getCoordinateOriginX( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DOriginX( coordinateID );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標のY成分を取得します。
+ * 現在は、より新しい <a href="#getCoordinateLocation">getCoordinateLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @return 原点位置座標のY成分
+ */
+macro getCoordinateOriginY( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DOriginY( coordinateID );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標のZ成分を取得します。
+ * 現在は、より新しい <a href="#getCoordinateLocation">getCoordinateLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @return 原点位置座標のZ成分
+ */
+macro getCoordinateOriginZ( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DOriginZ( coordinateID );
+}
+
+/**
+ * 座標系の、親座標系から見た原点位置座標を取得します。
+ * 現在は、より新しい <a href="#getCoordinateLocation">getCoordinateLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @return (float[])原点位置座標を格納するベクトルのID
+ */
+macro getCoordinateOrigin( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DOrigin( coordinateID );
+}
+
+/**
+ * 座標系の角度を Z-X-Z オイラー角で設定します。
+ * 現在は、より新しい <a href="#setCoordinateAngle">setCoordinateAngle</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param alpha Z-X-Z オイラー角のα角
+ * @param beta Z-X-Z オイラー角のβ角
+ * @param gamma Z-X-Z オイラー角のγ角
+ */
+macro setCoordinateEulerAngle( int coordinateID, float alpha, float beta, float gamma ){
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_setCoordinateSystem3DEulerAngle( coordinateID, alpha, beta, gamma );
+}
+
+/**
+ * 座標系の角度を Z-X-Z オイラー角で表した場合におけるα角を取得しします。
+ * 現在は、より新しい <a href="#getCoordinateAngle">getCoordinateAngle</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param alpha Z-X-Z オイラー角のα角
+ */
+macro getCoordinateEulerAngleAlpha( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DEulerAngleAlpha( coordinateID );
+}
+
+/**
+ * 座標系の角度を Z-X-Z オイラー角で表した場合におけるβ角を取得しします。
+ * 現在は、より新しい <a href="#getCoordinateAngle">getCoordinateAngle</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param alpha Z-X-Z オイラー角のβ角
+ */
+macro getCoordinateEulerAngleBeta( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DEulerAngleBeta( coordinateID );
+}
+
+/**
+ * 座標系の角度を Z-X-Z オイラー角で表した場合におけるγ角を取得しします。
+ * 現在は、より新しい <a href="#getCoordinateAngle">getCoordinateAngle</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param coordinateID 対象座標系のID
+ * @param alpha Z-X-Z オイラー角のγ角
+ */
+macro getCoordinateEulerAngleGamma( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DEulerAngleGamma( coordinateID );
+}
+
+
+/**
+ * この関数の使用は推奨されません。この関数は正しい Z-X-Z オイラー角に準拠していません。代わりに <a href="#setCoordinateAngle">setCoordinateAngle</a> 関数を使用してください。この関数は互換目的でサポートされています。
+ */
+macro getCoordinateAlphaAngle( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DAlphaAngle_REGACY( coordinateID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は正しい Z-X-Z オイラー角に準拠していません。代わりに <a href="#setCoordinateAngle">setCoordinateAngle</a> 関数を使用してください。この関数は互換目的でサポートされています。
+ */
+macro getCoordinateBetaAngle( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DBetaAngle_REGACY( coordinateID );
+}
+
+/**
+ * この関数の使用は推奨されません。この関数は正しい Z-X-Z オイラー角に準拠していません。代わりに <a href="#setCoordinateAngle">setCoordinateAngle</a> 関数を使用してください。この関数は互換目的でサポートされています。
+ */
+macro getCoordinateGammaAngle( int coordinateID ){
+  return SYSTEM_PROCESS_DRIVER_GRAPHICS_getCoordinateSystem3DGammaAngle_REGACY( coordinateID );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotVectorX">rotVectorX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotXView( int rendererID, float angle ){
+  spinXCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Y軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotVectorY">rotVectorY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotYView( int rendererID, float angle ){
+  spinYCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Z軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotVectorZ">rotVectorZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotZView( int rendererID, float angle ){
+  spinZCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotVectorX">rotVectorX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinXView( int rendererID, float angle ){
+  rotXCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、Y軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotVectorY">rotVectorY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinYView( int rendererID, float angle ){
+  rotYCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、Z軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotVectorZ">rotVectorZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinZView( int rendererID, float angle ){
+  rotZCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -angle );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setViewLocation">setViewLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param locationX 原点位置座標のX成分
+ * @param locationY 原点位置座標のY成分
+ * @param locationZ 原点位置座標のZ成分
+ */
+void setViewOrigin( int rendererID, float x, float y, float z ){
+  setCoordinateOrigin( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), 0.0, 0.0, 0.0 );
+  walkCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -x, -y, -z );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setViewLocation">setViewLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param rendererID レンダラーID
+ * @param localocationVector 原点位置座標を格納する配列
+ */
+void setViewOrigin( int rendererID, int originVectorID ){
+  setCoordinateOrigin( getWorldCoordinate(rendererID), 0.0, 0.0, 0.0 );
+  walkCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(originVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(originVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(originVectorID) );
+}
+
+
+
+/**
+ * この関数の使用は推奨されません。この関数は正しい Z-X-Z オイラー角に準拠していません。代わりに <a href="#setViewAngle">setViewAngle</a> 関数を使用してください。この関数は互換目的でサポートされています。
+ */
+void setViewEulerAngle( int rendererID, float alpha, float beta, float gamma ){
+  setCoordinateEulerAngle( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), 0.0, 0.0, 0.0 );
+  rotXCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -alpha );
+  rotYCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -beta );
+  rotZCoordinate( SYSTEM_PROCESS_DRIVER_GRAPHICS_getWorldSystem3D(rendererID), -gamma );
+}
+
+
+
+
+
+
+
+
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、平行移動させます。
+ * 現在は、より新しい <a href="#moveView">moveView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param dx X軸方向の変位
+ * @param dy Y軸方向の変位
+ * @param dz Z軸方向の変位
+ */
+void moveCamera( int worldID, float dx, float dy, float dz ){
+  walkCoordinate( worldID, -dx, -dy, -dz );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、平行移動させます。
+ * 現在は、より新しい <a href="#moveView">moveView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param deltaVectorID 変位ベクトルのID
+ */
+void moveCamera( int worldID, int deltaVectorID ){
+  walkCoordinate( worldID, -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、平行移動させます。
+ * 現在は、より新しい <a href="#walkCamera">walkCamera</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param dx X軸方向の変位
+ * @param dy Y軸方向の変位
+ * @param dz Z軸方向の変位
+ */
+void walkCamera( int worldID, float dx, float dy, float dz ){
+  moveCoordinate( worldID, -dx, -dy, -dz );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、平行移動させます。
+ * 現在は、より新しい <a href="#walkCamera">walkCamera</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param deltaVectorID 変位ベクトルのID
+ */
+void walkCamera( int worldID, int deltaVectorID ){
+  moveCoordinate( worldID, -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(deltaVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(deltaVectorID) );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotViewX">rotViewX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotCameraX( int worldID, float angle ){
+  spinXCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Y軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotViewY">rotViewY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotCameraY( int worldID, float angle ){
+  spinYCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Z軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotViewZ">rotViewZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotCameraZ( int worldID, float angle ){
+  spinZCoordinate( worldID, -angle );
+}
+
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotViewX">rotViewX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotXCamera( int worldID, float angle ){
+  spinXCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Y軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotViewY">rotViewY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotYCamera( int worldID, float angle ){
+  spinYCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、ワールド座標系の座標軸を基準として、Z軸まわりに回転させます。
+ * 現在は、より新しい <a href="#rotViewZ">rotViewZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void rotZCamera( int worldID, float angle ){
+  spinZCoordinate( worldID, -angle );
+}
+
+
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 現在は、より新しい <a href="#rotView">rotView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+void rotCamera( int worldID, float angle, float vx, float vy, float vz ){
+  spinCoordinate( worldID, -angle, vx, vy, vz );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 現在は、より新しい <a href="#rotView">rotView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void rotCamera( int worldID, float angle, int dirVectorID ){
+  spinCoordinate( worldID, -angle, dirVectorID );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 現在は、より新しい <a href="#rotView">rotView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+void rotCamera( int worldID, float angle, float vx, float vy, float vz, float px, float py, float pz ){
+  spinCoordinate( worldID, -angle, vx, vy, vz, px, py, pz );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（ワールド座標系の座標軸基準）。
+ * 現在は、より新しい <a href="#rotView">rotView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void rotCamera( int worldID, float angle, int dirVectorID, int pointVectorID ){
+  spinCoordinate( worldID, -angle, dirVectorID, pointVectorID );
+}
+
+
+
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#spinViewX">spinViewX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinCameraX( int worldID, float angle ){
+  rotXCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、Y軸まわりに回転させます。
+ * 現在は、より新しい <a href="#spinViewY">spinViewY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinCameraY( int worldID, float angle ){
+  rotYCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、Z軸まわりに回転させます。
+ * 現在は、より新しい <a href="#spinViewZ">spinViewZ</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinCameraZ( int worldID, float angle ){
+  rotZCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#spinViewX">spinViewX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinXCamera( int worldID, float angle ){
+  rotXCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、Y軸まわりに回転させます。
+ * 現在は、より新しい <a href="#spinViewY">spinViewY</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Y軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinYCamera( int worldID, float angle ){
+  rotYCoordinate( worldID, -angle );
+}
+
+/**
+ * ビュー座標系を、自身の座標軸を基準として、X軸まわりに回転させます。
+ * 現在は、より新しい <a href="#spinViewX">spinViewX</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ X軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ */
+void spinZCamera( int worldID, float angle ){
+  rotZCoordinate( worldID, -angle );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 現在は、より新しい <a href="#spinView">spinView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ */
+void spinCamera( int worldID, float angle, float vx, float vy, float vz ){
+  rotCoordinate( worldID, -angle, vx, vy, vz );
+}
+
+/**
+ * 原点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 現在は、より新しい <a href="#spinView">spinView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ */
+void spinCamera( int worldID, float angle, int dirVectorID ){
+  rotCoordinate( worldID, -angle, dirVectorID );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 現在は、より新しい <a href="#spinView">spinView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ 回転軸ベクトルの向きに右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param vectorX 回転軸の方向ベクトルX成分
+ * @param vectorY 回転軸の方向ベクトルY成分
+ * @param vectorZ 回転軸の方向ベクトルZ成分
+ * @param pointX 回転軸が通る点のX座標
+ * @param pointY 回転軸が通る点のY座標
+ * @param pointZ 回転軸が通る点のZ座標
+ */
+void spinCamera( int worldID, float angle, float vx, float vy, float vz, float px, float py, float pz ){
+  rotCoordinate( worldID, -angle, vx, vy, vz, px, py, pz );
+}
+
+/**
+ * 任意点を通る、任意方向ベクトルの回転軸まわりに、ビュー座標系を回転させます（自身の座標軸基準）。
+ * 現在は、より新しい <a href="#spinView">spinView</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param angle 回転角度（ Z軸方向に右ねじが進む回転方向を正とし、単位はラジアンで指定 ）
+ * @param dirVectorID 回転軸の方向ベクトルID
+ * @param pointVectorID 回転軸が通る点の座標ベクトルID
+ */
+void spinCamera( int worldID, float angle, int dirVectorID, int pointVectorID ){
+  rotCoordinate( worldID, -angle, dirVectorID, pointVectorID );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setViewLocation">setViewLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param locationX 原点位置座標のX成分
+ * @param locationY 原点位置座標のY成分
+ * @param locationZ 原点位置座標のZ成分
+ */
+void setCameraOrigin( int worldID, float x, float y, float z ){
+  setCoordinateOrigin( worldID, 0.0, 0.0, 0.0 );
+  walkCoordinate( worldID, -x, -y, -z );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setViewLocation">setViewLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param localocationVector 原点位置座標を格納する配列
+ */
+void setCameraOrigin( int worldID, int originVectorID ){
+  setCoordinateOrigin( worldID, 0.0, 0.0, 0.0 );
+  walkCoordinate( worldID, -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(originVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(originVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(originVectorID) );
+}
+
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setViewLocation">setViewLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param locationX 原点位置座標のX成分
+ * @param locationY 原点位置座標のY成分
+ * @param locationZ 原点位置座標のZ成分
+ */
+void setCameraLocation( int worldID, float x, float y, float z ){
+  setCoordinateLocation( worldID, 0.0, 0.0, 0.0 );
+  walkCoordinate( worldID, -x, -y, -z );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setViewLocation">setViewLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param localocationVector 原点位置座標を格納する配列
+ */
+void setCameraLocation( int worldID, float originVector[] ){
+  setCoordinateLocation( worldID, 0.0, 0.0, 0.0 );
+  walkCoordinate( worldID, -originVector[0], -originVector[1], -originVector[2] );
+}
+
+/**
+ * ビュー座標系の、ワールド座標系から見た原点位置座標を設定します。
+ * 現在は、より新しい <a href="#setViewLocation">setViewLocation</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param localocationVectorID 原点位置座標を格納するベクトルのID
+ */
+void setCameraLocation( int worldID, int originVectorID ){
+  setCoordinateLocation( worldID, 0.0, 0.0, 0.0 );
+  walkCoordinate( worldID, -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DX(originVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DY(originVectorID), -SYSTEM_PROCESS_DRIVER_GRAPHICS_getVector3DZ(originVectorID) );
+}
+
+
+
+/**
+ * ビュー座標系の角度を Z-X-Z オイラー角で設定します。
+ * 現在は、より新しい <a href="#setViewAngle">setViewAngle</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+ * 
+ * @param worldID ワールド座標系のID
+ * @param alpha Z-X-Z オイラー角のα角
+ * @param beta Z-X-Z オイラー角のβ角
+ * @param gamma Z-X-Z オイラー角のγ角
+ */
+void setCameraAngle( int worldID, float alpha, float beta, float gamma ){
+  setCoordinateEulerAngle( worldID, 0.0, 0.0, 0.0 );
+  rotZCoordinate( worldID, -alpha );
+  rotXCoordinate( worldID, -beta );
+  rotZCoordinate( worldID, -gamma );
+}
+
+
+/**
+ * この関数の使用は推奨されません。この関数は正しい Z-X-Z オイラー角に準拠していません。代わりに <a href="#setViewAngle">setViewAngle</a> 関数を使用してください。この関数は互換目的でサポートされています。
+ */
+void setCameraEulerAngle( int worldID, float alpha, float beta, float gamma ){
+  setCoordinateEulerAngle( worldID, 0.0, 0.0, 0.0 );
+  rotXCoordinate( worldID, -alpha );
+  rotYCoordinate( worldID, -beta );
+  rotZCoordinate( worldID, -gamma );
+}
+
+
+
