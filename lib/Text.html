@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>Text</h1>
+<hr />
+<h2 id="abstract">概要 - Abstract</h2>
+<p>VCSSL Text ライブラリ は、テキスト（文字列）処理を扱う標準ライブラリです。</p><p>このライブラリでは、文字列を扱う string 型の変数に対して、長さや部分文字列の取得、検索と置換、分割などの機能を提供します。なお、検索、置換、分割では、正規表現を用いる事もできます。</p> <hr />
+<h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
+<dl>
+<dt><a href="#split">string[ ] split( string text, string cut ) </a></dt>
+<dd>文字列を、特定の文字列の位置で分割し、配列にまとめて返します。 </dd>
+<dt><a href="#splitPattern">string[ ] splitPattern( string text, string cut ) </a></dt>
+<dd>文字列を、特定の正規表現に適合する位置で分割し、配列にまとめて返します。 </dd>
+<dt><a href="#replace">string replace( string text, string oldText, string newText ) </a></dt>
+<dd>文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。部分文字列の適合箇所が複数存在する場合は、全て置換されます。 </dd>
+<dt><a href="#replacePattern">string replacePattern( string text, string oldText, string newText ) </a></dt>
+<dd>文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。正規表現の適合箇所が複数存在する場合は、全て置換されます。 </dd>
+<dt><a href="#replaceFirst">string replaceFirst( string text, string oldText, string newText ) </a></dt>
+<dd>文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。部分文字列の適合箇所が複数存在する場合は、最初のものだけが置換されます。 </dd>
+<dt><a href="#replaceFirstPattern">string replaceFirstPattern( string text, string oldText, string newText ) </a></dt>
+<dd>文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。正規表現の適合箇所が複数存在する場合は、最初のものだけが置換されます。 </dd>
+<dt><a href="#replaceFirst">string replaceFirst( string text, string oldText, string newText, int start ) </a></dt>
+<dd>文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。部分文字列の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。 </dd>
+<dt><a href="#replaceFirstPattern">string replaceFirstPattern( string text, string oldText, string newText, int start ) </a></dt>
+<dd>文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。 </dd>
+<dt><a href="#startsWith">bool startsWith( string text, string word ) </a></dt>
+<dd>文字列が、指定された部分文字列で始まっているかどうか判定します。 </dd>
+<dt><a href="#endsWith">bool endsWith( string text, string word ) </a></dt>
+<dd>文字列が、指定された部分文字列で終わっているかどうか判定します。 </dd>
+<dt><a href="#match">string match( string text, string pattern ) </a></dt>
+<dd>この API の使用は推奨されません。<a href="#matchFirst">matchFirst</a> を使用してください。この関数の機能は、将来的に変更が検討される可能性があります。 </dd>
+<dt><a href="#match">string match( string text, string pattern, int start ) </a></dt>
+<dd>この API の使用は推奨されません。<a href="#matchFirst">matchFirst</a> を使用してください。この関数の機能は、将来的に変更が検討される可能性があります。 </dd>
+<dt><a href="#matchFull">bool matchFull( string text, string pattern ) </a></dt>
+<dd>文字列全体が、正規表現に適合するかどうか判定します。 </dd>
+<dt><a href="#matchFirst">string matchFirst( string text, string pattern ) </a></dt>
+<dd>文字列全体から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、最初のものだけが選択されます。 </dd>
+<dt><a href="#matchFirst">string matchFirst( string text, string pattern, int start ) </a></dt>
+<dd>文字列から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降から、最初のものだけが選択されます。 </dd>
+<dt><a href="#matchLast">string matchLast( string text, string pattern ) </a></dt>
+<dd>文字列全体から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、最後のものだけが選択されます。 </dd>
+<dt><a href="#matchLast">string matchLast( string text, string pattern, int end ) </a></dt>
+<dd>文字列から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、引数 end に指定したインデックスの位置よりも前から、最後のものだけが選択されます。 </dd>
+<dt><a href="#indexOf">int indexOf( string text, string word ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。 </dd>
+<dt><a href="#indexOf">int indexOf( string text, string word, int start ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、引数 start に指定したインデックス以降から、最初のものが選択されます。存在しない場合は -1 を返します。 </dd>
+<dt><a href="#indexOfPattern">string indexOfPattern( string text, string word ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。 </dd>
+<dt><a href="#indexOfPattern">string indexOfPattern( string text, string word, int start ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最初のものが選択されます。引数 start に指定したインデックス以降から、存在しない場合は -1 を返します。 </dd>
+<dt><a href="#lastIndexOf">int lastIndexOf( string text, string word ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
+<dt><a href="#lastIndexOf">int lastIndexOf( string text, string word, int end ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
+<dt><a href="#lastIndexOfPattern">string lastIndexOfPattern( string text, string word ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
+<dt><a href="#lastIndexOfPattern">string lastIndexOfPattern( string text, string word, int end ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
+<dt><a href="#lengthOf">int lengthOf( string text ) </a></dt>
+<dd>文字列の文字数を返します。 </dd>
+<dt><a href="#charAt">string charAt( string text, int index ) </a></dt>
+<dd>文字列内の、指定されたインデックスの位置にある文字を返します。 </dd>
+<dt><a href="#substring">string substring( string text, int start, int end ) </a></dt>
+<dd>文字列内の、指定されたインデックス区間にある部分文字列を返します。 </dd>
+<dt><a href="#tokenize">string[ ] tokenize( string text ) </a></dt>
+<dd>文字列内を、空白またはタブ、もしくは改行区切りでトークンに分割し、配列にまとめて返します。 </dd>
+</dl>
+<hr />
+<h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
+<p> - なし - None  -</p>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<p> - なし - None  -</p>
+<hr />
+<h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="split"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] split( string text, string cut ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列を、特定の文字列の位置で分割し、配列にまとめて返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />cut : 分割点の文字列（結果の文字列配列の内容には含まれません） <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	分割結果を格納する配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="splitPattern"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] splitPattern( string text, string cut ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列を、特定の正規表現に適合する位置で分割し、配列にまとめて返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />cut : 分割点の正規表現（結果の文字列配列の内容には含まれません） <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	分割結果を格納する配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="replace"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string replace( string text, string oldText, string newText ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。<br />部分文字列の適合箇所が複数存在する場合は、全て置換されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />oldText : 置換前の部分文字列 <br />newText : 置換後の部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	置換結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="replacePattern"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string replacePattern( string text, string oldText, string newText ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。<br />正規表現の適合箇所が複数存在する場合は、全て置換されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />oldText : 置換箇所の正規表現 <br />newText : 置換後の部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	置換結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="replaceFirst"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string replaceFirst( string text, string oldText, string newText ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。<br />部分文字列の適合箇所が複数存在する場合は、最初のものだけが置換されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />oldText : 置換前の部分文字列 <br />newText : 置換後の部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	置換結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="replaceFirstPattern"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string replaceFirstPattern( string text, string oldText, string newText ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。<br />正規表現の適合箇所が複数存在する場合は、最初のものだけが置換されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />oldText : 置換箇所の正規表現 <br />newText : 置換後の部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	置換結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string replaceFirst( string text, string oldText, string newText, int start ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。<br />部分文字列の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />oldText : 置換前の部分文字列 <br />newText : 置換後の部分文字列 <br />start : 探索範囲の始点インデックス <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	置換結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string replaceFirstPattern( string text, string oldText, string newText, int start ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。<br />正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />oldText : 置換箇所の正規表現 <br />newText : 置換後の部分文字列 <br />start : 探索範囲の始点インデックス <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	置換結果<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="startsWith"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	bool startsWith( string text, string word ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列が、指定された部分文字列で始まっているかどうか判定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定された部分文字列で始まっていれば true 、そうでなければ false <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="endsWith"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	bool endsWith( string text, string word ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列が、指定された部分文字列で終わっているかどうか判定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定された部分文字列で終わっていれば true 、そうでなければ false <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="match"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string match( string text, string pattern ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	この API の使用は推奨されません。<a href="#matchFirst">matchFirst</a> を使用してください。この関数の機能は、将来的に変更が検討される可能性があります。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string match( string text, string pattern, int start ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	この API の使用は推奨されません。<a href="#matchFirst">matchFirst</a> を使用してください。この関数の機能は、将来的に変更が検討される可能性があります。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="matchFull"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	bool matchFull( string text, string pattern ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列全体が、正規表現に適合するかどうか判定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />pattern : 正規表現 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	全体が正規表現に適合すれば true 、そうでなければ false <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="matchFirst"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string matchFirst( string text, string pattern ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列全体から、正規表現に適合する箇所を抜き出して返します。<br />正規表現の適合箇所が複数存在する場合は、最初のものだけが選択されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />pattern : 正規表現 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	正規表現に適合する箇所の部分文字列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string matchFirst( string text, string pattern, int start ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列から、正規表現に適合する箇所を抜き出して返します。<br />正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降から、最初のものだけが選択されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />pattern : 正規表現 <br />start : 探索範囲の始点インデックス <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	正規表現に適合する箇所の部分文字列<br />正規表現に適合する箇所の部分文字列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="matchLast"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string matchLast( string text, string pattern ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列全体から、正規表現に適合する箇所を抜き出して返します。<br />正規表現の適合箇所が複数存在する場合は、最後のものだけが選択されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />pattern : 正規表現 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	正規表現に適合する箇所の部分文字列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string matchLast( string text, string pattern, int end ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列から、正規表現に適合する箇所を抜き出して返します。<br />正規表現の適合箇所が複数存在する場合は、引数 end に指定したインデックスの位置よりも前から、最後のものだけが選択されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />pattern : 正規表現 <br />end : 探索範囲の終点インデックス <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	正規表現に適合する箇所の部分文字列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="indexOf"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int indexOf( string text, string word ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された部分文字列の位置を取得します。<br />複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	部分文字列の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int indexOf( string text, string word, int start ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された部分文字列の位置を取得します。<br />複数存在する場合は、引数 start に指定したインデックス以降から、最初のものが選択されます。存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 部分文字列 <br />start : 探索範囲の始点インデックス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	部分文字列の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="indexOfPattern"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string indexOfPattern( string text, string word ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された正規表現に適合する位置を取得します。<br />複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 正規表現 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	適合箇所の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string indexOfPattern( string text, string word, int start ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された正規表現に適合する位置を取得します。<br />複数存在する場合は、最初のものが選択されます。引数 start に指定したインデックス以降から、存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 正規表現 <br />start : 探索範囲の終点インデックス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	適合箇所の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="lastIndexOf"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int lastIndexOf( string text, string word ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された部分文字列の位置を取得します。<br />複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 部分文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	部分文字列の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int lastIndexOf( string text, string word, int end ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された部分文字列の位置を取得します。<br />複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 部分文字列 <br />end : 探索範囲の終点インデックス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	部分文字列の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="lastIndexOfPattern"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string lastIndexOfPattern( string text, string word ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された正規表現に適合する位置を取得します。<br />複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 正規表現 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	部分文字列の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string lastIndexOfPattern( string text, string word, int end ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内から、指定された正規表現に適合する位置を取得します。<br />複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />word : 正規表現 <br />end : 探索範囲の終点インデックス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	部分文字列の位置インデックス<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="lengthOf"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int lengthOf( string text ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列の文字数を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字数<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="charAt"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string charAt( string text, int index ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内の、指定されたインデックスの位置にある文字を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />index : 文字の位置インデックス <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="substring"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string substring( string text, int start, int end ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内の、指定されたインデックス区間にある部分文字列を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />start : 区間の始点インデックス。 <br />end : 区間の終点インデックス + 1 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	部分文字列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="tokenize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] tokenize( string text ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	文字列内を、空白またはタブ、もしくは改行区切りでトークンに分割し、配列にまとめて返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	text : 対象の文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	トークン配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>

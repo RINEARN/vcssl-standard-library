@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>File</h1>
+<hr />
+<h2 id="abstract">概要 - Abstract</h2>
+<p>VCSSL File ライブラリ は、ファイルパスの取得や、ディレクトリ内のファイル名リスト取得など、ファイルに関する各種機能を提供する標準ライブラリです。<br />ただし、このライブラリではファイルI/Oは扱いません。ファイルI/Oについては、<a href="System.html">System</a> ライブラリや <a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。</p> <hr />
+<h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
+<dl>
+<dt><a href="#ABSOLUTE">const int ABSOLUTE </a></dt>
+<dd> 絶対パスを意味する設定値です。 </dd>
+<dt><a href="#RELATIVE">const int RELATIVE </a></dt>
+<dd> 相対パスを意味する設定値です。 </dd>
+<dt><a href="#PARENT">const int PARENT </a></dt>
+<dd> 親階層を意味する設定値です。 </dd>
+<dt><a href="#HOME">const int HOME </a></dt>
+<dd> ホームディレクトリを意味する設定値です。 </dd>
+<dt><a href="#ROOT">const int ROOT </a></dt>
+<dd> ルートディレクトリを意味する設定値です。 </dd>
+<dt><a href="#UNORDERED">const int UNORDERED </a></dt>
+<dd> 特に整列されていないファイル順序を意味する設定値です。 </dd>
+<dt><a href="#LEXICAL">const int LEXICAL </a></dt>
+<dd> 辞書順に整列されたファイル順序を意味する設定値です。 </dd>
+<dt><a href="#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
+<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
+<dt><a href="#isDirectory">bool isDirectory( string pathOrName ) </a></dt>
+<dd>ファイルがディレクトリであるかどうかを判定します。 </dd>
+<dt><a href="#makeDirectory">void makeDirectory( string pathOrName ) </a></dt>
+<dd>ディレクトリを新規作成します。 </dd>
+<dt><a href="#listDirectory">string[ ] listDirectory( string pathOrName ) </a></dt>
+<dd>指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の順序は特に整列されず、環境や処理系に依存します。 </dd>
+<dt><a href="#listDirectory">string[ ] listDirectory( string pathOrName, bool sortByIgnoreCase, int sortOption ) </a></dt>
+<dd>指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の整列オプションを指定できます。 </dd>
+<dt><a href="#makeFile">void makeFile( string pathOrName ) </a></dt>
+<dd>ファイルを新規作成します。 </dd>
+<dt><a href="#getFileName">string getFileName( string path ) </a></dt>
+<dd>ファイルパスから、ファイル名の部分を取得します。 </dd>
+<dt><a href="#removeFile">void removeFile( string pathOrName ) </a></dt>
+<dd>ファイルを削除します。対象がディレクトリの場合、中身が空でなければ削除できないため、先に中身を削除する必要があります。 </dd>
+<dt><a href="#moveFile">void moveFile( string pathOrName, string newName ) </a></dt>
+<dd>ファイルの移動や、ファイル名の変更を行います。引数が、共にファイル名のみの場合や、共に同じディレクトリ内のファイルパスである場合には、処理内容はファイル名の変更になります。引数が、互いに異なるディレクトリ内のファイルパスである場合には、処理内容はファイルの移動になります。ファイルは移動されます。ドライブをまたぐ移動はできない場合があります。 </dd>
+<dt><a href="#renameFile">void renameFile( string pathOrName, string newName ) </a></dt>
+<dd>ファイル名を変更します。変更先にファイル名ではなくパスを指定した場合、ファイルは移動されます。ただし環境によっては、ドライブをまたぐ移動はできない場合があります。<div style="font-weight:bold;">※ このAPIの使用は推奨されません。このAPIの動作は処理系やバージョンに依存します。VCSSL 3.3 以降では、代わりに同機能の <a href="#moveFile">moveFile</a> を使用してください。やむを得ずこの API を使用する必要があり、依存性を回避したい場合には、変更後のファイルパス newPath を絶対パスで指定してください。相対パスやファイル名のみを指定した場合の挙動は、処理系やバージョンに依存します。現在の標準VCSSLランタイムでは、newPath にファイル名や相対パスを指定した場合、実行プログラムの場所を基準とするものと解釈されますが、VCSSL 3.2 以前の古いバージョンなどでは、処理系の場所を基準として解釈される場合があります。絶対パスを指定すればバージョンへの依存性を回避できます。 例えば、renameFile("Test1.txt", "Test2.txt"); と記述した場合、現在の標準VCSSLランタイムでは、同じディレクトリ内で Test1.txt のファイルが Test2.txt に名称変更されます。しかし古いバージョンでは、"Test2.txt" は処理系からみた相対パスと解釈されるため、ファイルは処理系のディレクトリ（ VCSSL.jar のある場所 ）に移動されます。古いバージョンにおいても、同じディレクトリ内における名称変更を行いたい場合は、 renameFile("hoge1.txt", getFilePath("hoge2.txt", getFilePath(".")) ); などと記述します。</div> </dd>
+<dt><a href="#copyFile">void copyFile( string inputPath, string outputPath ) </a></dt>
+<dd>ファイルをコピーします。 </dd>
+<dt><a href="#getFilePath">string getFilePath( string pathOrName ) </a></dt>
+<dd>ファイル名または相対パスから、絶対パスを取得して返します。 </dd>
+<dt><a href="#getFilePath">string getFilePath( string pathOrName, int type ) </a></dt>
+<dd>ファイル名またはパスから、絶対パスまたは相対パス、もしくは親階層パスを取得して返します。 </dd>
+<dt><a href="#getFilePath">string getFilePath( string pathOrName, string directory ) </a></dt>
+<dd>指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスに変換取得して返します。 </dd>
+<dt><a href="#getFilePath">string getFilePath( string pathOrName, string directory, int type ) </a></dt>
+<dd>指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスまたは（実行プログラム基準の）相対パス、もしくは（実行プログラム基準の）親階層パスに変換して返します。 </dd>
+<dt><a href="#getFilePath">string[ ] getFilePath( int target ) </a></dt>
+<dd>実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 </dd>
+<dt><a href="#getMainDirectory">string getMainDirectory() </a></dt>
+<dd>実行プログラムがあるディレクトリのパスを返します。現在は <a href="#getFilePath">getFilePath</a>(".") で取得できます。この関数は互換目的でサポートされています。 </dd>
+<dt><a href="#getHomeDirectory">string getHomeDirectory() </a></dt>
+<dd>ホームディレクトリのパスを返します。現在は <a href="#getFilePath">getFilePath</a>( <a href="#HOME">HOME</a> ) で取得できます。この関数は互換目的でサポートされています。 </dd>
+<dt><a href="#getRootDirectory">string[ ] getRootDirectory() </a></dt>
+<dd>ルートディレクトリのパスを返します。現在は <a href="#getFilePath">getFilePath</a>( <a href="#ROOT">ROOT</a> ) で取得できます。この関数は互換目的でサポートされています。 </dd>
+<dt><a href="#getParentDirectory">string getParentDirectory( string pathOrName ) </a></dt>
+<dd>親階層のパスを返します。現在は <a href="#getFilePath">getFilePath</a>( pathOrName, <a href="#PARENT">PARENT</a> ) で取得できます。この関数は互換目的でサポートされています。 </dd>
+<dt><a href="#getFileRelativePath">string getFileRelativePath( string pathOrName, string directory ) </a></dt>
+<dd>指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。現在は <a href="#getFilePath">getFilePath</a>( pathOrName, directory, <a href="#RELATIVE">RELARIVE</a> ) で取得できます。この関数は互換目的でサポートされています。 </dd>
+<dt><a href="#getFileList">string[ ] getFileList( string pathOrName ) </a></dt>
+<dd>指定ディレクトリ直下のファイル名一覧を取得します。現在は <a href="#getFilePath">listFile</a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href="#getFilePath">listFile</a>( pathOrName ) は整列オプションを指定できます。 </dd>
+<dt><a href="#WARNING_FILE_NOT_FOUND">const string WARNING_FILE_NOT_FOUND </a></dt>
+<dd> 警告メッセージ、ファイルが見つからなかった場合。 </dd>
+<dt><a href="#warnFileNotFound">bool warnFileNotFound(string pathOrName) </a></dt>
+<dd>ファイルが存在しなかった場合、警告を表示し、続行するかどうかをユーザーに尋ねます。 </dd>
+</dl>
+<hr />
+<h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
+<p> - なし - None  -</p>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ABSOLUTE"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int ABSOLUTE 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 絶対パスを意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="RELATIVE"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int RELATIVE 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 相対パスを意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="PARENT"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int PARENT 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 親階層を意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="HOME"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int HOME 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 ホームディレクトリを意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ROOT"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int ROOT 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 ルートディレクトリを意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="UNORDERED"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int UNORDERED 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 特に整列されていないファイル順序を意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="LEXICAL"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int LEXICAL 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 辞書順に整列されたファイル順序を意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_FILE_NOT_FOUND"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const string ERROR_FILE_NOT_FOUND 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 エラーメッセージ、ファイルが見つからなかった場合。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="isDirectory"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	bool isDirectory( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルがディレクトリであるかどうかを判定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称またはパス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ディレクトリであれば true 、そうでなければ false。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="makeDirectory"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void makeDirectory( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ディレクトリを新規作成します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 作成するディレクトリの名称またはパス。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="listDirectory"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] listDirectory( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の順序は特に整列されず、環境や処理系に依存します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ディレクトリの名称またはパス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ディレクトリ直下にあるファイル名の一覧。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] listDirectory( string pathOrName, bool sortByIgnoreCase, int sortOption ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の整列オプションを指定できます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ディレクトリの名称またはパス。 <br />sortByIgnoreCase : 整列時に大文字/小文字を区別するかどうか。true なら無視されます。 <br />sortOption : 整列オプション。<a href="#UNORDERED">UNORDERED</a> または <a href="#LEXICAL">LEXICAL</a> を指定します。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ディレクトリ直下にあるファイル名の一覧。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="makeFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void makeFile( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルを新規作成します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 作成するファイルの名称またはパス。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getFileName"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getFileName( string path ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルパスから、ファイル名の部分を取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	path : 対象ファイルのパス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイル名<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="removeFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void removeFile( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルを削除します。<br />対象がディレクトリの場合、中身が空でなければ削除できないため、先に中身を削除する必要があります。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	path : 対象ファイルの名称またはパス。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="moveFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void moveFile( string pathOrName, string newName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルの移動や、ファイル名の変更を行います。引数が、共にファイル名のみの場合や、共に同じディレクトリ内のファイルパスである場合には、処理内容はファイル名の変更になります。引数が、互いに異なるディレクトリ内のファイルパスである場合には、処理内容はファイルの移動になります。ファイルは移動されます。ドライブをまたぐ移動はできない場合があります。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称またはパス。 <br />newName : 変更後の名称またはパス。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="renameFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void renameFile( string pathOrName, string newName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイル名を変更します。変更先にファイル名ではなくパスを指定した場合、ファイルは移動されます。ただし環境によっては、ドライブをまたぐ移動はできない場合があります。<br /><div style="font-weight:bold;">※ このAPIの使用は推奨されません。このAPIの動作は処理系やバージョンに依存します。VCSSL 3.3 以降では、代わりに同機能の <a href="#moveFile">moveFile</a> を使用してください。やむを得ずこの API を使用する必要があり、依存性を回避したい場合には、変更後のファイルパス newPath を絶対パスで指定してください。相対パスやファイル名のみを指定した場合の挙動は、処理系やバージョンに依存します。現在の標準VCSSLランタイムでは、newPath にファイル名や相対パスを指定した場合、実行プログラムの場所を基準とするものと解釈されますが、VCSSL 3.2 以前の古いバージョンなどでは、処理系の場所を基準として解釈される場合があります。絶対パスを指定すればバージョンへの依存性を回避できます。 例えば、renameFile("Test1.txt", "Test2.txt"); と記述した場合、現在の標準VCSSLランタイムでは、同じディレクトリ内で Test1.txt のファイルが Test2.txt に名称変更されます。しかし古いバージョンでは、"Test2.txt" は処理系からみた相対パスと解釈されるため、ファイルは処理系のディレクトリ（ VCSSL.jar のある場所 ）に移動されます。古いバージョンにおいても、同じディレクトリ内における名称変更を行いたい場合は、 renameFile("hoge1.txt", getFilePath("hoge2.txt", getFilePath(".")) ); などと記述します。</div> 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称またはパス。 <br />newName : 変更後の名称またはパス。古いバージョンや処理系への依存性を回避するため、絶対パスでの指定が推奨されます。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="copyFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void copyFile( string inputPath, string outputPath ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルをコピーします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : コピー元ファイルの名称またはパス。 <br />newName : コピー先ファイルの名称またはパス。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getFilePath"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getFilePath( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイル名または相対パスから、絶対パスを取得して返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称または相対パス。 <br />newName : 対象ファイルの絶対パス。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getFilePath( string pathOrName, int type ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイル名またはパスから、絶対パスまたは相対パス、もしくは親階層パスを取得して返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称またはパス。 <br />type : 取得するパスの種類。<a href="#ABSOLUTE">ABSOLUTE</a> または <a href="#RELATIVE">RELATIVE</a> もしくは <a href="#PARENT">PARENT</a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	対象ファイルのパス。パスの種類は引数 type で指定します。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getFilePath( string pathOrName, string directory ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスに変換取得して返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 基準ディレクトリから見た、対象ファイルの名称または相対パス。 <br />directory : 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。 <br />newName : 対象ファイルの絶対パス。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getFilePath( string pathOrName, string directory, int type ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスまたは（実行プログラム基準の）相対パス、もしくは（実行プログラム基準の）親階層パスに変換して返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称またはパス。 <br />directory : 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。 <br />type : 取得するパスの種類。<a href="#ABSOLUTE">ABSOLUTE</a> または <a href="#RELATIVE">RELATIVE</a> もしくは <a href="#PARENT">PARENT</a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	対象ファイルのパス。パスの種類は引数 type で指定します。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] getFilePath( int target ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	target : 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> を指定します。それぞれルートディレクトリ、ホームディレクトリを意味します。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	特別な場所のパス。場所は引数 target で指定します。target に <a href="#ROOT">ROOT</a> を取得した場合の挙動はオペレーティングシステムに依存します。単一のルートが存在しないオペレーティングシステムでは、恐らくドライブ名が配列で返されます。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getMainDirectory"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getMainDirectory() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	実行プログラムがあるディレクトリのパスを返します。<br />現在は <a href="#getFilePath">getFilePath</a>(".") で取得できます。この関数は互換目的でサポートされています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	実行プログラムがあるディレクトリのパス。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getHomeDirectory"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getHomeDirectory() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ホームディレクトリのパスを返します。<br />現在は <a href="#getFilePath">getFilePath</a>( <a href="#HOME">HOME</a> ) で取得できます。この関数は互換目的でサポートされています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ホームディレクトリのパス。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getRootDirectory"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] getRootDirectory() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ルートディレクトリのパスを返します。<br />現在は <a href="#getFilePath">getFilePath</a>( <a href="#ROOT">ROOT</a> ) で取得できます。この関数は互換目的でサポートされています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ルートディレクトリのパス。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getParentDirectory"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getParentDirectory( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	親階層のパスを返します。<br />現在は <a href="#getFilePath">getFilePath</a>( pathOrName, <a href="#PARENT">PARENT</a> ) で取得できます。この関数は互換目的でサポートされています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称またはパス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	親階層のパス。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getFileRelativePath"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getFileRelativePath( string pathOrName, string directory ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。<br />現在は <a href="#getFilePath">getFilePath</a>( pathOrName, directory, <a href="#RELATIVE">RELARIVE</a> ) で取得できます。この関数は互換目的でサポートされています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ファイルの名称またはパス。 <br />directory : 基準ディレクトリのパス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	親階層のパス。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getFileList"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string[ ] getFileList( string pathOrName ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定ディレクトリ直下のファイル名一覧を取得します。<br />現在は <a href="#getFilePath">listFile</a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。<br />この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href="#getFilePath">listFile</a>( pathOrName ) は整列オプションを指定できます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pathOrName : 対象ディレクトリの名称またはパス。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	指定ディレクトリ直下のファイル名一覧（順序は環境依存）<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WARNING_FILE_NOT_FOUND"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const string WARNING_FILE_NOT_FOUND 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 警告メッセージ、ファイルが見つからなかった場合。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="warnFileNotFound"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	bool warnFileNotFound(string pathOrName) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルが存在しなかった場合、警告を表示し、続行するかどうかをユーザーに尋ねます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	続行する場合は true、停止する場合は false<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>

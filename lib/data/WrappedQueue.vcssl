@@ -33,6 +33,9 @@ coding UTF-8;
  * 従って、要素が配列でない場合には、
  * WrappedQueue よりも Queue の使用が推奨されます。
  * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
  */
 
 
@@ -41,8 +44,6 @@ import data.DataWrapper;
 
 /**
  * キュー構造体です。キューのデータを保持します。
- *
- * @author 松井文宏
  */
 public struct WrappedQueue<Type>{
 	protected int first = 0;
@@ -56,7 +57,6 @@ public struct WrappedQueue<Type>{
  * 要素を全て削除します。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 public void clear<Type>( WrappedQueue<Type> &queue ){
 	alloc[0] queue.data;
@@ -71,7 +71,6 @@ public void clear<Type>( WrappedQueue<Type> &queue ){
  * 使用中のサイズを返します。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 public int size<Type>( WrappedQueue<Type> &queue ){
 	return queue.size;
@@ -83,7 +82,6 @@ public int size<Type>( WrappedQueue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @param value 追加する要素
- * @author 松井文宏
  */
 public void enqueue<Type>( WrappedQueue<Type> &queue, Type value ){
 	queue.size++;
@@ -98,7 +96,6 @@ public void enqueue<Type>( WrappedQueue<Type> &queue, Type value ){
  *
  * @param queue 対象のキュー構造体
  * @return 取り出した要素
- * @author 松井文宏
  */
 public Type dequeue<Type>( WrappedQueue<Type> &queue ){
 	queue.size--;
@@ -115,7 +112,6 @@ public Type dequeue<Type>( WrappedQueue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @return 取り出した要素
- * @author 松井文宏
  */
 public Type peek<Type>( WrappedQueue<Type> &queue ){
 	return unwrap<Type>(queue.data[ queue.first ]);
@@ -127,7 +123,6 @@ public Type peek<Type>( WrappedQueue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @param 含まれるか判定したい要素
- * @author 松井文宏
  */
 public bool contains<Type>( WrappedQueue<Type> &queue, Type element ){
 	int n = queue.size;
@@ -145,7 +140,6 @@ public bool contains<Type>( WrappedQueue<Type> &queue, Type element ){
  * キューが保持する全要素の順序を反転させます。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 public void reverse<Type>( WrappedQueue<Type> &queue ){
 
@@ -166,7 +160,6 @@ public void reverse<Type>( WrappedQueue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @return スタックの全要素をまとめたDataWrapper配列
- * @author 松井文宏
  */
 public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedQueue<Type> &queue ){
 
@@ -184,7 +177,6 @@ public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedQueue<Type> &queue )
  * キューバッファを、必要に応じて最適な容量に再確保します。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 private int setProperLength<Type>( WrappedQueue<Type> &queue ){
 
@@ -213,7 +205,6 @@ private int setProperLength<Type>( WrappedQueue<Type> &queue ){
  * キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。
  *
  * @param size キューのサイズ
- * @author 松井文宏
  */
 private int checksize(int size){
 	if(size < 0){
@@ -227,7 +218,6 @@ private int checksize(int size){
  * 先頭をインデックス 0 に合わせます。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 private void shiftData<Type>( WrappedQueue<Type> &queue ){
 	int zero = 0;
@@ -254,7 +244,6 @@ private void shiftData<Type>( WrappedQueue<Type> &queue ){
  *
  * @param length 現在のキューバッファ長
  * @param usage 現在のキューバッファ使用量
- * @author 松井文宏
  */
 private int getProperLength(int length, int usage){
 	if( length == 0 ){
@@ -275,7 +264,6 @@ private int getProperLength(int length, int usage){
  * @param first 先頭インデックス
  * @param last 終端インデックス
  * @param length バッファ長
- * @author 松井文宏
  */
 private int getUsage(int first, int last, int length){
 	if(first <= last){

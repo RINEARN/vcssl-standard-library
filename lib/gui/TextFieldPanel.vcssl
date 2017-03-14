@@ -33,6 +33,9 @@ import GUI;
  * <a href="#setComponentSize">setComponentSize</a> 関数、 
  * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
  * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
  */
 
 
@@ -71,7 +74,6 @@ public struct TextFieldPanel{
  * @param labelWidth ラベル部分の幅
  * @param defaultText テキストフィールドの初期値文字列を格納する配列
  * @return 生成したテキストフィールドパネル構造体
- * @author 松井文宏
  */
 public TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, string labelText[], string defaultText[]){
 
@@ -117,7 +119,6 @@ public TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, str
  * テキストフィールドパネルを破棄します。
  *
  * @param panelInstance 破棄するテキストフィールドパネル
- * @author 松井文宏
  */
 public void deleteComponent(TextFieldPanel &panelInstance){
 	int n = length(panelInstance.textLabel, 0);
@@ -140,7 +141,6 @@ public void deleteComponent(TextFieldPanel &panelInstance){
  * テキストフィールドパネルを再描画します。
  *
  * @param panelInstance 再描画するテキストフィールドパネル
- * @author 松井文宏
  */
 public void paintComponent(TextFieldPanel &panelInstance){
 	int n = length(panelInstance.textLabel, 0);
@@ -159,7 +159,6 @@ public void paintComponent(TextFieldPanel &panelInstance){
  *
  * @param panelInstance 配置するテキストフィールドパネル
  * @param componentID 配置先GUIコンポーネントID
- * @author 松井文宏
  */
 public void mountComponent(TextFieldPanel &panelInstance, int componentID){
 	mountComponent(panelInstance.panel, componentID);
@@ -171,7 +170,6 @@ public void mountComponent(TextFieldPanel &panelInstance, int componentID){
  *
  * @param panelInstance 配置解除するテキストフィールドパネル
  * @param componentID 配置先GUIコンポーネントID
- * @author 松井文宏
  */
 public void demountComponent(TextFieldPanel &panelInstance, int componentID){
 	demountComponent(panelInstance.panel, componentID);
@@ -184,7 +182,6 @@ public void demountComponent(TextFieldPanel &panelInstance, int componentID){
  *
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @param labelWidth ラベル部分の幅
- * @author 松井文宏
  */
 public void setLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 	setTextLabelWidth(panelInstance, labelWidth);
@@ -196,7 +193,6 @@ public void setLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
  *
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @param labelWidth ラベル部分の幅
- * @author 松井文宏
  */
 public void setTextLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 	int panelSize[] = getComponentSize(panelInstance.panel);
@@ -215,7 +211,6 @@ public void setTextLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
  *
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @return パネルのGUIコンポーネントID
- * @author 松井文宏
  */
 public int getPanel(TextFieldPanel &panelInstance){
 	return panelInstance.panel;
@@ -228,7 +223,6 @@ public int getPanel(TextFieldPanel &panelInstance){
  * @param panelInstance 対象のテキストフィールドパネル
  * @param labelText 取得対象のテキストフィールドに対応するラベル文字列
  * @return テキストフィールドのGUIコンポーネントID
- * @author 松井文宏
  */
 public int getTextField(TextFieldPanel &panelInstance, string labelText){
 	int index = labelIndexOf(panelInstance, labelText);
@@ -245,7 +239,6 @@ public int getTextField(TextFieldPanel &panelInstance, string labelText){
  * @param panelInstance 対象のテキストフィールドパネル
  * @param index テキストフィールドのインデックス
  * @return テキストフィールドのGUIコンポーネントID
- * @author 松井文宏
  */
 public int getTextField(TextFieldPanel &panelInstance, int index){
 	return panelInstance.textField[index];
@@ -258,7 +251,6 @@ public int getTextField(TextFieldPanel &panelInstance, int index){
  * @param panelInstance 設定対象のテキストフィールドパネル
  * @param index テキストフィールドのインデックス
  * @param text 設定するテキスト
- * @author 松井文宏
  */
 /*
 public void setComponentString(TextFieldPanel &panelInstance, int index, string text){
@@ -273,7 +265,6 @@ public void setComponentString(TextFieldPanel &panelInstance, int index, string 
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @param index テキストフィールドのインデックス
  * @return テキストフィールドの保持するテキスト
- * @author 松井文宏
  */
 /*
 public string getComponentString(TextFieldPanel &panelInstance, int index){
@@ -288,7 +279,6 @@ public string getComponentString(TextFieldPanel &panelInstance, int index){
  * @param panelInstance 設定対象のテキストフィールドパネル
  * @param labelText 設定対象のテキストフィールドに対応するラベル文字列
  * @param text 設定するテキスト
- * @author 松井文宏
  */
 /*
 public void setComponentString(TextFieldPanel &panelInstance, string labelText, string text){
@@ -307,7 +297,6 @@ public void setComponentString(TextFieldPanel &panelInstance, string labelText, 
  * @param panelInstance 設定対象のテキストフィールドパネル
  * @param labelText 設定対象のテキストフィールドに対応するラベル文字列
  * @return テキストフィールドの保持するテキスト
- * @author 松井文宏
  */
 /*
 public string getComponentString(TextFieldPanel &panelInstance, string labelText){
@@ -326,7 +315,6 @@ public string getComponentString(TextFieldPanel &panelInstance, string labelText
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @param labelText 検索するラベル文字列
  * @return テキストフィールドのインデックス
- * @author 松井文宏
  */
 private int labelIndexOf(TextFieldPanel &panelInstance, string labelText){
 	int n = length(panelInstance.textLabelString, 0);
@@ -344,7 +332,6 @@ private int labelIndexOf(TextFieldPanel &panelInstance, string labelText){
  *
  * @param panelInstance 対象のテキストフィールドパネル
  * @return パネルのサイズを格納する配列
- * @author 松井文宏
  */
 public int[] getComponentSize(TextFieldPanel &panelInstance){
 	return getComponentSize(panelInstance.panel);
@@ -357,7 +344,6 @@ public int[] getComponentSize(TextFieldPanel &panelInstance){
  * @param panelInstance 対象のテキストフィールドパネル
  * @param width パネルの幅
  * @param height パネルの高さ
- * @author 松井文宏
  */
 public void setComponentSize(TextFieldPanel &panelInstance, int width, int height){
 	setComponentSize(panelInstance.panel, width, height);
@@ -369,7 +355,6 @@ public void setComponentSize(TextFieldPanel &panelInstance, int width, int heigh
  * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
  *
  * @param panelInstance 対象のテキストフィールドパネル
- * @author 松井文宏
  */
 public void setComponentSize(TextFieldPanel &panelInstance){
 	int panelSize[] = getComponentSize(panelInstance.panel);
@@ -384,7 +369,6 @@ public void setComponentSize(TextFieldPanel &panelInstance){
  *
  * @param panelInstance 対象のテキストフィールドパネル
  * @return パネルの位置を格納する配列
- * @author 松井文宏
  */
 public int[] getComponentLocation(TextFieldPanel &panelInstance){
 	return getComponentLocation(panelInstance.panel);
@@ -397,7 +381,6 @@ public int[] getComponentLocation(TextFieldPanel &panelInstance){
  * @param panelInstance 対象のスライダーパネル
  * @param x ウィンドウのX座標
  * @param y ウィンドウのY座標
- * @author 松井文宏
  */
 public void setComponentLocation(TextFieldPanel &panelInstance, int x, int y){
 	setComponentLocation(panelInstance.panel, x, y);

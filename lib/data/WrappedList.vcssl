@@ -33,6 +33,9 @@ coding UTF-8;
  * 従って、要素が配列でない場合には、
  * WrappedList よりも List の使用が推奨されます。
  * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
  */
 
 
@@ -41,8 +44,6 @@ import data.DataWrapper;
 
 /**
  * リスト構造体です。リストのデータを保持します。
- *
- * @author 松井文宏
  */
 public struct WrappedList<Type>{
 	protected int size = 0;
@@ -54,7 +55,6 @@ public struct WrappedList<Type>{
  * 要素を全て削除します。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 public void clear<Type>( WrappedList<Type> &list ){
 	alloc[0] list.data;
@@ -67,7 +67,6 @@ public void clear<Type>( WrappedList<Type> &list ){
  * 使用中のサイズを返します。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 public int size<Type>( WrappedList<Type> &list ){
 	return list.size;
@@ -79,7 +78,6 @@ public int size<Type>( WrappedList<Type> &list ){
  *
  * @param list 対象のリスト構造体
  * @param value 追加する要素
- * @author 松井文宏
  */
 public void add<Type>( WrappedList<Type> &list, Type value ){
 	setProperLength<Type>(list);
@@ -93,7 +91,6 @@ public void add<Type>( WrappedList<Type> &list, Type value ){
  * @param list 対象のリスト構造体
  * @param index 取得したい要素のインデックス
  * @return 指定されたインデックスの要素
- * @author 松井文宏
  */
 public Type get<Type>( WrappedList<Type> &list, int index ){
 	if(list.size <= index){
@@ -111,7 +108,6 @@ public Type get<Type>( WrappedList<Type> &list, int index ){
  * @param list 対象のリスト構造体
  * @param index 代入したい要素のインデックス
  * @param element 代入する要素
- * @author 松井文宏
  */
 public void set<Type>( WrappedList<Type> &list, int index, Type element ){
 	if(list.size <= index){
@@ -132,7 +128,6 @@ public void set<Type>( WrappedList<Type> &list, int index, Type element ){
  * @param list 対象のリスト構造体
  * @param index 挿入したい要素のインデックス
  * @param element 挿入する要素
- * @author 松井文宏
  */
 public Type insert<Type>( WrappedList<Type> &list, int index, Type value ){
 	if(list.size <= index){
@@ -154,7 +149,6 @@ public Type insert<Type>( WrappedList<Type> &list, int index, Type value ){
  *
  * @param list 対象のリスト構造体
  * @param element 含まれるか判定したい要素
- * @author 松井文宏
  */
 public bool contains<Type>( WrappedList<Type> &list, Type element ){
 	int n = list.size;
@@ -173,7 +167,6 @@ public bool contains<Type>( WrappedList<Type> &list, Type element ){
  *
  * @param list 対象のリスト構造体
  * @param index 削除したい要素のインデックス
- * @author 松井文宏
  */
 public Type removeAt<Type>( WrappedList<Type> &list, int index ){
 	if(list.size <= index){
@@ -195,7 +188,6 @@ public Type removeAt<Type>( WrappedList<Type> &list, int index ){
  *
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
- * @author 松井文宏
  */
 public void remove<Type>( WrappedList<Type> &list, Type element ){
 	int index = indexOf<Type>(list, element);
@@ -210,7 +202,6 @@ public void remove<Type>( WrappedList<Type> &list, Type element ){
  * 
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
- * @author 松井文宏
  */
 public void removeAll<Type>( WrappedList<Type> &list, Type element ){
 	int index = indexOf<Type>(list, element);
@@ -229,7 +220,6 @@ public void removeAll<Type>( WrappedList<Type> &list, Type element ){
  *
  * @param list 対象のリスト構造体
  * @param element 検索したい要素
- * @author 松井文宏
  */
 public int indexOf<Type>( WrappedList<Type> &list, Type element ){
 	int n = list.size;
@@ -252,7 +242,6 @@ public int indexOf<Type>( WrappedList<Type> &list, Type element ){
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
  * @param from 検索開始インデックス
- * @author 松井文宏
  */
 public int indexOf<Type>( WrappedList<Type> &list, Type element, int from ){
 	int n = list.size;
@@ -277,7 +266,6 @@ public int indexOf<Type>( WrappedList<Type> &list, Type element, int from ){
  *
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
- * @author 松井文宏
  */
 public int lastIndexOf<Type>( WrappedList<Type> &list, Type element ){
 	int n = list.size;
@@ -300,7 +288,6 @@ public int lastIndexOf<Type>( WrappedList<Type> &list, Type element ){
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
  * @param from 検索開始インデックス
- * @author 松井文宏
  */
 public int lastIndexOf<Type>( WrappedList<Type> &list, Type element, int from ){
 	int n = list.size;
@@ -321,7 +308,6 @@ public int lastIndexOf<Type>( WrappedList<Type> &list, Type element, int from ){
  * リストが保持する全要素の順序を反転させます。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 public void reverse<Type>( WrappedList<Type> &list ){
 	int n = list.size;
@@ -338,7 +324,6 @@ public void reverse<Type>( WrappedList<Type> &list ){
  *
  * @param list 対象のリスト構造体
  * @return リストの全要素をまとめたDataWrapper配列
- * @author 松井文宏
  */
 public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedList<Type> &list ){
 	DataWrapper<Type> array[] = list.data;
@@ -351,7 +336,6 @@ public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedList<Type> &list ){
  * 使用中のサイズに適切な配列バッファ長を設定します。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 private void setProperLength<Type>( WrappedList<Type> &list ){
 	int zero = 0;
@@ -368,7 +352,6 @@ private void setProperLength<Type>( WrappedList<Type> &list ){
  *
  * @param length 現在のリストバッファ長
  * @param size 現在使用中の要素数
- * @author 松井文宏
  */
 private int getProperLength(int length, int size){
 	if( length == 0 ){

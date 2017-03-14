@@ -21,13 +21,14 @@ coding UTF-8;
  * data.<a href="WrappedList.html">WrappedList</a> 
  * を使用して下さい。
  * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
  */
 
 
 /**
  * リスト構造体です。リストのデータを保持します。
- *
- * @author 松井文宏
  */
 public struct List<Type>{
 	protected int size = 0;
@@ -39,7 +40,6 @@ public struct List<Type>{
  * 要素を全て削除します。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 public void clear<Type>( List<Type> &list ){
 	alloc[0] list.data;
@@ -52,7 +52,6 @@ public void clear<Type>( List<Type> &list ){
  * 使用中のサイズを返します。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 public int size<Type>( List<Type> &list ){
 	return list.size;
@@ -64,7 +63,6 @@ public int size<Type>( List<Type> &list ){
  *
  * @param list 対象のリスト構造体
  * @param value 追加する要素
- * @author 松井文宏
  */
 public void add<Type>( List<Type> &list, Type value ){
 	setProperLength<Type>(list);
@@ -78,7 +76,6 @@ public void add<Type>( List<Type> &list, Type value ){
  * @param list 対象のリスト構造体
  * @param index 取得したい要素のインデックス
  * @return 指定されたインデックスの要素
- * @author 松井文宏
  */
 public Type get<Type>( List<Type> &list, int index ){
 	if(list.size <= index){
@@ -96,7 +93,6 @@ public Type get<Type>( List<Type> &list, int index ){
  * @param list 対象のリスト構造体
  * @param index 代入したい要素のインデックス
  * @param element 代入する要素
- * @author 松井文宏
  */
 public void set<Type>( List<Type> &list, int index, Type element ){
 	if(list.size <= index){
@@ -117,7 +113,6 @@ public void set<Type>( List<Type> &list, int index, Type element ){
  * @param list 対象のリスト構造体
  * @param index 挿入したい要素のインデックス
  * @param element 挿入する要素
- * @author 松井文宏
  */
 public Type insert<Type>( List<Type> &list, int index, Type value ){
 	if(list.size <= index){
@@ -139,7 +134,6 @@ public Type insert<Type>( List<Type> &list, int index, Type value ){
  *
  * @param list 対象のリスト構造体
  * @param element 含まれるか判定したい要素
- * @author 松井文宏
  */
 public bool contains<Type>( List<Type> &list, Type element ){
 	int n = list.size;
@@ -157,7 +151,6 @@ public bool contains<Type>( List<Type> &list, Type element ){
  *
  * @param list 対象のリスト構造体
  * @param index 削除したい要素のインデックス
- * @author 松井文宏
  */
 public Type removeAt<Type>( List<Type> &list, int index ){
 	if(list.size <= index){
@@ -179,7 +172,6 @@ public Type removeAt<Type>( List<Type> &list, int index ){
  *
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
- * @author 松井文宏
  */
 public void remove<Type>( List<Type> &list, Type element ){
 	int index = indexOf<Type>(list, element);
@@ -194,7 +186,6 @@ public void remove<Type>( List<Type> &list, Type element ){
  * 
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
- * @author 松井文宏
  */
 public void removeAll<Type>( List<Type> &list, Type element ){
 	int index = indexOf<Type>(list, element);
@@ -212,7 +203,6 @@ public void removeAll<Type>( List<Type> &list, Type element ){
  *
  * @param list 対象のリスト構造体
  * @param element 検索したい要素
- * @author 松井文宏
  */
 public int indexOf<Type>( List<Type> &list, Type element ){
 	int n = list.size;
@@ -234,7 +224,6 @@ public int indexOf<Type>( List<Type> &list, Type element ){
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
  * @param from 検索開始インデックス
- * @author 松井文宏
  */
 public int indexOf<Type>( List<Type> &list, Type element, int from ){
 	int n = list.size;
@@ -258,7 +247,6 @@ public int indexOf<Type>( List<Type> &list, Type element, int from ){
  *
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
- * @author 松井文宏
  */
 public int lastIndexOf<Type>( List<Type> &list, Type element ){
 	int n = list.size;
@@ -280,7 +268,6 @@ public int lastIndexOf<Type>( List<Type> &list, Type element ){
  * @param list 対象のリスト構造体
  * @param element 削除したい要素
  * @param from 検索開始インデックス
- * @author 松井文宏
  */
 public int lastIndexOf<Type>( List<Type> &list, Type element, int from ){
 	int n = list.size;
@@ -300,7 +287,6 @@ public int lastIndexOf<Type>( List<Type> &list, Type element, int from ){
  * リストが保持する全要素の順序を反転させます。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 public void reverse<Type>( List<Type> &list ){
 	int n = list.size;
@@ -318,7 +304,6 @@ public void reverse<Type>( List<Type> &list ){
  *
  * @param list 対象のリスト構造体
  * @return リストの全要素をまとめた1次元配列
- * @author 松井文宏
  */
 public Type[] toArray<Type>( List<Type> &list ){
 	Type array[] = list.data;
@@ -331,7 +316,6 @@ public Type[] toArray<Type>( List<Type> &list ){
  * 使用中のサイズに適切な配列バッファ長を設定します。
  *
  * @param list 対象のリスト構造体
- * @author 松井文宏
  */
 private void setProperLength<Type>( List<Type> &list ){
 	int zero = 0;
@@ -348,7 +332,6 @@ private void setProperLength<Type>( List<Type> &list ){
  *
  * @param length 現在のリストバッファ長
  * @param size 現在使用中の要素数
- * @author 松井文宏
  */
 private int getProperLength(int length, int size){
 	if( length == 0 ){

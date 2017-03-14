@@ -9,7 +9,7 @@
 <hr />
 <h2 id="abstract">概要 - Abstract</h2>
 <p>このライブラリ data.WrappedQueue は、キュー型のデータ構造を提供します。	</p><p>このモジュールでは、スタックのデータを保持するジェネリック構造体 <a href="#WrappedQueue">WrappedQueue</a> と、それに対してデータを出し入れするジェネリック関数 <a href="#enqueue">enqueue</a>, <a href="#dequeue">dequeue</a> などが提供されます。 </p><p>なお、この data.WrappedQueue では、要素を <a href="DataWrapper.html">DataWrapper</a> 構造体でラッピングして保持する実装になっています。<br />そのため WrappedQueueでは、 data.<a href="Queue.html">Queue</a> とは異なり、配列を要素として扱う事ができます。</p><p>反面、要素の出し入れの際に DataWrapper 構造体へのラッピング処理を伴うため、そのオーバーヘッドの分だけ、Queue よりも処理が重くなります。<br />従って、要素が配列でない場合には、WrappedQueue よりも Queue の使用が推奨されます。</p> <hr />
-<h2 id="abstract">目次 - Index</h2>
+<h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
 <dl>
 <dt><a href="#WrappedQueue">struct WrappedQueue&lt;Type&gt; </a></dt>
 <dd>キュー構造体です。キューのデータを保持します。 </dd>
@@ -29,23 +29,33 @@
 <dd>キューが保持する全要素の順序を反転させます。 </dd>
 <dt><a href="#toDataWrapperArray">DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
 <dd>キューが保持する全要素を、DataWrapper配列に変換して返します。 </dd>
+<dt><a href="#setProperLength">int setProperLength&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dd>キューバッファを、必要に応じて最適な容量に再確保します。 </dd>
+<dt><a href="#checksize">int checksize(int size) </a></dt>
+<dd>キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。 </dd>
+<dt><a href="#shiftData">void shiftData&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dd>キューバッファ（リングバッファ）をシフトし、先頭をインデックス 0 に合わせます。 </dd>
+<dt><a href="#getProperLength">int getProperLength(int length, int usage) </a></dt>
+<dd>現在のキューバッファ長と、その中の使用量から、最適なキューバッファ長を返します。 </dd>
+<dt><a href="#getUsage">int getUsage(int first, int last, int length) </a></dt>
+<dd>キューのリングバッファ内で、実際に使用している長さを返します。 </dd>
 </dl>
 <hr />
-<h2 id="struct">構造体 - Structs</h2>
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="WrappedQueue"><tbody>
+<h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WrappedQueue"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	struct WrappedQueue&lt;Type&gt; 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	キュー構造体です。キューのデータを保持します。 
    	 </td>
     </tr>
@@ -54,243 +64,378 @@
 <hr /><h2 id="variable">変数 - Variables</h2>
 <p> - なし - None  -</p>
 <hr />
-<h2 id="function">関数 - Functions</h2>
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="clear"><tbody>
+<h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="clear"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void clear&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	要素を全て削除します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="size"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="size"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	int size&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	使用中のサイズを返します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="enqueue"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="enqueue"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void enqueue&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue, Type value ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	キューに要素を追加します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />value : 追加する要素 <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="dequeue"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="dequeue"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	Type dequeue&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	キューから要素を取り出します。取り出した要素は、キューから削除されます。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	取り出した要素<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="peek"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="peek"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	Type peek&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	キューから要素を削除せずに取り出します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	取り出した要素<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="contains"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="contains"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	bool contains&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue, Type element ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	キューが指定された要素を含んでいるか判定します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />含まれるか判定したい要素 : <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="reverse"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="reverse"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void reverse&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	キューが保持する全要素の順序を反転させます。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="toDataWrapperArray"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="toDataWrapperArray"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	キューが保持する全要素を、DataWrapper配列に変換して返します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	queue : 対象のキュー構造体 <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スタックの全要素をまとめたDataWrapper配列<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setProperLength"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int setProperLength&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	キューバッファを、必要に応じて最適な容量に再確保します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	queue : 対象のキュー構造体 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="checksize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int checksize(int size) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	size : キューのサイズ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="shiftData"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void shiftData&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	キューバッファ（リングバッファ）をシフトし、先頭をインデックス 0 に合わせます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	queue : 対象のキュー構造体 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getProperLength"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getProperLength(int length, int usage) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	現在のキューバッファ長と、その中の使用量から、最適なキューバッファ長を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	length : 現在のキューバッファ長 <br />usage : 現在のキューバッファ使用量 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getUsage"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getUsage(int first, int last, int length) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	キューのリングバッファ内で、実際に使用している長さを返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	first : 先頭インデックス <br />last : 終端インデックス <br />length : バッファ長 <br />
    	 </td>
     </tr>
 </tbody></table>

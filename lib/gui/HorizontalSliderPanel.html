@@ -9,10 +9,14 @@
 <hr />
 <h2 id="abstract">概要 - Abstract</h2>
 <p>このライブラリ gui.HorizontalSliderPanel は、GUI部品として、水平スライダーが並ぶパネル ―― スライダーパネル ―― を提供します。	</p><p>VCSSLの標準ライブラリ「 GUI 」では、GUI部品をint型のIDで扱いますが、このモジュールで提供されるGUI部品は、<a href="#HorizontalSliderPanel">HorizontalSliderPanel</a> 構造体として扱います。</p><p>HorizontalSliderPanel 構造体は、内部にリソースのID等を保持していますが、<br />生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。<br />具体的には、 <a href="#newHorizontalSliderPanel">newHorizontalSliderPanel</a> 関数で生成し、 <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。</p><p>またこのモジュールでは、HorizontalSliderPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、標準GUIライブラリ関数のオーバーロードも提供されます。<br />例えば、 <a href="#mountComponent">mountComponent</a> 関数や、<a href="#setComponentSize">setComponentSize</a> 関数、 <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。</p> <hr />
-<h2 id="abstract">目次 - Index</h2>
+<h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
 <dl>
 <dt><a href="#HorizontalSliderPanel">struct HorizontalSliderPanel </a></dt>
 <dd> スライダーパネルの構造体です。 </dd>
+<dt><a href="#DEFAULT_PANEL_TITLE">const string DEFAULT_PANEL_TITLE </a></dt>
+<dd> デフォルトのパネルタイトルです。 </dd>
+<dt><a href="#ERROR_LABEL_NOT_FOUND">const string ERROR_LABEL_NOT_FOUND </a></dt>
+<dd> 指定されたラベルが見つからなかった場合のエラーメッセージです。 </dd>
 <dt><a href="#newHorizontalSliderPanel">HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[ ], float defaultValue[ ], float minValue[ ], float maxValue[ ]) </a></dt>
 <dd>スライダーパネルを生成します。 </dd>
 <dt><a href="#newHorizontalSliderPanel">HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[ ], int defaultValue[ ], int minValue[ ], int maxValue[ ]) </a></dt>
@@ -45,515 +49,590 @@
 <dd>パネルの位置を返します。 </dd>
 <dt><a href="#setComponentLocation">void setComponentLocation(HorizontalSliderPanel &amp;panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
+<dt><a href="#labelIndexOf">int labelIndexOf(HorizontalSliderPanel &amp;panelInstance, string labelText) </a></dt>
+<dd>ラベル文字列に対応する、スライダーのインデックスを返します。 </dd>
 </dl>
 <hr />
-<h2 id="struct">構造体 - Structs</h2>
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="HorizontalSliderPanel"><tbody>
+<h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="HorizontalSliderPanel"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	struct HorizontalSliderPanel 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	 スライダーパネルの構造体です。 
    	 </td>
     </tr>
 </tbody></table>
 
 <hr /><h2 id="variable">変数 - Variables</h2>
-<hr />
-<h2 id="function">関数 - Functions</h2>
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="newHorizontalSliderPanel"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="DEFAULT_PANEL_TITLE"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const string DEFAULT_PANEL_TITLE 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 デフォルトのパネルタイトルです。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_LABEL_NOT_FOUND"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const string ERROR_LABEL_NOT_FOUND 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 指定されたラベルが見つからなかった場合のエラーメッセージです。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newHorizontalSliderPanel"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[ ], float defaultValue[ ], float minValue[ ], float maxValue[ ]) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーパネルを生成します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	x : パネルのX座標 <br />y : パネルのY座標 <br />width : パネルの幅 <br />height : パネルの高さ <br />labelText : ラベル文字列を格納する配列 <br />labelWidth : ラベル部分の幅 <br />defaultValue : スライダーの初期値を格納する配列 <br />minValue : スライダーの最小値を格納する配列 <br />maxValue : スライダーの最小値を格納する配列 <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	生成したスライダーパネル構造体<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[ ], int defaultValue[ ], int minValue[ ], int maxValue[ ]) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーパネルを生成します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	x : パネルのX座標 <br />y : パネルのY座標 <br />width : パネルの幅 <br />height : パネルの高さ <br />labelText : ラベル文字列を格納する配列 <br />labelWidth : ラベル部分の幅 <br />defaultValue : スライダーの初期値を格納する配列 <br />minValue : スライダーの最小値を格納する配列 <br />maxValue : スライダーの最小値を格納する配列 <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	生成したスライダーパネル構造体<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="deleteComponent"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="deleteComponent"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void deleteComponent(HorizontalSliderPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーパネルを破棄します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 破棄するスライダーパネル <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="paintComponent"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="paintComponent"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void paintComponent(HorizontalSliderPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーパネルを再描画します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 再描画するスライダーパネル <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="mountComponent"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="mountComponent"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void mountComponent(HorizontalSliderPanel &amp;panelInstance, int componentID) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーパネルを、別のGUIコンポーネント上に配置します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 配置するスライダーパネル <br />componentID : 配置先GUIコンポーネントID <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="demountComponent"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="demountComponent"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void demountComponent(HorizontalSliderPanel &amp;panelInstance, int componentID) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーパネルを、別のGUIコンポーネントから配置解除します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 配置解除するスライダーパネル <br />componentID : 配置先GUIコンポーネントID <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setTextLabelWidth"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setTextLabelWidth"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void setTextLabelWidth(HorizontalSliderPanel &amp;panelInstance, int labelWidth) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ラベル部分の幅を設定します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 取得対象のスライダーパネル <br />labelWidth : ラベル部分の幅 <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setLabelWidth"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setLabelWidth"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void setLabelWidth(HorizontalSliderPanel panelInstance, int labelWidth) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	（この関数は互換目的でサポートされています。getTextLabelWidth を使用して下さい。）ラベル部分の幅を設定します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 取得対象のスライダーパネル <br />labelWidth : ラベル部分の幅 <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getPanel"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getPanel"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	int getPanel(HorizontalSliderPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルのコンポーネントIDを返します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 取得対象のスライダーパネル <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルのGUIコンポーネントID<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getHorizontalSlider"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getHorizontalSlider"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	int getHorizontalSlider(HorizontalSliderPanel &amp;panelInstance, string labelText) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	指定されたラベルに対応するスライダーを取得します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 対象のスライダーパネル <br />labelText : 取得対象のスライダーに対応するラベル文字列 <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーのGUIコンポーネントID<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	int getHorizontalSlider(HorizontalSliderPanel &amp;panelInstance, int index) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	指定されたインデックスのスライダーを取得します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 対象のスライダーパネル <br />index : スライダーのインデックス <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スライダーのGUIコンポーネントID<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getComponentSize"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getComponentSize"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	int[ ] getComponentSize(HorizontalSliderPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルのサイズを返します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 対象のスライダーパネル <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルのサイズを格納する配列<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setComponentSize"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setComponentSize"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void setComponentSize(HorizontalSliderPanel &amp;panelInstance, int width, int height) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルのサイズを設定します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 対象のスライダーパネル <br />width : パネルの幅 <br />height : パネルの高さ <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void setComponentSize(HorizontalSliderPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 対象のスライダーパネル <br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="getComponentLocation"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getComponentLocation"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	int[ ] getComponentLocation(HorizontalSliderPanel &amp;panelInstance) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルの位置を返します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 対象のスライダーパネル <br />
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	戻り値<br /> - Return
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルの位置を格納する配列<br />
    	 </td>
     </tr>
 </tbody></table>
 
-<table border="1" style="margin: 0px 0px 20px 0px; width:100%;" id="setComponentLocation"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setComponentLocation"><tbody>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	宣言<br /> - Declaration
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	void setComponentLocation(HorizontalSliderPanel &amp;panelInstance, int x, int y) 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
-   	 	詳細<br /> - Description
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	パネルの位置を設定します。 
    	 </td>
     </tr>
     <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px;">
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	引数<br /> - Arguments
    	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%;">
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	panelInstance : 対象のスライダーパネル <br />x : ウィンドウのX座標 <br />y : ウィンドウのY座標 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="labelIndexOf"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int labelIndexOf(HorizontalSliderPanel &amp;panelInstance, string labelText) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ラベル文字列に対応する、スライダーのインデックスを返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	panelInstance : 取得対象のスライダーパネル <br />labelText : 検索するラベル文字列 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	スライダーのインデックス<br />
    	 </td>
     </tr>
 </tbody></table>

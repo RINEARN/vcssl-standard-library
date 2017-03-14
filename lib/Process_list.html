@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Process</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>Process</h1>
+<hr />
+<dl>
+<dt><a href="lib/Process.html#newProcess">int newProcess( string command[ ] ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：string command[] = { getFilePath("test.exe"), "1", "2", "3" }int processID = newProcess(command);などとします。実行を開始するには、続けて：<a href="lib/Process.html#startProcess">startProcess</a>(processID);とします。終了まで待機するには、続けて：<a href="lib/Process.html#waitForProcess">waitForProcess</a>(processID);とします。 </dd>
+<dt><a href="lib/Process.html#newProcess">int newProcess( string command ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。 </dd>
+<dt><a href="lib/Process.html#startProcess">void startProcess( int processID ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを実行開始します。実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。プロセスの実行完了まで、VCSSL側の処理を待機させたい場合は、<a href="lib/Process.html#waitForProcess">waitForProcess</a> をコールしてください。 </dd>
+<dt><a href="lib/Process.html#deleteProcess">void deleteProcess( int processID ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスに関するリソースを破棄します。プロセスの実行終了後にコールしてください。ただし、プロセスの実行途中でコールしてはいけません。プロセスを実行途中で破棄するには先に <a href="lib/Process.html#destroyProcess">destroyProcess</a> で強制終了させてください。 </dd>
+<dt><a href="lib/Process.html#destroyProcess">void destroyProcess( int processID ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを、実行途中で強制終了します。 </dd>
+<dt><a href="lib/Process.html#setProcessInput">void setProcessInput( int processID, string command ) </a></dt>
+<dd>プロセスに渡す標準入力内容を設定します。入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。例として、順に「1」,「2」,「3」と入力する場合には：setProcessInput(processID, "1" + EOL + "2" + EOL + "3" + EOL);などとします。なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。 </dd>
+<dt><a href="lib/Process.html#getProcessOutput">string getProcessOutput( int processID ) </a></dt>
+<dd>コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準出力内容が多いネイティブアプリケーションについては、<a href="lib/Process.html#clearProcessOutput">clearProcessOutput</a> で適時バッファをクリアしてください。 </dd>
+<dt><a href="lib/Process.html#getProcessError">string getProcessError( int processID ) </a></dt>
+<dd>コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準エラー出力内容が多いネイティブアプリケーションについては、<a href="lib/Process.html#clearProcessError">clearProcessError</a> で適時バッファをクリアしてください。 </dd>
+<dt><a href="lib/Process.html#clearProcessOutput">void clearProcessOutput( int processID ) </a></dt>
+<dd>プロセスの標準出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 </dd>
+<dt><a href="lib/Process.html#clearProcessError">void clearProcessError( int processID ) </a></dt>
+<dd>プロセスの標準エラー出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 </dd>
+<dt><a href="lib/Process.html#flushProcessOutput">void flushProcessOutput( int processID ) </a></dt>
+<dd>プロセスの標準出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessOutput に流されます。 </dd>
+<dt><a href="lib/Process.html#flushProcessError">void flushProcessError( int processID ) </a></dt>
+<dd>プロセスの標準エラー出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessError に流されます。 </dd>
+<dt><a href="lib/Process.html#getProcessExitValue">int getProcessExitValue( int processID ) </a></dt>
+<dd>プロセスの終了ステータスコードを返します。 </dd>
+<dt><a href="lib/Process.html#waitForProcess">void waitForProcess( int processID ) </a></dt>
+<dd>プロセスの実行が終了するまで、VCSSL側の実行を待機します。 </dd>
+<dt><a href="lib/Process.html#onProcessStart">void onProcessStart(int processID) </a></dt>
+<dd>プロセスが生成された際にコールされます。 </dd>
+<dt><a href="lib/Process.html#onProcessEnd">void onProcessEnd(int processID) </a></dt>
+<dd>プロセスが終了した際にコールされます。 </dd>
+<dt><a href="lib/Process.html#onProcessOutput">void onProcessOutput(int processID, string output) </a></dt>
+<dd>プロセスが標準出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="lib/Process.html#flushProcessOutput">flushProcessOutput</a> 関数を使用してください。 </dd>
+<dt><a href="lib/Process.html#onProcessOutput">void onProcessOutput(int processID, string output) </a></dt>
+<dd>プロセスが標準エラー出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="lib/Process.html#flushProcessError">flushProcessError</a> 関数を使用してください。 </dd>
+</dl>
+</body>
+</html>

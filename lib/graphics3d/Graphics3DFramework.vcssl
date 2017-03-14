@@ -101,6 +101,9 @@ import Time;
  * <br />
  * 画面のちらつきを抑える事ができます（ ただしこの場合、実測フレームレートの限界は低下します ）。
  * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
  */
 
 
@@ -207,7 +210,6 @@ private bool backgroundRendererState = false;
  * 背景2DCGレンダラーの有効/無効を設定します。
  *
  * @param state 背景2DCGレンダラーの有効/無効（trueならば有効）
- * @author 松井文宏
  */
 public void setBackgroundRendererState(bool state){
 	backgroundRendererState = state;
@@ -237,7 +239,6 @@ private bool foregroundRendererState = false;
  * 前景2DCGレンダラーの有効/無効を設定します。
  *
  * @param state 前景2DCGレンダラーの有効/無効（trueならば有効）
- * @author 松井文宏
  */
 public void setForegroundRendererState(bool state){
 	if(state && !backgroundRendererState){
@@ -948,7 +949,6 @@ private float exportQuality = 0.0;
  * @param filePath 出力ファイル名またはファイルパス
  * @param format ファイル形式（"PNG"または"JPEG"）
  * @param quality 品質
- * @author 松井文宏
  */
 public void export( string filePath, string format, float quality ){
 	if(animation){
@@ -965,8 +965,6 @@ public void export( string filePath, string format, float quality ){
 /**
  * 現在の描画ラベルの内容を、画像ファイルに出力します。
  * 適切なタイミングで、メインループから実行されます。
- *
- * @author 松井文宏
  */
 private void export(){
 	if(backgroundRendererState){
@@ -984,7 +982,6 @@ private void export(){
  * 下記のframeworkMainを明示的に呼ぶ必要があります。
  *
  * @param args メイン引数（ getMainArgument関数で取得可能 ）
- * @author 松井文宏
  */
 public void main( string args[] ){
 
@@ -1011,8 +1008,6 @@ private bool existsOnResize = false;
 
 /**
  * 各種コールバック関数が定義されているかを検証します。
- *
- * @author 松井文宏
  */
 private void checkCallback(){
 	existsOnPaint = evaluable("onPaint(renderer)");
@@ -1030,8 +1025,6 @@ private void checkCallback(){
  * 従って、このフレームワークを 
  * import しているプログラムのグローバル領域実行時には、
  * すでにリソースが確保されている事が保証されます。
- * 
- * @author 松井文宏
  */
 private void frameworkInitialize() {
 	initializeWindow();
@@ -1047,7 +1040,6 @@ private void frameworkInitialize() {
  * 自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。
  *
  * @param args メイン引数（ getMainArgument関数で取得可能 ）
- * @author 松井文宏
  */
 public void frameworkMain( string args[] ){
 	
@@ -1085,7 +1077,6 @@ public void frameworkMain( string args[] ){
  * ウィンドウが閉じられた際にコールされるイベントハンドラです。
  *
  * @param id ウィンドウのGUIコンポーネントID
- * @author 松井文宏
  */
 public void onWindowClose( int id ){
 	if( id == window ){
@@ -1104,7 +1095,6 @@ private bool windowResized = false;
  * @param id ウィンドウのGUIコンポーネントID
  * @param width ウィンドウの幅
  * @param height ウィンドウの高さ
- * @author 松井文宏
  */
 public void onWindowResize( int id, int width, int height ){
 	if( id == window ){
@@ -1122,8 +1112,6 @@ public void onWindowResize( int id, int width, int height ){
  * メインループです。
  * 毎秒 frameRate 回の頻度で、描画処理(paint)と更新処理(update)、
  * フレームレートの調整処理などを繰り返します。
- *
- * @author 松井文宏
  */
 private void mainLoop(){
 
@@ -1178,8 +1166,6 @@ private void mainLoop(){
  * 通常は自動で実行されますが、
  * 通常は自動で実行されますが、アニメーションを無効にしている場合などは、
  * 画面更新時に明示的に呼び出す必要があります。
- *
- * @author 松井文宏
  */
 public void paintWindow(){
 	paintComponent( imageLabel );
@@ -1192,8 +1178,6 @@ public void paintWindow(){
  * 3DCGと、背景及び前景2DCGの合成も行います。
  * 通常は自動で実行されますが、アニメーションを無効にしている場合などは、
  * 画面更新時に明示的に呼び出す必要があります。
- *
- * @author 松井文宏
  */
 public void render(){
 	if(backgroundRendererState){
@@ -1212,7 +1196,6 @@ public void render(){
  * 3DCGのみを描画します。（背景及び前景2DCG無効時）
  *
  * @param existsPaint paint関数の有無
- * @author 松井文宏
  */
 private void render3D(){
 	setRendererBackgroundColor();
@@ -1227,8 +1210,6 @@ private void render3D(){
 
 /**
  * 3DCGと背景2DCGを描画します。（前景2DCGのみ無効時）
- *
- * @author 松井文宏
  */
 private void render3DAndBackground(){
 	setRendererBackgroundColor();
@@ -1246,8 +1227,6 @@ private void render3DAndBackground(){
 
 /**
  * 3DCGと、背景及び前景2DCGを描画します。（全レンダラ有効時）
- *
- * @author 松井文宏
  */
 private void render3DAndBackgroundAndForeground(){
 	setRendererBackgroundColor();
@@ -1269,8 +1248,6 @@ private void render3DAndBackgroundAndForeground(){
 /**
  * 目標フレームレート、実測フレームレート、
  * 現在のループウェイトなどから、次フレームでの最適なループウェイトを計算して返します。
- *
- * @author 松井文宏
  */
 private int getLoopWait( float targetFrameRate, float currentFrameRate, int currentLoopWait, int limitMin, int limitMax ){
 	if( targetFrameRate > currentFrameRate ){
@@ -1292,8 +1269,6 @@ private int getLoopWait( float targetFrameRate, float currentFrameRate, int curr
 
 /**
  * ウィンドウの生成と初期化を行います。
- *
- * @author 松井文宏
  */
 private void initializeWindow(){
 	window = newWindow( windowX, windowY, windowWidth, windowHeight, windowTitle );
@@ -1303,8 +1278,6 @@ private void initializeWindow(){
 
 /**
  * グラフィックスリソース関連の確保と初期化を行います。
- *
- * @author 松井文宏
  */
 private void initializeGraphics(){
 
@@ -1329,8 +1302,6 @@ private void initializeGraphics(){
 
 /**
  * GUIコンポーネント関連の確保と初期化を行います。
- *
- * @author 松井文宏
  */
 private void initializeComponent(){
 
@@ -1349,8 +1320,6 @@ private void initializeComponent(){
 
 /**
  * レイアウトを再計算してGUI配置を調整します。
- *
- * @author 松井文宏
  */
 private void setLayout(){
 
@@ -1376,8 +1345,6 @@ private void setLayout(){
 
 /**
  * 描画ラベルにレンダラーを関連付けます。
- *
- * @author 松井文宏
  */
 private void setGraphicsLabelRenderer(){
 	if(imageLabel == NULL){
@@ -1393,8 +1360,6 @@ private void setGraphicsLabelRenderer(){
 
 /**
  * 適切な描画領域の幅を返します。
- *
- * @author 松井文宏
  */
 private int getPreferredScreenWidth(){
 	int innerSize[] = getComponentSize(window, GUI.INNER);
@@ -1405,8 +1370,6 @@ private int getPreferredScreenWidth(){
 
 /**
  * 適切な描画領域の高さを返します。
- *
- * @author 松井文宏
  */
 private void getPreferredScreenHeight(){
 	int innerSize[] = getComponentSize(window, GUI.INNER);

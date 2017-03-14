@@ -96,7 +96,7 @@ const float PI = 3.141592653589793 ;
 const float E = 2.718281828459045 ;
 
 
-/** エラーメッセージ、入力値が定義域の範囲外だった場合。 */
+// エラーメッセージ、入力値が定義域の範囲外だった場合。
 private const string ERROR_OUT_OF_DEFINITION = "入力値が定義域の範囲外です。" ;
 
 
@@ -218,7 +218,7 @@ macro rand(){
 varfloat pi(){
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.1 );
 	if( digitStock <= 100 ){
 		digit( digitStock + 10 );
@@ -315,7 +315,7 @@ macro exp( float arg ){
 varfloat exp( varfloat arg ){
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -391,7 +391,7 @@ varfloat pow( varfloat arg1, varint arg2 ){
 	}
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( (int)( ( digitStock + abs( order( (varfloat)arg2 ) ) )* 2.1vf )	);
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -468,7 +468,7 @@ varfloat pow( varfloat arg1, varfloat arg2 ){
 	}
 	
 	// 現時点の演算桁数を控えておく
-	int digitStock = getdigit();
+	int digitStock = digit();
 	
 	// 指数が整数の場合は pow 関数を呼ぶ
 	varfloat mod = arg2 % 1vf;
@@ -640,7 +640,7 @@ varfloat log( varfloat arg ){
 	}
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -736,7 +736,7 @@ macro log10( float arg ){
 varfloat log10( varfloat arg ){
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.2 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -789,7 +789,7 @@ macro sqrt( float arg ){
 varfloat sqrt( varfloat arg ){
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -847,7 +847,7 @@ macro root( float arg, int rootPower ){
 varfloat root( varfloat arg, varint p ){
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -899,7 +899,7 @@ varfloat root( varfloat arg, varfloat vfp ){
 	
 	// 精度を出すために演算桁数を増加
 	varint p = vfp;
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1238,7 +1238,7 @@ macro sin( float arg ){
 varfloat sin( varfloat arg ){
 	
 	// 現時点の演算桁数を控えておく
-	int digitStock = getdigit();
+	int digitStock = digit();
 	
 	
 	// この関数内では、対称性を利用し、
@@ -1362,7 +1362,7 @@ macro cos( float arg ){
 varfloat cos( varfloat arg ){
 	
 	// 現時点の演算桁数を控えておく
-	int digitStock = getdigit();
+	int digitStock = digit();
 	
 	// この関数内では、対称性を利用し、
 	// 0 からPI/2までの範囲にシフトして計算する
@@ -1477,7 +1477,7 @@ macro tan( float arg ){
 varfloat tan( varfloat arg ){
 	
 	// 精度を出すために演算桁数を増加
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.1 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1536,7 +1536,7 @@ macro asin( float arg ){
  * 
  */
 varfloat asin( varfloat arg ){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1608,7 +1608,7 @@ macro acos( float arg ){
  * 
  */
 varfloat acos( varfloat arg ){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1644,7 +1644,7 @@ macro atan( float arg ){
  * 
  */
 varfloat atan( varfloat arg ){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1715,7 +1715,7 @@ macro sinh( float arg ){
  * 
  */
 varfloat sinh( varfloat arg ){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.1 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1751,7 +1751,7 @@ macro cosh( float arg ){
  * 
  */
 varfloat cosh( varfloat arg ){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.1 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1787,7 +1787,7 @@ macro tanh( float arg ){
  * 
  */
 varfloat tanh( varfloat arg ){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.8 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1830,7 +1830,7 @@ macro asinh( float arg ){
  * 
  */
 varfloat asinh( varfloat arg ){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.1 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1870,7 +1870,7 @@ macro acosh( float arg ){
 	if( arg <= 1vf ){
 		return 0vf;
 	}
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.1 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1916,7 +1916,7 @@ varfloat atanh( varfloat arg ){
 	if( 1vf <= arg ){
 		return 0vf;
 	}
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 2.1 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
@@ -1986,7 +1986,7 @@ macro deg( float angle ){
  * 
  */
 varfloat deg(varfloat rad){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	varfloat value = rad * 180.0vf / pi();
 	digit( digitStock );
@@ -2014,7 +2014,7 @@ macro rad( float angle ){
  * 
  */
 varfloat rad(varfloat deg){
-	int digitStock = getdigit();
+	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	varfloat value = deg * pi() / 180.0vf;
 	digit( digitStock );

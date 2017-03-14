@@ -50,6 +50,9 @@ import Text;
  * なお、このモジュールでは、一般的なCSV形式やTSV形式だけでなく、
  * 区切り文字（デリミタ）や引用符（エンクロージャ）の記号を明示的に指定する事も可能です。
  * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
  */
 
 
@@ -191,7 +194,6 @@ public struct TextFile{
  * @param filePath ファイル名
  * @param mode モード
  * @return 開いたファイルのテキストファイル構造体
- * @author 松井文宏
  */
 public TextFile openTextFile(string filePath, string mode){
 	string textEncoding = NULL;
@@ -237,7 +239,6 @@ public TextFile openTextFile(string filePath, string mode){
  * @param mode モード
  * @param encoding 文字コード
  * @return 開いたファイルのテキストファイル構造体
- * @author 松井文宏
  */
 public TextFile openTextFile(string filePath, string mode, string textEncoding){
 	TextFile textFile;
@@ -298,7 +299,6 @@ public TextFile openTextFile(string filePath, string mode, string textEncoding){
  * 特に書き込みアクセス後には、バッファされている内容を最後まで書き込み切るためにも、必ず呼び出す必要があります。
  *
  * @param textFile 対象のテキストファイル構造体
- * @author 松井文宏
  */
 public void close(TextFile &textFile){
 	checkAccessable(textFile);
@@ -321,7 +321,6 @@ public void close(TextFile &textFile){
  *
  * @param textFile 対象のテキストファイル構造体
  * @return 改行コード
- * @author 松井文宏
  */
 private string getPreferredEndOfLineCode(TextFile &textFile){
 	checkAccessable(textFile);
@@ -358,7 +357,6 @@ private string getPreferredEndOfLineCode(TextFile &textFile){
  *
  * @param textFile 対象のテキストファイル構造体
  * @return 改行コード
- * @author 松井文宏
  */
 public string getEndOfLineCode(TextFile &textFile){
 	checkAccessable(textFile);
@@ -382,7 +380,6 @@ public string getEndOfLineCode(TextFile &textFile){
  *
  * @param textFile 対象のテキストファイル構造体
  * @param endOfLineCode 改行コード
- * @author 松井文宏
  */
 public void setEndOfLineCode(TextFile &textFile, string endOfLineCode){
 	textFile.endOfLineCode = endOfLineCode;
@@ -413,7 +410,6 @@ public void setEndOfLineCode(TextFile &textFile, string endOfLineCode){
  *
  * @param textFile 対象のテキストファイル構造体
  * @param endOfLineCode コメント行を表す行頭文字列
- * @author 松井文宏
  */
 public void setCommentLineCode(TextFile &textFile, string commentLineCode){
 	textFile.commentLineCode = commentLineCode;
@@ -429,7 +425,6 @@ public void setCommentLineCode(TextFile &textFile, string commentLineCode){
  *
  * @param textFile 対象のテキストファイル構造体
  * @return コメント行を表す行頭文字列
- * @author 松井文宏
  */
 public string getCommentLineCode(TextFile &textFile){
 	return textFile.commentLineCode;
@@ -441,7 +436,6 @@ public string getCommentLineCode(TextFile &textFile){
  * 
  * @param textFile 対象のテキストファイル構造体
  * @return 読み込み可能なモードであればtrue
- * @author 松井文宏
  */
 public bool isReadable(TextFile &textFile){
 	if(textFile == NULL || textFile.file == NULL){
@@ -461,7 +455,6 @@ public bool isReadable(TextFile &textFile){
  * 
  * @param textFile 対象のテキストファイル構造体
  * @return 読み込み可能なモードであればtrue
- * @author 松井文宏
  */
 public bool isWritable(TextFile &textFile){
 	if(textFile == NULL || textFile.file == NULL){
@@ -483,7 +476,6 @@ public bool isWritable(TextFile &textFile){
  * 違えばエラーメッセージを表示します。
  * 
  * @param textFile 対象のテキストファイル構造体
- * @author 松井文宏
  */
 private void checkReadable(TextFile &textFile){
 	if(!isReadable(textFile)){
@@ -498,7 +490,6 @@ private void checkReadable(TextFile &textFile){
  * 違えばエラーメッセージを表示します。
  * 
  * @param textFile 対象のテキストファイル構造体
- * @author 松井文宏
  */
 private void checkWritable(TextFile &textFile){
 	if(!isWritable(textFile)){
@@ -540,7 +531,6 @@ private void checkAccessable(TextFile &textFile){
  *
  * @param textFile 対象のテキストファイル構造体
  * @param delimiter 値の区切り文字（デリミタ）
- * @author 松井文宏
  */
 public void setDelimiter(TextFile &textFile, string delimiter){
 	checkAccessable(textFile);
@@ -601,7 +591,6 @@ public void setDelimiter(TextFile &textFile, string delimiter){
  * @param enclosure 値を囲む引用符文字（エンクロージャ）
  * @param enclosureEscapeCharacter 値に引用符文字（エンクロージャ）が含まれる場合にエスケープする文字
  * @param enclosingOption 囲み方のオプション
- * @author 松井文宏
  */
 public void setEnclosure(TextFile &textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption){
 	checkAccessable(textFile);
@@ -628,7 +617,6 @@ public void setEnclosure(TextFile &textFile, string enclosure, string enclosureE
  *
  * @param textFile 対象のテキストファイル構造体
  * @param value 書き込む文字列（可変長引数のため複数指定可能）
- * @author 松井文宏
  */
 public void write(TextFile &textFile, ... string value[]){
 	checkAccessable(textFile);
@@ -668,7 +656,6 @@ public void write(TextFile &textFile, ... string value[]){
  *
  * @param textFile 対象のテキストファイル構造体
  * @param value 書き込む文字列（可変長引数のため複数指定可能）
- * @author 松井文宏
  */
 public void writeln(TextFile &textFile, ... string value[]){
 	if(0 < length(value, 0)){
@@ -682,7 +669,6 @@ public void writeln(TextFile &textFile, ... string value[]){
  * テキストファイルに区切り文字を書き込みます。
  * 
  * @param textFile 対象のテキストファイル構造体
- * @author 松井文宏
  */
 public void delimit(TextFile &textFile){
 	System.write(textFile.file, textFile.delimiter);
@@ -696,7 +682,6 @@ public void delimit(TextFile &textFile){
  * 
  * @param textFile 対象のテキストファイル構造体
  * @param comment コメント
- * @author 松井文宏
  */
 public void commentln(TextFile &textFile, string comment){
 	checkAccessable(textFile);
@@ -720,7 +705,6 @@ public void commentln(TextFile &textFile, string comment){
  * @param enclosureEscapeCharacter 引用符のエスケープ文字
  * @param commentLineCode コメント行頭文字列
  * @return 処理後の値
- * @author 松井文宏
  */
 private string[] addEnclosure(string value[],
 						string enclosure, string enclosureEscapeCharacter, int enclosureOption,
@@ -782,7 +766,6 @@ private string[] addEnclosure(string value[],
  * @param enclosure 引用符記号
  * @param enclosureEscapeCharacter 引用符のエスケープ文字
  * @return 処理後の値
- * @author 松井文宏
  */
 private string[] removeEnclosure(string value[], string enclosure, string enclosureEscapeCharacter, int enclosureOption){
 
@@ -909,7 +892,6 @@ public string[] readln(TextFile &textFile){
  *
  * @param textFile 対象のテキストファイル構造体
  * @return 読み込んだ内容
- * @author 松井文宏
  */
 public string[] read(TextFile &textFile){
 	checkAccessable(textFile);
@@ -986,10 +968,9 @@ public string[] read(TextFile &textFile){
  * なお、ファイル内に複数の改行コードが混在している場合は統一されます。
  * 統一される改行コードは getEndOfLine 関数で取得できます。
  *
- * @param file 対象のテキストファイル構造体
+ * @param textFile 対象のテキストファイル構造体
  * @param counter 読み込んだ行数が格納されます。
  * @return 読み込んだ行の内容
- * @author 松井文宏
  */
 private string loadln(TextFile &textFile, int &counter){
 	int file = textFile.file;
@@ -1053,9 +1034,8 @@ private string loadln(TextFile &textFile, int &counter){
  * getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。
  * また、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。
  *
- * @param file 対象のテキストファイル構造体
+ * @param textFile 対象のテキストファイル構造体
  * @return 読み込んだ行の内容
- * @author 松井文宏
  */
 public string loadln(TextFile &textFile){
 	checkAccessable(textFile);
@@ -1073,9 +1053,8 @@ public string loadln(TextFile &textFile){
  * ファイル内に複数の改行コードが混在している場合は、
  * getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。
  *
- * @param file 対象のテキストファイル構造体
+ * @param textFile 対象のテキストファイル構造体
  * @return 読み込んだ行の内容
- * @author 松井文宏
  */
 public string load(TextFile &textFile){
 	checkAccessable(textFile);
@@ -1104,7 +1083,7 @@ public string load(TextFile &textFile){
 /**
  * ファイルの最後が改行コードで終了しているかどうかを判定します。
  *
- * @author 松井文宏
+ * @param textFile 対象のテキストファイル構造体
  */
 private boolean endsWithEndOfLineCode(TextFile &textFile){
 
@@ -1131,9 +1110,8 @@ private boolean endsWithEndOfLineCode(TextFile &textFile){
  * 結果は TextFile.lineCount に設定されます。
  * 結果を別モジュールから取得したい場合は、countln を使用します。
  *
- * @param file 対象のテキストファイル構造体
+ * @param textFile 対象のテキストファイル構造体
  * @return テキストファイルの有効行数
- * @author 松井文宏
  */
 private int getEffectiveLineCount(TextFile &textFile){
 
@@ -1171,9 +1149,8 @@ private int getEffectiveLineCount(TextFile &textFile){
  * readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。
  * この関数が返す有効行数を超えてreadln関数をコールする事はできません。
  *
- * @param file 対象のテキストファイル構造体
+ * @param textFile 対象のテキストファイル構造体
  * @return テキストファイルの有効行数
- * @author 松井文宏
  */
 public int countln(TextFile &textFile){
 	checkAccessable(textFile);

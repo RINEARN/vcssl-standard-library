@@ -21,13 +21,14 @@ coding UTF-8;
  * data.<a href="WrappedQueue.html">WrappedQueue</a> 
  * を使用して下さい。
  * </p>
+ * 
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @license Public domain ( CC0 )
  */
 
 
 /**
  * キュー構造体です。キューのデータを保持します。
- *
- * @author 松井文宏
  */
 public struct Queue<Type>{
 	protected int first = 0;
@@ -41,7 +42,6 @@ public struct Queue<Type>{
  * 要素を全て削除します。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 public void clear<Type>( Queue<Type> &queue ){
 	alloc[0] queue.data;
@@ -56,7 +56,6 @@ public void clear<Type>( Queue<Type> &queue ){
  * 使用中のサイズを返します。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 public int size<Type>( Queue<Type> &queue ){
 	return queue.size;
@@ -68,7 +67,6 @@ public int size<Type>( Queue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @param value 追加する要素
- * @author 松井文宏
  */
 public void enqueue<Type>( Queue<Type> &queue, Type value ){
 	queue.size++;
@@ -83,7 +81,6 @@ public void enqueue<Type>( Queue<Type> &queue, Type value ){
  *
  * @param queue 対象のキュー構造体
  * @return 取り出した要素
- * @author 松井文宏
  */
 public Type dequeue<Type>( Queue<Type> &queue ){
 	queue.size--;
@@ -100,7 +97,6 @@ public Type dequeue<Type>( Queue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @return 取り出した要素
- * @author 松井文宏
  */
 public Type peek<Type>( Queue<Type> &queue ){
 	return queue.data[ queue.first ];
@@ -112,7 +108,6 @@ public Type peek<Type>( Queue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @param 含まれるか判定したい要素
- * @author 松井文宏
  */
 public bool contains<Type>( Queue<Type> &queue, Type element ){
 	int n = queue.size;
@@ -129,7 +124,6 @@ public bool contains<Type>( Queue<Type> &queue, Type element ){
  * キューが保持する全要素の順序を反転させます。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 public void reverse<Type>( Queue<Type> &queue ){
 
@@ -152,7 +146,6 @@ public void reverse<Type>( Queue<Type> &queue ){
  *
  * @param queue 対象のキュー構造体
  * @return スタックの全要素をまとめた1次元配列
- * @author 松井文宏
  */
 public Type[] toArray<Type>( Queue<Type> &queue ){
 
@@ -170,7 +163,6 @@ public Type[] toArray<Type>( Queue<Type> &queue ){
  * キューバッファを、必要に応じて最適な容量に再確保します。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 private int setProperLength<Type>( Queue<Type> &queue ){
 
@@ -199,7 +191,6 @@ private int setProperLength<Type>( Queue<Type> &queue ){
  * キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。
  *
  * @param size キューのサイズ
- * @author 松井文宏
  */
 private int checksize(int size){
 	if(size < 0){
@@ -213,7 +204,6 @@ private int checksize(int size){
  * 先頭をインデックス 0 に合わせます。
  *
  * @param queue 対象のキュー構造体
- * @author 松井文宏
  */
 private void shiftData<Type>( Queue<Type> &queue ){
 	int zero = 0;
@@ -240,7 +230,6 @@ private void shiftData<Type>( Queue<Type> &queue ){
  *
  * @param length 現在のキューバッファ長
  * @param usage 現在のキューバッファ使用量
- * @author 松井文宏
  */
 private int getProperLength(int length, int usage){
 	if( length == 0 ){
@@ -261,7 +250,6 @@ private int getProperLength(int length, int usage){
  * @param first 先頭インデックス
  * @param last 終端インデックス
  * @param length バッファ長
- * @author 松井文宏
  */
 private int getUsage(int first, int last, int length){
 	if(first <= last){
