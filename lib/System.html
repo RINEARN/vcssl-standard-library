@@ -87,14 +87,6 @@
 <dd> ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 </dd>
 <dt><a href="#DEC_HALF_TO_EVEN">const int DEC_HALF_TO_EVEN </a></dt>
 <dd> ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 </dd>
-<dt><a href="#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
-<dt><a href="#ERROR_EMPTY_FILE_PATH">const string ERROR_EMPTY_FILE_PATH </a></dt>
-<dd> エラーメッセージ、ファイルパスが空文字だった場合。 </dd>
-<dt><a href="#ERROR_FILE_IS_DIRECTORY">const string ERROR_FILE_IS_DIRECTORY </a></dt>
-<dd> エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 </dd>
-<dt><a href="#ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT">const string ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT </a></dt>
-<dd> エラーメッセージ、verfloat/vercomplex 型のデフォルト丸め処理に未対応の丸めモードを用いた場合。 </dd>
 <dt><a href="#print">macro print(...) </a></dt>
 <dd>コンソールに文字列を出力します。引数は任意型であり、自動的に文字列型に変換されます。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、空白区切りで出力されます。 </dd>
 <dt><a href="#println">macro println(...) </a></dt>
@@ -285,8 +277,6 @@
 <dd>環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="#EOL">EOL</a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="#EOL">EOL</a> の使用が推奨されます。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="#linefeed">string linefeed() </a></dt>
 <dd>環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="#EOL">EOL</a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="#EOL">EOL</a> の使用が推奨されます。この関数は互換目的でサポートされています。 </dd>
-<dt><a href="#checkFilePath">void checkFilePath(string filePath) </a></dt>
-<dd>ファイルが普通に読み書き可能なものか確認します。ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。 </dd>
 <dt><a href="#main">void main( ) </a></dt>
 <dd>いわゆる main 関数です。全モジュールのグローバル領域の処理（例えばグローバル定数の初期化など）が完了した時点で、自動的にコールされます。複数のモジュールにおいて main 関数が存在する場合、モジュールの読み込み順序に基づいて、最後に定義されたものだけがコールされます（この点は一般のイベントハンドラと異なります）。 </dd>
 <dt><a href="#main">void main( string args[ ] ) </a></dt>
@@ -1014,82 +1004,6 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	 ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_FILE_NOT_FOUND"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	const string ERROR_FILE_NOT_FOUND 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 エラーメッセージ、ファイルが見つからなかった場合。 
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_EMPTY_FILE_PATH"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	const string ERROR_EMPTY_FILE_PATH 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 エラーメッセージ、ファイルパスが空文字だった場合。 
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_FILE_IS_DIRECTORY"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	const string ERROR_FILE_IS_DIRECTORY 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	const string ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 エラーメッセージ、verfloat/vercomplex 型のデフォルト丸め処理に未対応の丸めモードを用いた場合。 
    	 </td>
     </tr>
 </tbody></table>
@@ -4029,35 +3943,8 @@
     </tr>
 </tbody></table>
 
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="checkFilePath"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void checkFilePath(string filePath) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ファイルが普通に読み書き可能なものか確認します。ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	filePath : ファイル名またはパス <br />
-   	 </td>
-    </tr>
-</tbody></table>
-
 <hr />
-<h2 id="function" style="page-break-before:always;" >イベントハンドラ - Event Handler</h2>
+<h2 id="event" style="page-break-before:always;" >イベントハンドラ - Event Handler</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="main"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">

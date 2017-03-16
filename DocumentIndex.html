@@ -39,6 +39,12 @@
 <p>2次元グラフソフトを制御するAPIライブラリです。</p> 
 <h3><a href="lib/tool/Graph3D.html">tool.graph.Graph3D ライブラリ</a></h3> 
 <p>3次元グラフソフトを制御するAPIライブラリです。</p> 
+<h3><a href="lib/graphics2d/Graphics2DFramework.html">graphics2d.Graphics2DFramework ライブラリ</a></h3> 
+<p>2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p> 
+<h3><a href="lib/graphics3d/Graphics3DFramework.html">graphics3d.Graphics3DFramework ライブラリ</a></h3> 
+<p>3DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p> 
+<h3><a href="lib/file/TextFile.html">file.TextFile ライブラリ</a></h3> 
+<p>CSV/TSV形式などのテキストファイル入出力機能を提供します。</p> 
 <h3><a href="lib/data/DataWrapper.html">data.DataWrapper ライブラリ</a></h3> 
 <p>任意型の変数値を構造体でラッピングする機能を提供するライブラリです。</p> 
 <h3><a href="lib/data/List.html">data.List ライブラリ</a></h3> 
@@ -71,12 +77,6 @@
 <p>ガウス関数を提供するライブラリです。</p> 
 <h3><a href="lib/math/FourierTransform.html">math.FourierTransform ライブラリ</a></h3> 
 <p>離散フーリエ変換処理を提供するライブラリです。</p> 
-<h3><a href="lib/file/TextFile.html">file.TextFile ライブラリ</a></h3> 
-<p>CSV/TSV形式などのテキストファイル入出力機能を提供します。</p> 
-<h3><a href="lib/graphics2d/Graphics2DFramework.html">graphics2d.Graphics2DFramework ライブラリ</a></h3> 
-<p>2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p> 
-<h3><a href="lib/graphics3d/Graphics3DFramework.html">graphics3d.Graphics3DFramework ライブラリ</a></h3> 
-<p>3DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p> 
 <h3><a href="lib/gui/ButtonPanel.html">gui.ButtonPanel ライブラリ</a></h3> 
 <p>GUI部品として、ボタンが並ぶパネルを提供するライブラリです。</p> 
 <h3><a href="lib/gui/ButtonWindow.html">gui.ButtonWindow ライブラリ</a></h3> 
@@ -176,14 +176,6 @@
 <dd> ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half down 丸め 」を行う丸めモードです。<a href="lib/System.html#round">round</a> 関数で使用します。 </dd>
 <dt><a href="lib/System.html#DEC_HALF_TO_EVEN">const int DEC_HALF_TO_EVEN </a></dt>
 <dd> ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half to even 丸め 」を行う丸めモードです。<a href="lib/System.html#round">round</a> 関数で使用します。 </dd>
-<dt><a href="lib/System.html#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
-<dt><a href="lib/System.html#ERROR_EMPTY_FILE_PATH">const string ERROR_EMPTY_FILE_PATH </a></dt>
-<dd> エラーメッセージ、ファイルパスが空文字だった場合。 </dd>
-<dt><a href="lib/System.html#ERROR_FILE_IS_DIRECTORY">const string ERROR_FILE_IS_DIRECTORY </a></dt>
-<dd> エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 </dd>
-<dt><a href="lib/System.html#ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT">const string ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT </a></dt>
-<dd> エラーメッセージ、verfloat/vercomplex 型のデフォルト丸め処理に未対応の丸めモードを用いた場合。 </dd>
 <dt><a href="lib/System.html#print">macro print(...) </a></dt>
 <dd>コンソールに文字列を出力します。引数は任意型であり、自動的に文字列型に変換されます。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、空白区切りで出力されます。 </dd>
 <dt><a href="lib/System.html#println">macro println(...) </a></dt>
@@ -374,8 +366,6 @@
 <dd>環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="lib/System.html#EOL">EOL</a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="lib/System.html#EOL">EOL</a> の使用が推奨されます。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="lib/System.html#linefeed">string linefeed() </a></dt>
 <dd>環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="lib/System.html#EOL">EOL</a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="lib/System.html#EOL">EOL</a> の使用が推奨されます。この関数は互換目的でサポートされています。 </dd>
-<dt><a href="lib/System.html#checkFilePath">void checkFilePath(string filePath) </a></dt>
-<dd>ファイルが普通に読み書き可能なものか確認します。ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。 </dd>
 <dt><a href="lib/System.html#main">void main( ) </a></dt>
 <dd>いわゆる main 関数です。全モジュールのグローバル領域の処理（例えばグローバル定数の初期化など）が完了した時点で、自動的にコールされます。複数のモジュールにおいて main 関数が存在する場合、モジュールの読み込み順序に基づいて、最後に定義されたものだけがコールされます（この点は一般のイベントハンドラと異なります）。 </dd>
 <dt><a href="lib/System.html#main">void main( string args[ ] ) </a></dt>
@@ -522,12 +512,6 @@
 <h3><a href="lib/Graphics.html">Graphics ライブラリ</a></h3> 
 <p>グラフィックス関連リソースの管理機能を提供するライブラリです。</p> 
 <dl>
-<dt><a href="lib/Graphics.html#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
-<dt><a href="lib/Graphics.html#ERROR_EMPTY_FILE_PATH">const string ERROR_EMPTY_FILE_PATH </a></dt>
-<dd> エラーメッセージ、ファイルパスが空文字だった場合。 </dd>
-<dt><a href="lib/Graphics.html#ERROR_FILE_IS_DIRECTORY">const string ERROR_FILE_IS_DIRECTORY </a></dt>
-<dd> エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 </dd>
 <dt><a href="lib/Graphics.html#newGraphics">int newGraphics() </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。 </dd>
 <dt><a href="lib/Graphics.html#newGraphics">int newGraphics( string filePath ) </a></dt>
@@ -564,8 +548,6 @@
 <dd>イメージの全ピクセルについて、青色成分のみを格納する配列を返します。 </dd>
 <dt><a href="lib/Graphics.html#getGraphicsPixelAlpha">int[ ][ ] getGraphicsPixelAlpha( int id ) </a></dt>
 <dd>イメージの全ピクセルについて、α値成分のみを格納する配列を返します。 </dd>
-<dt><a href="lib/Graphics.html#checkFilePath">void checkFilePath(string filePath) </a></dt>
-<dd>ファイルが普通に読み書き可能なものか確認します。ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。 </dd>
 </dl>
 
 <h3><a href="lib/Graphics2D.html">Graphics2D ライブラリ</a></h3> 
@@ -2030,8 +2012,6 @@
 <dd> 特に整列されていないファイル順序を意味する設定値です。 </dd>
 <dt><a href="lib/File.html#LEXICAL">const int LEXICAL </a></dt>
 <dd> 辞書順に整列されたファイル順序を意味する設定値です。 </dd>
-<dt><a href="lib/File.html#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
 <dt><a href="lib/File.html#isDirectory">bool isDirectory( string pathOrName ) </a></dt>
 <dd>ファイルがディレクトリであるかどうかを判定します。 </dd>
 <dt><a href="lib/File.html#makeDirectory">void makeDirectory( string pathOrName ) </a></dt>
@@ -2074,10 +2054,6 @@
 <dd>指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。現在は <a href="lib/File.html#getFilePath">getFilePath</a>( pathOrName, directory, <a href="lib/File.html#RELATIVE">RELARIVE</a> ) で取得できます。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="lib/File.html#getFileList">string[ ] getFileList( string pathOrName ) </a></dt>
 <dd>指定ディレクトリ直下のファイル名一覧を取得します。現在は <a href="lib/File.html#getFilePath">listFile</a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href="lib/File.html#getFilePath">listFile</a>( pathOrName ) は整列オプションを指定できます。 </dd>
-<dt><a href="lib/File.html#WARNING_FILE_NOT_FOUND">const string WARNING_FILE_NOT_FOUND </a></dt>
-<dd> 警告メッセージ、ファイルが見つからなかった場合。 </dd>
-<dt><a href="lib/File.html#warnFileNotFound">bool warnFileNotFound(string pathOrName) </a></dt>
-<dd>ファイルが存在しなかった場合、警告を表示し、続行するかどうかをユーザーに尋ねます。 </dd>
 </dl>
 
 <h3><a href="lib/Time.html">Time ライブラリ</a></h3> 
@@ -2178,8 +2154,6 @@
 <h3><a href="lib/Sound.html">Sound ライブラリ</a></h3> 
 <p>サウンド関連機能を提供するライブラリです。</p> 
 <dl>
-<dt><a href="lib/Sound.html#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
 <dt><a href="lib/Sound.html#newSound">int newSound(string filePath) </a></dt>
 <dd>サウンドファイルを読み込んでサウンドデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。 </dd>
 <dt><a href="lib/Sound.html#deleteSound">void deleteSound(int soundID) </a></dt>
@@ -2246,8 +2220,6 @@
 <h3><a href="lib/tool/Graph2D.html">tool.Graph2D ライブラリ</a></h3> 
 <p>2次元グラフソフトを制御するAPIライブラリです。</p> 
 <dl>
-<dt><a href="lib/tool/Graph2D.html#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
 <dt><a href="lib/tool/Graph2D.html#newGraph2D">int newGraph2D() </a></dt>
 <dd>2次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 </dd>
 <dt><a href="lib/tool/Graph2D.html#newGraph2D">int newGraph2D( int x, int y, int width, int height, string title ) </a></dt>
@@ -2315,8 +2287,6 @@
 <h3><a href="lib/tool/Graph3D.html">tool.Graph3D ライブラリ</a></h3> 
 <p>3次元グラフソフトを制御するAPIライブラリです。</p> 
 <dl>
-<dt><a href="lib/tool/Graph3D.html#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
 <dt><a href="lib/tool/Graph3D.html#newGraph3D">int newGraph3D() </a></dt>
 <dd>3次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 </dd>
 <dt><a href="lib/tool/Graph3D.html#newGraph3D">int newGraph3D( int x, int y, int width, int height, string title ) </a></dt>
@@ -2429,10 +2399,6 @@
 <dd>リストが保持する全要素の順序を反転させます。 </dd>
 <dt><a href="lib/data/List.html#toArray">Type[ ] toArray&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
 <dd>リストが保持する全要素を、1次元の配列に格納して返します。 </dd>
-<dt><a href="lib/data/List.html#setProperLength">void setProperLength&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
-<dd>使用中のサイズに適切な配列バッファ長を設定します。 </dd>
-<dt><a href="lib/data/List.html#getProperLength">int getProperLength(int length, int size) </a></dt>
-<dd>使用中の要素数に最適なリストバッファ長を返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/Queue.html">data.Queue ライブラリ</a></h3> 
@@ -2456,16 +2422,6 @@
 <dd>キューが保持する全要素の順序を反転させます。 </dd>
 <dt><a href="lib/data/Queue.html#toArray">Type[ ] toArray&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
 <dd>キューが保持する全要素を、1次元の配列に変換して返します。 </dd>
-<dt><a href="lib/data/Queue.html#setProperLength">int setProperLength&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
-<dd>キューバッファを、必要に応じて最適な容量に再確保します。 </dd>
-<dt><a href="lib/data/Queue.html#checksize">int checksize(int size) </a></dt>
-<dd>キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。 </dd>
-<dt><a href="lib/data/Queue.html#shiftData">void shiftData&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
-<dd>キューバッファ（リングバッファ）をシフトし、先頭をインデックス 0 に合わせます。 </dd>
-<dt><a href="lib/data/Queue.html#getProperLength">int getProperLength(int length, int usage) </a></dt>
-<dd>現在のキューバッファ長と、その中の使用量から、最適なキューバッファ長を返します。 </dd>
-<dt><a href="lib/data/Queue.html#getUsage">int getUsage(int first, int last, int length) </a></dt>
-<dd>キューのリングバッファ内で、実際に使用している長さを返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/Stack.html">data.Stack ライブラリ</a></h3> 
@@ -2489,12 +2445,6 @@
 <dd>スタックが保持する全要素の順序を反転させます。 </dd>
 <dt><a href="lib/data/Stack.html#toArray">Type[ ] toArray&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
 <dd>スタックが保持する全要素を、1次元の配列に変換して返します。なお、順序は pop や peek で最初に得られる要素が [ 0 ] になります。 </dd>
-<dt><a href="lib/data/Stack.html#setProperLength">void setProperLength&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
-<dd>使用中のサイズに適切な配列バッファ長を設定します。 </dd>
-<dt><a href="lib/data/Stack.html#checksize">int checksize(int size) </a></dt>
-<dd>スタックポインタの値が適正かどうかを確認し、不正ならエラーを出力します。 </dd>
-<dt><a href="lib/data/Stack.html#getProperLength">int getProperLength(int length, int size) </a></dt>
-<dd>現在のスタックバッファ長と、スタックポインタの値から、最適なスタックバッファ長を返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/WrappedList.html">data.WrappedList ライブラリ</a></h3> 
@@ -2534,10 +2484,6 @@
 <dd>リストが保持する全要素の順序を反転させます。 </dd>
 <dt><a href="lib/data/WrappedList.html#toDataWrapperArray">DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list ) </a></dt>
 <dd>リストが保持する全要素を、DataWrapper配列に格納して返します。 </dd>
-<dt><a href="lib/data/WrappedList.html#setProperLength">void setProperLength&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list ) </a></dt>
-<dd>使用中のサイズに適切な配列バッファ長を設定します。 </dd>
-<dt><a href="lib/data/WrappedList.html#getProperLength">int getProperLength(int length, int size) </a></dt>
-<dd>使用中の要素数に最適なリストバッファ長を返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/WrappedQueue.html">data.WrappedQueue ライブラリ</a></h3> 
@@ -2561,16 +2507,6 @@
 <dd>キューが保持する全要素の順序を反転させます。 </dd>
 <dt><a href="lib/data/WrappedQueue.html#toDataWrapperArray">DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
 <dd>キューが保持する全要素を、DataWrapper配列に変換して返します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#setProperLength">int setProperLength&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
-<dd>キューバッファを、必要に応じて最適な容量に再確保します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#checksize">int checksize(int size) </a></dt>
-<dd>キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#shiftData">void shiftData&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
-<dd>キューバッファ（リングバッファ）をシフトし、先頭をインデックス 0 に合わせます。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#getProperLength">int getProperLength(int length, int usage) </a></dt>
-<dd>現在のキューバッファ長と、その中の使用量から、最適なキューバッファ長を返します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#getUsage">int getUsage(int first, int last, int length) </a></dt>
-<dd>キューのリングバッファ内で、実際に使用している長さを返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/WrappedStack.html">data.WrappedStack ライブラリ</a></h3> 
@@ -2594,12 +2530,6 @@
 <dd>スタックが保持する全要素の順序を反転させます。 </dd>
 <dt><a href="lib/data/WrappedStack.html#toDataWrapperArray">DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
 <dd>スタックが保持する全要素を、DataWrapper配列に格納して返します。なお、順序は pop や peek で最初に得られる要素を格納するものが [ 0 ] になります。 </dd>
-<dt><a href="lib/data/WrappedStack.html#setProperLength">void setProperLength&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
-<dd>使用中のサイズに適切な配列バッファ長を設定します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#checksize">int checksize(int size) </a></dt>
-<dd>スタックポインタの値が適正かどうかを確認し、不正ならエラーを出力します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#getProperLength">int getProperLength(int length, int size) </a></dt>
-<dd>現在のスタックバッファ長と、スタックポインタの値から、最適なスタックバッファ長を返します。 </dd>
 </dl>
 
 <h3><a href="lib/system/Int.html">system.Int ライブラリ</a></h3> 
@@ -2624,22 +2554,10 @@
 <h3><a href="lib/system/Float.html">system.Float ライブラリ</a></h3> 
 <p>float型を補助する機能を提供するライブラリです。</p> 
 <dl>
-<dt><a href="lib/system/Float.html#FLOAT_SUFFIX">const string FLOAT_SUFFIX[ ] </a></dt>
-<dd> float型のリテラルとして許されるサフィックスの一覧です。 </dd>
 <dt><a href="lib/system/Float.html#toFloatArray">float[ ] toFloatArray(... float args[ ]) </a></dt>
 <dd>float型の複数の値を、配列にまとめて返します。 </dd>
 <dt><a href="lib/system/Float.html#isFloat">bool isFloat(string s) </a></dt>
 <dd>文字列の中身がfloat型に変換可能か判定します。 </dd>
-<dt><a href="lib/system/Float.html#checkPoint">bool checkPoint(string s) </a></dt>
-<dd>文字列の含む少数点が正しいかどうかを判定します。 </dd>
-<dt><a href="lib/system/Float.html#checkExponentPart">bool checkExponentPart(string s) </a></dt>
-<dd>文字列の含む指数部表記が正しいかどうかを判定します。指数部表記が無い場合にも true が返されます。 </dd>
-<dt><a href="lib/system/Float.html#removeExponentPart">string removeExponentPart(string s) </a></dt>
-<dd>文字列の含む指数部を削除して返します。 </dd>
-<dt><a href="lib/system/Float.html#checkSuffix">bool checkSuffix(string s) </a></dt>
-<dd>文字列の末尾がサフィックスとして許されるかどうかを判定します。サフィックスが無い場合にも true が返されます。末尾に複数の文字が続く場合でも、最終文字だけで判定されます。 </dd>
-<dt><a href="lib/system/Float.html#removeSuffix">string removeSuffix(string s) </a></dt>
-<dd>文字列の含むサフィックスを削除して返します。 </dd>
 </dl>
 
 <h3><a href="lib/system/Complex.html">system.Complex ライブラリ</a></h3> 
@@ -2808,16 +2726,6 @@
 <dd> 必要な値のみ引用符記号（エンクロージャ）で囲むオプションです。CSV/TSV形式ファイルのデフォルト設定値です。 </dd>
 <dt><a href="lib/file/TextFile.html#ENCLOSED_NONE">const int ENCLOSED_NONE </a></dt>
 <dd> どの値も引用符記号（エンクロージャ）で囲まないオプションです。汎用テキストファイルのデフォルト設定値です。 </dd>
-<dt><a href="lib/file/TextFile.html#DEFAULT_BUFFER_LENGTH">const int DEFAULT_BUFFER_LENGTH </a></dt>
-<dd> 読み込み用バッファの初期サイズです。 </dd>
-<dt><a href="lib/file/TextFile.html#ERROR_NOT_READABLE_MODE">const string ERROR_NOT_READABLE_MODE </a></dt>
-<dd> エラーメッセージ - ファイルが読み込み可能モードでなかった場合。 </dd>
-<dt><a href="lib/file/TextFile.html#ERROR_NOT_WRITEABLE_MODE">const string ERROR_NOT_WRITEABLE_MODE </a></dt>
-<dd> エラーメッセージ - ファイルが書き込み可能モードでなかった場合。 </dd>
-<dt><a href="lib/file/TextFile.html#ERROR_NO_MORE_LINES">const string ERROR_NO_MORE_LINES </a></dt>
-<dd> エラーメッセージ - 読み込みファイル行が最終行を超過した場合。 </dd>
-<dt><a href="lib/file/TextFile.html#ERROR_NOT_ACCESSABLE">const string ERROR_NOT_ACCESSABLE </a></dt>
-<dd> エラーメッセージ - 読み込みファイル行が最終行を超過した場合。 </dd>
 <dt><a href="lib/file/TextFile.html#openTextFile">TextFile openTextFile(string filePath, string mode) </a></dt>
 <dd>ファイル名とモードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。    <a href="lib/file/TextFile.html#WRITE">WRITE</a> :    特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#APPEND">APPEND</a> :    特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#READ">READ</a> :    特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#WRITE_CSV">WRITE_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="lib/file/TextFile.html#APPEND_CSV">APPEND_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された追記モードです。 ,    <a href="lib/file/TextFile.html#READ_CSV">READ_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された読み込みモードです。 ,    <a href="lib/file/TextFile.html#WRITE_TSV">WRITE_TSV</a> :    TSV（タブ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="lib/file/TextFile.html#APPEND_TSV">APPEND_TSV</a> :    TSV（タブ区切り）ファイル用に設定された追記モードです。 ,    <a href="lib/file/TextFile.html#READ_TSV">READ_TSV</a> :    TSV（タブ区切り）ファイル用に設定された読み込みモードです。 ,   </dd>
 <dt><a href="lib/file/TextFile.html#openTextFile">TextFile openTextFile(string filePath, string mode, string textEncoding) </a></dt>
@@ -2858,109 +2766,11 @@
 <dd>ファイルから全行を読み込み、そのまま返します。ただし、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。なお、ファイル内に複数の改行コードが混在している場合は統一されます。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。 </dd>
 <dt><a href="lib/file/TextFile.html#countln">int countln(TextFile &amp;textFile) </a></dt>
 <dd>テキストファイルの有効行数をカウントします。引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。この関数が返す有効行数を超えてreadln関数をコールする事はできません。 </dd>
-<dt><a href="lib/file/TextFile.html#ERROR_NULL_COMMENT_LINE_CODE">const string ERROR_NULL_COMMENT_LINE_CODE </a></dt>
-<dd> エラーメッセージ - コメント行頭文字列が未設定の場合。 </dd>
-<dt><a href="lib/file/TextFile.html#getPreferredEndOfLineCode">string getPreferredEndOfLineCode(TextFile &amp;textFile) </a></dt>
-<dd>ファイルに使用されている改行コードを解析し、CR+LF, CR, LF の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, CR, LF の順番で判定します。それらのどれにも該当しない場合は NULL を返します。この関数は、ファイルオープン時に1度だけ実行され、結果は TextFile.endOfLineCode メンバに設定されます。結果を別モジュールから取得したい場合は、<a href="lib/file/TextFile.html#getEndOfLineCode">getEndOfLineCode</a> を使用します。 </dd>
-<dt><a href="lib/file/TextFile.html#checkReadable">void checkReadable(TextFile &amp;textFile) </a></dt>
-<dd>ファイルが読み込み可能なモードで開かれているか確認し、違えばエラーメッセージを表示します。 </dd>
-<dt><a href="lib/file/TextFile.html#checkWritable">void checkWritable(TextFile &amp;textFile) </a></dt>
-<dd>ファイルが読み込み可能なモードで開かれているか確認し、違えばエラーメッセージを表示します。 </dd>
-<dt><a href="lib/file/TextFile.html#checkAccessable">void checkAccessable(TextFile &amp;textFile) </a></dt>
-<dd>ファイルにアクセス可能な状態か確認し、違えばエラーメッセージを表示します。 </dd>
-<dt><a href="lib/file/TextFile.html#addEnclosure">string[ ] addEnclosure(string value[ ], </a></dt>
-<dd>書き込み対象となる値の内容を解析し、必要に応じて引用符で囲みます。 </dd>
-<dt><a href="lib/file/TextFile.html#removeEnclosure">string[ ] removeEnclosure(string value[ ], string enclosure, string enclosureEscapeCharacter, int enclosureOption) </a></dt>
-<dd>読み込んだ値を解析し、引用符を除去します。 </dd>
-<dt><a href="lib/file/TextFile.html#loadln">string loadln(TextFile &amp;textFile, int &amp;counter) </a></dt>
-<dd>ファイルから一行を読み込み、そのまま返します。ただし、引用符記号が設定されていて、引用符記号で囲まれた内部に改行がある場合、それは値が改行コードを含んでいるものと見なされ、行末とは見なされません。つまり、内容によってはファイルの複数行が読み込まれる場合があります。実際に読み込まれた行数は、引数 counter に格納されます。なお、ファイル内に複数の改行コードが混在している場合は統一されます。統一される改行コードは getEndOfLine 関数で取得できます。 </dd>
-<dt><a href="lib/file/TextFile.html#endsWithEndOfLineCode">boolean endsWithEndOfLineCode(TextFile &amp;textFile) </a></dt>
-<dd>ファイルの最後が改行コードで終了しているかどうかを判定します。 </dd>
-<dt><a href="lib/file/TextFile.html#getEffectiveLineCount">int getEffectiveLineCount(TextFile &amp;textFile) </a></dt>
-<dd>テキストファイルの有効行数をカウントします。引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。この関数が返す有効行数を超えてreadln関数をコールする事はできません。この関数は、ファイルオープン時に1度だけ実行され、結果は TextFile.lineCount に設定されます。結果を別モジュールから取得したい場合は、countln を使用します。 </dd>
 </dl>
 
 <h3><a href="lib/graphics2d/Graphics2DFramework.html">graphics2d.Graphics2DFramework ライブラリ</a></h3> 
 <p>2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p> 
 <dl>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#graphics">int graphics </a></dt>
-<dd> 2DCGのグラフィックスIDです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#renderer">int renderer </a></dt>
-<dd> 2DCGのレンダラーIDです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#imageLabel">int imageLabel </a></dt>
-<dd> 描画内容を表示する、画像ラベルのGUIコンポーネントIDです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#window">int window </a></dt>
-<dd> ウィンドウのGUIコンポーネントIDです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#animation">bool animation </a></dt>
-<dd> アニメーションモードの有効/無効を制御する変数です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#frameRate">float frameRate </a></dt>
-<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#currentFrameRate">float currentFrameRate </a></dt>
-<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#lastFrameTime">int lastFrameTime </a></dt>
-<dd> アニメーションの最終画面更新時刻です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#paintGraphics2DState">bool paintGraphics2DState </a></dt>
-<dd> 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを制御する変数です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#backgroundRed">int backgroundRed </a></dt>
-<dd> 背景色の赤成分です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#backgroundGreen">int backgroundGreen </a></dt>
-<dd> 背景色の緑成分です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#backgroundBlue">int backgroundBlue </a></dt>
-<dd> 背景色の青成分です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#backgroundAlpha">int backgroundAlpha </a></dt>
-<dd> 背景色のα成分です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#windowTitle">string windowTitle </a></dt>
-<dd> ウィンドウタイトルです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#windowWidth">int windowWidth </a></dt>
-<dd> ウィンドウの幅です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#windowHeight">int windowHeight </a></dt>
-<dd> ウィンドウの高さです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#windowX">int windowX </a></dt>
-<dd> ウィンドウのX位置です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#windowY">int windowY </a></dt>
-<dd> ウィンドウのY位置です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#marginTop">int marginTop </a></dt>
-<dd> ウィンドウ上側の余白です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#marginRight">int marginRight </a></dt>
-<dd> ウィンドウ右側の余白です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#marginBottom">int marginBottom </a></dt>
-<dd> ウィンドウ下側の余白です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#marginLeft">int marginLeft </a></dt>
-<dd> ウィンドウ左側の余白です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#mainLoopState">bool mainLoopState </a></dt>
-<dd> メインループの継続状態を制御する変数です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#mainLoopWait;">int mainLoopWait; </a></dt>
-<dd> メインループウェイトです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#mainLoopWaitMin">int mainLoopWaitMin </a></dt>
-<dd> メインループウェイトの下限値です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#mainLoopWaitMax">int mainLoopWaitMax </a></dt>
-<dd> メインループウェイトの上限値です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#windowResizeWait">int windowResizeWait </a></dt>
-<dd> ウィンドウリサイズ後の待機時間 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#mainArguments;">string mainArguments[ ]; </a></dt>
-<dd> main関数の引数を保持する変数です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#mainArguments;">string mainArguments[ ]; </a></dt>
-<dd> main関数の引数を保持する変数です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#exportRequested">bool exportRequested </a></dt>
-<dd> 画像ファイルの出力要求です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#exportFilePath">string exportFilePath </a></dt>
-<dd> 画像ファイルの出力ファイルパスを保持です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#exportFormat">string exportFormat </a></dt>
-<dd> 画像ファイルの出力ファイルフォーマットです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#exportQuality">float exportQuality </a></dt>
-<dd> 画像ファイルの出力品質です。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#existsOnPaint">bool existsOnPaint </a></dt>
-<dd> onPaint関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#existsOnUpdate">bool existsOnUpdate </a></dt>
-<dd> onUpdate関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#existsOnStart">bool existsOnStart </a></dt>
-<dd> onStart関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#existsOnExit">bool existsOnExit </a></dt>
-<dd> onExit関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#existsOnResize">bool existsOnResize </a></dt>
-<dd> onResize関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#windowResized">bool windowResized </a></dt>
-<dd> ウィンドウがリサイズされた事をメインループに通知する変数です。 </dd>
 <dt><a href="lib/graphics2d/Graphics2DFramework.html#getGraphics">int getGraphics() </a></dt>
 <dd>2DCGのグラフィックスIDを返します。 </dd>
 <dt><a href="lib/graphics2d/Graphics2DFramework.html#getRenderer">int getRenderer() </a></dt>
@@ -3053,28 +2863,6 @@
 <dd>ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。 </dd>
 <dt><a href="lib/graphics2d/Graphics2DFramework.html#render">void render() </a></dt>
 <dd>paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#export">void export() </a></dt>
-<dd>現在の描画ラベルの内容を、画像ファイルに出力します。適切なタイミングで、メインループから実行されます。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#checkCallback">void checkCallback() </a></dt>
-<dd>各種コールバック関数が定義されているかを検証します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#frameworkInitialize">void frameworkInitialize() </a></dt>
-<dd>フレームワークのリソースを初期化する処理です。この関数は、このフレームワークのプログラムの末尾、グローバル領域においてコールされます。従って、このフレームワークを import しているプログラムのグローバル領域実行時には、すでにリソースが確保されている事が保証されます。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#mainLoop">void mainLoop() </a></dt>
-<dd>メインループです。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#getLoopWait">int getLoopWait( float targetFrameRate, float currentFrameRate, int currentLoopWait, int limitMin, int limitMax ) </a></dt>
-<dd>目標フレームレート、実測フレームレート、現在のループウェイトなどから、次フレームでの最適なループウェイトを計算して返します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#initializeWindow">void initializeWindow() </a></dt>
-<dd>ウィンドウの生成と初期化を行います。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#initializeGraphics">void initializeGraphics() </a></dt>
-<dd>グラフィックスリソース関連の確保と初期化を行います。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#initializeComponent">void initializeComponent() </a></dt>
-<dd>GUIコンポーネント関連の確保と初期化を行います。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#setLayout">void setLayout() </a></dt>
-<dd>レイアウトを再計算してGUI配置を調整します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#getPreferredScreenWidth">int getPreferredScreenWidth() </a></dt>
-<dd>適切な描画領域の幅を返します。 </dd>
-<dt><a href="lib/graphics2d/Graphics2DFramework.html#getPreferredScreenHeight">void getPreferredScreenHeight() </a></dt>
-<dd>適切な描画領域の高さを返します。 </dd>
 <dt><a href="lib/graphics2d/Graphics2DFramework.html#onStart">void onStart( int rendererID ) </a></dt>
 <dd>起動時に一度だけコールされます。スプライトの生成・配置などの初期化処理は、ここに記述します。 </dd>
 <dt><a href="lib/graphics2d/Graphics2DFramework.html#onExit">void onExit( int rendererID ) </a></dt>
@@ -3090,122 +2878,6 @@
 <h3><a href="lib/graphics3d/Graphics3DFramework.html">graphics3d.Graphics3DFramework ライブラリ</a></h3> 
 <p>3DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p> 
 <dl>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#graphics">int graphics </a></dt>
-<dd> 3DCGのグラフィックスリソースIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#backgroundGraphics">int backgroundGraphics </a></dt>
-<dd> 背景2DCGのグラフィックスリソースIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#foregroundGraphics">int foregroundGraphics </a></dt>
-<dd> 前景2DCGのグラフィックスリソースIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#renderer">int renderer </a></dt>
-<dd> 3DCGのレンダラーIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#backgroundRenderer">int backgroundRenderer </a></dt>
-<dd> 背景2DCGのレンダラーIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#foregroundRenderer">int foregroundRenderer </a></dt>
-<dd> 前景2DCGのレンダラーIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#backgroundRendererState">bool backgroundRendererState </a></dt>
-<dd> 背景2DCGレンダラーの有効/無効を制御する変数です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#foregroundRendererState">bool foregroundRendererState </a></dt>
-<dd> 前景2DCGレンダラーの有効/無効を制御する変数です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#imageLabel">int imageLabel </a></dt>
-<dd> 描画内容を表示する、画像ラベルのGUIコンポーネントIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#window">int window </a></dt>
-<dd> ウィンドウのGUIコンポーネントIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#animation">bool animation </a></dt>
-<dd> アニメーションモードの有効/無効を制御する変数です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#frameRate">float frameRate </a></dt>
-<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#currentFrameRate">float currentFrameRate </a></dt>
-<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#lastFrameTime">int lastFrameTime </a></dt>
-<dd> アニメーションの最終画面更新時刻です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#paintGraphics3DState">bool paintGraphics3DState </a></dt>
-<dd> 画面描画時（paintコール前）に、自動でGraphics3D.paintGraphics3Dをコールするかどうかを制御する変数です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#currentFrameRate">float currentFrameRate </a></dt>
-<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#lastFrameTime">int lastFrameTime </a></dt>
-<dd> アニメーションの最終画面更新時刻です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#paintGraphics2DState">bool paintGraphics2DState </a></dt>
-<dd> 画面描画時（paintコール前）の背景・前景描画において、自動でGraphics2D.paintGraphics2Dをコールするかどうかを制御する変数です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#magnification">float magnification </a></dt>
-<dd> 描画倍率です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#backgroundRed">int backgroundRed </a></dt>
-<dd> 背景色の赤成分です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#backgroundGreen">int backgroundGreen </a></dt>
-<dd> 背景色の緑成分です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#backgroundBlue">int backgroundBlue </a></dt>
-<dd> 背景色の青成分です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#backgroundAlpha">int backgroundAlpha </a></dt>
-<dd> 背景色のα成分です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#light">int light </a></dt>
-<dd> 平行光源のIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#lightX">float lightX </a></dt>
-<dd> 平行光源の方向ベクトルX値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#lightY">float lightY </a></dt>
-<dd> 平行光源の方向ベクトルY値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#lightZ">float lightZ </a></dt>
-<dd> 平行光源の方向ベクトルZ値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#lightPower">float lightPower </a></dt>
-<dd> 平行光源の輝度です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ambientLight">int ambientLight </a></dt>
-<dd> アンビエント光源のIDです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ambientLightX">float ambientLightX </a></dt>
-<dd> アンビエント光源の方向ベクトルX値です（現在の描画機能では、意味はありません）。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ambientLightY">float ambientLightY </a></dt>
-<dd> アンビエント光源の方向ベクトルY値です（現在の描画機能では、意味はありません）。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ambientLightZ">float ambientLightZ </a></dt>
-<dd> アンビエント光源の方向ベクトルZ値です（現在の描画機能では、意味はありません）。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ambientLightPower">float ambientLightPower </a></dt>
-<dd> アンビエント光源の輝度です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#windowTitle">string windowTitle </a></dt>
-<dd> ウィンドウタイトルです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#windowWidth">int windowWidth </a></dt>
-<dd> ウィンドウの幅です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#windowHeight">int windowHeight </a></dt>
-<dd> ウィンドウの高さです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#windowX">int windowX </a></dt>
-<dd> ウィンドウのX位置です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#windowY">int windowY </a></dt>
-<dd> ウィンドウのY位置です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#marginTop">int marginTop </a></dt>
-<dd> ウィンドウ上側の余白です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#marginRight">int marginRight </a></dt>
-<dd> ウィンドウ右側の余白です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#marginBottom">int marginBottom </a></dt>
-<dd> ウィンドウ下側の余白です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#marginLeft">int marginLeft </a></dt>
-<dd> ウィンドウ左側の余白です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#mainLoopState">bool mainLoopState </a></dt>
-<dd> メインループの継続状態を制御する変数です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#mainLoopWait;">int mainLoopWait; </a></dt>
-<dd> メインループウェイトです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#mainLoopWaitMin">int mainLoopWaitMin </a></dt>
-<dd> メインループウェイトの下限値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#mainLoopWaitMax">int mainLoopWaitMax </a></dt>
-<dd> メインループウェイトの上限値です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#windowResizeWait">int windowResizeWait </a></dt>
-<dd> ウィンドウリサイズ後の待機時間 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#mainArguments;">string mainArguments[ ]; </a></dt>
-<dd> main関数の引数を保持する変数です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#exportRequested">bool exportRequested </a></dt>
-<dd> 画像ファイルの出力要求です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#exportFilePath">string exportFilePath </a></dt>
-<dd> 画像ファイルの出力ファイルパスを保持です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#exportFormat">string exportFormat </a></dt>
-<dd> 画像ファイルの出力ファイルフォーマットです。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#exportQuality">float exportQuality </a></dt>
-<dd> 画像ファイルの出力品質です。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#existsOnPaint">bool existsOnPaint </a></dt>
-<dd> onPaint関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#existsOnUpdate">bool existsOnUpdate </a></dt>
-<dd> onUpdate関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#existsOnStart">bool existsOnStart </a></dt>
-<dd> onStart関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#existsOnExit">bool existsOnExit </a></dt>
-<dd> onExit関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#existsOnResize">bool existsOnResize </a></dt>
-<dd> onResize関数が定義されているかどうかを保持します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#windowResized">bool windowResized </a></dt>
-<dd> ウィンドウがリサイズされた事をメインループに通知する変数です。 </dd>
 <dt><a href="lib/graphics3d/Graphics3DFramework.html#getGraphics">int getGraphics() </a></dt>
 <dd>3DCGのグラフィックスリソースIDを返します。 </dd>
 <dt><a href="lib/graphics3d/Graphics3DFramework.html#getBackgroundGraphics">int getBackgroundGraphics() </a></dt>
@@ -3332,48 +3004,6 @@
 <dd>ウィンドウの再描画を行います。通常は自動で実行されますが、通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 </dd>
 <dt><a href="lib/graphics3d/Graphics3DFramework.html#render">void render() </a></dt>
 <dd>paint関数などをコールし、画面表示内容を描画します。3DCGと、背景及び前景2DCGの合成も行います。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ERROR_BACKGROUND_RENDERER_IS_DISABLED">const string ERROR_BACKGROUND_RENDERER_IS_DISABLED </a></dt>
-<dd> エラーメッセージ: 背景レンダラ無効時に使用しようとした場合 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ERROR_FOREGROUND_RENDERER_IS_DISABLED">const string ERROR_FOREGROUND_RENDERER_IS_DISABLED </a></dt>
-<dd> エラーメッセージ: 前景レンダラ無効時に使用しようとした場合 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#ERROR_BACKGROUND_RENDERER_IS_DISABLED_AND_FOREGRAUND_RENDERER_IS_ENABLED">const string ERROR_BACKGROUND_RENDERER_IS_DISABLED_AND_FOREGRAUND_RENDERER_IS_ENABLED </a></dt>
-<dd> エラーメッセージ: 背景レンダラ無効時に前景レンダラを有効にした場合 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#getBackgroundRendererState">bool getBackgroundRendererState() </a></dt>
-<dd>背景2DCGレンダラーの有効/無効を取得します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#getForegroundRendererState">bool getForegroundRendererState() </a></dt>
-<dd>前景2DCGレンダラーの有効/無効を取得します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#setRendererBackgroundColor">void setRendererBackgroundColor() </a></dt>
-<dd>背景及び前景2DCGレンダラーの有効/無効を考慮し、各レンダラーに適切な背景色を設定します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#export">void export() </a></dt>
-<dd>現在の描画ラベルの内容を、画像ファイルに出力します。適切なタイミングで、メインループから実行されます。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#checkCallback">void checkCallback() </a></dt>
-<dd>各種コールバック関数が定義されているかを検証します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#frameworkInitialize">void frameworkInitialize() </a></dt>
-<dd>フレームワークのリソースを初期化する処理です。この関数は、このフレームワークのプログラムの末尾、グローバル領域においてコールされます。従って、このフレームワークを import しているプログラムのグローバル領域実行時には、すでにリソースが確保されている事が保証されます。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#mainLoop">void mainLoop() </a></dt>
-<dd>メインループです。毎秒 frameRate 回の頻度で、描画処理(paint)と更新処理(update)、フレームレートの調整処理などを繰り返します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#render3D">void render3D() </a></dt>
-<dd>3DCGのみを描画します。（背景及び前景2DCG無効時） </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#render3DAndBackground">void render3DAndBackground() </a></dt>
-<dd>3DCGと背景2DCGを描画します。（前景2DCGのみ無効時） </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#render3DAndBackgroundAndForeground">void render3DAndBackgroundAndForeground() </a></dt>
-<dd>3DCGと、背景及び前景2DCGを描画します。（全レンダラ有効時） </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#getLoopWait">int getLoopWait( float targetFrameRate, float currentFrameRate, int currentLoopWait, int limitMin, int limitMax ) </a></dt>
-<dd>目標フレームレート、実測フレームレート、現在のループウェイトなどから、次フレームでの最適なループウェイトを計算して返します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#initializeWindow">void initializeWindow() </a></dt>
-<dd>ウィンドウの生成と初期化を行います。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#initializeGraphics">void initializeGraphics() </a></dt>
-<dd>グラフィックスリソース関連の確保と初期化を行います。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#initializeComponent">void initializeComponent() </a></dt>
-<dd>GUIコンポーネント関連の確保と初期化を行います。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#setLayout">void setLayout() </a></dt>
-<dd>レイアウトを再計算してGUI配置を調整します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#setGraphicsLabelRenderer">void setGraphicsLabelRenderer() </a></dt>
-<dd>描画ラベルにレンダラーを関連付けます。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#getPreferredScreenWidth">int getPreferredScreenWidth() </a></dt>
-<dd>適切な描画領域の幅を返します。 </dd>
-<dt><a href="lib/graphics3d/Graphics3DFramework.html#getPreferredScreenHeight">void getPreferredScreenHeight() </a></dt>
-<dd>適切な描画領域の高さを返します。 </dd>
 <dt><a href="lib/graphics3d/Graphics3DFramework.html#onStart">void onStart( int rendererID ) </a></dt>
 <dd>起動時に一度だけコールされます。3Dモデルの生成・配置などの初期化処理は、ここに記述します。 </dd>
 <dt><a href="lib/graphics3d/Graphics3DFramework.html#onExit">void onExit( int rendererID ) </a></dt>
@@ -3391,10 +3021,6 @@
 <dl>
 <dt><a href="lib/gui/ButtonPanel.html#ButtonPanel">struct ButtonPanel </a></dt>
 <dd> ボタンパネルの構造体です。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#DEFAULT_PANEL_TITLE">const string DEFAULT_PANEL_TITLE </a></dt>
-<dd> デフォルトのパネルタイトルです </dd>
-<dt><a href="lib/gui/ButtonPanel.html#ERROR_LABEL_NOT_FOUND">const string ERROR_LABEL_NOT_FOUND </a></dt>
-<dd> 指定されたラベルが見つからなかった場合のエラーメッセージです </dd>
 <dt><a href="lib/gui/ButtonPanel.html#newButtonPanel">ButtonPanel newButtonPanel(int x, int y, int width, int height, string labelText[ ]) </a></dt>
 <dd>ボタンパネルを生成します。 </dd>
 <dt><a href="lib/gui/ButtonPanel.html#deleteComponent">void deleteComponent(ButtonPanel &amp;panelInstance) </a></dt>
@@ -3421,8 +3047,6 @@
 <dd>パネルの位置を返します。 </dd>
 <dt><a href="lib/gui/ButtonPanel.html#setComponentLocation">void setComponentLocation(ButtonPanel &amp;panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#labelIndexOf">int labelIndexOf(ButtonPanel &amp;panelInstance, string labelText) </a></dt>
-<dd>ラベル文字列に対応する、ボタンのインデックスを返します。 </dd>
 </dl>
 
 <h3><a href="lib/gui/ButtonWindow.html">gui.ButtonWindow ライブラリ</a></h3> 
@@ -3430,28 +3054,6 @@
 <dl>
 <dt><a href="lib/gui/ButtonWindow.html#ButtonWindow">struct ButtonWindow </a></dt>
 <dd>ボタンウィンドウの構造体です。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_TITLE">const string DEFAULT_WINDOW_TITLE </a></dt>
-<dd> デフォルトのウィンドウタイトルです。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_WIDTH_OFFSET">const int DEFAULT_WINDOW_WIDTH_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_HEIGHT_OFFSET">const int DEFAULT_WINDOW_HEIGHT_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_X">const int DEFAULT_WINDOW_X </a></dt>
-<dd> デフォルトのウィンドウ位置(X)です。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_Y">const int DEFAULT_WINDOW_Y </a></dt>
-<dd> デフォルトのウィンドウ位置(Y)です。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_WIDTH">const int DEFAULT_WINDOW_WIDTH </a></dt>
-<dd> デフォルトのウィンドウ幅です。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_GRID_HEIGHT">const int DEFAULT_GRID_HEIGHT </a></dt>
-<dd> デフォルトのウィンドウ高さです。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_MARGIN_LEFT">const int DEFAULT_WINDOW_MARGIN_LEFT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(左)。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_MARGIN_RIGHT">const int DEFAULT_WINDOW_MARGIN_RIGHT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(右)。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_MARGIN_TOP">const int DEFAULT_WINDOW_MARGIN_TOP </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(上)。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#DEFAULT_WINDOW_MARGIN_BOTTOM">const int DEFAULT_WINDOW_MARGIN_BOTTOM </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(下)。 </dd>
 <dt><a href="lib/gui/ButtonWindow.html#newButtonWindow">ButtonWindow newButtonWindow(int x, int y, int width, int height, string title, string labelText[ ]) </a></dt>
 <dd>ボタンウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/ButtonWindow.html#newButtonWindow">ButtonWindow newButtonWindow(string labelText[ ]) </a></dt>
@@ -3487,10 +3089,6 @@
 <dl>
 <dt><a href="lib/gui/CheckBoxPanel.html#CheckBoxPanel">struct CheckBoxPanel </a></dt>
 <dd>チェックボックスパネルの構造体です。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#DEFAULT_PANEL_TITLE">const string DEFAULT_PANEL_TITLE </a></dt>
-<dd> デフォルトのパネルタイトルです。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#ERROR_LABEL_NOT_FOUND">const string ERROR_LABEL_NOT_FOUND </a></dt>
-<dd> 指定されたラベルが見つからなかった場合のエラーメッセージです。 </dd>
 <dt><a href="lib/gui/CheckBoxPanel.html#newCheckBoxPanel">CheckBoxPanel newCheckBoxPanel(int x, int y, int width, int height, string labelText[ ], bool defaultValue[ ]) </a></dt>
 <dd>チェックボックスパネルを生成します。 </dd>
 <dt><a href="lib/gui/CheckBoxPanel.html#deleteComponent">void deleteComponent(CheckBoxPanel &amp;panelInstance) </a></dt>
@@ -3517,8 +3115,6 @@
 <dd>パネルの位置を返します。 </dd>
 <dt><a href="lib/gui/CheckBoxPanel.html#setComponentLocation">void setComponentLocation(CheckBoxPanel &amp;panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#labelIndexOf">int labelIndexOf(CheckBoxPanel &amp;panelInstance, string labelText) </a></dt>
-<dd>ラベル文字列に対応する、チェックボックスのインデックスを返します。 </dd>
 </dl>
 
 <h3><a href="lib/gui/CheckBoxWindow.html">gui.CheckBoxWindow ライブラリ</a></h3> 
@@ -3526,32 +3122,6 @@
 <dl>
 <dt><a href="lib/gui/CheckBoxWindow.html#CheckBoxWindow">struct CheckBoxWindow </a></dt>
 <dd>チェックボックスウィンドウの構造体です。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_TITLE">const string DEFAULT_WINDOW_TITLE </a></dt>
-<dd> デフォルトのウィンドウタイトルです。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_WIDTH_OFFSET">const int DEFAULT_WINDOW_WIDTH_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_HEIGHT_OFFSET">const int DEFAULT_WINDOW_HEIGHT_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_X">const int DEFAULT_WINDOW_X </a></dt>
-<dd> デフォルトのウィンドウ位置(X)です。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_Y">const int DEFAULT_WINDOW_Y </a></dt>
-<dd> デフォルトのウィンドウ位置(Y)です。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_WIDTH">const int DEFAULT_WINDOW_WIDTH </a></dt>
-<dd> デフォルトのウィンドウ幅です。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_GRID_HEIGHT">const int DEFAULT_GRID_HEIGHT </a></dt>
-<dd> デフォルトのウィンドウ高さです。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_BUTTON_HEIGHT">const int DEFAULT_BUTTON_HEIGHT </a></dt>
-<dd> デフォルトのボタン高さです。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_BUTTON_MARGIN_TOP">const int DEFAULT_BUTTON_MARGIN_TOP </a></dt>
-<dd> デフォルトのボタン間余白です。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_MARGIN_LEFT">const int DEFAULT_WINDOW_MARGIN_LEFT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(左)。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_MARGIN_RIGHT">const int DEFAULT_WINDOW_MARGIN_RIGHT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(右)。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_MARGIN_TOP">const int DEFAULT_WINDOW_MARGIN_TOP </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(上)。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#DEFAULT_WINDOW_MARGIN_BOTTOM">const int DEFAULT_WINDOW_MARGIN_BOTTOM </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(下)。 </dd>
 <dt><a href="lib/gui/CheckBoxWindow.html#newCheckBoxWindow">CheckBoxWindow newCheckBoxWindow(int x, int y, int width, int height, string title, string labelText[ ], bool[ ] defaultValue) </a></dt>
 <dd>チェックボックスウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/CheckBoxWindow.html#newCheckBoxWindow">CheckBoxWindow newCheckBoxWindow(string labelText[ ], bool[ ] defaultValue) </a></dt>
@@ -3591,24 +3161,6 @@
 <dl>
 <dt><a href="lib/gui/ImageLabelWindow.html#ImageLabelWindow">struct ImageLabelWindow </a></dt>
 <dd> 画像ラベルウィンドウの構造体です。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_TITLE">const string DEFAULT_WINDOW_TITLE </a></dt>
-<dd> デフォルトのウィンドウタイトルです。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_WIDTH_OFFSET">const int DEFAULT_WINDOW_WIDTH_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_HEIGHT_OFFSET">const int DEFAULT_WINDOW_HEIGHT_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_X">const int DEFAULT_WINDOW_X </a></dt>
-<dd> デフォルトのウィンドウ位置(X)です。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_Y">const int DEFAULT_WINDOW_Y </a></dt>
-<dd> デフォルトのウィンドウ位置(Y)です。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_MARGIN_LEFT">const int DEFAULT_WINDOW_MARGIN_LEFT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(左)。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_MARGIN_RIGHT">const int DEFAULT_WINDOW_MARGIN_RIGHT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(右)。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_MARGIN_TOP">const int DEFAULT_WINDOW_MARGIN_TOP </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(上)。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#DEFAULT_WINDOW_MARGIN_BOTTOM">const int DEFAULT_WINDOW_MARGIN_BOTTOM </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(下)。 </dd>
 <dt><a href="lib/gui/ImageLabelWindow.html#newImageLabelWindow">ImageLabelWindow newImageLabelWindow(int x, int y, int width, int height, string title, int graphics) </a></dt>
 <dd>画像ラベルウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/ImageLabelWindow.html#newImageLabelWindow">ImageLabelWindow newImageLabelWindow(int graphics) </a></dt>
@@ -3644,10 +3196,6 @@
 <dl>
 <dt><a href="lib/gui/HorizontalSliderPanel.html#HorizontalSliderPanel">struct HorizontalSliderPanel </a></dt>
 <dd> スライダーパネルの構造体です。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#DEFAULT_PANEL_TITLE">const string DEFAULT_PANEL_TITLE </a></dt>
-<dd> デフォルトのパネルタイトルです。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#ERROR_LABEL_NOT_FOUND">const string ERROR_LABEL_NOT_FOUND </a></dt>
-<dd> 指定されたラベルが見つからなかった場合のエラーメッセージです。 </dd>
 <dt><a href="lib/gui/HorizontalSliderPanel.html#newHorizontalSliderPanel">HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[ ], float defaultValue[ ], float minValue[ ], float maxValue[ ]) </a></dt>
 <dd>スライダーパネルを生成します。 </dd>
 <dt><a href="lib/gui/HorizontalSliderPanel.html#newHorizontalSliderPanel">HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[ ], int defaultValue[ ], int minValue[ ], int maxValue[ ]) </a></dt>
@@ -3680,8 +3228,6 @@
 <dd>パネルの位置を返します。 </dd>
 <dt><a href="lib/gui/HorizontalSliderPanel.html#setComponentLocation">void setComponentLocation(HorizontalSliderPanel &amp;panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#labelIndexOf">int labelIndexOf(HorizontalSliderPanel &amp;panelInstance, string labelText) </a></dt>
-<dd>ラベル文字列に対応する、スライダーのインデックスを返します。 </dd>
 </dl>
 
 <h3><a href="lib/gui/HorizontalSliderWindow.html">gui.HorizontalSliderWindow ライブラリ</a></h3> 
@@ -3689,32 +3235,6 @@
 <dl>
 <dt><a href="lib/gui/HorizontalSliderWindow.html#HorizontalSliderWindow">struct HorizontalSliderWindow </a></dt>
 <dd> スライダーウィンドウの構造体です。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_TITLE">const string DEFAULT_WINDOW_TITLE </a></dt>
-<dd> デフォルトのウィンドウタイトルです。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_WIDTH_OFFSET">const int DEFAULT_WINDOW_WIDTH_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_HEIGHT_OFFSET">const int DEFAULT_WINDOW_HEIGHT_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_X">const int DEFAULT_WINDOW_X </a></dt>
-<dd> デフォルトのウィンドウ位置(X)です。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_Y">const int DEFAULT_WINDOW_Y </a></dt>
-<dd> デフォルトのウィンドウ位置(Y)です。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_WIDTH">const int DEFAULT_WINDOW_WIDTH </a></dt>
-<dd> デフォルトのウィンドウ幅です。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_GRID_HEIGHT">const int DEFAULT_GRID_HEIGHT </a></dt>
-<dd> デフォルトのウィンドウ高さです。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_BUTTON_HEIGHT">const int DEFAULT_BUTTON_HEIGHT </a></dt>
-<dd> デフォルトのボタン高さです。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_BUTTON_MARGIN_TOP">const int DEFAULT_BUTTON_MARGIN_TOP </a></dt>
-<dd> デフォルトのボタン間余白です。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_MARGIN_LEFT">const int DEFAULT_WINDOW_MARGIN_LEFT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(左)。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_MARGIN_RIGHT">const int DEFAULT_WINDOW_MARGIN_RIGHT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(右)。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_MARGIN_TOP">const int DEFAULT_WINDOW_MARGIN_TOP </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(上)。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#DEFAULT_WINDOW_MARGIN_BOTTOM">const int DEFAULT_WINDOW_MARGIN_BOTTOM </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(下)。 </dd>
 <dt><a href="lib/gui/HorizontalSliderWindow.html#newHorizontalSliderWindow">HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width, int height, string title, string labelText[ ], float defaultValue[ ], float minValue[ ], float maxValue[ ]) </a></dt>
 <dd>スライダーウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/HorizontalSliderWindow.html#newHorizontalSliderWindow">HorizontalSliderWindow newHorizontalSliderWindow(string labelText[ ], float defaultValue[ ], float minValue[ ], float maxValue[ ]) </a></dt>
@@ -3762,10 +3282,6 @@
 <dl>
 <dt><a href="lib/gui/TextFieldPanel.html#TextFieldPanel">struct TextFieldPanel </a></dt>
 <dd> テキストフィールドパネルの構造体です。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#DEFAULT_PANEL_TITLE">const string DEFAULT_PANEL_TITLE </a></dt>
-<dd> デフォルトのパネルタイトルです。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#ERROR_LABEL_NOT_FOUND">const string ERROR_LABEL_NOT_FOUND </a></dt>
-<dd> 指定されたラベルが見つからなかった場合のエラーメッセージです。 </dd>
 <dt><a href="lib/gui/TextFieldPanel.html#newTextFieldPanel">TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, string labelText[ ], string defaultText[ ]) </a></dt>
 <dd>テキストフィールドパネルを生成します。 </dd>
 <dt><a href="lib/gui/TextFieldPanel.html#deleteComponent">void deleteComponent(TextFieldPanel &amp;panelInstance) </a></dt>
@@ -3796,8 +3312,6 @@
 <dd>パネルの位置を返します。 </dd>
 <dt><a href="lib/gui/TextFieldPanel.html#setComponentLocation">void setComponentLocation(TextFieldPanel &amp;panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#labelIndexOf">int labelIndexOf(TextFieldPanel &amp;panelInstance, string labelText) </a></dt>
-<dd>ラベル文字列に対応する、テキストフィールドのインデックスを返します。 </dd>
 </dl>
 
 <h3><a href="lib/gui/TextFieldWindow.html">gui.TextFieldWindow ライブラリ</a></h3> 
@@ -3805,32 +3319,6 @@
 <dl>
 <dt><a href="lib/gui/TextFieldWindow.html#TextFieldWindow">struct TextFieldWindow </a></dt>
 <dd> テキストフィールドウィンドウの構造体です。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_TITLE">const string DEFAULT_WINDOW_TITLE </a></dt>
-<dd> デフォルトのウィンドウタイトルです。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_WIDTH_OFFSET">const int DEFAULT_WINDOW_WIDTH_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_HEIGHT_OFFSET">const int DEFAULT_WINDOW_HEIGHT_OFFSET </a></dt>
-<dd> デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_X">const int DEFAULT_WINDOW_X </a></dt>
-<dd> デフォルトのウィンドウ位置(X)です。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_Y">const int DEFAULT_WINDOW_Y </a></dt>
-<dd> デフォルトのウィンドウ位置(Y)です。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_WIDTH">const int DEFAULT_WINDOW_WIDTH </a></dt>
-<dd> デフォルトのウィンドウ幅です。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_GRID_HEIGHT">const int DEFAULT_GRID_HEIGHT </a></dt>
-<dd> デフォルトのウィンドウ高さです。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_BUTTON_HEIGHT">const int DEFAULT_BUTTON_HEIGHT </a></dt>
-<dd> デフォルトのボタン高さです。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_BUTTON_MARGIN_TOP">const int DEFAULT_BUTTON_MARGIN_TOP </a></dt>
-<dd> デフォルトのボタン間余白です。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_MARGIN_LEFT">const int DEFAULT_WINDOW_MARGIN_LEFT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(左)。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_MARGIN_RIGHT">const int DEFAULT_WINDOW_MARGIN_RIGHT </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(右)。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_MARGIN_TOP">const int DEFAULT_WINDOW_MARGIN_TOP </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(上)。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#DEFAULT_WINDOW_MARGIN_BOTTOM">const int DEFAULT_WINDOW_MARGIN_BOTTOM </a></dt>
-<dd> デフォルトのウィンドウ内余白領域です(下)。 </dd>
 <dt><a href="lib/gui/TextFieldWindow.html#newTextFieldWindow">TextFieldWindow newTextFieldWindow(int x, int y, int width, int height, string title, string labelText[ ], string defaultValue[ ]) </a></dt>
 <dd>自動でウィンドウサイズを決定し、テキストフィールドウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/TextFieldWindow.html#newTextFieldWindow">TextFieldWindow newTextFieldWindow(string labelText[ ], string defaultValue[ ]) </a></dt>

@@ -70,7 +70,14 @@ echo ^<h3^>^<a href="lib/tool/Graph3D.html"^>tool.graph.Graph3D ライブラリ^</a^>
 echo ^<p^>3次元グラフソフトを制御するAPIライブラリです。^</p^> >> DocumentIndex.html
 
 
+echo ^<h3^>^<a href="lib/graphics2d/Graphics2DFramework.html"^>graphics2d.Graphics2DFramework ライブラリ^</a^>^</h3^> >> DocumentIndex.html
+echo ^<p^>2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。^</p^> >> DocumentIndex.html
 
+echo ^<h3^>^<a href="lib/graphics3d/Graphics3DFramework.html"^>graphics3d.Graphics3DFramework ライブラリ^</a^>^</h3^> >> DocumentIndex.html
+echo ^<p^>3DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。^</p^> >> DocumentIndex.html
+
+echo ^<h3^>^<a href="lib/file/TextFile.html"^>file.TextFile ライブラリ^</a^>^</h3^> >> DocumentIndex.html
+echo ^<p^>CSV/TSV形式などのテキストファイル入出力機能を提供します。^</p^> >> DocumentIndex.html
 
 
 echo ^<h3^>^<a href="lib/data/DataWrapper.html"^>data.DataWrapper ライブラリ^</a^>^</h3^> >> DocumentIndex.html
@@ -126,15 +133,6 @@ echo ^<h3^>^<a href="lib/math/FourierTransform.html"^>math.FourierTransform ライ
 echo ^<p^>離散フーリエ変換処理を提供するライブラリです。^</p^> >> DocumentIndex.html
 
 
-
-echo ^<h3^>^<a href="lib/file/TextFile.html"^>file.TextFile ライブラリ^</a^>^</h3^> >> DocumentIndex.html
-echo ^<p^>CSV/TSV形式などのテキストファイル入出力機能を提供します。^</p^> >> DocumentIndex.html
-
-echo ^<h3^>^<a href="lib/graphics2d/Graphics2DFramework.html"^>graphics2d.Graphics2DFramework ライブラリ^</a^>^</h3^> >> DocumentIndex.html
-echo ^<p^>2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。^</p^> >> DocumentIndex.html
-
-echo ^<h3^>^<a href="lib/graphics3d/Graphics3DFramework.html"^>graphics3d.Graphics3DFramework ライブラリ^</a^>^</h3^> >> DocumentIndex.html
-echo ^<p^>3DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。^</p^> >> DocumentIndex.html
 
 
 

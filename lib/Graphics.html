@@ -11,12 +11,6 @@
 <p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。</p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br />その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。</p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br />いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br />つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。</p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br />例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class="code">int g1 = newGraphics("input.png");  // 画像ファイルからグラフィックスデータ g1 を生成<br />int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br />exportGraphics(g2, "output.png", "PNG");  // g2 を画像ファイルに出力<br />deleteGraphics(g1);  // g1 を破棄<br />deleteGraphics(g2);  // g2 を破棄</div></p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br />より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。</p> <hr />
 <h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
 <dl>
-<dt><a href="#ERROR_FILE_NOT_FOUND">const string ERROR_FILE_NOT_FOUND </a></dt>
-<dd> エラーメッセージ、ファイルが見つからなかった場合。 </dd>
-<dt><a href="#ERROR_EMPTY_FILE_PATH">const string ERROR_EMPTY_FILE_PATH </a></dt>
-<dd> エラーメッセージ、ファイルパスが空文字だった場合。 </dd>
-<dt><a href="#ERROR_FILE_IS_DIRECTORY">const string ERROR_FILE_IS_DIRECTORY </a></dt>
-<dd> エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 </dd>
 <dt><a href="#newGraphics">int newGraphics() </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。 </dd>
 <dt><a href="#newGraphics">int newGraphics( string filePath ) </a></dt>
@@ -53,70 +47,12 @@
 <dd>イメージの全ピクセルについて、青色成分のみを格納する配列を返します。 </dd>
 <dt><a href="#getGraphicsPixelAlpha">int[ ][ ] getGraphicsPixelAlpha( int id ) </a></dt>
 <dd>イメージの全ピクセルについて、α値成分のみを格納する配列を返します。 </dd>
-<dt><a href="#checkFilePath">void checkFilePath(string filePath) </a></dt>
-<dd>ファイルが普通に読み書き可能なものか確認します。ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。 </dd>
 </dl>
 <hr />
 <h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
 <p> - なし - None  -</p>
 <hr /><h2 id="variable">変数 - Variables</h2>
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_FILE_NOT_FOUND"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	const string ERROR_FILE_NOT_FOUND 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 エラーメッセージ、ファイルが見つからなかった場合。 
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_EMPTY_FILE_PATH"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	const string ERROR_EMPTY_FILE_PATH 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 エラーメッセージ、ファイルパスが空文字だった場合。 
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ERROR_FILE_IS_DIRECTORY"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	const string ERROR_FILE_IS_DIRECTORY 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 
-   	 </td>
-    </tr>
-</tbody></table>
-
+<p> - なし - None  -</p>
 <hr />
 <h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newGraphics"><tbody>
@@ -681,33 +617,6 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。<br />
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="checkFilePath"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void checkFilePath(string filePath) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ファイルが普通に読み書き可能なものか確認します。ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	filePath : ファイル名またはパス <br />
    	 </td>
     </tr>
 </tbody></table>
