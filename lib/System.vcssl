@@ -168,36 +168,39 @@ public const string STDERR = "???//<SYSTEM_PROCESS_IO>::___STDERR___";
 
 
 
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 UP 」として試験導入されていたものです。 */
-const int SIG_UP = 1;
-
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 DOWN 」として試験導入されていたものです。 */
-const int SIG_DOWN = 2;
-
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_UP 」として試験導入されていたものです。 */
-const int SIG_HALF_UP = 3;
-
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_DOWN 」として試験導入されていたものです。 */
-const int SIG_HALF_DOWN = 4;
-
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_EVEN 」として試験導入されていたものです。 */
-const int SIG_HALF_TO_EVEN = 5;
-
-
 /** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
-const int DEC_UP = 21;
+const int UP = 21;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 UP 」として試験導入されていたものです。 */
+const int UP_SIGNIF = 1;
+
 
 /** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
-const int DEC_DOWN = 22;
+const int DOWN = 22;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 DOWN 」として試験導入されていたものです。 */
+const int DOWN_SIGNIF = 2;
+
 
 /** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
-const int DEC_HALF_UP = 23;
+const int HALF_UP = 23;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_UP 」として試験導入されていたものです。 */
+const int HALF_UP_SIGNIF = 3;
+
 
 /** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
-const int DEC_HALF_DOWN = 24;
+const int HALF_DOWN = 24;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_DOWN 」として試験導入されていたものです。 */
+const int HALF_DOWN_SIGNIF = 4;
+
 
 /** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
-const int DEC_HALF_TO_EVEN = 25;
+const int HALF_TO_EVEN = 25;
+
+/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_EVEN 」として試験導入されていたものです。 */
+const int HALF_TO_EVEN_SIGNIF = 5;
 
 
 
@@ -674,7 +677,7 @@ public macro digit(){
  * 
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
- * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
+ * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
  * @return 丸められた値
  */
 public float round(float value, int digit, int mode) {
@@ -687,7 +690,7 @@ public float round(float value, int digit, int mode) {
  * 
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
- * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
+ * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
  * @return 丸められた値
  */
 public complex round(complex value, int digit, int mode) {
@@ -705,7 +708,7 @@ public complex round(complex value, int digit, int mode) {
  * 
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
- * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
+ * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
  * @return 丸められた値
  */
 public varfloat round(varfloat value, varint digit, int mode) {
@@ -718,7 +721,6 @@ public varfloat round(varfloat value, varint digit, int mode) {
  * 
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
- * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a>, <a href="#DEC_UP">DEC_UP</a>、<a href="#DEC_DOWN">DEC_DOWN</a>、<a href="#DEC_HALF_UP">DEC_HALF_UP</a>、<a href="#DEC_HALF_DOWN">DEC_HALF_DOWN</a>、<a href="#DEC_HALF_TO_EVEN">DEC_HALF_TO_EVEN</a> )
  * @return 丸められた値
  */
 public varcomplex round(varcomplex value, varint digit, int mode) {
@@ -738,10 +740,10 @@ public varcomplex round(varcomplex value, varint digit, int mode) {
  * 使用する際には、事前に検証を行って下さい。
  * varfloat 型および varcomplex 型の丸め制御、及びこの round 関数の実装は、試験導入期間を経た上で、VCSSL 4 以降での正式導入を予定しています。
  * 
- * @param mode 丸めモード ( <a href="#SIG_UP">SIG_UP</a>、<a href="#SIG_DOWN">SIG_DOWN</a>、<a href="#SIG_HALF_UP">SIG_HALF_UP</a>、<a href="#SIG_HALF_DOWN">SIG_HALF_DOWN</a>、<a href="#SIG_HALF_TO_EVEN">SIG_HALF_TO_EVEN</a> )
+ * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a> )
  */
 public void round(int mode){
-	if (mode == SIG_UP || mode == SIG_DOWN || mode == SIG_HALF_UP || mode == SIG_HALF_DOWN || mode == SIG_HALF_TO_EVEN) {
+	if (mode == UP_SIGNIF || mode == DOWN_SIGNIF || mode == HALF_UP_SIGNIF || mode == HALF_DOWN_SIGNIF || mode == HALF_TO_EVEN_SIGNIF) {
 		___round(mode);
 	} else {
 		___error(ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT, mode);
@@ -1186,7 +1188,7 @@ public int countln(int fileID){
  * 文字列を式として評価します。レキシカルスコープで、変数や関数へのアクセスも可能です。また、代入を行う事もできます。
  * 戻り値には、式の値が string 型配列に変換されて返されます ( 式の値が非配列であった場合は、戻り値の要素数は 1 となります )。
  * string 型配列は、最も変換自由度の高い型であり、あらゆるプリミティブ型の配列と非配列に代入できます ( 非配列へは要素数が1の場合に限り可能です )。
- * 反面、繰り返し高速に評価したい場合、特に戻り値が int 型や float 型である場合においては、文字列を介する型変換がボトルベックとなります。
+ * 反面、繰り返し高速に評価したい場合、特に戻り値が int 型や float 型である場合においては、文字列を介する型変換がボトルネックとなります。
  * そういった場合は、評価式の中で結果を変数に代入し、戻り値を利用せずに捨てる事で、ボトルネックを回避できます。
  * 
  * @param expression 評価する式

@@ -220,7 +220,7 @@ call vcssldoc lib/GUI.vcssl Shift_JIS:UTF-8 -event:GUIEventHandler.vcssl -list:l
 call vcssldoc lib/GUI.vcssl Shift_JIS:UTF-8 -event:GUIEventHandler.vcssl -list:lib/GUI.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Text.html"^>Text ライブラリ^</a^>^</h3^> >> DocumentIndex.html
-echo ^<p^>テキスト（文字列）処理機能を提供するライブラリです。^</p^> >> lib\DocumentIndex.html
+echo ^<p^>テキスト（文字列）処理機能を提供するライブラリです。^</p^> >> DocumentIndex.html
 call vcssldoc lib/Text.vcssl Shift_JIS:UTF-8
 call vcssldoc lib/Text.vcssl Shift_JIS:UTF-8 -list:lib/Text.html -body >> DocumentIndex.html
 

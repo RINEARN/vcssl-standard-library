@@ -39,7 +39,7 @@
 <dd>テキスト描画に使用するフォントを太字に設定または解除します。イタリック体と併用はできません。 </dd>
 <dt><a href="#setDrawFontItalic">void setDrawFontItalic( int rendererID, bool isItalic ) </a></dt>
 <dd>テキスト描画に使用するフォントをイタリック体に設定または解除します。太字と併用はできません。 </dd>
-<dt><a href="#drawPoint">macro drawPoint( int rendererID, int vertex_x, int vertex_y, int radius, bool fill ) </a></dt>
+<dt><a href="#drawPoint">void drawPoint( int rendererID, int vertex_x, int vertex_y, int radius, bool fill ) </a></dt>
 <dd>点を描画します。 </dd>
 <dt><a href="#drawLine">macro drawLine( int rendererID, int vertex_x1, int vertex_y1, int vertex_x2, int vertex_y2 ) </a></dt>
 <dd>直線（線分）を描画します。 </dd>
@@ -93,6 +93,8 @@
 <dd>描画領域の保持する内容を、ピクセルの青色成分配列に変換して返します。 </dd>
 <dt><a href="#getPixelAlpha">int[ ][ ] getPixelAlpha( int rendererID ) </a></dt>
 <dd>描画領域の保持する内容を、ピクセルのα値成分配列に変換して返します。 </dd>
+<dt><a href="#newPointSprite">int newPointSprite( int x, int y, int radius, bool fill ) </a></dt>
+<dd>点スプライトを生成し、固有の識別番号（ スプライトID ）を返します。 </dd>
 <dt><a href="#newLineSprite">int newLineSprite( int x1, int y1, int x2, int y2 ) </a></dt>
 <dd>直線（線分）スプライトを生成し、固有の識別番号（ スプライトID ）を返します。 </dd>
 <dt><a href="#newEllipseSprite">int newEllipseSprite( int x, int y, int width, int height, bool fill ) </a></dt>
@@ -117,6 +119,8 @@
 <dd>スプライトの深度を設定します。スプライトは、深度の値が大きいほど奥に、小さいほど手前に表示されます。 </dd>
 <dt><a href="#setSpriteLocation">macro setSpriteLocation( int spriteID, int vertex_x, int vertex_y ) </a></dt>
 <dd>スプライトの位置を設定します。 </dd>
+<dt><a href="#setSpriteSize">void setSpriteSize( int spriteID, int size ) </a></dt>
+<dd>スプライトの大きさを設定します。この関数は、点スプライトのように、サイズを1個のパラメータで指定できるスプライトに使用します。 </dd>
 <dt><a href="#setSpriteSize">macro setSpriteSize( int spriteID, int width, int height ) </a></dt>
 <dd>スプライトの大きさを設定します。 </dd>
 <dt><a href="#setSpriteClip">macro setSpriteClip( int spriteID, int clip_x, int clip_y, int clip_width, int clip_height ) </a></dt>
@@ -611,7 +615,7 @@
    	 	定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	macro drawPoint( int rendererID, int vertex_x, int vertex_y, int radius, bool fill ) 
+   	 	void drawPoint( int rendererID, int vertex_x, int vertex_y, int radius, bool fill ) 
    	 </td>
     </tr>
     <tr>
@@ -1374,6 +1378,41 @@
     </tr>
 </tbody></table>
 
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newPointSprite"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int newPointSprite( int x, int y, int radius, bool fill ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	点スプライトを生成し、固有の識別番号（ スプライトID ）を返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	x : 外接長方形の左上頂点X座標 <br />y : 外接長方形の左上頂点Y座標 <br />width : 外接長方形の幅 <br />height : 外接長方形の高さ <br />fill : 塗りつぶすかどうか <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	スプライトID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newLineSprite"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
@@ -1755,6 +1794,33 @@
 </tbody></table>
 
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setSpriteSize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setSpriteSize( int spriteID, int size ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	スプライトの大きさを設定します。この関数は、点スプライトのように、サイズを1個のパラメータで指定できるスプライトに使用します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	spriteID : 対象スプライトのID <br />radius : 半径 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	定義<br /> - Signature
