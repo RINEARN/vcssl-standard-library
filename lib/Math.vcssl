@@ -1,61 +1,63 @@
+coding UTF-8;
+
 /**
  * <p>
- * VCSSL Math ���C�u���� �́A���w�֐���񋟂��邽�߂̕W�����C�u�����ł��B
+ * VCSSL Math ライブラリ は、数学関数を提供するための標準ライブラリです。
  * <br />
- * ��̓I�ɂ́A�w���֐��A�ΐ��֐��A�������Ɨݏ捪�A�K��A�O�p�֐��A�t�O�p�֐��A�o�Ȑ��֐��A�t�o�Ȑ��֐��A��Βl�ƍő�ŏ��l�֐��Ȃǂ��������܂��B
+ * 具体的には、指数関数、対数関数、平方根と累乗根、階乗、三角関数、逆三角関数、双曲線関数、逆双曲線関数、絶対値と最大最小値関数などが挙げられます。
  * </p>
  * 
  * <p>
- * ���̃��C�u�����ł́A64bit-float (������double) ���x�Ƒ��{�����x�̐��w�֐����񋟂���܂��B�O�҂� float �^�A��҂� varfloat �^�Ƃ��Ĉ����܂��B
+ * このライブラリでは、64bit-float (いわゆるdouble) 精度と多倍長精度の数学関数が提供されます。前者は float 型、後者は varfloat 型として扱います。
  * <br />
- * VCSSL�ɂ����� float �^�� double �^�Ƌ�ʂ��ꂸ�A���ɏ����n�ɂ���Ē�`����鐸�x�������A���݂̌��������ł� IEEE754 �� 64-bit float �ƂȂ��Ă��܂��B
+ * VCSSLにおける float 型は double 型と区別されず、共に処理系によって定義される精度を持ち、現在の公式実装では IEEE754 の 64-bit float となっています。
  * <br />
- * varfloat �^�ɂ��ẮA���݂̌��������ł͓���K�i�ł͖����A
- * 10�i �C�Ӑ��x�̓Ǝ��d�l���̗p����Ă܂��B�ۂ߂�10�i�ɂ�����؂�̂Ăɂ���ď�������܂��B
+ * varfloat 型については、現在の公式実装では統一規格では無く、
+ * 10進 任意精度の独自仕様が採用されてます。丸めは10進における切り捨てによって処理されます。
  * <br />
- * varfloat�^�̏ڍ׎d�l�͏����n�ˑ��ł���A�����I�ɂ͉��炩�̓���K�i�ɕύX�����\��������܂��B
+ * varfloat型の詳細仕様は処理系依存であり、将来的には何らかの統一規格に変更される可能性があります。
  * </p>
  * 
  * <p>
- * float (double) �����̐��w�֐��ɂ��ẮA�����n���̑g�ݍ��݂̋@�\���g�p����A���s���ɓ���ȉ��Z���߂̈��ɓW�J����Ĉ����܂��B
+ * float (double) 実装の数学関数については、処理系側の組み込みの機能が使用され、実行時に特殊な演算命令の一種に展開されて扱われます。
  * <br />
- * Math ���C�u�������񋟂��� float �����̐��w�֐��̑����́A��������������ȉ��Z���߂����b�s���O�����֐��}�N���ł��B
+ * Math ライブラリが提供する float 実装の数学関数の多くは、そういった特殊な演算命令をラッピングした関数マクロです。
  * <br />
- * ���̂��߁A�֐��R�[���̃I�[�o�[�w�b�h�������A�T�˗ǍD�ȃp�t�H�[�}���X�𔭊����܂��B
+ * そのため、関数コールのオーバーヘッドが無く、概ね良好なパフォーマンスを発揮します。
  * </p>
  * <p>
- * ����ɑ΂��� varfloat (���{��) �����̐��w�֐��ɂ��ẮAVCSSL �̃R�[�h�Ƃ��Ď�������Ă��܂��B
+ * それに対して varfloat (多倍長) 実装の数学関数については、VCSSL のコードとして実装されています。
  * <br />
- * ��̓I�ɂ́A�}�N���[�����W�J��e�C���[�W�J�A�j���[�g���@�A�K�E�X=���W�����h���@�Ȃǂɂ���āA
- * �l�����߂�v�Z�A���S���Y�����A�S�� VCSSL �� varfloat �^��p���Ď�������Ă��܂��B
+ * 具体的には、マクローリン展開やテイラー展開、ニュートン法、ガウス=ルジャンドル法などによって、
+ * 値を求める計算アルゴリズムが、全て VCSSL で varfloat 型を用いて実装されています。
  * <br />
- * ���̂��߁A�������x�͈�ʂɒᑬ�̕��ނɓ���܂��B����́A�X�N���v�g����ɂ������ł��鎖��A�������� varfloat �^�̉��Z���x���ᑬ�ł��鎖�ȂǂɋN�����܂��B
+ * このため、処理速度は一般に低速の部類に入ります。これは、スクリプト言語による実装である事や、そもそも varfloat 型の演算速度が低速である事などに起因します。
  * <br />
- * ��̓I�ȗ�Ƃ��āAsin(1) �̒l��L������ 1000 ���Ōv�Z����R�[�h�͈ȉ��̂悤�ɂȂ�܂��B���̌v�Z�ł� sin �֐��� 1 �b��̏������Ԃ�v���܂��B
+ * 具体的な例として、sin(1) の値を有効桁数 1000 桁で計算するコードは以下のようになります。この計算では sin 関数に 1 秒弱の処理時間を要します。
  * <div class="code">
- * digit( 1000 ); // �L�������� 1000 ���ɐݒ�
+ * digit( 1000 ); // 有効桁数を 1000 桁に設定
  * <br />
- * varfloat value = sin( 1.0vf ); // sin �֐����v�Z
+ * varfloat value = sin( 1.0vf ); // sin 関数を計算
  * <br />
- * print( value ); // �o��
+ * print( value ); // 出力
  * </div>
  * </p>
  *
  * <p>
- * varfloat (���{��) �����̐��w�֐��ł́A�����������A���S���Y���Ɉˑ����Ă��邽�߁A�����́A������x�̌����Ɍ덷�~�ς�������ꍇ������܂��B
+ * varfloat (多倍長) 実装の数学関数では、多くが収束アルゴリズムに依存しているため、末尾の、ある程度の桁数に誤差蓄積が生じる場合があります。
  * <br />
- * ���̎������z���āA���w�֐��̓����ł́A�������x�i�֐��ɂ���ĈقȂ�܂��j�傫�������Ōv�Z���A�l��Ԃ����_�ŗ]�茅��؂�̂Ă�悤�ɂȂ��Ă��܂��B
+ * この事を見越して、数学関数の内部では、数割程度（関数によって異なります）大きい桁数で計算し、値を返す時点で余剰桁を切り捨てるようになっています。
  * <br />
- * �������A����͂����܂ŕ⏕�I�Ȃ��̂ł���A������L�������ƈ����ɑ΂��āA��Ɍ덷�~�ς̌����r������鎖��ۏ؂�����̂ł͂���܂���B
+ * ただし、これはあくまで補助的なものであり、あらゆる有効桁数と引数に対して、常に誤差蓄積の桁が排除される事を保証するものではありません。
  * <br />
- * �֐��ɂ����܂����A�덷�~�ς̌��؂́A��ʂɐ��\�����x�̗L�������ɂ��p�r�ƁA��p�I�Ȕ͈͂̈�����z�肵�čs���Ă��܂��B
+ * 関数にもよりますが、誤差蓄積の検証は、一般に数十桁程度の有効桁数による用途と、常用的な範囲の引数を想定して行われています。
  * <br />
- * ���炩�琔�����̗p�r��A���ٓ_�ߖT�̈����ɂ��ẮA��ʂɌ덷�~�ς��傫���Ȃ邽�߁A�؂�̂Ă�]�茅�Ɏ��܂炸�A�֐��̖߂�l�̖����ɂ������ꍇ������܂��B
+ * 数千から数万桁の用途や、特異点近傍の引数については、一般に誤差蓄積が大きくなるため、切り捨てる余剰桁に収まらず、関数の戻り値の末尾にも現れる場合があります。
  * <br />
- * �]���āA���������p�r�ł́A�Ăяo�����ł��덷�~�ς��l�������傫�߂̗L�������Ŏg�p���A�]�茅��؂�̂Ă�Ȃǂ̑[�u���s���Ă��������B
+ * 従って、そうした用途では、呼び出し側でも誤差蓄積を考慮した大きめの有効桁数で使用し、余剰桁を切り捨てるなどの措置を行ってください。
  * </p>
  * 
- * @author  ���䕶�G - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -64,9 +66,8 @@
 /*
 # ====================================================================================================
 # 
-# PRAGMA COMPILE    DYNAMIC_REFERRED
-# PRAGMA COMPILE    STATIC_REFERRED
-# PRAGMA RESERVE    NOT_REFERRED
+# PRAGMA COMPILE    REFERRAL
+# PRAGMA RESERVE    ALL
 # 
 # PRAGMA INTERNAL   RINEARN  {
 #     
@@ -89,22 +90,22 @@
 
 
 
-/** float���x�ɂ�����A�~�����̒l�ł��B���{�����x�� varfloat �l�𓾂�ɂ� <a href="#pi">pi</a>() ���g�p���Ă��������B */
+/** float精度における、円周率の値です。多倍長精度の varfloat 値を得るには <a href="#pi">pi</a>() を使用してください。 */
 const float PI = 3.141592653589793 ;
 
-/** float���x�ɂ�����A�l�C�s�A���i���R�ΐ��̒�j�̒l�ł��B���{�����x�� varfloat �l�𓾂�ɂ� <a href="#exp">exp</a>( 1.0vf ) �Ōv�Z���Ă��������B */
+/** float精度における、ネイピア数（自然対数の底）の値です。多倍長精度の varfloat 値を得るには <a href="#exp">exp</a>( 1.0vf ) で計算してください。 */
 const float E = 2.718281828459045 ;
 
 
-// �G���[���b�Z�[�W�A���͒l����`��͈̔͊O�������ꍇ�B
-private const string ERROR_OUT_OF_DEFINITION = "���͒l����`��͈̔͊O�ł��B" ;
+// エラーメッセージ、入力値が定義域の範囲外だった場合。
+private const string ERROR_OUT_OF_DEFINITION = "入力値が定義域の範囲外です。" ;
 
 
 /*
- * float�l�� NaN ���ǂ������肵�܂��B
+ * float値が NaN かどうか判定します。
  *
- * @param arg ����Ώۂ̒l�B
- * @return (bool) NaN �ł���� true �A�����łȂ���� false �B
+ * @param arg 判定対象の値。
+ * @return (bool) NaN であれば true 、そうでなければ false 。
  */
 macro nan( float arg ){
 	return SYSTEM_PROCESS_FPU_nanF( arg );
@@ -112,10 +113,10 @@ macro nan( float arg ){
 
 
 /*
- * float�l�� Inf ���ǂ������肵�܂��B
+ * float値が Inf かどうか判定します。
  *
- * @param arg ����Ώۂ̒l�B
- * @return (bool) Inf �ł���� true �A�����łȂ���� false �B
+ * @param arg 判定対象の値。
+ * @return (bool) Inf であれば true 、そうでなければ false 。
  */
 macro inf( float arg ){
 	return SYSTEM_PROCESS_FPU_infF( arg );
@@ -123,7 +124,7 @@ macro inf( float arg ){
 
 
 
-// ������ System ���C�u�����Ɉړ�����܂����B
+// これらは System ライブラリに移動されました。
 macro bin( int number ){
 	return SYSTEM_PROCESS_FPU_binary( number );
 }
@@ -137,11 +138,11 @@ macro hex( int number ){
 
 
 /*
- * int�l�ɑ΂��āA�r�b�g���Ƃ�AND�i�_���ρj���Z���v�Z���܂��B
+ * int値に対して、ビットごとのAND（論理積）演算を計算します。
  *
- * @param number1 ���Z�Ώۂ̒l
- * @param number2 ���Z�Ώۂ̒l
- * @param (int) �v�Z���ʂ̒l
+ * @param number1 演算対象の値
+ * @param number2 演算対象の値
+ * @param (int) 計算結果の値
  */
 macro and( int number1, int number2 ){
 	return SYSTEM_PROCESS_FPU_and( number1, number2 );
@@ -149,11 +150,11 @@ macro and( int number1, int number2 ){
 
 
 /*
- * int�l�ɑ΂��āA�r�b�g���Ƃ�OR�i�_���a�j���Z���v�Z���܂��B
+ * int値に対して、ビットごとのOR（論理和）演算を計算します。
  *
- * @param number1 ���Z�Ώۂ̒l
- * @param number2 ���Z�Ώۂ̒l
- * @param (int) �v�Z���ʂ̒l
+ * @param number1 演算対象の値
+ * @param number2 演算対象の値
+ * @param (int) 計算結果の値
  */
 macro or( int number1, int number2 ){
 	return SYSTEM_PROCESS_FPU_or( number1, number2 );
@@ -161,11 +162,11 @@ macro or( int number1, int number2 ){
 
 
 /*
- * int�l�ɑ΂��āA�r�b�g���Ƃ�XOR�i�r���I�_���a�j���Z���v�Z���܂��B
+ * int値に対して、ビットごとのXOR（排他的論理和）演算を計算します。
  *
- * @param number1 ���Z�Ώۂ̒l
- * @param number2 ���Z�Ώۂ̒l
- * @param (int) �v�Z���ʂ̒l
+ * @param number1 演算対象の値
+ * @param number2 演算対象の値
+ * @param (int) 計算結果の値
  */
 macro xor( int number1, int number2 ){
 	return SYSTEM_PROCESS_FPU_xor( number1, number2 );
@@ -176,18 +177,18 @@ macro xor( int number1, int number2 ){
 
 
 /**
- * 0.0�ȏ�1.0�����̒l��Ԃ��܂��B�Ȃ��AVCSSL3.0.20�ȑO�̃h�L�������g�ɂ����āu0.0 ���� 1.0 �܂ł̗����l��Ԃ��܂��B�v�ƋL�ڂ���Ă��܂������A���̕\���͞B���ł���A���ۂɂ�1.0�Ɋ��S�Ɉ�v����l���Ԃ���鎖�͂���܂���B
+ * 0.0以上1.0未満の値を返します。なお、VCSSL3.0.20以前のドキュメントにおいて「0.0 から 1.0 までの乱数値を返します。」と記載されていましたが、この表現は曖昧であり、実際には1.0に完全に一致する値が返される事はありません。
  *
- * @return (float) �����l
+ * @return (float) 乱数値
  */
 macro random(){
 	return SYSTEM_PROCESS_FPU_rand();
 }
 
 /**
- * random�Ɠ��l�ł��B���݂�random�̎g�p����������܂��B���̊֐��̖��̂́A�����^�̗����ƍ������������߁A���݂̎g�p�͐�������܂���B�����I�ɁA���̊֐��̌^�̕ύX�����������\��������܂��B
+ * randomと同様です。現在はrandomの使用が推奨されます。この関数の名称は、整数型の乱数と混同を招くため、現在の使用は推奨されません。将来的に、この関数の型の変更が検討される可能性があります。
  *
- * @return (float) �����l
+ * @return (float) 乱数値
  */
 macro rand(){
 	return SYSTEM_PROCESS_FPU_rand();
@@ -205,26 +206,26 @@ macro rand(){
 
 
 /**
- * �~�����̒l���v�Z���܂��B
+ * 円周率の値を計算します。
  * <br />
- * �����ł́A���̌�����1.1�{�̌����ŁA�K�E�X=���W�����h���@�ɂ���Čv�Z����܂��B
+ * 内部では、元の桁数の1.1倍の桁数で、ガウス=ルジャンドル法によって計算されます。
  * <br />
- * �����x�ȉ~�����̒l�́A������������֐��̌v�Z��A�������E�����V�~�����[�V�����i��]�n��ʑ��n�Ȃǁj�ɂ����āA��������W�̉~�����ɂ���]�����߂邽�߂ɕK�v�ƂȂ�܂��B
- * ���ۂ� Math ���C�u�����ł��Avarfloat�^�̎O�p�֐������߂�v�Z�ȂǂŎg�p����Ă��܂��B
+ * 高精度な円周率の値は、周期性がある関数の計算や、周期境界をもつシミュレーション（回転系や写像系など）において、引数や座標の円周率による剰余を求めるために必要となります。
+ * 実際に Math ライブラリでも、varfloat型の三角関数を求める計算などで使用されています。
  *
- * @return �~�����̒l�B
+ * @return 円周率の値。
  * 
  */
 varfloat pi(){
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( digitStock * 1.1 );
 	if( digitStock <= 100 ){
 		digit( digitStock + 10 );
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varfloat value = 0.0vf;
 	varfloat a = 1.0vf;
 	varfloat b;
@@ -237,7 +238,7 @@ varfloat pi(){
 	varfloat sqrt_inv = 0.5vf;
 	varfloat sqrt_arg = 0.0vf;
 	
-	// �܂����[�g1/2�̒l���v�Z���� b �ɃZ�b�g
+	// まずルート1/2の値を計算して b にセット
 	sqrt_value = 0.7071067811865475vf;
 	sqrt_arg = 0.5vf;
 	sqrt_value_stock = -1.0vf;
@@ -248,21 +249,21 @@ varfloat pi(){
 	}
 	b = sqrt_value;
 	
-	// ������ŏ���������b��l
+	// すぐ後で書き換える暫定値
 	sqrt_value = 0.8408964152537145vf;
 	
-	// ��������܂ŃK�E�X=���W�����h���@�Ōv�Z
+	// 収束するまでガウス=ルジャンドル法で計算
 	while( a != a_stock && b != b_stock ){
 		
-		// ��������̂��߂ɒl���T����
+		// 収束判定のために値を控える
 		a_stock = a;
 		b_stock = b;
 		
-		// a �ƁAb �̃��[�g���ɓ���l sqrt_arg ���X�V
+		// a と、b のルート内に入る値 sqrt_arg を更新
 		a = ( a_stock + b_stock )*0.5vf;
 		sqrt_arg = a_stock*b_stock;
 		
-		// ���[�g sqrt_arg �̒l���v�Z���� b ���X�V
+		// ルート sqrt_arg の値を計算して b を更新
 		sqrt_value_stock = -1.0vf;
 		while( sqrt_value != sqrt_value_stock ){
 			sqrt_value_stock = sqrt_value;
@@ -271,15 +272,15 @@ varfloat pi(){
 		}
 		b = sqrt_value;
 		
-		// c, d �̒l���X�V
+		// c, d の値を更新
 		c = c - d*( a - a_stock )*( a - a_stock );
 		d = 2.0vf*d;
 	}
 	
-	// �����l�̑g����~�����ɕϊ�
+	// 収束値の組から円周率に変換
 	value = (a+b)*(a+b) / (4.0vf*c);
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -293,35 +294,35 @@ varfloat pi(){
 
 
 /**
- * �l�C�s�A�����Ƃ���w���֐����v�Z���܂��B
+ * ネイピア数を低とする指数関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro exp( float arg ){
 	return SYSTEM_PROCESS_FPU_exp( arg );
 }
 
 /**
- * �l�C�s�A�����Ƃ���w���֐����v�Z���܂��B
+ * ネイピア数を低とする指数関数を計算します。
  * <br />
- * �����ł́A���̌����� 1.34 �{�̌����ŁA�}�N���[�����W�J�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B
- * ���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の 1.34 倍の桁数で、マクローリン展開によって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。
+ * この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat exp( varfloat arg ){
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varfloat value = 1.0vf;
 	varfloat value_stock = -500.0vf;
 	varfloat powor = 1.0vf;
@@ -330,7 +331,7 @@ varfloat exp( varfloat arg ){
 	varint i = 1v;
 	varint fac;
 	
-	// �l����������܂œW�J�������Z
+	// 値が収束するまで展開項を加算
 	while( value != value_stock ){
 		value_stock = value;
 		powor = powor * arg;
@@ -340,7 +341,7 @@ varfloat exp( varfloat arg ){
 		i++;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -352,164 +353,164 @@ varfloat exp( varfloat arg ){
 
 
 /**
- * �w���֐����v�Z���܂��B
+ * 指数関数を計算します。
  *
- * @param arg1 ��B
- * @param arg2 �w���B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg1 低。
+ * @param arg2 指数。
+ * @return (float) 計算結果の値。
  */
 macro pow( float arg1, float arg2 ){
 	return SYSTEM_PROCESS_FPU_pow( arg1, arg2 );
 }
 
 /**
- * �w���������̎w���֐����v�Z���܂��B
+ * 指数が整数の指数関数を計算します。
  * <br />
- * �����ł́A�u ���̌��� + �w�� ( arg2 ) �̃I�[�_�[�̐�Βl �v��2.1�{�̌����ŁA��Z�̌J��Ԃ��ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B
- * ���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、「 元の桁数 + 指数 ( arg2 ) のオーダーの絶対値 」の2.1倍の桁数で、乗算の繰り返しによって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。
+ * この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg1 ��B
- * @param arg2 �w���B
- * @return �v�Z���ʂ̒l�B
+ * @param arg1 低。
+ * @param arg2 指数。
+ * @return 計算結果の値。
  */
 varfloat pow( varfloat arg1, varint arg2 ){
 	
-	// ���Z���ʂƂȂ�ϐ�
+	// 演算結果となる変数
 	varfloat value;
 	
-	// 0��͏��1�Ȃ̂Ōv�Z����1��Ԃ�
+	// 0乗は常に1なので計算せず1を返す
 	if( arg2 == 0vf ){
 		value = 1vf;
 		return value;
 	}
 	
-	// 1��͒l���ω����Ȃ��̂ł��̂܂ܕԂ�
+	// 1乗は値が変化しないのでそのまま返す
 	if( arg2 == 1vf ){
 		value = arg1;
 		return value;
 	}
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( (int)( ( digitStock + abs( order( (varfloat)arg2 ) ) )* 2.1vf )	);
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
 	}
 	
-	// �}�C�i�X��̓v���X��Ōv�Z���A��ŕϊ�����
+	// マイナス乗はプラス乗で計算し、後で変換する
 	boolean plus = true;
 	if( arg2 < 0vf ){
 		plus = false;
 		arg2 = -arg2;
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varint n = arg2-1v;
 	varfloat p = arg1;
 	value = arg1;
 	
-	// �w���̉񐔂�����Z���J��Ԃ�
+	// 指数の回数だけ乗算を繰り返す
 	for( varint i=0v; i<n; i++ ){
 		value = value * p;
 	}
 	
-	// �}�C�i�X�悾�����ꍇ��1/�v���X��ɕϊ�
+	// マイナス乗だった場合は1/プラス乗に変換
 	if( !plus ){
 		value = 1.0vf / value;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
 }
 
 /**
- * �w�������������_���i�����j�̎w���֐����v�Z���܂��B
+ * 指数が浮動小数点数（実数）の指数関数を計算します。
  * <br />
- * �����ł́A�u ���̌��� + �w�� ( arg2 ) �̃I�[�_�[�̐�Βl �v��1.2�{�̌����ŁA
- + �}�N���[�����W�J�������͎w���֐��Ƒΐ��֐��̑g�ݍ��킹�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B
- * ���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、「 元の桁数 + 指数 ( arg2 ) のオーダーの絶対値 」の1.2倍の桁数で、
+ + マクローリン展開もしくは指数関数と対数関数の組み合わせによって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。
+ * この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg1 ��B
- * @param arg2 �w���B
- * @return �v�Z���ʂ̒l�B
+ * @param arg1 低。
+ * @param arg2 指数。
+ * @return 計算結果の値。
  */
 varfloat pow( varfloat arg1, varfloat arg2 ){
 	
-	// ���Z���ʂƂȂ�ϐ�
+	// 演算結果となる変数
 	varfloat value;
 	
-	// 0��͏��1�Ȃ̂Ōv�Z����1��Ԃ�
+	// 0乗は常に1なので計算せず1を返す
 	if( arg2 == 0vf ){
 		value = 1vf;
 		return value;
 	}
 	
-	// 1��͒l���ω����Ȃ��̂ł��̂܂ܕԂ�
+	// 1乗は値が変化しないのでそのまま返す
 	if( arg2 == 1vf ){
 		value = arg1;
 		return value;
 	}
 	
-	// 2��͑f���Ɍv�Z�������������Ȃ̂ŁA����2�悵�ĕԂ�
+	// 2乗は素直に計算した方が高速なので、直接2乗して返す
 	if( arg2 == 2vf ){
 		value = arg1*arg1;
 		return value;
 	}
 	
-	// �}�C�i�X��̓v���X��Ōv�Z���A��ŕϊ�����
+	// マイナス乗はプラス乗で計算し、後で変換する
 	boolean plus = true;
 	if( arg2 < 0vf ){
 		plus = false;
 		arg2 = -arg2;
 	}
 	
-	// �����_�̉��Z�������T���Ă���
+	// 現時点の演算桁数を控えておく
 	int digitStock = digit();
 	
-	// �w���������̏ꍇ�� pow �֐����Ă�
+	// 指数が整数の場合は pow 関数を呼ぶ
 	varfloat mod = arg2 % 1vf;
 	boolean integerPowor = ( mod == 0vf );
 	if( integerPowor ){
 		
-		// ���x���o�����߂ɉ��Z�����𑝉�
+		// 精度を出すために演算桁数を増加
 		digit(	(int)( (digitStock+abs( order(arg2) ))* 1.2vf )	);
 		if( digitStock <= 10 ){
 			digit( digitStock + 4 );
 		}
 		
-		// pow �֐��ł͒P���ɌJ��Ԃ���Z����邽�߁A��荂��
+		// pow 関数では単純に繰り返し乗算されるため、より高速
 		varint intarg2 = arg2;
 		value = pow( arg1, intarg2 );
 	}
 	
-	// �����w���������������ꍇ�A�����v�Z�ł��邽�ߊm�F
+	// もし指数が分数だった場合、高速計算できるため確認
 	boolean root = false;
 	if( !integerPowor && arg2 < 1vf ){
 		
-		// �����̋t���͐����ɂȂ�
+		// 分数の逆数は整数になる
 		varfloat rootinv;
 		varfloat one = 1vf;
 		
-		// 2�ȏ�10�ȉ��𕪕�Ƃ��镪���ƁA�w������v���邩�ǂ����m�F����
+		// 2以上10以下を分母とする分数と、指数が一致するかどうか確認する
 		for( varint i=2v; i<=10v; i++ ){
 			
-			// �����̒l
+			// 分数の値
 			rootinv = one / arg2;
 			
-			// �w���������ƈ�v�����ꍇ
+			// 指数が分数と一致した場合
 			if( arg2 == rootinv ){
 				
-				// ���x���o�����߂ɉ��Z�����𑝉�
+				// 精度を出すために演算桁数を増加
 				digit( digitStock * 1.34 );
 				if( digitStock <= 10 ){
 					digit( digitStock + 4 );
 				}
 				
-				// �����l�ݒ�
+				// 初期値設定
 				value = 1.0vf;
 				varint p = arg2;
 				varint p_m1;
@@ -518,7 +519,7 @@ varfloat pow( varfloat arg1, varfloat arg2 ){
 				varfloat m;
 				varfloat c;
 				
-				// �w���������� pow �֐����g���ă}�N���[�����W�J
+				// 指数が整数の pow 関数を使ってマクローリン展開
 				while( value != value_stock ){
 					value_stock = value;
 					c = pow( value, p ) - arg1;
@@ -532,41 +533,41 @@ varfloat pow( varfloat arg1, varfloat arg2 ){
 		}
 	}
 	
-	// �w�����P���łȂ��ꍇ�A�w���֐��Ƒΐ��֐���g�ݍ��킹�Čv�Z
+	// 指数が単純でない場合、指数関数と対数関数を組み合わせて計算
 	if( !integerPowor && !root ){
 		
-		// ���x���o�����߂ɉ��Z�����𑝉�
+		// 精度を出すために演算桁数を増加
 		digit( digitStock * 2.1 );
 		if( digitStock <= 10 ){
 			digit( digitStock + 4 );
 		}
 		
-		// ���w�I�� ln( arg1**arg2 ) == arg2 * ln(arg1) �Ȃ̂ŁA
-		// ���ӂ� exp ���� value == arg1**arg2 == exp(arg2 * ln(arg1)) �ɂȂ�
+		// 数学的に ln( arg1**arg2 ) == arg2 * ln(arg1) なので、
+		// 両辺を exp して value == arg1**arg2 == exp(arg2 * ln(arg1)) になる
 		varfloat buff = arg2 * ln( arg1 );
 		value = exp( buff );
 	}
 	
-	// �}�C�i�X�悾�����ꍇ��1/�v���X��ɕϊ�
+	// マイナス乗だった場合は1/プラス乗に変換
 	if( !plus ){
 		digit( digitStock * 2.1	);
 		value = 1.0vf / value;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
 }
 
 /**
- * �w���֐����v�Z���܂��B
+ * 指数関数を計算します。
  * <br />
- * �����ł́Aarg1 �� varfloat �^�ɃL���X�g������ŁA pow( varfloat, varfloat ) ���g�p����܂��B
+ * 内部では、arg1 を varfloat 型にキャストした上で、 pow( varfloat, varfloat ) が使用されます。
  *
- * @param arg1 ��B
- * @param arg2 �w���B
- * @return �v�Z���ʂ̒l�B
+ * @param arg1 低。
+ * @param arg2 指数。
+ * @return 計算結果の値。
  */
 varfloat pow( varint arg1, varfloat arg2 ){
 	varfloat vfarg = (varfloat)arg1;
@@ -587,22 +588,22 @@ varfloat pow( varint arg1, varfloat arg2 ){
 
 
 /**
- * ���R�ΐ����v�Z���܂��Blog �Ɠ����ł��B
+ * 自然対数を計算します。log と同じです。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro ln( float arg ){
 	return SYSTEM_PROCESS_FPU_ln( arg );
 }
 
 /**
- * ���R�ΐ����v�Z���܂��Blog �Ɠ����ł��B
+ * 自然対数を計算します。log と同じです。
  * <br />
- * �����ł͂��̂܂� log(varfloat) ���g�p����Ă��܂��B
+ * 内部ではそのまま log(varfloat) が使用されています。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 macro ln( varfloat arg ){
 	return log( arg );
@@ -613,61 +614,61 @@ macro ln( varfloat arg ){
 
 
 /**
- * ���R�ΐ����v�Z���܂��Bln �Ɠ����ł��B
+ * 自然対数を計算します。ln と同じです。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro log( float arg ){
 	return SYSTEM_PROCESS_FPU_ln( arg );
 }
 
 /**
- * ���R�ΐ����v�Z���܂��Bln �Ɠ����ł��B
+ * 自然対数を計算します。ln と同じです。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�u 1�ȏ�̈����ł̓j���[�g���@�A1�ȉ��̈����ł̓e�C���[�W�J �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B
- * ���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、「 1以上の引数ではニュートン法、1以下の引数ではテイラー展開 」によって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。
+ * この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat log( varfloat arg ){
 	
-	// log(1) �� ��� 0 �Ȃ̂ł��� 0 ��Ԃ�
+	// log(1) は 常に 0 なのですぐ 0 を返す
 	if( 1vf == arg ){
 		return 0vf;
 	}
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
 	}
 	
-	// ���Z���ʂ��i�[����ϐ��ƁA��������p�̕ϐ�
+	// 演算結果を格納する変数と、収束判定用の変数
 	varfloat value;
 	varfloat valueStock;
 	
-	// ������ 1 ���傫���ꍇ�̓j���[�g���@�Ōv�Z����
+	// 引数が 1 より大きい場合はニュートン法で計算する
 	if( 1.0vf < arg ){
 		
-		// �����̍������̂��߁A�Ȃ�ׂ����ʂɋ߂��o���_�����߂���
-		varint order = 0v;   // �܂� arg ��10�̉��悭�炢�����߂�
-		varfloat vf = 1.0vf; // ��������߂邽�߂̔���ϐ�
+		// 収束の高速化のため、なるべく結果に近い出発点を求めたい
+		varint order = 0v;   // まず arg が10の何乗くらいか求める
+		varfloat vf = 1.0vf; // それを求めるための判定変数
 		while( vf < arg ){
 			order += 1v;
 			vf *= 10.0vf;
 		}
 		
-		// ��������� arg �� 10**oder ���x�̃X�P�[���ƌ��ς���ƁA
-		// �ߎ��I�� value = log(arg) = log(10**order) = order*log(10) �Ȃ̂ŁA
-		// ����������l�ɂ���ƃv���}�C1�����炢�̈ʒu��������J�n�ł��đ���
+		// ざっくりと arg を 10**oder 程度のスケールと見積もると、
+		// 近似的に value = log(arg) = log(10**order) = order*log(10) なので、
+		// それを初期値にするとプラマイ1桁くらいの位置から収束開始できて速い
 		value = order * 2.302585092994046vf;
 		valueStock = 0.0vf;
 		
-		// ��������܂Ńj���[�g���@�Ŕ�΂�������
+		// 収束するまでニュートン法で飛ばし続ける
 		varfloat buff;
 		varfloat term;
 		while( value != valueStock ){
@@ -676,22 +677,22 @@ varfloat log( varfloat arg ){
 		}
 	}
 	
-	// ������ 1 ��菬�����ꍇ�̓}�N���[�����W�J�ɂ���Čv�Z����
+	// 引数が 1 より小さい場合はマクローリン展開によって計算する
 	if( arg < 1vf ){
 		
-		// arg = x + 1 �Ƃ����Alog( x + 1 ) �̃}�N���[�����W�J���s��
+		// arg = x + 1 とおき、log( x + 1 ) のマクローリン展開を行う
 		varfloat x = arg - 1vf;
 		
-		// �����l�ݒ�
-		value = 0vf;        // ���Z���ʂ��i�[����ϐ�
-		valueStock = -1vf;  // ��������p�̕ϐ�
-		varint n = 1v;      // �a�̃C���f�b�N�X
-		varfloat xn = -1vf; // x �� n ����T����ϐ��i1�񂲂Ƃɕ������]�j
+		// 初期値設定
+		value = 0vf;        // 演算結果を格納する変数
+		valueStock = -1vf;  // 収束判定用の変数
+		varint n = 1v;      // 和のインデックス
+		varfloat xn = -1vf; // x の n 乗を控える変数（1回ごとに符号反転）
 		
-		// ������Z����W�J��
+		// 毎回加算する展開項
 		varfloat term = 1vf;
 		
-		// ��������܂Ń}�N���[�����W�J�̍������Z��������
+		// 収束するまでマクローリン展開の項を加算し続ける
 		while (value != valueStock) {
 			valueStock = value;
 			xn *= -x;
@@ -701,7 +702,7 @@ varfloat log( varfloat arg ){
 		}
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -715,49 +716,49 @@ varfloat log( varfloat arg ){
 
 
 /**
- * ��p�ΐ����v�Z���܂��B
+ * 常用対数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro log10( float arg ){
 	return SYSTEM_PROCESS_FPU_log10( arg );
 }
 
 /**
- * ��p�ΐ����v�Z���܂��B
+ * 常用対数を計算します。
  * <br />
- * �����ł́A���̌�����2.2�{�̌����ŁA�u log10(x) = ln(x) / ln(10) �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の2.2倍の桁数で、「 log10(x) = ln(x) / ln(10) 」によって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat log10( varfloat arg ){
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( digitStock * 2.2 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
 	}
 	
-	// arg ��10�̉���̃I�[�_�[�i�܂茅���j�����߂�
+	// arg が10の何乗のオーダー（つまり桁数）か求める
 	varint order = 0v;
-	varfloat vf = 1.0vf; // arg�Ɠ����I�[�_�[��10�̗ݏ搔
+	varfloat vf = 1.0vf; // argと同じオーダーの10の累乗数
 	while( vf < arg ){
 		order += 1v;
 		vf *= 10.0vf;
 	}
 	
-	// �����𑁂߂邽�߂Ɍ����I�t�Z�b�g���Čv�Z����
+	// 収束を早めるために桁をオフセットして計算する
 	arg = arg / vf;
 	varfloat value = ln( arg ) / ln( 10.0vf );
 	
-	// log10 �͓��͂�1�������ƒl��1����鎖�𗘗p���āA�t�I�t�Z�b�g�ŕ␳
+	// log10 は入力が1桁ずれると値が1ずれる事を利用して、逆オフセットで補正
 	value += order;
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -768,52 +769,52 @@ varfloat log10( varfloat arg ){
 
 
 /**
- * ���������v�Z���܂��B
+ * 平方根を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro sqrt( float arg ){
 	return SYSTEM_PROCESS_FPU_sqrt( arg );
 }
 
 /**
- * ���������v�Z���܂��B
+ * 平方根を計算します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�j���[�g���@�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、ニュートン法によって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat sqrt( varfloat arg ){
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
 	}
 	
-	// 0 �̕������� 0 �Ȃ̂ŁA���̂܂� 0 ��Ԃ�
+	// 0 の平方根は 0 なので、そのまま 0 を返す
 	if(arg<0vf){
 		digit( digitStock );
 		return 0vf;
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varfloat value = 1.0vf;
 	varfloat value_stock = 2.0vf;
 	varfloat inv = 0.5vf;
 	
-	// �l����������܂Ńj���[�g���@�Ŕ�΂�������
+	// 値が収束するまでニュートン法で飛ばし続ける
 	while( value != value_stock ){
 		value_stock = value;
 		value += arg/value;
 		value *= inv;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -824,50 +825,50 @@ varfloat sqrt( varfloat arg ){
 
 
 /**
- * N�捪���v�Z���܂��B
+ * N乗根を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @param rootPower N�捪��N�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @param rootPower N乗根のN。
+ * @return (float) 計算結果の値。
  */
 macro root( float arg, int rootPower ){
 	return SYSTEM_PROCESS_FPU_root( arg, rootPower );
 }
 
 /**
- * N�捪���v�Z���܂��B
+ * N乗根を計算します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�j���[�g���@�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、ニュートン法によって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @param p N�捪��N�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @param p N乗根のN。
+ * @return 計算結果の値。
  */
 varfloat root( varfloat arg, varint p ){
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( digitStock * 1.34 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
 	}
 	
-	// ���̓��͂ɂ͑Ή��ł��Ȃ�
+	// 負の入力には対応できない
 	if(arg<0vf){
 		digit( digitStock );
 		error( ERROR_OUT_OF_DEFINITION );
 		return 0vf;
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varfloat value = 1.0vf;
 	varfloat value_stock = 2.0vf;
 	varfloat inv = 0.5vf;
 	varfloat m;
 	varfloat c;
 	
-	// ��������܂Ńj���[�g���@�Ŕ�΂�������
+	// 収束するまでニュートン法で飛ばし続ける
 	while( value != value_stock ){
 		value_stock = value;
 		c = ( value**p - arg );
@@ -875,29 +876,29 @@ varfloat root( varfloat arg, varint p ){
 		value -=	c / m;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
 }
 
 /**
- * N�捪���v�Z���܂��B
+ * N乗根を計算します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�j���[�g���@�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A���̌��� + 4�� �Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
- * �Ȃ��A���̊֐��̑������́A��ɐ����ł���ƌ��Ȃ���܂��B
- * ���̊֐��́A�d��\�t�g�ȂǂŐ��l���e���������������_���ƌ��Ȃ���郂�[�h�ɂ�����A
- * ���֐��m�ۂ̂��߂����ɃT�|�[�g����Ă��܂��B
- * �ʏ�̗��p�V�[���ł͎g�p���闘�_�͓��ɖ������߁Aroot( varfloat, varint ) ���g�p���Ă��������B
+ * 内部では、元の桁数の1.34倍の桁数で、ニュートン法によって計算されます。
+ * ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
+ * なお、この関数の第二引数は、常に整数であると見なされます。
+ * この関数は、電卓ソフトなどで数値リテラルが浮動小数点数と見なされるモードにおける、
+ * 利便性確保のためだけにサポートされています。
+ * 通常の利用シーンでは使用する利点は特に無いため、root( varfloat, varint ) を使用してください。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @param vfp N�捪��N�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @param vfp N乗根のN。
+ * @return 計算結果の値。
  */
 varfloat root( varfloat arg, varfloat vfp ){
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	varint p = vfp;
 	int digitStock = digit();
 	digit( digitStock * 1.34 );
@@ -905,21 +906,21 @@ varfloat root( varfloat arg, varfloat vfp ){
 		digit( digitStock + 4 );
 	}
 	
-	// ���̓��͂ɂ͑Ή��ł��Ȃ�
+	// 負の入力には対応できない
 	if(arg<0vf){
 		digit( digitStock );
 		error( ERROR_OUT_OF_DEFINITION );
 		return 0vf;
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varfloat value = 1.0vf;
 	varfloat value_stock = 2.0vf;
 	varfloat inv = 0.5vf;
 	varfloat m;
 	varfloat c;
 	
-	// �l����������܂œW�J�������Z
+	// 値が収束するまで展開項を加算
 	while( value != value_stock ){
 		value_stock = value;
 		c = ( value**p - arg );
@@ -927,7 +928,7 @@ varfloat root( varfloat arg, varfloat vfp ){
 		value -=	c / m;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -975,30 +976,30 @@ varfloat root( varfloat arg, varfloat vfp ){
 
 
 /**
- * ��Βl���v�Z���܂��B
+ * 絶対値を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro abs( float arg ){
 	return SYSTEM_PROCESS_FPU_abs( arg );
 }
 
 /**
- * ��Βl���v�Z���܂��B
+ * 絶対値を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (int) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (int) 計算結果の値。
  */
 macro abs( int arg ){
 	return SYSTEM_PROCESS_FPU_abs( arg );
 }
 
 /**
- * ��Βl���v�Z���܂��B
+ * 絶対値を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat abs( varfloat arg ){
 	if( arg < 0vf ){
@@ -1008,10 +1009,10 @@ varfloat abs( varfloat arg ){
 }
 
 /**
- * ��Βl���v�Z���܂��B
+ * 絶対値を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varint abs( varint arg ){
 	if( arg < 0v ){
@@ -1028,11 +1029,11 @@ varint abs( varint arg ){
 
 
 /**
- * 2�̈����̓��A�傫������Ԃ��܂��B
+ * 2つの引数の内、大きい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro max( float arg1, float arg2 ){
 	return SYSTEM_PROCESS_FPU_max( arg1, arg2 );
@@ -1040,22 +1041,22 @@ macro max( float arg1, float arg2 ){
 
 
 /**
- * 2�̈����̓��A�傫������Ԃ��܂��B
+ * 2つの引数の内、大きい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return (int) �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return (int) 計算結果の値。
  */
 macro max( int arg1, int arg2 ){
 	return SYSTEM_PROCESS_FPU_max( arg1, arg2 );
 }
 
 /**
- * 2�̈����̓��A�傫������Ԃ��܂��B
+ * 2つの引数の内、大きい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat max( varfloat arg1, varfloat arg2 ){
 	if( arg1 < arg2 ){
@@ -1065,11 +1066,11 @@ varfloat max( varfloat arg1, varfloat arg2 ){
 }
 
 /**
- * 2�̈����̓��A�傫������Ԃ��܂��B
+ * 2つの引数の内、大きい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return 計算結果の値。
  */
 varint max( varint arg1, varint arg2 ){
 	if( arg1 < arg2 ){
@@ -1085,33 +1086,33 @@ varint max( varint arg1, varint arg2 ){
 
 
 /**
- * 2�̈����̓��A����������Ԃ��܂��B
+ * 2つの引数の内、小さい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro min( float arg1, float arg2 ){
 	return SYSTEM_PROCESS_FPU_min( arg1, arg2 );
 }
 
 /**
- * 2�̈����̓��A����������Ԃ��܂��B
+ * 2つの引数の内、小さい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return (int) �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return (int) 計算結果の値。
  */
 macro min( int arg1, int arg2 ){
 	return SYSTEM_PROCESS_FPU_min( arg1, arg2 );
 }
 
 /**
- * 2�̈����̓��A����������Ԃ��܂��B
+ * 2つの引数の内、小さい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat min( varfloat arg1, varfloat arg2 ){
 	if( arg1 < arg2 ){
@@ -1121,11 +1122,11 @@ varfloat min( varfloat arg1, varfloat arg2 ){
 }
 
 /**
- * 2�̈����̓��A����������Ԃ��܂��B
+ * 2つの引数の内、小さい方を返します。
  *
- * @param arg1 �v�Z�Ώۂ̒l�B
- * @param arg2 �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg1 計算対象の値。
+ * @param arg2 計算対象の値。
+ * @return 計算結果の値。
  */
 varint min( varint arg1, varint arg2 ){
 	if( arg1 < arg2 ){
@@ -1142,10 +1143,10 @@ varint min( varint arg1, varint arg2 ){
 
 
 /**
- * �K����v�Z���܂��B���̊֐��͈����E�߂�l���� float �ł����A�����ŋ߂� int �Ɋۂ߂Čv�Z����܂��B�ϊ��ɔ����A�덷�����x�ɉe������\��������܂��B��������v������ꍇ�� int �����̂��̂��g�p���Ă��������B
+ * 階乗を計算します。この関数は引数・戻り値共に float ですが、内部で近い int に丸めて計算されます。変換に伴い、誤差が精度に影響する可能性があります。厳密性を要求する場合は int 引数のものを使用してください。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 float fac( float arg ){
 	int intArgFloor = arg;
@@ -1158,20 +1159,20 @@ float fac( float arg ){
 }
 
 /**
- * �K����v�Z���܂��B
+ * 階乗を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (int) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (int) 計算結果の値。
  */
 macro fac( int arg ){
 	return SYSTEM_PROCESS_FPU_fac( arg );
 }
 
 /**
- * �K����v�Z���܂��B
+ * 階乗を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varint fac( varint arg ){
 
@@ -1190,10 +1191,10 @@ varint fac( varint arg ){
 }
 
 /**
- * �K����v�Z���܂��B
+ * 階乗を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat fac( varfloat arg ){
 
@@ -1215,35 +1216,35 @@ varfloat fac( varfloat arg ){
 
 
 /**
- * �T�C���i�����j�֐����v�Z���܂��B
+ * サイン（正弦）関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro sin( float arg ){
 	return SYSTEM_PROCESS_FPU_sin( arg );
 }
 
 /**
- * �T�C���i�����j�֐����v�Z���܂��B
+ * サイン（正弦）関数を計算します。
  * <br />
- * �����ł́A�u ���̌�����1.34�{ + �����̃I�[�_�[��10�{ �v�̌����ŁA�}�N���[�����W�J�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� + �����̃I�[�_�[��10�{ �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、「 元の桁数の1.34倍 + 引数のオーダーの10倍 」の桁数で、マクローリン展開によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 + 引数のオーダーの10倍 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  * <br />
- * 0 ~ ��/2 �͈͈̔ȊO�̈����ɑ΂��ẮA�O�p�֐��̑Ώ̐��Ǝ������𗘗p���A�����ł� 0 ~ �� �͈̔͂̒l���g�p���Čv�Z����܂��B
+ * 0 ~ π/2 の範囲以外の引数に対しては、三角関数の対称性と周期性を利用し、内部では 0 ~ π の範囲の値を使用して計算されます。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  */
 varfloat sin( varfloat arg ){
 	
-	// �����_�̉��Z�������T���Ă���
+	// 現時点の演算桁数を控えておく
 	int digitStock = digit();
 	
 	
-	// ���̊֐����ł́A�Ώ̐��𗘗p���A
-	// 0 ����PI/2�܂ł͈̔͂ɃV�t�g���Čv�Z����
-	// �i���̂ق��������������Ȃ邽�߁j
+	// この関数内では、対称性を利用し、
+	// 0 からPI/2までの範囲にシフトして計算する
+	// （そのほうが収束が速くなるため）
 	
 	
 	varfloat pi = pi();
@@ -1251,55 +1252,55 @@ varfloat sin( varfloat arg ){
 	varfloat shiftN_stock = 1.0vf;
 	int argOrder;
 	
-	// �K�v�ȃV�t�g�������߂�
-	// ���[�v���Ă���̂́A�������傫�Ȍ����ɑ΂��鐸�x�����΍�
+	// 必要なシフト数を求める
+	// ループしているのは、著しく大きな桁数に対する精度落ち対策
 	while( shiftN != shiftN_stock ){
 		
 		shiftN_stock = shiftN;
 		
-		// �K�v�Ȑ��x�ŉ~�������v�Z����
+		// 必要な精度で円周率を計算する
 		pi = pi();
 		
-		// ���������V�t�g���邩�v�Z
+		// 何周期分シフトするか計算
 		shiftN = abs( arg / pi );
 		
-		// �K�v�ȃV�t�g�񐔂� 10 �̉���I�[�_�[�ł��邩�̒l�����߂�
+		// 必要なシフト回数が 10 の何乗オーダーであるかの値を求める
 		argOrder = max( (int)(order( shiftN )), (int)0vf );
 		
-		// �V�t�g�񐔂����]�T�������ĉ��Z�������m�ۂ��Ȃ��ƁA
-		// ��̏�]���Z�ɂ��V�t�g�Ō������̊댯������
+		// シフト回数だけ余裕をもって演算桁数を確保しないと、
+		// 後の剰余演算によるシフトで桁落ちの危険がある
 		digit( digitStock * 1.34 + 10*argOrder );
 		if( digitStock <= 10 ){
 			digit( digitStock + 4 + 10*argOrder );
 		}
 	}
 	
-	// �������}�C�i�X�Ȃ�A�v���X�ɂ��Čv�Z���A��ŕ␳�i�S�̂����E�Ђ�����Ԃ��j
+	// 引数がマイナスなら、プラスにして計算し、後で補正（全体を左右ひっくり返す）
 	boolean globalMinus = false;
 	if( arg < 0vf ){
 		globalMinus = true;
 		arg = -arg;
 	}
 	
-	// 2�� �������𗘗p���ăV�t�g���A0 ���� 2�� �͈̔͂ɂ����Ă���
+	// 2π 周期性を利用してシフトし、0 から 2π の範囲にもってくる
 	if( 2vf*pi <= arg ){
-		arg = arg % ( 2vf*pi ); // ���̏�]���Z�̌�������h�����߂ɁA�\���Ȍ������K�v
+		arg = arg % ( 2vf*pi ); // この剰余演算の桁落ちを防ぐために、十分な桁数が必要
 	}
 	
 	
-	// PI ���傫�� x �ɂ��Ă͒l���}�C�i�X�ɂȂ�̂ŁA�΃V�t�g���ăv���X�ɂ��Čv�Z
+	// PI より大きな x については値がマイナスになるので、πシフトしてプラスにして計算
 	boolean minus = false;
 	if( pi <= arg ){
 		minus = true;
 		arg -= pi;
 	}
 	
-	// ����ɑΏ̐��𗘗p���āA��/2 ���� �� �܂ł͈̔͂� 0 ���� ��/2 �ȓ��ɂ����Ă���
+	// さらに対称性を利用して、π/2 から π までの範囲を 0 から π/2 以内にもってくる
 	if( pi/2vf < arg && arg < pi ){
 			arg = pi-arg;
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varfloat value = arg;
 	varfloat value_stock = -500.0vf;
 	varfloat term;
@@ -1308,7 +1309,7 @@ varfloat sin( varfloat arg ){
 	varfloat powor = arg;
 	varint sgn = 1v;
 	
-	// �l����������܂Ń}�N���[�����W�J�̊e�������Z
+	// 値が収束するまでマクローリン展開の各項を加算
 	while( value != value_stock ){
 		value_stock = value;
 		powor = powor * arg * arg;
@@ -1319,7 +1320,7 @@ varfloat sin( varfloat arg ){
 		i++;
 	}
 	
-	// �s�����������]��␳���Č��ɖ߂�
+	// 行った符号反転を補正して元に戻す
 	if( globalMinus ){
 		value = -value;
 	}
@@ -1327,7 +1328,7 @@ varfloat sin( varfloat arg ){
 		value = -value;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -1338,88 +1339,88 @@ varfloat sin( varfloat arg ){
 
 
 /**
- * �R�T�C���i�]���j�֐����v�Z���܂��B
+ * コサイン（余弦）関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro cos( float arg ){
 	return SYSTEM_PROCESS_FPU_cos( arg );
 }
 
 /**
- * �R�T�C���i�]���j�֐����v�Z���܂��B
+ * コサイン（余弦）関数を計算します。
  * <br />
- * �����ł́A�u ���̌�����1.34�{ + �����̃I�[�_�[��10�{ �v�̌����ŁA�}�N���[�����W�J�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� + �����̃I�[�_�[��10�{ �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、「 元の桁数の1.34倍 + 引数のオーダーの10倍 」の桁数で、マクローリン展開によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 + 引数のオーダーの10倍 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  * <br />
- * 0 ~ ��/2 �͈͈̔ȊO�̈����ɑ΂��ẮA�O�p�֐��̑Ώ̐��Ǝ������𗘗p���A�����ł� 0 ~ �� �͈̔͂̒l���g�p���Čv�Z����܂��B
+ * 0 ~ π/2 の範囲以外の引数に対しては、三角関数の対称性と周期性を利用し、内部では 0 ~ π の範囲の値を使用して計算されます。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat cos( varfloat arg ){
 	
-	// �����_�̉��Z�������T���Ă���
+	// 現時点の演算桁数を控えておく
 	int digitStock = digit();
 	
-	// ���̊֐����ł́A�Ώ̐��𗘗p���A
-	// 0 ����PI/2�܂ł͈̔͂ɃV�t�g���Čv�Z����
-	// �i���̂ق��������������Ȃ邽�߁j
+	// この関数内では、対称性を利用し、
+	// 0 からPI/2までの範囲にシフトして計算する
+	// （そのほうが収束が速くなるため）
 	
 	varfloat pi = pi();
 	varfloat shiftN = 0.0vf;
 	varfloat shiftN_stock = 1.0vf;
 	int argOrder;
 	
-	// �K�v�ȃV�t�g�������߂�
-	// ���[�v���Ă���̂́A�������傫�Ȍ����ɑ΂��鐸�x�����΍�
+	// 必要なシフト数を求める
+	// ループしているのは、著しく大きな桁数に対する精度落ち対策
 	while( shiftN != shiftN_stock ){
 		
 		shiftN_stock = shiftN;
 		
-		// �K�v�Ȑ��x�ŉ~�������v�Z����
+		// 必要な精度で円周率を計算する
 		pi = pi();
 		
-		// ���������V�t�g���邩�v�Z
+		// 何周期分シフトするか計算
 		shiftN = abs( arg / pi );
 		
-		// �K�v�ȃV�t�g�񐔂� 10 �̉���I�[�_�[�ł��邩�̒l�����߂�
+		// 必要なシフト回数が 10 の何乗オーダーであるかの値を求める
 		argOrder = max( (int)(order( shiftN )), (int)0vf );
 		
-		// �V�t�g�񐔂����]�T�������ĉ��Z�������m�ۂ��Ȃ��ƁA
-		// ��̏�]���Z�ɂ��V�t�g�Ō������̊댯������
+		// シフト回数だけ余裕をもって演算桁数を確保しないと、
+		// 後の剰余演算によるシフトで桁落ちの危険がある
 		digit( digitStock * 1.34 + 10*argOrder );
 		if( digitStock <= 10 ){
 			digit( digitStock + 4 + 10*argOrder );
 		}
 	}
 	
-	// �������}�C�i�X�Ȃ�v���X�ɂȂ����i cos �͋��֐��Ȃ̂Ō��ʂ͕ς��Ȃ� �j
+	// 引数がマイナスならプラスになおす（ cos は遇関数なので結果は変わらない ）
 	if( arg < 0vf ){
 		arg = -arg;
 	}
 	
-	// 2�� �������𗘗p���ăV�t�g���A0 ���� 2�� �͈̔͂ɂ����Ă���
+	// 2π 周期性を利用してシフトし、0 から 2π の範囲にもってくる
 	if( 2vf*pi <= arg ){
-		arg = arg % ( 2vf*pi ); // ���̏�]���Z�̌�������h�����߂ɁA�\���Ȍ������K�v
+		arg = arg % ( 2vf*pi ); // この剰余演算の桁落ちを防ぐために、十分な桁数が必要
 	}
 	
-	// PI ���傫�� x �ɂ��Ă͒l���}�C�i�X�ɂȂ�̂ŁA�΃V�t�g���ăv���X�ɂ��Čv�Z
+	// PI より大きな x については値がマイナスになるので、πシフトしてプラスにして計算
 	boolean minus = false;
 	if( pi <= arg ){
 		minus = true;
 		arg -= pi;
 	}
 	
-	// ����ɑΏ̐��𗘗p���āA��/2 ���� �� �܂ł͈̔͂� 0 ���� ��/2 �ȓ��ɂ����Ă���
+	// さらに対称性を利用して、π/2 から π までの範囲を 0 から π/2 以内にもってくる
 	if( pi/2vf < arg && arg < pi ){
 			arg = pi-arg;
 			minus = !minus;
 	}
 	
-	// �����l�ݒ�
+	// 初期値設定
 	varfloat value = 1.0vf;
 	varfloat value_stock = -500.0vf;
 	varfloat term;
@@ -1428,7 +1429,7 @@ varfloat cos( varfloat arg ){
 	varfloat powor = 1.0vf;
 	varint sgn = 1v;
 	
-	// �l����������܂Ń}�N���[�����W�J�̊e�������Z
+	// 値が収束するまでマクローリン展開の各項を加算
 	while( value != value_stock ){
 		value_stock = value;
 		powor = powor * arg * arg;
@@ -1439,12 +1440,12 @@ varfloat cos( varfloat arg ){
 		i++;
 	}
 	
-	// �s�����������]��␳���Č��ɖ߂�
+	// 行った符号反転を補正して元に戻す
 	if( minus ){
 		value = -value;
 	}
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -1455,41 +1456,41 @@ varfloat cos( varfloat arg ){
 
 
 /**
- * �^���W�F���g�i���ځj�֐����v�Z���܂��B
+ * タンジェント（正接）関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro tan( float arg ){
 	return SYSTEM_PROCESS_FPU_tan( arg );
 }
 
 /**
- * �^���W�F���g�i���ځj�֐����v�Z���܂��B
+ * タンジェント（正接）関数を計算します。
  * <br />
- * �����ł́A���̌�����2.1�{�̌����ŁA�u tan(x) = sin(x) / cos(x) �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の2.1倍の桁数で、「 tan(x) = sin(x) / cos(x) 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat tan( varfloat arg ){
 	
-	// ���x���o�����߂ɉ��Z�����𑝉�
+	// 精度を出すために演算桁数を増加
 	int digitStock = digit();
 	digit( digitStock * 2.1 );
 	if( digitStock <= 10 ){
 		digit( digitStock + 4 );
 	}
 	
-	// �f���� tan = sin / cos �Ōv�Z
+	// 素直に tan = sin / cos で計算
 	varfloat pi = pi();
 	varfloat s = sin( arg );
 	varfloat c = cos( arg );
 	varfloat value = s / c;
 	
-	// ���Z���������ɖ߂��A���ʂ�Ԃ�
+	// 演算桁数を元に戻し、結果を返す
 	digit( digitStock );
 	value += 0vf;
 	return value;
@@ -1516,23 +1517,23 @@ varfloat tan( varfloat arg ){
 
 
 /**
- * �A�[�N�T�C���֐��i�T�C���̋t�֐��j���v�Z���܂��B
+ * アークサイン関数（サインの逆関数）を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro asin( float arg ){
 	return SYSTEM_PROCESS_FPU_asin( arg );
 }
 
 /**
- * �A�[�N�T�C���֐��i�T�C���̋t�֐��j���v�Z���܂��B
+ * アークサイン関数（サインの逆関数）を計算します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�u ��Βl��0.7�ȉ��̈����ɂ��Ă̓}�N���[�����W�J�A������O���̓j���[�g���@ �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、「 絶対値が0.7以下の引数についてはマクローリン展開、それより外側はニュートン法 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat asin( varfloat arg ){
@@ -1588,23 +1589,23 @@ varfloat asin( varfloat arg ){
 
 
 /**
- * �A�[�N�R�T�C���֐��i�R�T�C���̋t�֐��j���v�Z���܂��B
+ * アークコサイン関数（コサインの逆関数）を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro acos( float arg ){
 	return SYSTEM_PROCESS_FPU_acos( arg );
 }
 
 /**
- * �A�[�N�R�T�C���֐��i�R�T�C���̋t�֐��j���v�Z���܂��B
+ * アークコサイン関数（コサインの逆関数）を計算します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�u acos(x) = ��/2 - asin(x) �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、「 acos(x) = π/2 - asin(x) 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat acos( varfloat arg ){
@@ -1624,23 +1625,23 @@ varfloat acos( varfloat arg ){
 
 
 /**
- * �A�[�N�^���W�F���g�֐��i�^���W�F���g�̋t�֐��j���v�Z���܂��B
+ * アークタンジェント関数（タンジェントの逆関数）を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro atan( float arg ){
 	return SYSTEM_PROCESS_FPU_atan( arg );
 }
 
 /**
- * �A�[�N�^���W�F���g�֐��i�^���W�F���g�̋t�֐��j���v�Z���܂��B
+ * アークタンジェント関数（タンジェントの逆関数）を計算します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�u ��Βl��0.7�ȉ��̈����ɂ��Ă̓}�N���[�����W�J�A������O���̓j���[�g���@ �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、「 絶対値が0.7以下の引数についてはマクローリン展開、それより外側はニュートン法 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat atan( varfloat arg ){
@@ -1695,23 +1696,23 @@ varfloat atan( varfloat arg ){
 
 
 /**
- * �n�C�p�{���b�N�T�C���֐����v�Z���܂��B
+ * ハイパボリックサイン関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro sinh( float arg ){
 	return SYSTEM_PROCESS_FPU_sinh( arg );
 }
 
 /**
- * �n�C�p�{���b�N�T�C���֐����v�Z���܂��B
+ * ハイパボリックサイン関数を計算します。
  * <br />
- * �����ł́A���̌�����2.1�{�̌����ŁA�u sinh(x) = ( exp(x) - exp(-x) ) / 2 �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の2.1倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / 2 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat sinh( varfloat arg ){
@@ -1731,23 +1732,23 @@ varfloat sinh( varfloat arg ){
 
 
 /**
- * �n�C�p�{���b�N�R�T�C���֐����v�Z���܂��B
+ * ハイパボリックコサイン関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro cosh( float arg ){
 	return SYSTEM_PROCESS_FPU_cosh( arg );
 }
 
 /**
- * �n�C�p�{���b�N�R�T�C���֐����v�Z���܂��B
+ * ハイパボリックコサイン関数を計算します。
  * <br />
- * �����ł́A���̌�����2.1�{�̌����ŁA�u sinh(x) = ( exp(x) + exp(-x) ) / 2 �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の2.1倍の桁数で、「 sinh(x) = ( exp(x) + exp(-x) ) / 2 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat cosh( varfloat arg ){
@@ -1767,23 +1768,23 @@ varfloat cosh( varfloat arg ){
 
 
 /**
- * �n�C�p�{���b�N�R�^���W�F���g�֐����v�Z���܂��B
+ * ハイパボリックコタンジェント関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro tanh( float arg ){
 	return SYSTEM_PROCESS_FPU_tanh( arg );
 }
 
 /**
- * �n�C�p�{���b�N�R�^���W�F���g�֐����v�Z���܂��B
+ * ハイパボリックコタンジェント関数を計算します。
  * <br />
- * �����ł́A���̌�����2.8�{�̌����ŁA�u sinh(x) = ( exp(x) - exp(-x) ) / ( exp(x) + exp(-x) ) �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の2.8倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / ( exp(x) + exp(-x) ) 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat tanh( varfloat arg ){
@@ -1809,10 +1810,10 @@ varfloat tanh( varfloat arg ){
 
 
 /**
- * �n�C�p�{���b�N�T�C���̋t�֐����v�Z���܂��B
+ * ハイパボリックサインの逆関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro asinh( float arg ){
 	return SYSTEM_PROCESS_FPU_asinh( arg );
@@ -1820,13 +1821,13 @@ macro asinh( float arg ){
 
 
 /**
- * �n�C�p�{���b�N�T�C���̋t�֐����v�Z���܂��B
+ * ハイパボリックサインの逆関数を計算します。
  * <br />
- * �����ł́A���̌�����2.1�{�̌����ŁA�u asinh(x) = ln( x + ��( x*x + 1 ) ) �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の2.1倍の桁数で、「 asinh(x) = ln( x + √( x*x + 1 ) ) 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat asinh( varfloat arg ){
@@ -1846,10 +1847,10 @@ varfloat asinh( varfloat arg ){
 
 
 /**
- * �n�C�p�{���b�N�R�T�C���̋t�֐����v�Z���܂��B
+ * ハイパボリックコサインの逆関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro acosh( float arg ){
 	return SYSTEM_PROCESS_FPU_acosh( arg );
@@ -1857,13 +1858,13 @@ macro acosh( float arg ){
 
 
 /**
- * �n�C�p�{���b�N�R�T�C���̋t�֐����v�Z���܂��B
+ * ハイパボリックコサインの逆関数を計算します。
  * <br />
- * �����ł́A���̌�����2.1�{�̌����ŁA�u acosh(x) = ln( x + ��( x*x - 1 ) ) �v�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
+ * 内部では、元の桁数の2.1倍の桁数で、「 acosh(x) = ln( x + √( x*x - 1 ) ) 」によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
  varfloat acosh( varfloat arg ){
@@ -1886,10 +1887,10 @@ macro acosh( float arg ){
 
 
 /**
- * �n�C�p�{���b�N�^���W�F���g�̋t�֐����v�Z���܂��B
+ * ハイパボリックタンジェントの逆関数を計算します。
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return (float) �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return (float) 計算結果の値。
  */
 macro atanh( float arg ){
 	return SYSTEM_PROCESS_FPU_atanh( arg );
@@ -1897,16 +1898,16 @@ macro atanh( float arg ){
 
 
 /**
- * �n�C�p�{���b�N�^���W�F���g�̋t�֐����v�Z���܂��B
+ * ハイパボリックタンジェントの逆関数を計算します。
  * <br />
- * �����ł́A���̌�����2.1�{�̌����ŁA�u ��Βl��0.9�ȉ��̈����ɂ��Ă� atanh(x) = 1/2 * log(1+x)/log(1-x) �v�ɂ���āA������O���̓j���[�g���@�ɂ���Čv�Z����܂��B
- * ������ 10 ���ȉ��ł́A�u ���̌��� + 4�� �v�̌����Ōv�Z����܂��B���̗]�茅���́A�����I�Ɂi ���炭��荂���x�ȕ����� �j�ύX�����\��������܂��B
- * �֐��̑Ώ̐��𗘗p���A���̈����ɂ��ẮA���̈����ɂ�����l�𗘗p���Čv�Z����܂��B
+ * 内部では、元の桁数の2.1倍の桁数で、「 絶対値が0.9以下の引数については atanh(x) = 1/2 * log(1+x)/log(1-x) 」によって、それより外側はニュートン法によって計算されます。
+ * ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
+ * 関数の対称性を利用し、負の引数については、正の引数における値を利用して計算されます。
  * <br />
- * <span style="font-weight:bold;">�Â��o�[�W�����ł́A-0.7 �ȉ��i���̖����呤�j�̈����ɂ��Ēl�����߂��܂���B�v�Z���I���Ȃ����A0 ���Ԃ���܂��B���̖��� VCSSL 3.3.2 �ɂ����ďC������܂����B</span>
+ * <span style="font-weight:bold;">古いバージョンでは、-0.7 以下（負の無限大側）の引数について値を求められません。計算が終わらないか、0 が返されます。この問題は VCSSL 3.3.2 において修正されました。</span>
  *
- * @param arg �v�Z�Ώۂ̒l�B
- * @return �v�Z���ʂ̒l�B
+ * @param arg 計算対象の値。
+ * @return 計算結果の値。
  * 
  */
 varfloat atanh( varfloat arg ){
@@ -1967,22 +1968,22 @@ varfloat atanh( varfloat arg ){
 
 
 /**
- * �p�x�̒P�ʕϊ��ł��B�x���@�̊p�x���A�ʓx�@�i���W�A���j�̊p�x�ɕϊ����܂��B
+ * 角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。
  *
- * @param angle �x���@�̊p�x�B
- * @return (float) �ʓx�@�i���W�A���j�̊p�x�B
+ * @param angle 度数法の角度。
+ * @return (float) 弧度法（ラジアン）の角度。
  */
 macro deg( float angle ){
 	return SYSTEM_PROCESS_FPU_deg( angle );
 }
 
 /**
- * �p�x�̒P�ʕϊ��ł��B�x���@�̊p�x���A�ʓx�@�i���W�A���j�̊p�x�ɕϊ����܂��B
+ * 角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�u �x�� = ���W�A���� * 180 / �� �v�ɂ���Čv�Z����܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。
  *
- * @param angle �x���@�̊p�x�B
- * @return �ʓx�@�i���W�A���j�̊p�x�B
+ * @param angle 度数法の角度。
+ * @return 弧度法（ラジアン）の角度。
  * 
  */
 varfloat deg(varfloat rad){
@@ -1995,22 +1996,22 @@ varfloat deg(varfloat rad){
 
 
 /**
- * �p�x�̒P�ʕϊ��ł��B�ʓx�@�i���W�A���j�̊p�x���A�x���@�̊p�x�ɕϊ����܂��B
+ * 角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。
  *
- * @param angle �ʓx�@�i���W�A���j�̊p�x�B
- * @return (float) �x���@�̊p�x�B
+ * @param angle 弧度法（ラジアン）の角度。
+ * @return (float) 度数法の角度。
  */
 macro rad( float angle ){
 	return SYSTEM_PROCESS_FPU_rad( angle );
 }
 
 /**
- * �p�x�̒P�ʕϊ��ł��B�ʓx�@�i���W�A���j�̊p�x���A�x���@�̊p�x�ɕϊ����܂��B
+ * 角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。
  * <br />
- * �����ł́A���̌�����1.34�{�̌����ŁA�u ���W�A���� = �x�� * �� / 180 �v�ɂ���Čv�Z����܂��B
+ * 内部では、元の桁数の1.34倍の桁数で、「 ラジアン数 = 度数 * π / 180 」によって計算されます。
  *
- * @param angle �ʓx�@�i���W�A���j�̊p�x�B
- * @return �x���@�̊p�x�B
+ * @param angle 弧度法（ラジアン）の角度。
+ * @return 度数法の角度。
  * 
  */
 varfloat rad(varfloat deg){
@@ -2051,7 +2052,7 @@ varfloat rad(varfloat deg){
 
 
 
-// ���������p
+// 内部処理用
 macro order( varfloat arg ){
 	return SYSTEM_PROCESS_FPU_orderVF( arg );
 }

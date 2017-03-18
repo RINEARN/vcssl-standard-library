@@ -1,54 +1,56 @@
+coding UTF-8;
+
 /**
  * <p>
- * VCSSL Process ���C�u���� �́A�I�y���[�e�B���O�V�X�e���ƒʐM���A�v���Z�X���N���E���䂷�邽�߂̕W�����C�u�����ł��B
- * �N�������v���Z�X�ƁA�W�����o�͂ł���肷�鎖���\�ł��B
+ * VCSSL Process ライブラリ は、オペレーティングシステムと通信し、プロセスを起動・制御するための標準ライブラリです。
+ * 起動したプロセスと、標準入出力でやり取りする事も可能です。
  * </p>
  * 
  * <p>
- * Process ���C�u�����́AVCSSL����I�y���[�e�B���O�V�X�e���̃R�}���h�����s������A
- * �ʂ̃A�v���P�[�V�������N��������Ƃ������@�\��񋟂��܂��B
- * �܂��AVCSSL �̃v���O�����ƁA
- * VCSSL �ȊO�̌���ŊJ�����ꂽ�v���O������A�g������i������A�g�j�ꍇ�ɂ����Ă��K�v�ƂȂ�܂��B
+ * Process ライブラリは、VCSSLからオペレーティングシステムのコマンドを実行したり、
+ * 別のアプリケーションを起動したりといった機能を提供します。
+ * また、VCSSL のプログラムと、
+ * VCSSL 以外の言語で開発されたプログラムを連携させる（他言語連携）場合においても必要となります。
  * </p>
  * 
  * <p>
- * VCSSL �ɂ�����v���Z�X����̊�{�I�ȗ���́A�ȉ��̒ʂ�ł��B
+ * VCSSL におけるプロセス制御の基本的な流れは、以下の通りです。
  * </p>
  * 
  * <p>
- * �܂��A<a href="#newProcess">newProcess</a> �֐��Ńv���Z�X�𐶐����܂��B
- * ���̎��_�ł́A�܂����s�͊J�n����܂���B���̊֐��́A�v���Z�X�ɌŗL��ID�i�v���Z�XID�j������U���ĕԂ��܂�
- * �i �����ł̃v���Z�XID�́AVCSSL�����n�ɂ���Ċ���U����ID�ł���A
- * �I�y���[�e�B���O�V�X�e���ɂ���Ċ���U����ID�Ƃ͈�ʂɈ�v���܂��� �j�B
+ * まず、<a href="#newProcess">newProcess</a> 関数でプロセスを生成します。
+ * この時点では、まだ実行は開始されません。この関数は、プロセスに固有のID（プロセスID）を割り振って返します
+ * （ ここでのプロセスIDは、VCSSL処理系によって割り振られるIDであり、
+ * オペレーティングシステムによって割り振られるIDとは一般に一致しません ）。
  * </p>
  * 
  * <p>
- * �����āA<a href="#startProcess">startProcess</a> �֐��Ńv���Z�X�̎��s���J�n���܂��B
- * �v���Z�X�̎��s�́AVCSSL�v���O�����̎��s�Ƃ͔񓯊��ōs���܂��B
- * �܂�A�v���Z�X�̍Đ��I����҂��ƂȂ��AVCSSL �̏����������������s����Ă����܂��B
- * �������A�v���Z�X�̏I���܂�VCSSL���̏�����ҋ@���������ꍇ�́A
- * <a href="#waitForProcess">waitForProcess</a> �֐����g�p���Ă��������B
+ * 続いて、<a href="#startProcess">startProcess</a> 関数でプロセスの実行を開始します。
+ * プロセスの実行は、VCSSLプログラムの実行とは非同期で行われます。
+ * つまり、プロセスの再生終了を待つことなく、VCSSL の処理も引き続き実行されていきます。
+ * もしも、プロセスの終了までVCSSL側の処理を待機させたい場合は、
+ * <a href="#waitForProcess">waitForProcess</a> 関数を使用してください。
  * </p>
  * 
  * <p>
- * �v���Z�X�̍Đ����I������ƁA<a href="#onProcessEnd">onProcessEnd</a> �C�x���g�n���h�����R�[������܂��B
- * �����Ńv���Z�X�̔j���Ȃǂ��s���܂��B
+ * プロセスの再生が終了すると、<a href="#onProcessEnd">onProcessEnd</a> イベントハンドラがコールされます。
+ * ここでプロセスの破棄などを行います。
  * </p>
  * 
  * <p>
- * �v���Z�X�̕W���o�͂��擾����ɂ́A��ʂ�̕��@������܂��B
- * ��́A<a href="#getProcessOutput">setProcessOutput</a> �֐����Ăяo���A�C�ӂ̃^�C�~���O�Ŕ\���I�Ɏ擾������@�ł��B
- * ����́A�v���Z�X�̏I����ɁA�W���o�͓��e���ꊇ���Ď擾�������ꍇ�Ȃǂɕ֗��ł��B
- * ������́A<a href="#onProcessOutput">onProcessOutput</a>�C�x���g�n���h����p���Ď󓮓I�Ɏ擾������@�ł��B
- * ������́A�󂯎�����W���o�͓��e�ɉ����āA�W�����͂Ƀ��X�|���X��Ԃ������悤�ȏꍇ�ɕ֗��ł��B
- * ���������̏ꍇ�A�W���o�͓��e���i���炭�s�P�ʂŁj�o�b�t�@����A
- * �C�x���g�n���h���ɓn�����܂łɃ^�C�����O�������鎖�ɒ��ӂ��Ă��������i���ɁA���s���s���Ȃ��܂܃v���Z�X�����͑҂��ƂȂ�悤�ȏꍇ�ɂ͒��ӂ��K�v�ł��j�B
- * ���̃^�C�����O�����ɂȂ�悤�Ȃ������s���ɂ́A�K�v�ɉ����ă��[�v�Ȃǂ���
- * <a href="#flushProcessOutput">flushProcessOutput</a> �֐����R�[�����A
- * �K���o�b�t�@���t���b�V������Ȃǂ��Ă��������B
+ * プロセスの標準出力を取得するには、二通りの方法があります。
+ * 一つは、<a href="#getProcessOutput">setProcessOutput</a> 関数を呼び出し、任意のタイミングで能動的に取得する方法です。
+ * これは、プロセスの終了後に、標準出力内容を一括して取得したい場合などに便利です。
+ * もう一つは、<a href="#onProcessOutput">onProcessOutput</a>イベントハンドラを用いて受動的に取得する方法です。
+ * こちらは、受け取った標準出力内容に応じて、標準入力にレスポンスを返したいような場合に便利です。
+ * ただしこの場合、標準出力内容が（恐らく行単位で）バッファされ、
+ * イベントハンドラに渡されるまでにタイムラグが生じる事に注意してください（特に、改行が行われないままプロセスが入力待ちとなるような場合には注意が必要です）。
+ * このタイムラグが問題になるようなやり取りを行うには、必要に応じてループなどから
+ * <a href="#flushProcessOutput">flushProcessOutput</a> 関数をコールし、
+ * 適時バッファをフラッシュするなどしてください。
  * </p>
  * 
- * @author  ���䕶�G - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -57,9 +59,8 @@
 /*
 # ====================================================================================================
 # 
-# PRAGMA COMPILE    DYNAMIC_REFERRED
-# PRAGMA COMPILE    STATIC_REFERRED
-# PRAGMA RESERVE    NOT_REFERRED
+# PRAGMA COMPILE    REFERRAL
+# PRAGMA RESERVE    ALL
 # 
 # PRAGMA INTERNAL   RINEARN  {
 #     
@@ -83,29 +84,29 @@
 
 
 /**
- * �l�C�e�B�u�A�v���P�[�V�����̃v���Z�X�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�v���Z�XID�v������U���ĕԂ��܂��B
+ * ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。
  * <br />
- * ���̊֐��ɂ��v���Z�X�̐�����A<a href="#startProcess">startProcess</a> ���R�[������܂Ŏ��s�͊J�n����Ȃ����߁i VCSSL 3.3�ȍ~ �j�A���̊ԂɕW�����͓��e�̐ݒ�Ȃǂ��s�������ł��܂��B
- * �v���Z�X�̐����� <a href="System.html#exec">System.exec</a> �ł��\�ł����Aexec �̓v���Z�X�����Ɠ����Ɏ��s�J�n���s���܂��B
+ * この関数によるプロセスの生成後、<a href="#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。
+ * プロセスの生成は <a href="System.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。
  * <br />
- * ��Ƃ��āA�utest.exe�v�ɃR�}���h���C�������u1�v�u2�v�u3�v���w�肵�ċN������ɂ́AFile ���C�u������ Process ���C�u������ import ������ŁF
+ * 例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：
  * <br />
  * string command[] = { getFilePath("test.exe"), "1", "2", "3" }
  * <br />
  * int processID = newProcess(command);
  * <br />
- * �ȂǂƂ��܂��B���s���J�n����ɂ́A�����āF
+ * などとします。実行を開始するには、続けて：
  * <br />
  * <a href="#startProcess">startProcess</a>(processID);
  * <br />
- * �Ƃ��܂��B�I���܂őҋ@����ɂ́A�����āF
+ * とします。終了まで待機するには、続けて：
  * <br />
  * <a href="#waitForProcess">waitForProcess</a>(processID);
  * <br />
- * �Ƃ��܂��B
+ * とします。
  *
- * @param command[] �I�y���[�e�B���O�V�X�e���ɓn���R�}���h�B��ʓI�Ȋ��ł� [0] �ɃA�v���P�[�V�����̐�΃p�X�A[1] �ȍ~�ɋN�����̃R�}���h���C���������w�肵�܂��B�Ȃ��A��΃p�X�� <a href="File.html#getFilePath">File.getFilePath</a> �Ŏ擾�ł��܂��B
- * @return ���������v���Z�X�Ɋ���U��ꂽ�v���Z�XID�i���ʔԍ��j�B
+ * @param command[] オペレーティングシステムに渡すコマンド。一般的な環境では [0] にアプリケーションの絶対パス、[1] 以降に起動時のコマンドライン引数を指定します。なお、絶対パスは <a href="File.html#getFilePath">File.getFilePath</a> で取得できます。
+ * @return 生成したプロセスに割り振られたプロセスID（識別番号）。
  */
 int newProcess( string command[] ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_createProcess( command );
@@ -113,13 +114,13 @@ int newProcess( string command[] ){
 
 
 /**
- * �l�C�e�B�u�A�v���P�[�V�����̃v���Z�X�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�v���Z�XID�v������U���ĕԂ��܂��B
+ * ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。
  * <br />
- * ���̊֐��ɂ��v���Z�X�̐�����A<a href="#startProcess">startProcess</a> ���R�[������܂Ŏ��s�͊J�n����Ȃ����߁i VCSSL 3.3�ȍ~ �j�A���̊ԂɕW�����͓��e�̐ݒ�Ȃǂ��s�������ł��܂��B
- * �v���Z�X�̐����� <a href="System.html#exec">System.exec</a> �ł��\�ł����Aexec �̓v���Z�X�����Ɠ����Ɏ��s�J�n���s���܂��B
+ * この関数によるプロセスの生成後、<a href="#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。
+ * プロセスの生成は <a href="System.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。
  *
- * @param command �I�y���[�e�B���O�V�X�e���ɓn���R�}���h�B�R�}���h���͒[���ɓ��͂���悤�ɁA1�s�ɂ܂Ƃ߂Ďw�肵�܂��B���������ɂ���Ă͎g�p�ł��Ȃ��ꍇ������܂��B
- * @return ���������v���Z�X�Ɋ���U��ꂽ�v���Z�XID�i���ʔԍ��j�B
+ * @param command オペレーティングシステムに渡すコマンド。コマンド入力端末に入力するように、1行にまとめて指定します。ただし環境によっては使用できない場合があります。
+ * @return 生成したプロセスに割り振られたプロセスID（識別番号）。
  */
 int newProcess( string command ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_createProcess( command );
@@ -127,13 +128,13 @@ int newProcess( string command ){
 
 
 /**
- * �l�C�e�B�u�A�v���P�[�V�����̃v���Z�X�����s�J�n���܂��B
+ * ネイティブアプリケーションのプロセスを実行開始します。
  * <br />
- * ���s�J�n��́AVCSSL�̎��s�Ƃ͓Ɨ��ɁA�񓯊��ɏ������s���܂��B
- * �v���Z�X�̎��s�����܂ŁAVCSSL���̏�����ҋ@���������ꍇ�́A
- * <a href="#waitForProcess">waitForProcess</a> ���R�[�����Ă��������B
+ * 実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。
+ * プロセスの実行完了まで、VCSSL側の処理を待機させたい場合は、
+ * <a href="#waitForProcess">waitForProcess</a> をコールしてください。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void startProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_startProcess( processID );
@@ -141,12 +142,12 @@ void startProcess( int processID ){
 
 
 /**
- * �l�C�e�B�u�A�v���P�[�V�����̃v���Z�X�Ɋւ��郊�\�[�X��j�����܂��B�v���Z�X�̎��s�I����ɃR�[�����Ă��������B
+ * ネイティブアプリケーションのプロセスに関するリソースを破棄します。プロセスの実行終了後にコールしてください。
  * <br />
- * �������A�v���Z�X�̎��s�r���ŃR�[�����Ă͂����܂���B�v���Z�X�����s�r���Ŕj������ɂ�
- * ��� <a href="#destroyProcess">destroyProcess</a> �ŋ����I�������Ă��������B
+ * ただし、プロセスの実行途中でコールしてはいけません。プロセスを実行途中で破棄するには
+ * 先に <a href="#destroyProcess">destroyProcess</a> で強制終了させてください。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void deleteProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_disposeProcess( processID );
@@ -154,9 +155,9 @@ void deleteProcess( int processID ){
 
 
 /**
- * �l�C�e�B�u�A�v���P�[�V�����̃v���Z�X���A���s�r���ŋ����I�����܂��B
+ * ネイティブアプリケーションのプロセスを、実行途中で強制終了します。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void destroyProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_destroyProcess( processID );
@@ -164,21 +165,21 @@ void destroyProcess( int processID ){
 
 
 /**
- * �v���Z�X�ɓn���W�����͓��e��ݒ肵�܂��B
+ * プロセスに渡す標準入力内容を設定します。
  * <br />
- * ���͓��e�̓o�b�t�@����A�v���Z�X�����ۂɓ��͑҂��̏�ԂɂȂ����^�C�~���O�ŁA�v���Z�X�ɓn����܂��B
- * ���̂��߃v���Z�X�̏I���܂łɕK�v�ȕW�����͓��e���A���s�R�[�h��؂�őS�Ă܂Ƃ߂Đݒ肵�Ă��������ł��܂��B
+ * 入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。
+ * そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。
  * <br />
- * ��Ƃ��āA���Ɂu1�v,�u2�v,�u3�v�Ɠ��͂���ꍇ�ɂ́F
+ * 例として、順に「1」,「2」,「3」と入力する場合には：
  * <br />
  * setProcessInput(processID, "1" + EOL + "2" + EOL + "3" + EOL);
  * <br />
- * �ȂǂƂ��܂��B
+ * などとします。
  * <br />
- * �Ȃ��A�o�b�t�@�ɗ��炸�A�W���o�͓��e�̎擾�ƍ��킹�āA�Θb�I�Ɂi�����I�Ɂj�W�����͂��s���Ă��������ł��܂��B
- * ���̍ہA���ɂ����܂����A���͓��e�̖����ɂ͉��s�R�[�h��t���Ă����Ȃ��ƁA�󗝂���Ȃ��ꍇ������܂��B
+ * なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。
+ * その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void setProcessInput( int processID, string command ){
   SYSTEM_PROCESS_DRIVER_NATIVE_setProcessInput( processID, command );
@@ -186,14 +187,14 @@ void setProcessInput( int processID, string command ){
 
 
 /**
- * �R�[�����ꂽ���_�܂łɃo�b�t�@����Ă���A�v���Z�X�̕W���o�͓��e���擾���܂��B
+ * コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。
  * <br />
- * ���ɂ���ẮA�o�b�t�@�ʂɏ������������A�o�b�t�@�ʂ��~�ς���ƌ������ቺ���鎖������܂��B
- * ���̂��߁A�W���o�͓��e�������l�C�e�B�u�A�v���P�[�V�����ɂ��ẮA
- * <a href="#clearProcessOutput">clearProcessOutput</a> �œK���o�b�t�@���N���A���Ă��������B
+ * 環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。
+ * そのため、標準出力内容が多いネイティブアプリケーションについては、
+ * <a href="#clearProcessOutput">clearProcessOutput</a> で適時バッファをクリアしてください。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
- * @return �v���Z�X�̃o�b�t�@����Ă���W���o�͓��e�B
+ * @param processID 対象プロセスのプロセスID。
+ * @return プロセスのバッファされている標準出力内容。
  */
 string getProcessOutput( int processID ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_getProcessOutput( processID );
@@ -201,14 +202,14 @@ string getProcessOutput( int processID ){
 
 
 /**
- * �R�[�����ꂽ���_�܂łɃo�b�t�@����Ă���A�v���Z�X�̕W���G���[�o�͓��e���擾���܂��B
+ * コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。
  * <br />
- * ���ɂ���ẮA�o�b�t�@�ʂɏ������������A�o�b�t�@�ʂ��~�ς���ƌ������ቺ���鎖������܂��B
- * ���̂��߁A�W���G���[�o�͓��e�������l�C�e�B�u�A�v���P�[�V�����ɂ��ẮA
- * <a href="#clearProcessError">clearProcessError</a> �œK���o�b�t�@���N���A���Ă��������B
+ * 環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。
+ * そのため、標準エラー出力内容が多いネイティブアプリケーションについては、
+ * <a href="#clearProcessError">clearProcessError</a> で適時バッファをクリアしてください。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
- * @return �v���Z�X�̃o�b�t�@����Ă���W���G���[�o�͓��e�B
+ * @param processID 対象プロセスのプロセスID。
+ * @return プロセスのバッファされている標準エラー出力内容。
  */
 string getProcessError( int processID ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_getProcessError( processID );
@@ -216,11 +217,11 @@ string getProcessError( int processID ){
 
 
 /**
- * �v���Z�X�̕W���o�̓o�b�t�@���N���A���܂��B
- * �W���o�͓��e�������l�C�e�B�u�A�v���P�[�V�����ɂ��ẮA
- * �o�b�t�@�ʂ��~�ς��Ă���ƌ������ቺ���邽�߁A�K���N���A���Ă��������B
+ * プロセスの標準出力バッファをクリアします。
+ * 標準出力内容が多いネイティブアプリケーションについては、
+ * バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void clearProcessOutput( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_clearProcessOutput( processID );
@@ -228,11 +229,11 @@ void clearProcessOutput( int processID ){
 
 
 /**
- * �v���Z�X�̕W���G���[�o�̓o�b�t�@���N���A���܂��B
- * �W���o�͓��e�������l�C�e�B�u�A�v���P�[�V�����ɂ��ẮA
- * �o�b�t�@�ʂ��~�ς��Ă���ƌ������ቺ���邽�߁A�K���N���A���Ă��������B
+ * プロセスの標準エラー出力バッファをクリアします。
+ * 標準出力内容が多いネイティブアプリケーションについては、
+ * バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void clearProcessError( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_clearProcessError( processID );
@@ -240,11 +241,11 @@ void clearProcessError( int processID ){
 
 
 /**
- * �v���Z�X�̕W���o�̓o�b�t�@���t���b�V�����܂��B
- * �t���b�V�����s���ƁA���̎��_�Ńo�b�t�@����Ă�����e���S��
- * onProcessOutput �ɗ�����܂��B
+ * プロセスの標準出力バッファをフラッシュします。
+ * フラッシュを行うと、その時点でバッファされている内容が全て
+ * onProcessOutput に流されます。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void flushProcessOutput( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_flushProcessOutput( processID );
@@ -252,11 +253,11 @@ void flushProcessOutput( int processID ){
 
 
 /**
- * �v���Z�X�̕W���G���[�o�̓o�b�t�@���t���b�V�����܂��B
- * �t���b�V�����s���ƁA���̎��_�Ńo�b�t�@����Ă�����e���S��
- * onProcessError �ɗ�����܂��B
+ * プロセスの標準エラー出力バッファをフラッシュします。
+ * フラッシュを行うと、その時点でバッファされている内容が全て
+ * onProcessError に流されます。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void flushProcessError( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_flushProcessError( processID );
@@ -264,10 +265,10 @@ void flushProcessError( int processID ){
 
 
 /**
- * �v���Z�X�̏I���X�e�[�^�X�R�[�h��Ԃ��܂��B
+ * プロセスの終了ステータスコードを返します。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
- * @return �v���Z�X�̏I���X�e�[�^�X�R�[�h�B
+ * @param processID 対象プロセスのプロセスID。
+ * @return プロセスの終了ステータスコード。
  */
 int getProcessExitValue( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_getProcessExitValue( processID );
@@ -275,9 +276,9 @@ int getProcessExitValue( int processID ){
 
 
 /**
- * �v���Z�X�̎��s���I������܂ŁAVCSSL���̎��s��ҋ@���܂��B
+ * プロセスの実行が終了するまで、VCSSL側の実行を待機します。
  *
- * @param processID �Ώۃv���Z�X�̃v���Z�XID�B
+ * @param processID 対象プロセスのプロセスID。
  */
 void waitForProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_waitForProcess( processID );

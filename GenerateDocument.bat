@@ -63,10 +63,10 @@ echo ^<p^>色の制御機能を提供するライブラリです。^</p^> >> DocumentIndex.html
 
 
 
-echo ^<h3^>^<a href="lib/tool/graph/Graph2D.html"^>tool.Graph2D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
+echo ^<h3^>^<a href="lib/tool/Graph2D.html"^>tool.Graph2D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>2次元グラフソフトを制御するAPIライブラリです。^</p^> >> DocumentIndex.html
 
-echo ^<h3^>^<a href="lib/tool/Graph3D.html"^>tool.graph.Graph3D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
+echo ^<h3^>^<a href="lib/tool/Graph3D.html"^>tool.Graph3D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>3次元グラフソフトを制御するAPIライブラリです。^</p^> >> DocumentIndex.html
 
 
@@ -191,68 +191,68 @@ echo: ^<h2^>全ての関数・定数一覧^</h2^> >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/System.html"^>System ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>各種の重要な基盤機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/System.vcssl Shift_JIS:UTF-8 -event:SystemEventHandler.vcssl
-call vcssldoc lib/System.vcssl Shift_JIS:UTF-8 -event:SystemEventHandler.vcssl -list:lib/System.html -body >> DocumentIndex.html
+call vcssldoc lib/System.vcssl UTF-8:UTF-8 -event:SystemEventHandler.vcssl
+call vcssldoc lib/System.vcssl UTF-8:UTF-8 -event:SystemEventHandler.vcssl -list:lib/System.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Math.html"^>Math ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>各種数学関数を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Math.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/Math.vcssl Shift_JIS:UTF-8 -list:lib/Math.html -body >> DocumentIndex.html
+call vcssldoc lib/Math.vcssl UTF-8:UTF-8
+call vcssldoc lib/Math.vcssl UTF-8:UTF-8 -list:lib/Math.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Graphics.html"^>Graphics ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>グラフィックス関連リソースの管理機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Graphics.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/Graphics.vcssl Shift_JIS:UTF-8 -list:lib/Graphics.html -body >> DocumentIndex.html
+call vcssldoc lib/Graphics.vcssl UTF-8:UTF-8
+call vcssldoc lib/Graphics.vcssl UTF-8:UTF-8 -list:lib/Graphics.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Graphics2D.html"^>Graphics2D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>2DCG（2次元グラフィックス）機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Graphics2D.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/Graphics2D.vcssl Shift_JIS:UTF-8 -list:lib/Graphics2D.html -body >> DocumentIndex.html
+call vcssldoc lib/Graphics2D.vcssl UTF-8:UTF-8
+call vcssldoc lib/Graphics2D.vcssl UTF-8:UTF-8 -list:lib/Graphics2D.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Graphics3D.html"^>Graphics3D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>3DCG（3次元グラフィックス）機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Graphics3D.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/Graphics3D.vcssl Shift_JIS:UTF-8 -list:lib/Graphics3D.html -body >> DocumentIndex.html
+call vcssldoc lib/Graphics3D.vcssl UTF-8:UTF-8
+call vcssldoc lib/Graphics3D.vcssl UTF-8:UTF-8 -list:lib/Graphics3D.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/GUI.html"^>GUI ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>GUIの生成や制御機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/GUI.vcssl Shift_JIS:UTF-8 -event:GUIEventHandler.vcssl -list:lib/GUI.html
-call vcssldoc lib/GUI.vcssl Shift_JIS:UTF-8 -event:GUIEventHandler.vcssl -list:lib/GUI.html -body >> DocumentIndex.html
+call vcssldoc lib/GUI.vcssl UTF-8:UTF-8 -event:GUIEventHandler.vcssl
+call vcssldoc lib/GUI.vcssl UTF-8:UTF-8 -event:GUIEventHandler.vcssl -list:lib/GUI.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Text.html"^>Text ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>テキスト（文字列）処理機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Text.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/Text.vcssl Shift_JIS:UTF-8 -list:lib/Text.html -body >> DocumentIndex.html
+call vcssldoc lib/Text.vcssl UTF-8:UTF-8
+call vcssldoc lib/Text.vcssl UTF-8:UTF-8 -list:lib/Text.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/File.html"^>File ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>ファイル一覧取得やパス処理などの機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/File.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/File.vcssl Shift_JIS:UTF-8 -list:lib/File.html -body >> DocumentIndex.html
+call vcssldoc lib/File.vcssl UTF-8:UTF-8
+call vcssldoc lib/File.vcssl UTF-8:UTF-8 -list:lib/File.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Time.html"^>Time ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>時間計測や、時刻取得などの機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Time.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/Time.vcssl Shift_JIS:UTF-8 -list:lib/Time.html -body >> DocumentIndex.html
+call vcssldoc lib/Time.vcssl UTF-8:UTF-8
+call vcssldoc lib/Time.vcssl UTF-8:UTF-8 -list:lib/Time.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Process.html"^>Process ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>ネイティブプロセスの実行機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Process.vcssl Shift_JIS:UTF-8 -event:ProcessEventHandler.vcssl -list:lib/Process.html
-call vcssldoc lib/Process.vcssl Shift_JIS:UTF-8 -event:ProcessEventHandler.vcssl -list:lib/Process.html -body >> DocumentIndex.html
+call vcssldoc lib/Process.vcssl UTF-8:UTF-8 -event:ProcessEventHandler.vcssl
+call vcssldoc lib/Process.vcssl UTF-8:UTF-8 -event:ProcessEventHandler.vcssl -list:lib/Process.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Thread.html"^>Thread ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>スレッド関連機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Thread.vcssl Shift_JIS:UTF-8 -event:ThreadEventHandler.vcssl -list:lib/Thread.html
-call vcssldoc lib/Thread.vcssl Shift_JIS:UTF-8 -event:ThreadEventHandler.vcssl -list:lib/Thread.html -body >> DocumentIndex.html
+call vcssldoc lib/Thread.vcssl UTF-8:UTF-8 -event:ThreadEventHandler.vcssl
+call vcssldoc lib/Thread.vcssl UTF-8:UTF-8 -event:ThreadEventHandler.vcssl -list:lib/Thread.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Sound.html"^>Sound ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>サウンド関連機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Sound.vcssl Shift_JIS:UTF-8 -event:SoundEventHandler.vcssl -list:lib/Sound.html
-call vcssldoc lib/Sound.vcssl Shift_JIS:UTF-8 -event:SoundEventHandler.vcssl -list:lib/Sound.html -body >> DocumentIndex.html
+call vcssldoc lib/Sound.vcssl UTF-8:UTF-8 -event:SoundEventHandler.vcssl
+call vcssldoc lib/Sound.vcssl UTF-8:UTF-8 -event:SoundEventHandler.vcssl -list:lib/Sound.html -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/Color.html"^>Color ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>色の制御機能を提供するライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/Color.vcssl Shift_JIS:UTF-8
-call vcssldoc lib/Color.vcssl Shift_JIS:UTF-8 -list:lib/Color.html -body >> DocumentIndex.html
+call vcssldoc lib/Color.vcssl UTF-8:UTF-8
+call vcssldoc lib/Color.vcssl UTF-8:UTF-8 -list:lib/Color.html -body >> DocumentIndex.html
 
 
 
@@ -260,13 +260,13 @@ call vcssldoc lib/Color.vcssl Shift_JIS:UTF-8 -list:lib/Color.html -body >> Docu
 
 echo ^<h3^>^<a href="lib/tool/Graph2D.html"^>tool.Graph2D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>2次元グラフソフトを制御するAPIライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/tool/Graph2D.vcssl Shift_JIS:UTF-8 -list:lib/tool/Graph2D.html -event:Graph2DEventHandler.vcssl
-call vcssldoc lib/tool/Graph2D.vcssl Shift_JIS:UTF-8 -list:lib/tool/Graph2D.html -event:Graph2DEventHandler.vcssl -body >> DocumentIndex.html
+call vcssldoc lib/tool/Graph2D.vcssl UTF-8:UTF-8 -event:Graph2DEventHandler.vcssl
+call vcssldoc lib/tool/Graph2D.vcssl UTF-8:UTF-8 -list:lib/tool/Graph2D.html -event:Graph2DEventHandler.vcssl -body >> DocumentIndex.html
 
 echo ^<h3^>^<a href="lib/tool/Graph3D.html"^>tool.Graph3D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>3次元グラフソフトを制御するAPIライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/tool/Graph3D.vcssl Shift_JIS:UTF-8 -list:lib/tool/Graph3D.html -event:Graph2DEventHandler.vcssl
-call vcssldoc lib/tool/Graph3D.vcssl Shift_JIS:UTF-8 -list:lib/tool/Graph3D.html -event:Graph2DEventHandler.vcssl -body >> DocumentIndex.html
+call vcssldoc lib/tool/Graph3D.vcssl UTF-8:UTF-8 -event:Graph2DEventHandler.vcssl
+call vcssldoc lib/tool/Graph3D.vcssl UTF-8:UTF-8 -list:lib/tool/Graph3D.html -event:Graph2DEventHandler.vcssl -body >> DocumentIndex.html
 
 
 

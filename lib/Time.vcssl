@@ -1,45 +1,45 @@
 /**
  * <p>
- * VCSSL Time ���C�u���� �́A���Ԍv����A�����擾�Ȃǂ̋@�\��񋟂���W�����C�u�����ł��B
+ * VCSSL Time ライブラリ は、時間計測や、時刻取得などの機能を提供する標準ライブラリです。
  * </p>
  * 
  * <p>
- * ���Ԃ��擾����@�\�� <a href="#time">time</a>() �֐��ɂ���Ē񋟂���܂��B���̊֐��́A�v���O�������s�J�n����̌o�ߎ��Ԃ�Ԃ��܂��B
+ * 時間を取得する機能は <a href="#time">time</a>() 関数によって提供されます。この関数は、プログラム実行開始からの経過時間を返します。
  * <br />
- * �i �������̌���ł́A���������֐��� 1970�N 1�� 1�� �ߑO 0 �� ����̌o�ߎ��Ԃ�Ԃ��܂����AVCSSL �ł͂����ł͂���܂���B �j
+ * （ いくつかの言語では、こうした関数は 1970年 1月 1日 午前 0 時 からの経過時間を返しますが、VCSSL ではそうではありません。 ）
  * </p>
  * 
  * <p>
- * time �֐����Ԃ����Ԃ̐��x�i�P�ʁj�͏����n��`�ł��B���������ł̓~���b�ł����A�����I�ɁA�����鏈���n�ɂ����ď�Ƀ~���b���x���ۏ؂����Ƃ͌���܂���B
+ * time 関数が返す時間の精度（単位）は処理系定義です。公式実装ではミリ秒ですが、将来的に、あらゆる処理系において常にミリ秒精度が保証されるとは限りません。
  * <br />
- * �������������n�ւ̈ˑ�����������邽�߂ɁAtime �֐��̖߂�l���A�l�X�Ȏ��ԒP�ʂɕϊ�����֐����񋟂���Ă��܂��B
+ * そうした処理系への依存性を回避するために、time 関数の戻り値を、様々な時間単位に変換する関数も提供されています。
  * <br />
- * ��̓I�ɂ́A<a href="#millisecond">millisecond</a> �֐��̓~���b�P�ʁA<a href="#second">second</a> �֐��͕b�P�ʁA<a href="#minute">minute</a> �֐��͕��P�ʁA<a href="#hour">hour</a> �֐��͎��ԒP�ʁA<a href="#day">day</a> �֐��͓��P�ʂɕϊ����܂��B
+ * 具体的には、<a href="#millisecond">millisecond</a> 関数はミリ秒単位、<a href="#second">second</a> 関数は秒単位、<a href="#minute">minute</a> 関数は分単位、<a href="#hour">hour</a> 関数は時間単位、<a href="#day">day</a> 関数は日単位に変換します。
  * <br />
- * ��Ƃ��āA�K���ȏ����������āA���̊Ԃ̏��v���Ԃ��v������ɂ́A�ȉ��̂悤�ɂ��܂��F
+ * 例として、適当な処理をさせて、その間の所要時間を計測するには、以下のようにします：
  * <div class="code">
- * int t1 = time();// �I�����Ԃ��v��<br />
+ * int t1 = time();// 終了時間を計測<br />
  * <br />
- * [ �����œK���Ɏ��Ԃ̂����鏈�����s�� ]<br />
+ * [ ここで適当に時間のかかる処理を行う ]<br />
  * <br />
- * int t2 = time(); // �J�n���Ԃ��v��<br />
- * int sec = second( t2 - t1 ); // ���v���ԁi���Ԃ̍��j��b�P�ʂŎ擾<br />
- * print( "���v���� [ �b ] = " +  sec ); // �o��<br />
+ * int t2 = time(); // 開始時間を計測<br />
+ * int sec = second( t2 - t1 ); // 所要時間（時間の差）を秒単位で取得<br />
+ * print( "所要時間 [ 秒 ] = " +  sec ); // 出力<br />
  * </div>
  * </p>
  * 
  * <p>
- * �܂��A<a href="#second">second</a> �֐��A<a href="#minute">minute</a> �֐��A<a href="#hour">hour</a> �֐��������Ȃ��ŃR�[������ƁA���݂̎��v�I�Ȏ�����Ԃ��܂��B
+ * また、<a href="#second">second</a> 関数、<a href="#minute">minute</a> 関数、<a href="#hour">hour</a> 関数を引数なしでコールすると、現在の時計的な時刻を返します。
  * <br />
- * ���l�ɁA<a href="#day">day</a> �֐��A<a href="#month">month</a> �֐��A<a href="#year">year</a> �֐��������Ȃ��ŃR�[������ƁA���݂̃J�����_�[�ɂ�������t��Ԃ��܂��B
+ * 同様に、<a href="#day">day</a> 関数、<a href="#month">month</a> 関数、<a href="#year">year</a> 関数を引数なしでコールすると、現在のカレンダーにおける日付を返します。
  * <br />
- * ��Ƃ��āA���݂̓��t�Ǝ�����\������ɂ́A�ȉ��̂悤�ɂ��܂��F
+ * 例として、現在の日付と時刻を表示するには、以下のようにします：
  * <div class="code">
- * print( year() + "�N" + month() + "��" + day() + "��" + hour() + "��" + minute() + "��" + second() + "�b" );
+ * print( year() + "年" + month() + "月" + day() + "日" + hour() + "時" + minute() + "分" + second() + "秒" );
  * </div>
  * </p>
  * 
- * @author  ���䕶�G - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -74,9 +74,9 @@
 
 
 /**
- * �v���O�������s�J�n����̌o�ߎ��Ԃ�Ԃ��܂��B
+ * プログラム実行開始からの経過時間を返します。
  * <br />
- * �ʏ�A�P�ʂ̓~���b�ł����A�d�l��͏����n�ł��B�����ɔC�ӂ̒P�ʂő���ɂ́A<a href="#millisecond">millisecond</a> �Ȃǂ����܂��ĕϊ����Ă��������B
+ * 通常、単位はミリ秒ですが、仕様上は処理系です。厳密に任意の単位で測るには、<a href="#millisecond">millisecond</a> などを噛ませて変換してください。
  */
 int time(){
   return SYSTEM_PROCESS_CLOCK_millisecond();
@@ -84,9 +84,9 @@ int time(){
 
 
 /**
- * <a href="#time">time</a> �֐����Ԃ��l�Ȃǂ��A�~���b�P�ʂɕϊ����܂��B
- * @param t �ϊ����������ԁi<a href="#time">time</a> �֐��̖߂�l�A�y�т��̘a�⍷�Ȃǁj
- * @return �~���b�P�ʂɕϊ����ꂽ�l�B
+ * <a href="#time">time</a> 関数が返す値などを、ミリ秒単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return ミリ秒単位に変換された値。
  */
 int millisecond( int t ){
   return t;
@@ -94,9 +94,9 @@ int millisecond( int t ){
 
 
 /**
- * <a href="#time">time</a> �֐����Ԃ��l�Ȃǂ��A�b�P�ʂɕϊ����܂��B
- * @param t �ϊ����������ԁi<a href="#time">time</a> �֐��̖߂�l�A�y�т��̘a�⍷�Ȃǁj
- * @return �b�P�ʂɕϊ����ꂽ�l�B
+ * <a href="#time">time</a> 関数が返す値などを、秒単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 秒単位に変換された値。
  */
 int second( int t ){
   return t/1000;
@@ -104,9 +104,9 @@ int second( int t ){
 
 
 /**
- * <a href="#time">time</a> �֐����Ԃ��l�Ȃǂ��A���P�ʂɕϊ����܂��B
- * @param t �ϊ����������ԁi<a href="#time">time</a> �֐��̖߂�l�A�y�т��̘a�⍷�Ȃǁj
- * @return ���P�ʂɕϊ����ꂽ�l�B
+ * <a href="#time">time</a> 関数が返す値などを、分単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 分単位に変換された値。
  */
 int minute( int t ){
   return t/60000;
@@ -114,9 +114,9 @@ int minute( int t ){
 
 
 /**
- * <a href="#time">time</a> �֐����Ԃ��l�Ȃǂ��A����(hour)�P�ʂɕϊ����܂��B
- * @param t �ϊ����������ԁi<a href="#time">time</a> �֐��̖߂�l�A�y�т��̘a�⍷�Ȃǁj
- * @return ����(hour)�P�ʂɕϊ����ꂽ�l�B
+ * <a href="#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 時間(hour)単位に変換された値。
  */
 int hour( int t ){
   return t/3600000;
@@ -124,9 +124,9 @@ int hour( int t ){
 
 
 /**
- * <a href="#time">time</a> �֐����Ԃ��l�Ȃǂ��A���P�ʂɕϊ����܂��B���]���x�̗h�炬��[�b�ȂǁA�V���w�I�E�����w�I�Ȍ��ʂ͍l������܂���B�P���� 86400000 �~���b�� 1 ���Ƃ��ĕϊ����܂��B
- * @param t �ϊ����������ԁi<a href="#time">time</a> �֐��̖߂�l�A�y�т��̘a�⍷�Ȃǁj
- * @return ���P�ʂɕϊ����ꂽ�l�B
+ * <a href="#time">time</a> 関数が返す値などを、日単位に変換します。自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。
+ * @param t 変換したい時間（<a href="#time">time</a> 関数の戻り値、及びその和や差など）
+ * @return 日単位に変換された値。
  */
 int day( int t ){
   return t/86400000;
@@ -138,9 +138,9 @@ int day( int t ){
 
 
 /**
- * ����J�����_�[�ɂ����錻�݂̔N��Ԃ��܂��B
+ * 西暦カレンダーにおける現在の年を返します。
  *
- * @return ���݂̔N�B
+ * @return 現在の年。
  */
 int year(){
   return SYSTEM_PROCESS_DRIVER_TIME_getCurrentYear();
@@ -148,11 +148,11 @@ int year(){
 
 
 /**
- * ����J�����_�[�ɂ����錻�݂̌���Ԃ��܂��B
+ * 西暦カレンダーにおける現在の月を返します。
  * <br />
- * �͈͂� 1 �` 12 �͈̔͂ŕԂ��܂��B0 �` 11 �łȂ����ɒ��ӂ��Ă��������B
+ * 範囲は 1 ～ 12 の範囲で返します。0 ～ 11 でない事に注意してください。
  *
- * @return ���݂̌��B
+ * @return 現在の月。
  */
 int month(){
   return SYSTEM_PROCESS_DRIVER_TIME_getCurrentMonth();
@@ -160,9 +160,9 @@ int month(){
 
 
 /**
- * ����J�����_�[�ɂ����錻�݂̓���Ԃ��܂��B
+ * 西暦カレンダーにおける現在の日を返します。
  *
- * @return ���݂̓��B
+ * @return 現在の日。
  */
 int day(){
   return SYSTEM_PROCESS_DRIVER_TIME_getCurrentDay();
@@ -170,9 +170,9 @@ int day(){
 
 
 /**
- * ���݂̎����ɂ����鎞�Ԃ�Ԃ��܂��B
+ * 現在の時刻における時間を返します。
  *
- * @return ���݂̎��ԁB
+ * @return 現在の時間。
  */
 int hour(){
   return SYSTEM_PROCESS_DRIVER_TIME_getCurrentHour();
@@ -180,9 +180,9 @@ int hour(){
 
 
 /**
- * ���݂̎����ɂ����镪��Ԃ��܂��B
+ * 現在の時刻における分を返します。
  *
- * @return ���݂̕��B
+ * @return 現在の分。
  */
 int minute(){
   return SYSTEM_PROCESS_DRIVER_TIME_getCurrentMinute();
@@ -190,9 +190,9 @@ int minute(){
 
 
 /**
- * ���݂̎����ɂ�����b��Ԃ��܂��B
+ * 現在の時刻における秒を返します。
  *
- * @return ���݂̕b�B
+ * @return 現在の秒。
  */
 int second(){
   return SYSTEM_PROCESS_DRIVER_TIME_getCurrentSecond();
@@ -200,11 +200,11 @@ int second(){
 
 
 /**
- * ����J�����_�[�ɂ�������t�E������\���e�L�X�g��Ԃ��܂��B
+ * 西暦カレンダーにおける日付・時刻を表すテキストを返します。
  * <br />
- * �����͌����_�Ŏd�l�㖢��ƂȂ��Ă���A�����n�ˑ��ł��B�m���ȏ������K�v�ȏꍇ�́A<a href="#year">year</a> �֐��� <a href="#hour">hour</a> �֐��Ȃǂ�p���ēƎ��ɕ\�����Ă��������B
+ * 書式は現時点で仕様上未定となっており、処理系依存です。確実な書式が必要な場合は、<a href="#year">year</a> 関数や <a href="#hour">hour</a> 関数などを用いて独自に表現してください。
  *
- * @return ���t�E������\���e�L�X�g�B
+ * @return 日付・時刻を表すテキスト。
  */
 string date(){
   return SYSTEM_PROCESS_DRIVER_TIME_getCurrentDate();

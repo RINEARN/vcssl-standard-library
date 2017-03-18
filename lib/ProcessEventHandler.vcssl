@@ -1,45 +1,46 @@
+coding UTF-8;
 
 
 /**
- * �v���Z�X���������ꂽ�ۂɃR�[������܂��B
+ * プロセスが生成された際にコールされます。
  * 
- * @param processID �C�x���g�������̃v���Z�XID
+ * @param processID イベント発生元のプロセスID
  */
 void onProcessStart(int processID) {
 }
 
 /**
- * �v���Z�X���I�������ۂɃR�[������܂��B
+ * プロセスが終了した際にコールされます。
  * 
- * @param processID �C�x���g�������̃v���Z�XID
+ * @param processID イベント発生元のプロセスID
  */
 void onProcessEnd(int processID) {
 }
 
 /**
- * �v���Z�X���W���o�͂��s�����ۂɃR�[������܂��B
- * �������o�͓��e�̓o�b�t�@����邽�߁A���ۂɏo�͂��s��ꂽ�u�ԂɃR�[�������킯�ł͂Ȃ��A�^�C�����O�����݂��܂��B
- * �o�b�t�@���t���b�V�������^�C�~���O�́A�����ɂ͏����n�ˑ��ł����A���炭�ʏ�͍s�P�ʂł��B
- * ���̏ꍇ�A���̃C�x���g�n���h���ɂ��A�o�͓��e���s�P�ʂœn����܂�
- * �i�������A�����n�̃o�b�t�@�e�ʂ𒴉߂���悤�Ȓ����s�ł́A1�s�̓��e����؂��A������ɓn���ăR�[�������\��������܂��j�B
- * �Ȃ��A���s��҂����ɁA�C�ӂ̃^�C�~���O�Ńo�b�t�@�������I�Ƀt���b�V��������ɂ́A<a href="#flushProcessOutput">flushProcessOutput</a> �֐����g�p���Ă��������B
+ * プロセスが標準出力を行った際にコールされます。
+ * ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。
+ * バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。
+ * その場合、このイベントハンドラにも、出力内容が行単位で渡されます
+ * （ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。
+ * なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessOutput">flushProcessOutput</a> 関数を使用してください。
  * 
- * @param processID �C�x���g�������̃v���Z�XID
- * @param processID �W���o�͓��e
+ * @param processID イベント発生元のプロセスID
+ * @param processID 標準出力内容
  */
 void onProcessOutput(int processID, string output) {
 }
 
 /**
- * �v���Z�X���W���G���[�o�͂��s�����ۂɃR�[������܂��B
- * �������o�͓��e�̓o�b�t�@����邽�߁A���ۂɏo�͂��s��ꂽ�u�ԂɃR�[�������킯�ł͂Ȃ��A�^�C�����O�����݂��܂��B
- * �o�b�t�@���t���b�V�������^�C�~���O�́A�����ɂ͏����n�ˑ��ł����A���炭�ʏ�͍s�P�ʂł��B
- * ���̏ꍇ�A���̃C�x���g�n���h���ɂ��A�o�͓��e���s�P�ʂœn����܂�
- * �i�������A�����n�̃o�b�t�@�e�ʂ𒴉߂���悤�Ȓ����s�ł́A1�s�̓��e����؂��A������ɓn���ăR�[�������\��������܂��j�B
- * �Ȃ��A���s��҂����ɁA�C�ӂ̃^�C�~���O�Ńo�b�t�@�������I�Ƀt���b�V��������ɂ́A<a href="#flushProcessError">flushProcessError</a> �֐����g�p���Ă��������B
+ * プロセスが標準エラー出力を行った際にコールされます。
+ * ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。
+ * バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。
+ * その場合、このイベントハンドラにも、出力内容が行単位で渡されます
+ * （ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。
+ * なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessError">flushProcessError</a> 関数を使用してください。
  * 
- * @param processID �C�x���g�������̃v���Z�XID
- * @param processID �W���G���[�o�͓��e
+ * @param processID イベント発生元のプロセスID
+ * @param processID 標準エラー出力内容
  */
 void onProcessOutput(int processID, string output) {
 }

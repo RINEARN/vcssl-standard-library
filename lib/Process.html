@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Process</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>Process</h1>
+<hr />
+<h2 id="abstract">概要 - Abstract</h2>
+<p>VCSSL Process ライブラリ は、オペレーティングシステムと通信し、プロセスを起動・制御するための標準ライブラリです。起動したプロセスと、標準入出力でやり取りする事も可能です。</p><p>Process ライブラリは、VCSSLからオペレーティングシステムのコマンドを実行したり、別のアプリケーションを起動したりといった機能を提供します。また、VCSSL のプログラムと、VCSSL 以外の言語で開発されたプログラムを連携させる（他言語連携）場合においても必要となります。</p><p>VCSSL におけるプロセス制御の基本的な流れは、以下の通りです。</p><p>まず、<a href="#newProcess">newProcess</a> 関数でプロセスを生成します。この時点では、まだ実行は開始されません。この関数は、プロセスに固有のID（プロセスID）を割り振って返します（ ここでのプロセスIDは、VCSSL処理系によって割り振られるIDであり、オペレーティングシステムによって割り振られるIDとは一般に一致しません ）。</p><p>続いて、<a href="#startProcess">startProcess</a> 関数でプロセスの実行を開始します。プロセスの実行は、VCSSLプログラムの実行とは非同期で行われます。つまり、プロセスの再生終了を待つことなく、VCSSL の処理も引き続き実行されていきます。もしも、プロセスの終了までVCSSL側の処理を待機させたい場合は、<a href="#waitForProcess">waitForProcess</a> 関数を使用してください。</p><p>プロセスの再生が終了すると、<a href="#onProcessEnd">onProcessEnd</a> イベントハンドラがコールされます。ここでプロセスの破棄などを行います。</p><p>プロセスの標準出力を取得するには、二通りの方法があります。一つは、<a href="#getProcessOutput">setProcessOutput</a> 関数を呼び出し、任意のタイミングで能動的に取得する方法です。これは、プロセスの終了後に、標準出力内容を一括して取得したい場合などに便利です。もう一つは、<a href="#onProcessOutput">onProcessOutput</a>イベントハンドラを用いて受動的に取得する方法です。こちらは、受け取った標準出力内容に応じて、標準入力にレスポンスを返したいような場合に便利です。ただしこの場合、標準出力内容が（恐らく行単位で）バッファされ、イベントハンドラに渡されるまでにタイムラグが生じる事に注意してください（特に、改行が行われないままプロセスが入力待ちとなるような場合には注意が必要です）。このタイムラグが問題になるようなやり取りを行うには、必要に応じてループなどから<a href="#flushProcessOutput">flushProcessOutput</a> 関数をコールし、適時バッファをフラッシュするなどしてください。</p> <hr />
+<h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
+<dl>
+<dt><a href="#newProcess">int newProcess( string command[ ] ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：string command[] = { getFilePath("test.exe"), "1", "2", "3" }int processID = newProcess(command);などとします。実行を開始するには、続けて：<a href="#startProcess">startProcess</a>(processID);とします。終了まで待機するには、続けて：<a href="#waitForProcess">waitForProcess</a>(processID);とします。 </dd>
+<dt><a href="#newProcess">int newProcess( string command ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。 </dd>
+<dt><a href="#startProcess">void startProcess( int processID ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを実行開始します。実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。プロセスの実行完了まで、VCSSL側の処理を待機させたい場合は、<a href="#waitForProcess">waitForProcess</a> をコールしてください。 </dd>
+<dt><a href="#deleteProcess">void deleteProcess( int processID ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスに関するリソースを破棄します。プロセスの実行終了後にコールしてください。ただし、プロセスの実行途中でコールしてはいけません。プロセスを実行途中で破棄するには先に <a href="#destroyProcess">destroyProcess</a> で強制終了させてください。 </dd>
+<dt><a href="#destroyProcess">void destroyProcess( int processID ) </a></dt>
+<dd>ネイティブアプリケーションのプロセスを、実行途中で強制終了します。 </dd>
+<dt><a href="#setProcessInput">void setProcessInput( int processID, string command ) </a></dt>
+<dd>プロセスに渡す標準入力内容を設定します。入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。例として、順に「1」,「2」,「3」と入力する場合には：setProcessInput(processID, "1" + EOL + "2" + EOL + "3" + EOL);などとします。なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。 </dd>
+<dt><a href="#getProcessOutput">string getProcessOutput( int processID ) </a></dt>
+<dd>コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準出力内容が多いネイティブアプリケーションについては、<a href="#clearProcessOutput">clearProcessOutput</a> で適時バッファをクリアしてください。 </dd>
+<dt><a href="#getProcessError">string getProcessError( int processID ) </a></dt>
+<dd>コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準エラー出力内容が多いネイティブアプリケーションについては、<a href="#clearProcessError">clearProcessError</a> で適時バッファをクリアしてください。 </dd>
+<dt><a href="#clearProcessOutput">void clearProcessOutput( int processID ) </a></dt>
+<dd>プロセスの標準出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 </dd>
+<dt><a href="#clearProcessError">void clearProcessError( int processID ) </a></dt>
+<dd>プロセスの標準エラー出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 </dd>
+<dt><a href="#flushProcessOutput">void flushProcessOutput( int processID ) </a></dt>
+<dd>プロセスの標準出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessOutput に流されます。 </dd>
+<dt><a href="#flushProcessError">void flushProcessError( int processID ) </a></dt>
+<dd>プロセスの標準エラー出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessError に流されます。 </dd>
+<dt><a href="#getProcessExitValue">int getProcessExitValue( int processID ) </a></dt>
+<dd>プロセスの終了ステータスコードを返します。 </dd>
+<dt><a href="#waitForProcess">void waitForProcess( int processID ) </a></dt>
+<dd>プロセスの実行が終了するまで、VCSSL側の実行を待機します。 </dd>
+<dt><a href="#onProcessStart">void onProcessStart(int processID) </a></dt>
+<dd>プロセスが生成された際にコールされます。 </dd>
+<dt><a href="#onProcessEnd">void onProcessEnd(int processID) </a></dt>
+<dd>プロセスが終了した際にコールされます。 </dd>
+<dt><a href="#onProcessOutput">void onProcessOutput(int processID, string output) </a></dt>
+<dd>プロセスが標準出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessOutput">flushProcessOutput</a> 関数を使用してください。 </dd>
+<dt><a href="#onProcessOutput">void onProcessOutput(int processID, string output) </a></dt>
+<dd>プロセスが標準エラー出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessError">flushProcessError</a> 関数を使用してください。 </dd>
+</dl>
+<hr />
+<h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
+<p> - なし - None  -</p>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<p> - なし - None  -</p>
+<hr />
+<h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newProcess"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int newProcess( string command[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。<br />この関数によるプロセスの生成後、<a href="#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。<br />例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：<br />string command[] = { getFilePath("test.exe"), "1", "2", "3" }<br />int processID = newProcess(command);<br />などとします。実行を開始するには、続けて：<br /><a href="#startProcess">startProcess</a>(processID);<br />とします。終了まで待機するには、続けて：<br /><a href="#waitForProcess">waitForProcess</a>(processID);<br />とします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	command[] : オペレーティングシステムに渡すコマンド。一般的な環境では [0] にアプリケーションの絶対パス、[1] 以降に起動時のコマンドライン引数を指定します。なお、絶対パスは <a href="File.html#getFilePath">File.getFilePath</a> で取得できます。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	生成したプロセスに割り振られたプロセスID（識別番号）。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int newProcess( string command ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。<br />この関数によるプロセスの生成後、<a href="#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	command : オペレーティングシステムに渡すコマンド。コマンド入力端末に入力するように、1行にまとめて指定します。ただし環境によっては使用できない場合があります。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	生成したプロセスに割り振られたプロセスID（識別番号）。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="startProcess"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void startProcess( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ネイティブアプリケーションのプロセスを実行開始します。<br />実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。プロセスの実行完了まで、VCSSL側の処理を待機させたい場合は、<a href="#waitForProcess">waitForProcess</a> をコールしてください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="deleteProcess"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void deleteProcess( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ネイティブアプリケーションのプロセスに関するリソースを破棄します。プロセスの実行終了後にコールしてください。<br />ただし、プロセスの実行途中でコールしてはいけません。プロセスを実行途中で破棄するには先に <a href="#destroyProcess">destroyProcess</a> で強制終了させてください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="destroyProcess"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void destroyProcess( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ネイティブアプリケーションのプロセスを、実行途中で強制終了します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setProcessInput"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setProcessInput( int processID, string command ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスに渡す標準入力内容を設定します。<br />入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。<br />例として、順に「1」,「2」,「3」と入力する場合には：<br />setProcessInput(processID, "1" + EOL + "2" + EOL + "3" + EOL);<br />などとします。<br />なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getProcessOutput"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getProcessOutput( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。<br />環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準出力内容が多いネイティブアプリケーションについては、<a href="#clearProcessOutput">clearProcessOutput</a> で適時バッファをクリアしてください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスのバッファされている標準出力内容。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getProcessError"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string getProcessError( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。<br />環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準エラー出力内容が多いネイティブアプリケーションについては、<a href="#clearProcessError">clearProcessError</a> で適時バッファをクリアしてください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスのバッファされている標準エラー出力内容。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="clearProcessOutput"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void clearProcessOutput( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスの標準出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="clearProcessError"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void clearProcessError( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスの標準エラー出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="flushProcessOutput"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void flushProcessOutput( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスの標準出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessOutput に流されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="flushProcessError"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void flushProcessError( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスの標準エラー出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessError に流されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getProcessExitValue"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getProcessExitValue( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスの終了ステータスコードを返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスの終了ステータスコード。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="waitForProcess"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void waitForProcess( int processID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスの実行が終了するまで、VCSSL側の実行を待機します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : 対象プロセスのプロセスID。 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="event" style="page-break-before:always;" >イベントハンドラ - Event Handler</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onProcessStart"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onProcessStart(int processID) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスが生成された際にコールされます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : イベント発生元のプロセスID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onProcessEnd"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onProcessEnd(int processID) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスが終了した際にコールされます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : イベント発生元のプロセスID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onProcessOutput"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onProcessOutput(int processID, string output) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスが標準出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessOutput">flushProcessOutput</a> 関数を使用してください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : イベント発生元のプロセスID <br />processID : 標準出力内容 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onProcessOutput(int processID, string output) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロセスが標準エラー出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessError">flushProcessError</a> 関数を使用してください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	processID : イベント発生元のプロセスID <br />processID : 標準エラー出力内容 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>

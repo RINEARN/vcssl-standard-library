@@ -1,46 +1,48 @@
+coding UTF-8;
+
 /**
  * <p>
- * VCSSL Graphics ���C�u���� �́AVCSSL�ŕ`����������߂̕W�����C�u�����̈�ł��B
+ * VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。
  * </p>
  * 
  * <p>
- * VCSSL�ɂ�����`��֘A�̕W�����C�u�����ɂ́AGraphics�AGraphics2D�AGraphics3D ���C�u������ 3 �����݂��܂��B
+ * VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。
  * <br />
- * ���̒��ŁAGraphics ���C�u�����͕`��p���\�[�X�̊Ǘ��@�\��񋟂��AGraphics2D �y�� Graphics3D ���C�u�����͎��ۂ̕`��@�\��񋟂��܂��B
+ * その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。
  * </p>
  * 
  * <p>
- * �`����s�����߂ɂ́A�C���[�W��o�b�t�@�A�X�g���[���Ȃǂ̃��\�[�X���K�v�ƂȂ�܂��B
+ * 描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。
  * <br />
- * �������́i���炭�����́j����ł́A�����͓Ɨ��ȃI�u�W�F�N�g�Ƃ��Ĉ������������ł����AVCSSL�ł͂�������ɂ܂Ƃ߂āu �O���t�B�b�N�X�f�[�^ �v�Ƃ��Ĉ����܂��B
+ * いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。
  * <br />
- * �܂�VCSSL�ł́A�A�j���[�V�����Ń��A���^�C����3DCG��`�悷�邽�߂̃o�b�t�@�̈���A�摜�t�@�C������ǂݍ��񂾌Œ�I�ȃC���[�W���A��ʂ����Ɂu �O���t�B�b�N�X�f�[�^ �v�Ƃ��Ĉ����܂��B
+ * つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。
  * </p>
  * 
  * <p>
- * Graphics ���C�u�������񋟂���̂́A���́u �O���t�B�b�N�X�f�[�^ �v�̐�����j���A���o�́A�y�я����I�ȉ��H�Ȃǂ̊Ǘ��@�\�ł��B
+ * Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。
  * <br />
- * ��Ƃ��āA�摜�t�@�C���u input.png �v��ǂݍ��݁A���F�̕����𓧖��ɂ��āu output.png �v�ɏo�͂���ɂ́A�ȉ��̂悤�ɂ��܂��B
+ * 例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。
  * <div class="code">
- * int g1 = newGraphics("input.png");  // �摜�t�@�C������O���t�B�b�N�X�f�[�^ g1 �𐶐�
+ * int g1 = newGraphics("input.png");  // 画像ファイルからグラフィックスデータ g1 を生成
  * <br />
- * int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 �̍��F�𓧖��ɂ����O���t�B�b�N�X�f�[�^ g2 �𐶐�
+ * int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 の黒色を透明にしたグラフィックスデータ g2 を生成
  * <br />
- * exportGraphics(g2, "output.png", "PNG");  // g2 ���摜�t�@�C���ɏo��
+ * exportGraphics(g2, "output.png", "PNG");  // g2 を画像ファイルに出力
  * <br />
- * deleteGraphics(g1);  // g1 ��j��
+ * deleteGraphics(g1);  // g1 を破棄
  * <br />
- * deleteGraphics(g2);  // g2 ��j��
+ * deleteGraphics(g2);  // g2 を破棄
  * </div>
  * </p>
  *
  * <p>
- * ���ɂ��A���X�^�f�[�^�i�s�N�Z���z��j�𒼐ڑ��삵�āA�����I�ȉ��H��`��Ȃǂ��s���@�\���񋟂���܂��B
+ * 他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。
  * <br />
- * ��荂�x�ȕ`����s���ɂ́AGraphics2D �y�� Graphics3D ���C�u�����𕹂��Ďg�p���Ă��������B
+ * より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。
  * </p>
  * 
- * @author  ���䕶�G - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -49,9 +51,8 @@
 /*
 # ====================================================================================================
 # 
-# PRAGMA COMPILE    DYNAMIC_REFERRED
-# PRAGMA COMPILE    STATIC_REFERRED
-# PRAGMA RESERVE    NOT_REFERRED
+# PRAGMA COMPILE    REFERRAL
+# PRAGMA RESERVE    ALL
 # 
 # PRAGMA INTERNAL   RINEARN  {
 #     
@@ -74,22 +75,22 @@
 
 
 
-/** �G���[���b�Z�[�W�A�t�@�C����������Ȃ������ꍇ�B */
-private const string ERROR_FILE_NOT_FOUND = "�t�@�C����������܂���: ";
+/** エラーメッセージ、ファイルが見つからなかった場合。 */
+private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
 
-/** �G���[���b�Z�[�W�A�t�@�C���p�X���󕶎��������ꍇ�B */
-private const string ERROR_EMPTY_FILE_PATH = "�t�@�C���̃p�X�ɁA��̕����񂪎w�肳��܂����B";
+/** エラーメッセージ、ファイルパスが空文字だった場合。 */
+private const string ERROR_EMPTY_FILE_PATH = "ファイルのパスに、空の文字列が指定されました。";
 
-/** �G���[���b�Z�[�W�A�A�N�Z�X�Ώۂ̃t�@�C�����f�B���N�g���������ꍇ�B */
-private const string ERROR_FILE_IS_DIRECTORY = "���̃t�@�C���̓f�B���N�g���ł���A�ǂݍ��݂⏑�����݂͍s���܂���F ";
+/** エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 */
+private const string ERROR_FILE_IS_DIRECTORY = "このファイルはディレクトリであり、読み込みや書き込みは行えません： ";
 
 
 
 /**
- * �t�@�C�������ʂɓǂݏ����\�Ȃ��̂��m�F���܂��B
- * �������A���݂��Ȃ��t�@�C����V�K��������ꍇ�����邽�߁A���݊m�F�͍s���܂���B
+ * ファイルが普通に読み書き可能なものか確認します。
+ * ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。
  * 
- * @param filePath �t�@�C�����܂��̓p�X
+ * @param filePath ファイル名またはパス
  */
 private void checkFilePath(string filePath) {
 	if (filePath == "") {
@@ -103,11 +104,11 @@ private void checkFilePath(string filePath) {
 
 
 /**
- * �O���t�B�b�N�X�f�[�^�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�O���t�B�b�N�X�f�[�^ID�v������U���ĕԂ��܂��B
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
- * ���̊֐��Ő��������O���t�B�b�N�X�f�[�^�́A�T�C�Y��0�s�N�Z���̃C���[�W��ێ����܂��B
+ * この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。
  *
- * @return ���������O���t�B�b�N�X�f�[�^�Ɋ���U��ꂽ�O���t�B�b�N�X�f�[�^ID�i���ʔԍ��j�B
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
 int newGraphics(){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
@@ -115,12 +116,12 @@ int newGraphics(){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�O���t�B�b�N�X�f�[�^ID�v������U���ĕԂ��܂��B
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
- * ���̊֐��Ő��������O���t�B�b�N�X�f�[�^�́A�摜�t�@�C������ǂݍ��񂾃C���[�W�����炩���ߕ`�����܂�Ă��܂��B
+ * この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。
  *
- * @param filePath �摜�t�@�C���̖��̂܂��̓p�X�B
- * @return ���������O���t�B�b�N�X�f�[�^�Ɋ���U��ꂽ�O���t�B�b�N�X�f�[�^ID�i���ʔԍ��j�B
+ * @param filePath 画像ファイルの名称またはパス。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
 int newGraphics( string filePath ){
   checkFilePath(filePath);
@@ -135,15 +136,15 @@ int newGraphics( string filePath ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�O���t�B�b�N�X�f�[�^ID�v������U���ĕԂ��܂��B
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
- * ���̊֐��Ő��������O���t�B�b�N�X�f�[�^�́A�s�N�Z���z�񂩂�ǂݍ��񂾃C���[�W�����炩���ߕ`�����܂�Ă��܂��B
+ * この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
  *
- * @param red[][] �s�N�Z���̐ԐF�����i[Y][X]�A0 ~ 255�j�B
- * @param green[][] �s�N�Z���̗ΐF�����i[Y][X]�A0 ~ 255�j�B
- * @param blue[][] �s�N�Z���̐F�����i[Y][X]�A0 ~ 255�j�B
- * @param alpha[][] �s�N�Z���̃��l�����i[Y][X]�A0 ~ 255�j�B
- * @return ���������O���t�B�b�N�X�f�[�^�Ɋ���U��ꂽ�O���t�B�b�N�X�f�[�^ID�i���ʔԍ��j�B
+ * @param red[][] ピクセルの赤色成分（[Y][X]、0 ~ 255）。
+ * @param green[][] ピクセルの緑色成分（[Y][X]、0 ~ 255）。
+ * @param blue[][] ピクセルの青色成分（[Y][X]、0 ~ 255）。
+ * @param alpha[][] ピクセルのα値成分（[Y][X]、0 ~ 255）。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
 int newGraphics( int red[][], int green[][], int blue[][], int alpha[][] ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
@@ -157,12 +158,12 @@ int newGraphics( int red[][], int green[][], int blue[][], int alpha[][] ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�O���t�B�b�N�X�f�[�^ID�v������U���ĕԂ��܂��B
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
- * ���̊֐��Ő��������O���t�B�b�N�X�f�[�^�́A�s�N�Z���z�񂩂�ǂݍ��񂾃C���[�W�����炩���ߕ`�����܂�Ă��܂��B
+ * この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
  *
- * @param rgba[][][] �s�N�Z���̐F�����i[Y][X][�F�����C���f�b�N�X]�A�F�����C���f�b�N�X�́u0=�� / 1=�� / 2=�� / 3=���v�A�l�͈̔͂�0 ~ 255�j�B
- * @return ���������O���t�B�b�N�X�f�[�^�Ɋ���U��ꂽ�O���t�B�b�N�X�f�[�^ID�i���ʔԍ��j�B
+ * @param rgba[][][] ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
 int newGraphics( int rgba[][][] ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
@@ -176,20 +177,20 @@ int newGraphics( int rgba[][][] ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�O���t�B�b�N�X�f�[�^ID�v������U���ĕԂ��܂��B
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
- * ���̊֐��Ő��������O���t�B�b�N�X�f�[�^�́A�ʂ̃O���t�B�b�N�X�f�[�^�̓���F���A�ʂ̐F�ɕϊ������C���[�W�����炩���ߕ`�����܂�Ă��܂��B
+ * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
  *
- * @param id �ϊ����̃C���[�W��ێ�����O���t�B�b�N�X�f�[�^�̃O���t�B�b�N�X�f�[�^ID�B
- * @param fromRed �ϊ��Ώۂ̐F�̐ԐF�����i0 ~ 255�j�B
- * @param fromGreen �ϊ��Ώۂ̐F�̐F�����i0 ~ 255�j�B
- * @param fromBlue �ϊ��Ώۂ̐F�̗ΐF�����i0 ~ 255�j�B
- * @param fromAlpha �ϊ��Ώۂ̐F�̃��l�����i0 ~ 255�j�B
- * @param toRed �ϊ���̐F�̐ԐF�����i0 ~ 255�j�B
- * @param toGreen �ϊ���̐F�̐F�����i0 ~ 255�j�B
- * @param toBlue �ϊ���̐F�̗ΐF�����i0 ~ 255�j�B
- * @param toAlpha �ϊ���̐F�̃��l�����i0 ~ 255�j�B
- * @return ���������O���t�B�b�N�X�f�[�^�Ɋ���U��ꂽ�O���t�B�b�N�X�f�[�^ID�i���ʔԍ��j�B
+ * @param id 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。
+ * @param fromRed 変換対象の色の赤色成分（0 ~ 255）。
+ * @param fromGreen 変換対象の色の青色成分（0 ~ 255）。
+ * @param fromBlue 変換対象の色の緑色成分（0 ~ 255）。
+ * @param fromAlpha 変換対象の色のα値成分（0 ~ 255）。
+ * @param toRed 変換後の色の赤色成分（0 ~ 255）。
+ * @param toGreen 変換後の色の青色成分（0 ~ 255）。
+ * @param toBlue 変換後の色の緑色成分（0 ~ 255）。
+ * @param toAlpha 変換後の色のα値成分（0 ~ 255）。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
 int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ){
 
@@ -223,14 +224,14 @@ int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha
 
 
 /**
- * �O���t�B�b�N�X�f�[�^�𐶐����A����ɌŗL�̎��ʔԍ��ł���u�O���t�B�b�N�X�f�[�^ID�v������U���ĕԂ��܂��B
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
- * ���̊֐��Ő��������O���t�B�b�N�X�f�[�^�́A�ʂ̃O���t�B�b�N�X�f�[�^�̓���F���A�ʂ̐F�ɕϊ������C���[�W�����炩���ߕ`�����܂�Ă��܂��B
+ * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
 
- * @param id �ϊ����̃C���[�W��ێ�����O���t�B�b�N�X�f�[�^��ID�B
- * @param fromColor �ϊ��Ώۂ̐F�̐������i�[����z��B
- * @param toColor �ϊ���̐F�̐������i�[����z��B
- * @return ���������O���t�B�b�N�X�f�[�^�Ɋ���U��ꂽ�O���t�B�b�N�X�f�[�^ID�i���ʔԍ��j�B
+ * @param id 変換元のイメージを保持するグラフィックスデータのID。
+ * @param fromColor 変換対象の色の成分を格納する配列。
+ * @param toColor 変換後の色の成分を格納する配列。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
 int newGraphics( int id, int fromColor[], int toColor[] ){
 	int id = newGraphics( id, fromColor[0], fromColor[1], fromColor[2], fromColor[3], toColor[0], toColor[1], toColor[2], toColor[3] );
@@ -239,9 +240,9 @@ int newGraphics( int id, int fromColor[], int toColor[] ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^��j�����܂��B
+ * グラフィックスデータを破棄します。
  *
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
+ * @param id 対象グラフィックスデータのID。
  */
 void deleteGraphics( int id ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( id );
@@ -249,10 +250,10 @@ void deleteGraphics( int id ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^���ێ�����C���[�W�̕��i�s�N�Z�����j��Ԃ��܂��B
+ * グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。
  *
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @param �ΏۃO���t�B�b�N�X�f�[�^�̕��i�s�N�Z�����j�B
+ * @param id 対象グラフィックスデータのID。
+ * @param 対象グラフィックスデータの幅（ピクセル数）。
  */
 int getGraphicsWidth( int id ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -260,10 +261,10 @@ int getGraphicsWidth( int id ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^���ێ�����C���[�W�̍����i�s�N�Z�����j��Ԃ��܂��B
+ * グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。
  *
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @param �ΏۃO���t�B�b�N�X�f�[�^�̍����i�s�N�Z�����j�B
+ * @param id 対象グラフィックスデータのID。
+ * @param 対象グラフィックスデータの高さ（ピクセル数）。
  */
 int getGraphicsHeight( int id ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
@@ -271,11 +272,11 @@ int getGraphicsHeight( int id ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^���ێ�����C���[�W���A�摜�t�@�C���ɕϊ����ďo�͂��܂��B
+ * グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
  *
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @param name �o�̓t�@�C�����B
- * @param format �o�̓t�@�C���̌`���B"JPEG" �܂��� "PNG"�A�������� "BMP" ���w�肵�܂��B
+ * @param id 対象グラフィックスデータのID。
+ * @param name 出力ファイル名。
+ * @param format 出力ファイルの形式。"JPEG" または "PNG"、もしくは "BMP" を指定します。
  */
 void exportGraphics( int id, string name, string format ){
   checkFilePath(name);
@@ -284,12 +285,12 @@ void exportGraphics( int id, string name, string format ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^���ێ�����C���[�W���A�摜�t�@�C���ɕϊ����ďo�͂��܂��B
+ * グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
  *
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @param name �o�̓t�@�C�����B
- * @param format �o�̓t�@�C���̌`���B"JPEG" �܂��� "PNG"�A�������� "BMP" ���w�肵�܂��B
- * @param quality �掿�i0.0  ~  100.0�j�BJPEG �̏ꍇ�ɗL���ł��B�傫���قǍ��掿�ł��B
+ * @param id 対象グラフィックスデータのID。
+ * @param name 出力ファイル名。
+ * @param format 出力ファイルの形式。"JPEG" または "PNG"、もしくは "BMP" を指定します。
+ * @param quality 画質（0.0  ~  100.0）。JPEG の場合に有効です。大きいほど高画質です。
  */
 void exportGraphics( int id, string name, string format, double quality ){
   checkFilePath(name);
@@ -298,13 +299,13 @@ void exportGraphics( int id, string name, string format, double quality ){
 
 
 /**
- * �O���t�B�b�N�X�f�[�^�̕ێ�����C���[�W���A�w�肳�ꂽ�s�N�Z���z��ŕ`�������܂��B
+ * グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
  *
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @param red[][] �s�N�Z���̐ԐF�����i[Y][X]�A0 ~ 255�j�B
- * @param green[][] �s�N�Z���̗ΐF�����i[Y][X]�A0 ~ 255�j�B
- * @param blue[][] �s�N�Z���̐F�����i[Y][X]�A0 ~ 255�j�B
- * @param alpha[][] �s�N�Z���̃��l�����i[Y][X]�A0 ~ 255�j�B
+ * @param id 対象グラフィックスデータのID。
+ * @param red[][] ピクセルの赤色成分（[Y][X]、0 ~ 255）。
+ * @param green[][] ピクセルの緑色成分（[Y][X]、0 ~ 255）。
+ * @param blue[][] ピクセルの青色成分（[Y][X]、0 ~ 255）。
+ * @param alpha[][] ピクセルのα値成分（[Y][X]、0 ~ 255）。
  */
 void setGraphicsPixel( int id, int red[][], int green[][], int blue[][], int alpha[][] ){
   int width = length(red, 1);
@@ -315,10 +316,10 @@ void setGraphicsPixel( int id, int red[][], int green[][], int blue[][], int alp
 }
 
 /**
- * �O���t�B�b�N�X�f�[�^�̕ێ�����C���[�W���A�w�肳�ꂽ�s�N�Z���z��ŕ`�������܂��B
+ * グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
  *
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @param rgba[][][] �s�N�Z���̐F�����i[Y][X][�F�����C���f�b�N�X]�A�F�����C���f�b�N�X�́u0=�� / 1=�� / 2=�� / 3=���v�A�l�͈̔͂�0 ~ 255�j�B
+ * @param id 対象グラフィックスデータのID。
+ * @param rgba[][][] ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
  */
 void setGraphicsPixel( int id, int rgba[][][] ){
   int height = length( rgba, 0 );
@@ -329,10 +330,10 @@ void setGraphicsPixel( int id, int rgba[][][] ){
 }
 
 /**
- * �C���[�W�̑S�s�N�Z���F�������i�[����z���Ԃ��܂��B
+ * イメージの全ピクセル色成分を格納する配列を返します。
  * 
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @return �s�N�Z���̐F�����i[Y][X][�F�����C���f�b�N�X]�A�F�����C���f�b�N�X�́u0=�� / 1=�� / 2=�� / 3=���v�A�l�͈̔͂�0 ~ 255�j�B
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
  */
 int[][][] getGraphicsPixel( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -348,10 +349,10 @@ int[][][] getGraphicsPixel( int id ){
 
 
 /**
- * �C���[�W�̑S�s�N�Z���ɂ��āA�ԐF�����݂̂��i�[����z���Ԃ��܂��B
+ * イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。
  * 
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @return �s�N�Z���̐ԐF�����i[Y][X]�A�l�͈̔͂�0 ~ 255�j�B
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの赤色成分（[Y][X]、値の範囲は0 ~ 255）。
  */
 int[][] getGraphicsPixelRed( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -367,10 +368,10 @@ int[][] getGraphicsPixelRed( int id ){
 
 
 /**
- * �C���[�W�̑S�s�N�Z���ɂ��āA�ΐF�����݂̂��i�[����z���Ԃ��܂��B
+ * イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。
  * 
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @return �s�N�Z���̗ΐF�����i[Y][X]�A�l�͈̔͂�0 ~ 255�j�B
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの緑色成分（[Y][X]、値の範囲は0 ~ 255）。
  */
 int[][] getGraphicsPixelGreen( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -386,10 +387,10 @@ int[][] getGraphicsPixelGreen( int id ){
 
 
 /**
- * �C���[�W�̑S�s�N�Z���ɂ��āA�F�����݂̂��i�[����z���Ԃ��܂��B
+ * イメージの全ピクセルについて、青色成分のみを格納する配列を返します。
  * 
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @return �s�N�Z���̐F�����i[Y][X]�A�l�͈̔͂�0 ~ 255�j�B
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルの青色成分（[Y][X]、値の範囲は0 ~ 255）。
  */
 int[][] getGraphicsPixelBlue( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -405,10 +406,10 @@ int[][] getGraphicsPixelBlue( int id ){
 
 
 /**
- * �C���[�W�̑S�s�N�Z���ɂ��āA���l�����݂̂��i�[����z���Ԃ��܂��B
+ * イメージの全ピクセルについて、α値成分のみを格納する配列を返します。
  * 
- * @param id �ΏۃO���t�B�b�N�X�f�[�^��ID�B
- * @return �s�N�Z���̃��l�����i[Y][X]�A�l�͈̔͂�0 ~ 255�j�B
+ * @param id 対象グラフィックスデータのID。
+ * @return ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。
  */
 int[][] getGraphicsPixelAlpha( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );

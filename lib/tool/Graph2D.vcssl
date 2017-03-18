@@ -1,28 +1,30 @@
+coding UTF-8;
+
 /**
  * <p>
- * tool.Graph2D API���C�u�����i�ȉ��AGraph2D���C�u�����j�́A2�����O���t�\�t�g�E�F�A�𐧌䂷�邽�߂̃��C�u�����ł��B
+ * tool.Graph2D APIライブラリ（以下、Graph2Dライブラリ）は、2次元グラフソフトウェアを制御するためのライブラリです。
  * </p>
  * 
  * <p>
- * Graph2D ���C�u�����͊g�����C�u�����ł���AVCSSL�̌���d�l�ɂ�����W�����C�u�����ɂ͊܂܂�Ă��܂���B�]���āA�S�Ă�VCSSL�����n�ɂ����āA�K������Graph2D ���C�u�����̎������T�|�[�g�����킯�ł͂���܂���B
+ * Graph2D ライブラリは拡張ライブラリであり、VCSSLの言語仕様における標準ライブラリには含まれていません。従って、全てのVCSSL処理系において、必ずしもGraph2D ライブラリの実装がサポートされるわけではありません。
  * </p>
  * 
  * <p>
- * Graph2D ���C�u�����̎d�l�́A�L����ʓI��2�����O���t�\�t�g�E�F�A��VCSSL���琧�䂷�鎖��z�肵�Ē�`����Ă���A�����2�����O���t�\�t�g�E�F�A��O��Ƃ������̂ł͂���܂���B Graph2D ���C�u�����̎����ɂ����āA����Ώۂɂǂ̂悤��2�����O���t�\�t�g�E�F�A���̗p����邩�͏����n�ˑ��ł���A�����n�̊J�����i�x���_�[�j�A�o�[�W�����A�܂��̓O���t�\�t�g�E�F�A�Ƃ̒ʐM�@�\��񋟂���v���O�C���ȂǂɈˑ����܂��B���̂悤�Ȏ�����邽�߁AGraph2D ���C�u�������񋟂���e��֐����A�قȂ鏈���n�Ɋւ��ẮA�����ɓ���̋��������҂��ׂ��ł͂���܂���B
+ * Graph2D ライブラリの仕様は、広く一般的な2次元グラフソフトウェアをVCSSLから制御する事を想定して定義されており、特定の2次元グラフソフトウェアを前提としたものではありません。 Graph2D ライブラリの実装において、制御対象にどのような2次元グラフソフトウェアが採用されるかは処理系依存であり、処理系の開発元（ベンダー）、バージョン、またはグラフソフトウェアとの通信機能を提供するプラグインなどに依存します。このような事情があるため、Graph2D ライブラリが提供する各種関数も、異なる処理系に関しては、厳密に同一の挙動を期待すべきではありません。
  * </p>
  * 
  * <p>
- * �܂��A����̏����n�ł����Ă��AGraph2D ���C�u�����͕W�����C�u�����ł͖������߁A���̎����ɂ����āA�P�v�I�ɓ��l�̋������ۏ؂������̂ł͂���܂���BGraph2D ���C�u�����̎����́A�����܂ŏ����n���Ǝ��ɃT�|�[�g����g���@�\�ł���Ƃ����_�ɗ��ӂ��Ă����K�v������܂��B�Ⴆ�΁A�O���t�\�t�g�E�F�A�̑啝�ȃA�b�v�f�[�g���s����ƁA ����ɔ����AGraph2D ���C�u�����̋����������ɕω����Ă��܂��P�[�X�Ȃǂ��l�����܂��B
+ * また、同一の処理系であっても、Graph2D ライブラリは標準ライブラリでは無いため、その実装において、恒久的に同様の挙動が保証されるものではありません。Graph2D ライブラリの実装は、あくまで処理系が独自にサポートする拡張機能であるという点に留意しておく必要があります。例えば、グラフソフトウェアの大幅なアップデートが行われると、 それに伴い、Graph2D ライブラリの挙動も微妙に変化してしまうケースなどが考えられます。
  * </p>
  * 
  * <p>
- * RINEARN VCSSL�����^�C���A�y�т���𓋍ڂ���VCSSL�Ή��\�t�g�E�F�A�i���j�A���v���Z�b�T�[�Ȃǁj�ł́A
- * Graph2D ���C�u�������T�|�[�g���Ă���A���̎����ɂ͉Ȋw�Z�p����p�O���t�\�t�g�E�F�A�u ���j�A���O���t2D �v���̗p���Ă��܂��B
- * ���j�A���O���t2D�{�́i RinearnGraph2D.jar �j��VCSSL�����^�C���̔z�z�p�b�P�[�W���ɓ�������Ă��邽�߁A
- * �ʓr������p�ӂ���K�v�͂���܂���B
+ * RINEARN VCSSLランタイム、及びそれを搭載するVCSSL対応ソフトウェア（リニアンプロセッサーなど）では、
+ * Graph2D ライブラリをサポートしており、その実装には科学技術分野用グラフソフトウェア「 リニアングラフ2D 」を採用しています。
+ * リニアングラフ2D本体（ RinearnGraph2D.jar ）はVCSSLランタイムの配布パッケージ内に同梱されているため、
+ * 別途何かを用意する必要はありません。
  * </p>
  * 
- * @author  ���䕶�G - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -31,9 +33,8 @@
 /*
 # ====================================================================================================
 # 
-# PRAGMA COMPILE    DYNAMIC_REFERRED
-# PRAGMA COMPILE    STATIC_REFERRED
-# PRAGMA RESERVE    NOT_REFERRED
+# PRAGMA COMPILE    REFERRAL
+# PRAGMA RESERVE    ALL
 # 
 # PRAGMA INTERNAL   RINEARN  {
 #     
@@ -56,28 +57,28 @@
 
 
 
-/** �G���[���b�Z�[�W�A�t�@�C����������Ȃ������ꍇ�B */
-private const string ERROR_FILE_NOT_FOUND = "�t�@�C����������܂���: ";
+/** エラーメッセージ、ファイルが見つからなかった場合。 */
+private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
 
 
 /**
- * 2�����O���t���f�t�H���g�̃T�C�Y�Ő������A����ɌŗL�̎��ʔԍ� ( �O���tID ) ������U���ĕԂ��܂��B
+ * 2次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。
  * 
- * @return ���������O���t��ID
+ * @return 生成したグラフのID
  */
 int newGraph2D(){
   return SYSTEM_PROCESS_DRIVER_GRAPH2D_newGraph2D();
 }
 
 /**
- * 2�����O���t���w�肳�ꂽ�T�C�Y�Ő������A����ɌŗL�̎��ʔԍ� ( �O���tID ) ������U���ĕԂ��܂��B
+ * 2次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。
  * 
- * @param x �O���t�E�B���h�E���㒸�_��X���W
- * @param y �O���t�E�B���h�E���㒸�_��Y���W
- * @param width �O���t�E�B���h�E�̕�
- * @param height �O���t�E�B���h�E�̍���
- * @param title �O���t�E�B���h�E�^�C�g��
- * @return ���������O���t��ID
+ * @param x グラフウィンドウ左上頂点のX座標
+ * @param y グラフウィンドウ左上頂点のY座標
+ * @param width グラフウィンドウの幅
+ * @param height グラフウィンドウの高さ
+ * @param title グラフウィンドウタイトル
+ * @return 生成したグラフのID
  */
 int newGraph2D( int x, int y, int width, int height, string title ){
   int graphID = SYSTEM_PROCESS_DRIVER_GRAPH2D_newGraph2D();
@@ -88,9 +89,9 @@ int newGraph2D( int x, int y, int width, int height, string title ){
 }
 
 /**
- * �����n�ŋN���E�m�ۂ���Ă�����ʂȃO���t������΁A���̃O���tID���擾���܂��B������ΐV�K�������܂��B
+ * 処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。
  * 
- * @return �擾�܂��͐��������O���tID
+ * @return 取得または生成したグラフID
  */
 int getGraph2D(){
   return SYSTEM_PROCESS_DRIVER_GRAPH2D_getGraph2DSystemDefaultInstance();
@@ -99,29 +100,29 @@ int getGraph2D(){
 
 
 /**
- * �O���t��j�����܂��B
+ * グラフを破棄します。
  * 
- * @param graphID �ΏۃO���t��ID
+ * @param graphID 対象グラフのID
  */
 void deleteGraph2D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_deleteGraph2D( graphID );
 }
 
 /**
- * �O���t�̓��e���N���A���܂��B
+ * グラフの内容をクリアします。
  * 
- * @param graphID �ΏۃO���t��ID
+ * @param graphID 対象グラフのID
  */
 void clearGraph2D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_clearGraph2D( graphID );
 }
 
 /**
- * �O���t�̕ێ����Ă���`����e���AGraphics���C�u�����݊��̃O���t�B�b�N�X�f�[�^�ɕϊ����܂��B
- * �ϊ����ꂽ�O���t�B�b�N�X�f�[�^�́A2D/3D�����_���\�Ȃǂŉ��H�ł��܂��B
+ * グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。
+ * 変換されたグラフィックスデータは、2D/3Dレンダラ―などで加工できます。
  * 
- * @param graphID �ΏۃO���t��ID
- * @return �O���t�B�b�N�X�f�[�^ID
+ * @param graphID 対象グラフのID
+ * @return グラフィックスデータID
  */
 int getGraph2DGraphics( int graphID ){
   return SYSTEM_PROCESS_DRIVER_GRAPH2D_newGraph2DGraphics( graphID );
@@ -129,40 +130,40 @@ int getGraph2DGraphics( int graphID ){
 
 
 /**
- * �O���t�E�B���h�E�̈ʒu��ݒ肵�܂��B
+ * グラフウィンドウの位置を設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param x �O���t�E�B���h�E���㒸�_��X���W
- * @param y �O���t�E�B���h�E���㒸�_��Y���W
+ * @param graphID 対象グラフのID
+ * @param x グラフウィンドウ左上頂点のX座標
+ * @param y グラフウィンドウ左上頂点のY座標
  */
 void setGraph2DLocation( int graphID, int x, int y ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DLocation( graphID, x, y );
 }
 
 /**
- * �O���t�E�B���h�E�̑傫����ݒ肵�܂��B
+ * グラフウィンドウの大きさを設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param width �O���t�E�B���h�E�̕�
- * @param height �O���t�E�B���h�E����
+ * @param graphID 対象グラフのID
+ * @param width グラフウィンドウの幅
+ * @param height グラフウィンドウ高さ
  */
 void setGraph2DSize( int graphID, int width, int height ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DSize( graphID, width, height );
 }
 
 /**
- * �O���t�E�B���h�E��s�������܂��B
+ * グラフウィンドウを不可視化します。
  * 
- * @param graphID �ΏۃO���t��ID
+ * @param graphID 対象グラフのID
  */
 void hideGraph2D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_hideGraph2D( graphID );
 }
 
 /**
- * �O���t�E�B���h�E���������܂��B
+ * グラフウィンドウを可視化します。
  * 
- * @param graphID �ΏۃO���t��ID
+ * @param graphID 対象グラフのID
  */
 void showGraph2D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_showGraph2D( graphID );
@@ -171,10 +172,10 @@ void showGraph2D( int graphID ){
 
 
 /**
- * �t�@�C����ǂݍ��݁A�O���t�Ƀv���b�g���܂��B
+ * ファイルを読み込み、グラフにプロットします。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param filePath �v���b�g����t�@�C���̃t�@�C�����܂��̓p�X
+ * @param graphID 対象グラフのID
+ * @param filePath プロットするファイルのファイル名またはパス
  */
 void setGraph2DFile( int graphID, string filePath ){
   bool exist = ___exists(filePath);
@@ -187,10 +188,10 @@ void setGraph2DFile( int graphID, string filePath ){
 }
 
 /**
- * �����̃t�@�C����ǂݍ��݁A�O���t�Ƀv���b�g���܂��B
+ * 複数のファイルを読み込み、グラフにプロットします。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param file �v���b�g����t�@�C���̃t�@�C�����܂��̓p�X
+ * @param graphID 対象グラフのID
+ * @param file プロットするファイルのファイル名またはパス
  */
 void setGraph2DFile( int graphID, string file[] ){
   int n = length(file);
@@ -204,10 +205,10 @@ void setGraph2DFile( int graphID, string file[] ){
 
 
 /**
- * �t�@�C���̓��e�Ɠ��������ŋL�ڂ��ꂽ�e�L�X�g��ǂݍ��݁A�O���t�Ƀv���b�g���܂��B
+ * ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param data �t�@�C���̓��e�Ɠ��������ŋL�ڂ��ꂽ�e�L�X�g
+ * @param graphID 対象グラフのID
+ * @param data ファイルの内容と同じ書式で記載されたテキスト
  */
 void setGraph2DData( int graphID, string data ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DDataString( graphID, data );
@@ -215,44 +216,44 @@ void setGraph2DData( int graphID, string data ){
 
 
 /**
- * ���W�l���i�[���� float �^�z���ǂݍ��݁A�O���t�Ƀv���b�g���܂��B
+ * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param dataX X���W���i�[����z��i [ �_�C���f�b�N�X ] �j
- * @param dataY Y���W���i�[����z��i [ �_�C���f�b�N�X ] �j
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 点インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 点インデックス ] ）
  */
 void setGraph2DData( int graphID, float dataX[], float dataY[] ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DData( graphID, dataX, dataY );
 }
 
 /**
- * ���W�l���i�[���� float �^�z���ǂݍ��݁A�O���t�Ƀv���b�g���܂��B
+ * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param dataX X���W���i�[����z��i [ �n��C���f�b�N�X ][ �_�C���f�b�N�X ] �j
- * @param dataY Y���W���i�[����z��i [ �n��C���f�b�N�X ][ �_�C���f�b�N�X ] �j
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ）
  */
 void setGraph2DData( int graphID, float dataX[][], float dataY[][] ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DData( graphID, dataX, dataY );
 }
 
 /**
- * ���W�l���i�[���� float �^�z���ǂݍ��݁A�O���t�ɒǋL�v���b�g���܂��B
+ * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param dataX X���W���i�[����z��i [ �_�C���f�b�N�X ] �j
- * @param dataY Y���W���i�[����z��i [ �_�C���f�b�N�X ] �j
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 点インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 点インデックス ] ）
  */
 void addGraph2DData( int graphID, float dataX[], float dataY[] ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_addGraph2DData( graphID, dataX, dataY );
 }
 
 /**
- * ���W�l���i�[���� float �^�z���ǂݍ��݁A�O���t�ɒǋL�v���b�g���܂��B
+ * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param dataX X���W���i�[����z��i [ �n��C���f�b�N�X ][ �_�C���f�b�N�X ] �j
- * @param dataY Y���W���i�[����z��i [ �n��C���f�b�N�X ][ �_�C���f�b�N�X ] �j
+ * @param graphID 対象グラフのID
+ * @param dataX X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ）
+ * @param dataY Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ）
  */
 void addGraph2DData( int graphID, float dataX[][], float dataY[][] ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_addGraph2DData( graphID, dataX, dataY );
@@ -262,10 +263,10 @@ void addGraph2DData( int graphID, float dataX[][], float dataY[][] ){
 
 
 /**
- * �ݒ�t�@�C����ǂݍ��݁A�O���t�Ɏ����Őݒ���s���܂��B
+ * 設定ファイルを読み込み、グラフに自動で設定を行います。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param file �ݒ�t�@�C���̃t�@�C�����܂��̓p�X
+ * @param graphID 対象グラフのID
+ * @param file 設定ファイルのファイル名またはパス
  */
 void setGraph2DConfigurationFile( int graphID, string file ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DConfigurationFile( graphID, file );
@@ -280,35 +281,35 @@ void setGraph2DScaleColor( int graphID, int red, int green, int blue, int alpha 
 }
 
 /**
- * �v���b�g�͈͂�ݒ肵�܂��B
+ * プロット範囲を設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param xMin X���̍ŏ��l
- * @param xMax X���̍ő�l
- * @param yMin Y���̍ŏ��l
- * @param yMax Y���̍ő�l
+ * @param graphID 対象グラフのID
+ * @param xMin X軸の最小値
+ * @param xMax X軸の最大値
+ * @param yMin Y軸の最小値
+ * @param yMax Y軸の最大値
  */
 void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DRange( graphID, xMin, xMax, yMin, yMax );
 }
 
 /**
- * X���̃v���b�g�͈͂�ݒ肵�܂��B
+ * X軸のプロット範囲を設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param xMin X���̍ŏ��l
- * @param xMax X���̍ő�l
+ * @param graphID 対象グラフのID
+ * @param xMin X軸の最小値
+ * @param xMax X軸の最大値
  */
 void setGraph2DRangeX( int graphID, double xMin, double xMax ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DRangeX( graphID, xMin, xMax );
 }
 
 /**
- * Y���̃v���b�g�͈͂�ݒ肵�܂��B
+ * Y軸のプロット範囲を設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param yMin Y���̍ŏ��l
- * @param yMax Y���̍ő�l
+ * @param graphID 対象グラフのID
+ * @param yMin Y軸の最小値
+ * @param yMax Y軸の最大値
  */
 void setGraph2DRangeY( int graphID, double yMin, double yMax ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DRangeY( graphID, yMin, yMax );
@@ -316,11 +317,11 @@ void setGraph2DRangeY( int graphID, double yMin, double yMax ){
 
 
 /**
- * �v���b�g�͈͂̎��������@�\��L�����܂��͖��������܂��B
+ * プロット範囲の自動調整機能を有効化または無効化します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param autoX X�������̎��������@�\��L���ɂ���Ȃ�true�A�����ɂ���Ȃ�false
- * @param autoY Y�������̎��������@�\��L���ɂ���Ȃ�true�A�����ɂ���Ȃ�false
+ * @param graphID 対象グラフのID
+ * @param autoX X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
+ * @param autoY Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
  */
 void setGraph2DAutoRange( int graphID, bool autoX, bool autoY ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DAutoRange( graphID, autoX, autoY );
@@ -328,40 +329,40 @@ void setGraph2DAutoRange( int graphID, bool autoX, bool autoY ){
 
 
 /**
- * �O���t�̃I�v�V�������ڂ�ݒ肵�܂��B���ږ��͏����n�Ɉˑ����܂��B��\�I�ȃI�v�V�������ږ��͈ȉ��̒ʂ�ł��F
+ * グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：
  * <dl>
  *   <dt>WITH_POINTS</dt>
- *     <dd>�_�v���b�g</dd>
+ *     <dd>点プロット</dd>
  *   <dt>WITH_LINES</dt>
- *     <dd>���v���b�g</dd>
+ *     <dd>線プロット</dd>
  *   <dt>WITH_DOTS</dt>
- *     <dd>�h�b�g�v���b�g</dd>
+ *     <dd>ドットプロット</dd>
  *   <dt>WITH_GRID_LINE</dt>
- *     <dd>�O���b�h���C���`��</dd>
+ *     <dd>グリッドライン描画</dd>
  *   <dt>LOG_X</dt>
- *     <dd>X�ΐ����\��</dd>
+ *     <dd>X対数軸表示</dd>
  *   <dt>LOG_Y</dt>
- *     <dd>Y�ΐ����\��</dd>
+ *     <dd>Y対数軸表示</dd>
  *   <dt>REVERSE_X</dt>
- *     <dd>X�����]�\��</dd>
+ *     <dd>X軸反転表示</dd>
  *   <dt>REVERSE_Y</dt>
- *     <dd>Y�����]�\��</dd>
+ *     <dd>Y軸反転表示</dd>
  * </dl>
  * 
- * @param graphID �ΏۃO���t��ID
- * @param option �I�v�V�������ږ�
- * @param value �I�v�V������L���ɂ���Ȃ�true�A�����ɂ���ɂ�false
+ * @param graphID 対象グラフのID
+ * @param option オプション項目名
+ * @param value オプションを有効にするならtrue、無効にするにはfalse
  */
 void setGraph2DOption( int graphID, string option, bool value ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DOption( graphID, option, value );
 }
 
 /**
- * �O���t�̃��j���[���ڂ�ݒ肵�܂��B���ږ��͏����n�Ɉˑ����܂��B
+ * グラフのメニュー項目を設定します。項目名は処理系に依存します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param option ���j���[���ږ�
- * @param value ���j���[���ڂ�L���ɂ���Ȃ�true�A�����ɂ���ɂ�false
+ * @param graphID 対象グラフのID
+ * @param option メニュー項目名
+ * @param value メニュー項目を有効にするならtrue、無効にするにはfalse
  */
 void setGraph2DMenu( int graphID, string menu, string value ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DMenu( graphID, menu, value );
@@ -369,50 +370,50 @@ void setGraph2DMenu( int graphID, string menu, string value ){
 
 
 /**
- * �O���t�̃A�j���[�V������L�����܂��͖��������܂��B���p�\�ȃA�j���[�V�������[�h�͏����n�Ɉˑ����܂��B��\�I�ȃA�j���[�V�������[�h�͈ȉ��̒ʂ�ł��F
+ * グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：
  *  <dl>
  *   <dt>TRACE</dt>
- *     <dd>�_���A�j���[�V�������A�O�Ղ��c��</dd>
+ *     <dd>点をアニメーションし、軌跡を残す</dd>
  *   <dt>INDEX</dt>
- *     <dd>�_���A�j���[�V��������</dd>
+ *     <dd>点をアニメーションする</dd>
  *   <dt>INDEX-SERIES</dt>
- *     <dd>�n����A�j���[�V��������</dd>
+ *     <dd>系列をアニメーションする</dd>
  * </dl>
  * 
- * @param graphID �ΏۃO���t��ID
- * @param mode �A�j���[�V�������[�h
- * @param state �A�j���[�V������L��������Ȃ�true�A����������Ȃ�false
+ * @param graphID 対象グラフのID
+ * @param mode アニメーションモード
+ * @param state アニメーションを有効化するならtrue、無効化するならfalse
  */
 void setGraph2DAnimation( int graphID, string mode, bool state ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DAnimation( graphID, mode, state );
 }
 
 /**
- * �O���t�̃^�C�g����ݒ肵�܂��B
+ * グラフのタイトルを設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param title �^�C�g��
+ * @param graphID 対象グラフのID
+ * @param title タイトル
  */
 void setGraph2DTitle( int graphID, string title ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DTitle( graphID, title );
 }
 
 /**
- * �O���t�̎����x����ݒ肵�܂��B
+ * グラフの軸ラベルを設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param xLabel X���̃��x��
- * @param yLabel Y���̃��x��
+ * @param graphID 対象グラフのID
+ * @param xLabel X軸のラベル
+ * @param yLabel Y軸のラベル
  */
 void setGraph2DLabel( int graphID, string xLabel, string yLabel ){
   SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DLabel( graphID, xLabel, yLabel );
 }
 
 /**
- * �O���t�̖}���ݒ肵�܂��B
+ * グラフの凡例を設定します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param legend �}����i�[����z��i [ �n��C���f�b�N�X ] �j
+ * @param graphID 対象グラフのID
+ * @param legend 凡例を格納する配列（ [ 系列インデックス ] ）
  */
 void setGraph2DLegend( int graphID, string legend[] ){
   int L = length( legend );
@@ -426,11 +427,11 @@ void setGraph2DLegend( int graphID, string legend[] ){
 
 
 /**
- * �O���t���摜�ɏo�͂��܂��B
+ * グラフを画像に出力します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param filename �o�̓t�@�C�����܂��̓p�X
- * @param �`���i "PNG" �܂��� "JPEG" �j
+ * @param graphID 対象グラフのID
+ * @param filename 出力ファイル名またはパス
+ * @param 形式（ "PNG" または "JPEG" ）
  */
 void exportGraph2D( int graphID, string filename, string format ){
   int graphicsID = SYSTEM_PROCESS_DRIVER_GRAPH2D_newGraph2DGraphics( graphID );
@@ -439,12 +440,12 @@ void exportGraph2D( int graphID, string filename, string format ){
 }
 
 /**
- * �O���t���摜�ɏo�͂��܂��B
+ * グラフを画像に出力します。
  * 
- * @param graphID �ΏۃO���t��ID
- * @param filename �o�̓t�@�C�����܂��̓p�X
- * @param �`���i "PNG" �܂��� "JPEG" �j
- * @param quality �i���i 0.0 ~ 100.0 �j
+ * @param graphID 対象グラフのID
+ * @param filename 出力ファイル名またはパス
+ * @param 形式（ "PNG" または "JPEG" ）
+ * @param quality 品質（ 0.0 ~ 100.0 ）
  */
 void exportGraph2D( int graphID, string filename, string format, float quality ){
   int graphicsID = SYSTEM_PROCESS_DRIVER_GRAPH2D_newGraph2DGraphics( graphID );

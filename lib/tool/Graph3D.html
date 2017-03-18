@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Graph3D</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>Graph3D</h1>
+<hr />
+<h2 id="abstract">概要 - Abstract</h2>
+<p>tool.Graph3D ライブラリ APIライブラリ（以下、Graph3D ライブラリライブラリ）は、3次元グラフソフトウェアを制御するためのライブラリです。</p><p>Graph3D ライブラリ ライブラリは拡張ライブラリであり、VCSSLの言語仕様における標準ライブラリには含まれていません。従って、全てのVCSSL処理系において、必ずしもGraph3D ライブラリ ライブラリの実装がサポートされるわけではありません。</p><p>Graph3D ライブラリ ライブラリの仕様は、広く一般的な2次元グラフソフトウェアをVCSSLから制御する事を想定して定義されており、特定の2次元グラフソフトウェアを前提としたものではありません。 Graph3D ライブラリ ライブラリの実装において、制御対象にどのような2次元グラフソフトウェアが採用されるかは処理系依存であり、処理系の開発元（ベンダー）、バージョン、またはグラフソフトウェアとの通信機能を提供するプラグインなどに依存します。このような事情があるため、Graph3D ライブラリ ライブラリが提供する各種関数も、異なる処理系に関しては、厳密に同一の挙動を期待すべきではありません。</p><p>また、同一の処理系であっても、Graph3D ライブラリ ライブラリは標準ライブラリでは無いため、その実装において、恒久的に同様の挙動が保証されるものではありません。Graph3D ライブラリ ライブラリの実装は、あくまで処理系が独自にサポートする拡張機能であるという点に留意しておく必要があります。例えば、グラフソフトウェアの大幅なアップデートが行われると、 それに伴い、Graph3D ライブラリ ライブラリの挙動も微妙に変化してしまうケースなどが考えられます。</p><p>RINEARN VCSSLランタイム、及びそれを搭載するVCSSL対応ソフトウェア（リニアンプロセッサーなど）では、Graph3D ライブラリ ライブラリをサポートしており、その実装には科学技術分野用グラフソフトウェア「 リニアングラフ3D 」を採用しています。リニアングラフ2D本体（ RinearnGraph3D ライブラリ.jar ）はVCSSLランタイムの配布パッケージ内に同梱されているため、別途何かを用意する必要はありません。</p> <hr />
+<h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
+<dl>
+<dt><a href="#newGraph3D">int newGraph3D() </a></dt>
+<dd>3次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 </dd>
+<dt><a href="#newGraph3D">int newGraph3D( int x, int y, int width, int height, string title ) </a></dt>
+<dd>3次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 </dd>
+<dt><a href="#getGraph3D">int getGraph3D() </a></dt>
+<dd>処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。 </dd>
+<dt><a href="#deleteGraph3D">void deleteGraph3D( int graphID ) </a></dt>
+<dd>グラフを破棄します。 </dd>
+<dt><a href="#clearGraph3D">void clearGraph3D( int graphID ) </a></dt>
+<dd>グラフの内容をクリアします。 </dd>
+<dt><a href="#getGraph3DGraphics">int getGraph3DGraphics( int graphID ) </a></dt>
+<dd>グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。変換されたグラフィックスデータは、2D/3Dレンダラ―などで加工できます。 </dd>
+<dt><a href="#setGraph3DLocation">void setGraph3DLocation( int graphID, int x, int y ) </a></dt>
+<dd>グラフウィンドウの位置を設定します。 </dd>
+<dt><a href="#setGraph3DSize">void setGraph3DSize( int graphID, int width, int height ) </a></dt>
+<dd>グラフウィンドウの大きさを設定します。 </dd>
+<dt><a href="#hideGraph3D">void hideGraph3D( int graphID ) </a></dt>
+<dd>グラフウィンドウを不可視化します。 </dd>
+<dt><a href="#showGraph3D">void showGraph3D( int graphID ) </a></dt>
+<dd>グラフウィンドウを可視化します。 </dd>
+<dt><a href="#setGraph3DFile">void setGraph3DFile( int graphID, string filePath ) </a></dt>
+<dd>ファイルを読み込み、グラフにプロットします。 </dd>
+<dt><a href="#setGraph3DFile">void setGraph3DFile( int graphID, string file[ ] ) </a></dt>
+<dd>複数のファイルを読み込み、グラフにプロットします。 </dd>
+<dt><a href="#setGraph3DData">void setGraph3DData( int graphID, string data ) </a></dt>
+<dd>ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。 </dd>
+<dt><a href="#setGraph3DData">void setGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] ) </a></dt>
+<dd>座標値を格納する float 型配列を読み込み、グラフにプロットします。 </dd>
+<dt><a href="#setGraph3DData">void setGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] ) </a></dt>
+<dd>座標値を格納する float 型配列を読み込み、グラフにプロットします。 </dd>
+<dt><a href="#setGraph3DData">void setGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] ) </a></dt>
+<dd>座標値を格納する float 型配列を読み込み、グラフにプロットします。 </dd>
+<dt><a href="#addGraph3DData">void addGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] ) </a></dt>
+<dd>座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 </dd>
+<dt><a href="#addGraph3DData">void addGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] ) </a></dt>
+<dd>座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 </dd>
+<dt><a href="#addGraph3DData">void addGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] ) </a></dt>
+<dd>座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 </dd>
+<dt><a href="#setGraph3DConfigurationFile">void setGraph3DConfigurationFile( int graphID, string file ) </a></dt>
+<dd>設定ファイルを読み込み、グラフに自動で設定を行います。 </dd>
+<dt><a href="#setGraph3DRange">void setGraph3DRange( int graphID, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax ) </a></dt>
+<dd>プロット範囲を設定します。 </dd>
+<dt><a href="#setGraph3DRangeX">void setGraph3DRangeX( int graphID, double xMin, double xMax ) </a></dt>
+<dd>X軸のプロット範囲を設定します。 </dd>
+<dt><a href="#setGraph3DRangeY">void setGraph3DRangeY( int graphID, double yMin, double yMax ) </a></dt>
+<dd>Y軸のプロット範囲を設定します。 </dd>
+<dt><a href="#setGraph3DRangeZ">void setGraph3DRangeZ( int graphID, double zMin, double zMax ) </a></dt>
+<dd>Z軸のプロット範囲を設定します。 </dd>
+<dt><a href="#setGraph3DAutoRange">void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ) </a></dt>
+<dd>プロット範囲の自動調整機能を有効化または無効化します。 </dd>
+<dt><a href="#setGraph3DOption">void setGraph3DOption( int graphID, string option, bool value ) </a></dt>
+<dd>グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：    WITH_POINTS :      点プロット ,    WITH_LINES :      線プロット ,    WITH_MESHES :      メッシュプロット ,    WITH_MEMBRANES :      曲面プロット ,    FLAT :      平面化 ,    FRAME :      枠線描画 ,    SCALE :      目盛り描画 ,    GRID_LINE :      グリッドライン描画 ,    GRADATION :      Z値によるグラデーション彩色 ,    ALPHA :      半透明描画 ,    LOG_X :      X対数軸表示 ,    LOG_Y :      Y対数軸表示 ,    LOG_Z :      Z対数軸表示 ,    REVERSE_X :      X軸反転表示 ,    REVERSE_Y :      Y軸反転表示 ,    REVERSE_Z :      Z軸反転表示 ,   </dd>
+<dt><a href="#setGraph3DMenu">void setGraph3DMenu( int graphID, string option, string value ) </a></dt>
+<dd>グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：    SET_LABEL_X :      X軸ラベル ,    SET_LABEL_Y :      Y軸ラベル ,    SET_LABEL_Z :      Z軸ラベル ,   </dd>
+<dt><a href="#setGraph3DAnimation">void setGraph3DAnimation( int graphID, string option, bool state ) </a></dt>
+<dd>グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：     TRACE :      点をアニメーションし、軌跡を残す ,    INDEX :      点をアニメーションする ,    INDEX-SERIES :      系列をアニメーションする ,    INDEX-X :      メッシュデータのX方向ラインをアニメーションする ,    INDEX-Y :      メッシュデータのY方向ラインをアニメーションする ,    RANGE-X :      プロット範囲をX方向にスライドさせる ,    RANGE-Y :      プロット範囲をY方向にスライドさせる ,    RANGE-Z :      プロット範囲をZ方向にスライドさせる ,   </dd>
+<dt><a href="#exportGraph3D">void exportGraph3D( int graphID, string filename, string format ) </a></dt>
+<dd>グラフを画像に出力します。 </dd>
+<dt><a href="#exportGraph3D">void exportGraph3D( int graphID, string filename, string format, float quality ) </a></dt>
+<dd>グラフを画像に出力します。 </dd>
+<dt><a href="#onGraph2DClose">void onGraph2DClose( int graphID ) </a></dt>
+<dd>グラフウィンドウが閉じられた際にコールされます。 </dd>
+</dl>
+<hr />
+<h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
+<p> - なし - None  -</p>
+<hr /><h2 id="variable">変数 - Variables</h2>
+<p> - なし - None  -</p>
+<hr />
+<h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newGraph3D"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int newGraph3D() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	3次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	生成したグラフのID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int newGraph3D( int x, int y, int width, int height, string title ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	3次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	x : グラフウィンドウ左上頂点のX座標 <br />y : グラフウィンドウ左上頂点のY座標 <br />width : グラフウィンドウの幅 <br />height : グラフウィンドウの高さ <br />title : グラフウィンドウタイトル <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	生成したグラフのID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getGraph3D"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getGraph3D() 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	取得または生成したグラフID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="deleteGraph3D"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void deleteGraph3D( int graphID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフを破棄します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="clearGraph3D"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void clearGraph3D( int graphID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフの内容をクリアします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getGraph3DGraphics"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int getGraph3DGraphics( int graphID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。変換されたグラフィックスデータは、2D/3Dレンダラ―などで加工できます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフィックスデータID<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DLocation"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DLocation( int graphID, int x, int y ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフウィンドウの位置を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />x : グラフウィンドウ左上頂点のX座標 <br />y : グラフウィンドウ左上頂点のY座標 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DSize"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DSize( int graphID, int width, int height ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフウィンドウの大きさを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />width : グラフウィンドウの幅 <br />height : グラフウィンドウ高さ <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="hideGraph3D"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void hideGraph3D( int graphID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフウィンドウを不可視化します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="showGraph3D"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void showGraph3D( int graphID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフウィンドウを可視化します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DFile( int graphID, string filePath ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルを読み込み、グラフにプロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />filePath : プロットするファイルのファイル名またはパス <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DFile( int graphID, string file[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	複数のファイルを読み込み、グラフにプロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />file : プロットするファイルのファイル名またはパス <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DData"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DData( int graphID, string data ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />data : ファイルの内容と同じ書式で記載されたテキスト <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	座標値を格納する float 型配列を読み込み、グラフにプロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />dataX : X座標を格納する配列（ [ 点インデックス ] ） <br />dataY : Y座標を格納する配列（ [ 点インデックス ] ） <br />dataZ : Z座標を格納する配列（ [ 点インデックス ] ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	座標値を格納する float 型配列を読み込み、グラフにプロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />dataX : X座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataY : Y座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataZ : Z座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	座標値を格納する float 型配列を読み込み、グラフにプロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />dataX : X座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataY : Y座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataZ : Z座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="addGraph3DData"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void addGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />dataX : X座標を格納する配列（ [ 点インデックス ] ） <br />dataY : Y座標を格納する配列（ [ 点インデックス ] ） <br />dataZ : Z座標を格納する配列（ [ 点インデックス ] ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void addGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />dataX : X座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataY : Y座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataZ : Z座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void addGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />dataX : X座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataY : Y座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />dataZ : Z座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DConfigurationFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DConfigurationFile( int graphID, string file ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	設定ファイルを読み込み、グラフに自動で設定を行います。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />file : 設定ファイルのファイル名またはパス <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DRange"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DRange( int graphID, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロット範囲を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />xMin : X軸の最小値 <br />xMax : X軸の最大値 <br />yMin : Y軸の最小値 <br />yMax : Y軸の最大値 <br />zMin : Z軸の最小値 <br />zMax : Z軸の最大値 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DRangeX"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DRangeX( int graphID, double xMin, double xMax ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	X軸のプロット範囲を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />xMin : X軸の最小値 <br />xMax : X軸の最大値 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DRangeY"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DRangeY( int graphID, double yMin, double yMax ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Y軸のプロット範囲を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />yMin : Y軸の最小値 <br />yMax : Y軸の最大値 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DRangeZ"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DRangeZ( int graphID, double zMin, double zMax ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Z軸のプロット範囲を設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />zMin : Z軸の最小値 <br />zMax : Z軸の最大値 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DAutoRange"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	プロット範囲の自動調整機能を有効化または無効化します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />autoX : X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse <br />autoY : Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse <br />autoZ : Z軸方向の自動調性機能を有効にするならtrue、無効にするならfalse <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DOption"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DOption( int graphID, string option, bool value ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：<dl>  <dt>WITH_POINTS</dt>    <dd>点プロット</dd>  <dt>WITH_LINES</dt>    <dd>線プロット</dd>  <dt>WITH_MESHES</dt>    <dd>メッシュプロット</dd>  <dt>WITH_MEMBRANES</dt>    <dd>曲面プロット</dd>  <dt>FLAT</dt>    <dd>平面化</dd>  <dt>FRAME</dt>    <dd>枠線描画</dd>  <dt>SCALE</dt>    <dd>目盛り描画</dd>  <dt>GRID_LINE</dt>    <dd>グリッドライン描画</dd>  <dt>GRADATION</dt>    <dd>Z値によるグラデーション彩色</dd>  <dt>ALPHA</dt>    <dd>半透明描画</dd>  <dt>LOG_X</dt>    <dd>X対数軸表示</dd>  <dt>LOG_Y</dt>    <dd>Y対数軸表示</dd>  <dt>LOG_Z</dt>    <dd>Z対数軸表示</dd>  <dt>REVERSE_X</dt>    <dd>X軸反転表示</dd>  <dt>REVERSE_Y</dt>    <dd>Y軸反転表示</dd>  <dt>REVERSE_Z</dt>    <dd>Z軸反転表示</dd></dl> 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />option : オプション項目名 <br />value : オプションを有効にするならtrue、無効にするにはfalse <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DMenu"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DMenu( int graphID, string option, string value ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：<dl>  <dt>SET_LABEL_X</dt>    <dd>X軸ラベル</dd>  <dt>SET_LABEL_Y</dt>    <dd>Y軸ラベル</dd>  <dt>SET_LABEL_Z</dt>    <dd>Z軸ラベル</dd></dl> 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />option : メニュー項目名 <br />value : メニュー項目を有効にするならtrue、無効にするにはfalse <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DAnimation"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DAnimation( int graphID, string option, bool state ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです： <dl>  <dt>TRACE</dt>    <dd>点をアニメーションし、軌跡を残す</dd>  <dt>INDEX</dt>    <dd>点をアニメーションする</dd>  <dt>INDEX-SERIES</dt>    <dd>系列をアニメーションする</dd>  <dt>INDEX-X</dt>    <dd>メッシュデータのX方向ラインをアニメーションする</dd>  <dt>INDEX-Y</dt>    <dd>メッシュデータのY方向ラインをアニメーションする</dd>  <dt>RANGE-X</dt>    <dd>プロット範囲をX方向にスライドさせる</dd>  <dt>RANGE-Y</dt>    <dd>プロット範囲をY方向にスライドさせる</dd>  <dt>RANGE-Z</dt>    <dd>プロット範囲をZ方向にスライドさせる</dd></dl> 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />mode : アニメーションモード <br />state : アニメーションを有効化するならtrue、無効化するならfalse <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="exportGraph3D"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void exportGraph3D( int graphID, string filename, string format ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフを画像に出力します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />filename : 出力ファイル名またはパス <br />形式（ : "PNG" または "JPEG" ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void exportGraph3D( int graphID, string filename, string format, float quality ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフを画像に出力します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : 対象グラフのID <br />filename : 出力ファイル名またはパス <br />形式（ : "PNG" または "JPEG" ） <br />quality : 品質（ 0.0 ~ 100.0 ） <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="event" style="page-break-before:always;" >イベントハンドラ - Event Handler</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onGraph2DClose"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void onGraph2DClose( int graphID ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフウィンドウが閉じられた際にコールされます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	graphID : イベント発生元グラフのID <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>

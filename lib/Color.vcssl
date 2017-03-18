@@ -1,35 +1,37 @@
+coding UTF-8;
+
 /**
  * <p>
- * VCSSL Color ���C�u���� �́A�F�̈�����⏕���邽�߂̕W�����C�u�����ł��B
- * ��� Graphics2D �� Graphics3D ���C�u�����ȂǂƑg�ݍ��킹�āA�O���t�B�b�N�X�֘A�̏����ɗp���܂��B
+ * VCSSL Color ライブラリ は、色の扱いを補助するための標準ライブラリです。
+ * 主に Graphics2D や Graphics3D ライブラリなどと組み合わせて、グラフィックス関連の処理に用います。
  * </p>
  * <p>
- * ���̃��C�u�����ł́A�F�� int[4] �z��Ƃ��Ĉ����܂��B�e�v�f�́A[0] ���ԐF�����A[1] ���ΐF�����A[2] ���F�����A[3] �����l�������i�[���܂��B
+ * このライブラリでは、色を int[4] 配列として扱います。各要素は、[0] が赤色成分、[1] が緑色成分、[2] が青色成分、[3] がα値成分を格納します。
  * <br />
- * ���ꂼ��̐F�����ɂ�����l�͈̔͂� 0 �` 255 �ł��B�܂� int[4] �z��� 32bit ��RGBA�J���[��\�����܂��B
+ * それぞれの色成分における値の範囲は 0 ～ 255 です。つまり int[4] 配列で 32bit のRGBAカラーを表現します。
  * <br />
- * ���̃��C�u�����ɍ��킹�āAGraphics2D �� Graphics3D ���C�u�����Ȃǂł��Aint[4] �z��� 32bit RGBA�J���[�ƌ��Ȃ��āA�F�̐ݒ�E�擾�Ȃǂ��s����悤�ɂȂ��Ă��܂��B
+ * このライブラリに合わせて、Graphics2D や Graphics3D ライブラリなどでも、int[4] 配列を 32bit RGBAカラーと見なして、色の設定・取得などを行えるようになっています。
  * </p>
  * <p>
- * �g�p��Ƃ��āAGraphics2D �ŕ`��F��F�ɐݒ肷���������܂��B�����Color���C�u�����̋@�\���g�p���Ȃ��Ă��A�ȉ��̂悤�ɂ��ĉ\�ł��F
+ * 使用例として、Graphics2D で描画色を青色に設定する例を挙げます。これはColorライブラリの機能を使用しなくても、以下のようにして可能です：
  * <div class="code">
  * setDrawColor( rendererID, 0, 0, 255, 255 );
  * </div>
  * </p>
  * <p>
- * �������AColor���C�u�����̋@�\���g�p���鎖�ŁA�ȉ��̂悤�ɗl�X�Ȍ`���ŐF�ݒ肪�ł���悤�ɂȂ�܂��F
+ * しかし、Colorライブラリの機能を使用する事で、以下のように様々な形式で色設定ができるようになります：
  * <div class="code">
- * setDrawColor( rendererID, BLUE );  // �萔�Őݒ�
+ * setDrawColor( rendererID, BLUE );  // 定数で設定
  * <br />
- * setDrawColor( rendererID, color(0, 0, 255) );  // 24bit RGB�J���[�Őݒ�
+ * setDrawColor( rendererID, color(0, 0, 255) );  // 24bit RGBカラーで設定
  * <br />
- * setDrawColor( rendererID, color(0.0, 0.0, 1.0) ); // 0.0 �` 1.0 �͈̔͂�RGB�J���[�Őݒ�
+ * setDrawColor( rendererID, color(0.0, 0.0, 1.0) ); // 0.0 ～ 1.0 の範囲のRGBカラーで設定
  * <br />
- * setDrawColor( rendererID, color( 0x0000ff ) ); // 16�i���J���[�R�[�h�Őݒ�
+ * setDrawColor( rendererID, color( 0x0000ff ) ); // 16進数カラーコードで設定
  * </div>
  * </p>
  * 
- * @author  ���䕶�G - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -38,9 +40,8 @@
 /*
 # ====================================================================================================
 # 
-# PRAGMA COMPILE    DYNAMIC_REFERRED
-# PRAGMA COMPILE    STATIC_REFERRED
-# PRAGMA RESERVE    NOT_REFERRED
+# PRAGMA COMPILE    REFERRAL
+# PRAGMA RESERVE    ALL
 # PRAGMA END
 # 
 # ====================================================================================================
@@ -48,39 +49,39 @@
 
 
 
-/** ���F�̐F�������i�[����z��ł��B */
+/** 黒色の色成分を格納する配列です。 */
 const int BLACK[] = {0, 0, 0, 255};
 
-/** ���F�̐F�������i�[����z��ł��B */
+/** 白色の色成分を格納する配列です。 */
 const int WHITE[] = {255, 255, 255, 255};
 
-/** �ԐF�̐F�������i�[����z��ł��B */
+/** 赤色の色成分を格納する配列です。 */
 const int RED[] = {255, 0, 0, 255};
 
-/** �ΐF�̐F�������i�[����z��ł��B */
+/** 緑色の色成分を格納する配列です。 */
 const int GREEN[] = {0, 255, 0, 255};
 
-/** �F�̐F�������i�[����z��ł��B */
+/** 青色の色成分を格納する配列です。 */
 const int BLUE[] = {0, 0, 255, 255};
 
-/** ���F�i�}�[���^�j�̐F�������i�[����z��ł��B */
+/** 紫色（マゼンタ）の色成分を格納する配列です。 */
 const int MAGENTA[] = {255, 0, 255, 255};
 
-/** ���F�̐F�������i�[����z��ł��B */
+/** 黄色の色成分を格納する配列です。 */
 const int YELLOW[] = {255, 255, 0, 255};
 
-/** ���F�i�V�A���j�̐F�������i�[����z��ł��B */
+/** 水色（シアン）の色成分を格納する配列です。 */
 const int CYAN[] = {0, 255, 255, 255};
 
 
 /**
- * 0 �` 255 �̐���RGBA�l����A�F�������i�[����z��𐶐����ĕԂ��܂��B
+ * 0 ～ 255 の整数RGBA値から、色成分を格納する配列を生成して返します。
  *
- * @param red �ԐF�����i0�`255�j�B
- * @param green �ΐF�����i0�`255�j�B
- * @param blue �F�����i0�`255�j�B
- * @param alpha �s�����x�����i0�`255�j�B
- * @return �F�������i�[����z��B
+ * @param red 赤色成分（0～255）。
+ * @param green 緑色成分（0～255）。
+ * @param blue 青色成分（0～255）。
+ * @param alpha 不透明度成分（0～255）。
+ * @return 色成分を格納する配列。
  */
 int[] color(int red, int green, int blue, int alpha){
 	int c[] = {red, green, blue, alpha};
@@ -89,12 +90,12 @@ int[] color(int red, int green, int blue, int alpha){
 
 
 /**
- * 0 �` 255 �̐���RGB�l����A�F�����i�s�����F�j���i�[����z��𐶐����ĕԂ��܂��B
+ * 0 ～ 255 の整数RGB値から、色成分（不透明色）を格納する配列を生成して返します。
  *
- * @param red �ԐF�����i0�`255�j�B
- * @param green �ΐF�����i0�`255�j�B
- * @param blue �F�����i0�`255�j�B
- * @return �F�������i�[����z��B
+ * @param red 赤色成分（0～255）。
+ * @param green 緑色成分（0～255）。
+ * @param blue 青色成分（0～255）。
+ * @return 色成分を格納する配列。
  */
 int[] color(int red, int green, int blue){
 	int c[] = {red, green, blue, 255};
@@ -103,13 +104,13 @@ int[] color(int red, int green, int blue){
 
 
 /**
- * 0.0 �` 1.0 �̏���RGBA�l����A�F�������i�[����z��𐶐����ĕԂ��܂��B
+ * 0.0 ～ 1.0 の小数RGBA値から、色成分を格納する配列を生成して返します。
  *
- * @param red �ԐF�����i0.0 �` 1.0�j�B
- * @param green �ΐF�����i0.0 �` 1.0�j�B
- * @param blue �F�����i0.0 �` 1.0�j�B
- * @param alpha �s�����x�����i0.0 �` 1.0�j�B
- * @return �F�������i�[����z��B
+ * @param red 赤色成分（0.0 ～ 1.0）。
+ * @param green 緑色成分（0.0 ～ 1.0）。
+ * @param blue 青色成分（0.0 ～ 1.0）。
+ * @param alpha 不透明度成分（0.0 ～ 1.0）。
+ * @return 色成分を格納する配列。
  */
 int[] color(float red, float green, float blue, float alpha){
 	float fc[] = {red, green, blue, alpha};
@@ -120,12 +121,12 @@ int[] color(float red, float green, float blue, float alpha){
 
 
 /**
- * 0.0 �` 1.0 �̏���RGB�l����A�F�����i�s�����F�j���i�[����z��𐶐����ĕԂ��܂��B
+ * 0.0 ～ 1.0 の小数RGB値から、色成分（不透明色）を格納する配列を生成して返します。
  *
- * @param red �ԐF�����i0.0 �` 1.0�j�B
- * @param green �ΐF�����i0.0 �` 1.0�j�B
- * @param blue �F�����i0.0 �` 1.0�j�B
- * @return �F�������i�[����z��B
+ * @param red 赤色成分（0.0 ～ 1.0）。
+ * @param green 緑色成分（0.0 ～ 1.0）。
+ * @param blue 青色成分（0.0 ～ 1.0）。
+ * @return 色成分を格納する配列。
  */
 int[] color(float red, float green, float blue){
 	float fc[] = {red, green, blue, 1.0};
@@ -136,18 +137,18 @@ int[] color(float red, float green, float blue){
 
 
 /**
- * 16�i���J���[�R�[�h�l����A�F�����i�s�����F�j���i�[����z��𐶐����ĕԂ��܂��B
+ * 16進数カラーコード値から、色成分（不透明色）を格納する配列を生成して返します。
  * <br />
- * ��Ƃ��āA�F�ł��� 0000ff ��ϊ�����ɂ́F
+ * 例として、青色である 0000ff を変換するには：
  * <br />
  * int rgba[] = color(0x0000ff);
  * <br />
- * �ȂǂƂ��܂��B0x �͐�����16�i���\�L�������ꍇ�ɕt������v���t�B�b�N�X�ł��B
+ * などとします。0x は整数を16進数表記したい場合に付加するプレフィックスです。
  *
- * @param red �ԐF�����i0.0 �` 1.0�j�B
- * @param green �ΐF�����i0.0 �` 1.0�j�B
- * @param blue �F�����i0.0 �` 1.0�j�B
- * @return �F�������i�[����z��B
+ * @param red 赤色成分（0.0 ～ 1.0）。
+ * @param green 緑色成分（0.0 ～ 1.0）。
+ * @param blue 青色成分（0.0 ～ 1.0）。
+ * @return 色成分を格納する配列。
  */
 int[] color(int hexCode){
 	if(0xffffff < hexCode || hexCode < 0){
@@ -171,8 +172,8 @@ int[] color(int hexCode){
 
 
 /**
- * �F�����̔z����A�J���[�R�[�h�l�ɕϊ����ĕԂ��܂��B
- * ��Ƃ��āA���F�i�}�[���^�j���J���[�R�[�h�ɕϊ�����ɂ́F
+ * 色成分の配列を、カラーコード値に変換して返します。
+ * 例として、紫色（マゼンタ）をカラーコードに変換するには：
  * <br />
  * int rgba[] = { 255, 0, 255, 255 };
  * <br />
@@ -180,10 +181,10 @@ int[] color(int hexCode){
  * <br />
  * string hexCode = hex(colorCode);
  * <br />
- * �ȂǂƂ��܂��B�ϐ� hexCode �ɓ����錋�ʂ� 0xff00ff �ł��B�Ȃ��A�ΐF�̏ꍇ�� 0xff00�A�F�̏ꍇ�� 0xff �𓾂܂��B����ʓI�ȃJ���[�R�[�h�`���ɐ��`����ɂ́A�擪�� 0x ���������A6���ɂȂ�悤������[���l�߂Ȃǂ��s���Ă��������B���������������񏈗��ɂ� Text ���C�u�������g�p����ƕ֗��ł��B
+ * などとします。変数 hexCode に得られる結果は 0xff00ff です。なお、緑色の場合は 0xff00、青色の場合は 0xff を得ます。より一般的なカラーコード形式に整形するには、先頭の 0x を除去し、6桁になるよう左からゼロ詰めなどを行ってください。そういった文字列処理には Text ライブラリを使用すると便利です。
  *
- * @param rgba[] �F�������i�[����z��B[0] ���ԐF�����A[1] ���ΐF�����A[2] ���F�����A[3] �����l�����B�F�����͂��ꂼ�� 0 �` 255 �͈̔͂ł����A���l�����͕K�� 255 �i�s�����j�łȂ��Ă͂����܂���B
- * @return �J���[�R�[�h�l�̐����B16�i���̕�����ɕϊ�����ɂ� <a href="System.html#hex">hex</a> �֐����g�p���܂��B
+ * @param rgba[] 色成分を格納する配列。[0] が赤色成分、[1] が緑色成分、[2] が青色成分、[3] がα値成分。色成分はそれぞれ 0 ～ 255 の範囲ですが、α値成分は必ず 255 （不透明）でなくてはいけません。
+ * @return カラーコード値の整数。16進数の文字列に変換するには <a href="System.html#hex">hex</a> 関数を使用します。
  */
 int getColorCode(int rgba[]){
 	if(255 != rgba[3]){
