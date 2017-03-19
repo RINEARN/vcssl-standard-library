@@ -1940,62 +1940,122 @@
 <h3><a href="lib/Text.html">Text ライブラリ</a></h3> 
 <p>テキスト（文字列）処理機能を提供するライブラリです。</p> 
 <dl>
-<dt><a href="lib/Text.html#split">string[ ] split( string text, string cut ) </a></dt>
-<dd>文字列を、特定の文字列の位置で分割し、配列にまとめて返します。 </dd>
-<dt><a href="lib/Text.html#splitPattern">string[ ] splitPattern( string text, string cut ) </a></dt>
-<dd>文字列を、特定の正規表現に適合する位置で分割し、配列にまとめて返します。 </dd>
+<dt><a href="lib/Text.html#ALL">const int ALL </a></dt>
+<dd> 文字列と一致する、全ての部分を探す検索モードです。 </dd>
+<dt><a href="lib/Text.html#ALL_PATTERN">const int ALL_PATTERN </a></dt>
+<dd> 正規表現と一致する、全ての部分を探す検索モードです。 </dd>
+<dt><a href="lib/Text.html#FIRST">const int FIRST </a></dt>
+<dd> 文字列と一致する、最初の部分を探す検索モードです。 </dd>
+<dt><a href="lib/Text.html#FIRST_PATTERN">const int FIRST_PATTERN </a></dt>
+<dd> 正規表現と一致する、最初の部分を探す検索モードです。 </dd>
+<dt><a href="lib/Text.html#LAST">const int LAST </a></dt>
+<dd> 文字列と一致する、最後の部分を探す検索モードです。 </dd>
+<dt><a href="lib/Text.html#LAST_PATTERN">const int LAST_PATTERN </a></dt>
+<dd> 正規表現と一致する、最後の部分を探す検索モードです。 </dd>
+<dt><a href="lib/Text.html#START">const int START </a></dt>
+<dd> 文字列の先頭が、部分文字列と一致するかを判断する判定モードです。 </dd>
+<dt><a href="lib/Text.html#START_PATTERN">const int START_PATTERN </a></dt>
+<dd> 文字列の先頭が、正規表現と一致するかを判断する判定モードです。 </dd>
+<dt><a href="lib/Text.html#END">const int END </a></dt>
+<dd> 文字列の終端が、部分文字列と一致するかを判断する判定モードです。 </dd>
+<dt><a href="lib/Text.html#END_PATTERN">const int END_PATTERN </a></dt>
+<dd> 文字列の終端が、正規表現と一致するかを判断する判定モードです。 </dd>
+<dt><a href="lib/Text.html#FULL_PATTERN">const int FULL_PATTERN </a></dt>
+<dd> 文字列の全体が、正規表現と一致するかを判断する判定モードです。 </dd>
+<dt><a href="lib/Text.html#atText">string atText( string text, int index ) </a></dt>
+<dd>文字列内の、指定されたインデックスの位置にある文字を、1文字のstring型変数として返します。 </dd>
+<dt><a href="lib/Text.html#checkText">bool checkText( string text, string query, int mode ) </a></dt>
+<dd>文字列の先頭、末尾、または全体が、指定された文字列か正規表現に一致するかを判定します。 </dd>
+<dt><a href="lib/Text.html#cropText">string cropText( string text, int cropBegin, int cropEnd ) </a></dt>
+<dd>テキストから、指定された範囲を抜き出したものを返します。抜き出す範囲は、テキストの各文字に、先頭を 0 としてインデックスを割りふると、cropBegin 番目から cropEnd - 1 番目までの文字列となります。また、文字と文字の「 隙間（すきま） 」にインデックスを割りふると、抜き出す範囲はちょうど cropBegin 番目から cropEnd 番目までの隙間に挟まれた範囲となります。 </dd>
+<dt><a href="lib/Text.html#countText">int countText( string text ) </a></dt>
+<dd>テキストの文字数をカウントして返します。 </dd>
+<dt><a href="lib/Text.html#countText">int countText( string text, string query, int mode ) </a></dt>
+<dd>テキストから、部分文字列（ または正規表現 ）に一致する箇所を検索し、その個数をカウントして返します。 </dd>
+<dt><a href="lib/Text.html#countText">int countText( string text, string query, int searchBegin, int mode ) </a></dt>
+<dd>テキストの指定位置以降から、部分文字列（ または正規表現 ）に一致する箇所を検索し、その個数をカウントして返します。 </dd>
+<dt><a href="lib/Text.html#countText">int countText( string text, string query, int searchBegin, int searchEnd, int mode ) </a></dt>
+<dd>テキストの指定範囲内から、部分文字列（ または正規表現 ）に一致する箇所を検索し、その個数をカウントして返します。 </dd>
+<dt><a href="lib/Text.html#findText">int[ ] findText( string text, string query, int mode ) </a></dt>
+<dd>テキストから、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所の文字インデックスを配列にまとめて返します。 </dd>
+<dt><a href="lib/Text.html#findText">int[ ] findText( string text, string query, int searchBegin, int mode ) </a></dt>
+<dd>テキスト指定位置以降から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所の文字インデックスを配列にまとめて返します。検索で一致する箇所が無かった場合、戻り値は要素数 0 の配列となります。 </dd>
+<dt><a href="lib/Text.html#findText">int[ ] findText( string text, string query, int searchBegin, int searchEnd, int mode ) </a></dt>
+<dd>テキスト指定範囲内から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所の文字インデックスを配列にまとめて返します。検索で一致する箇所が無かった場合、戻り値は要素数 0 の配列となります。 </dd>
+<dt><a href="lib/Text.html#extractText">string[ ] extractText( string text, string query, int mode ) </a></dt>
+<dd>テキストから、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所を抜き出した文字列を配列にまとめて返します。検索で一致する箇所が無かった場合、戻り値は要素数 0 の配列となります。 </dd>
+<dt><a href="lib/Text.html#extractText">string[ ] extractText( string text, string query, int searchBegin, int mode ) </a></dt>
+<dd>テキストの指定位置以降から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所を抜き出した文字列を配列にまとめて返します。検索で一致する箇所が無かった場合、戻り値は要素数 0 の配列となります。 </dd>
+<dt><a href="lib/Text.html#extractText">string[ ] extractText( string text, string query, int searchBegin, int searchEnd, int mode ) </a></dt>
+<dd>テキストの指定範囲内から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所を抜き出した文字列を配列にまとめて返します。検索で一致する箇所が無かった場合、戻り値は要素数 0 の配列となります。 </dd>
+<dt><a href="lib/Text.html#replaceText">string replaceText( string text, string query, string newPart, int mode ) </a></dt>
+<dd>テキストから、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所を別の文字列で置き換えて返します。 </dd>
+<dt><a href="lib/Text.html#replaceText">string replaceText( string text, string query, string newPart, int searchBegin, int mode ) </a></dt>
+<dd>テキストの指定位置以降から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所を別の文字列で置き換えて返します。 </dd>
+<dt><a href="lib/Text.html#replaceText">string replaceText( string text, string query, string newPart, int searchBegin, int searchEnd, int mode ) </a></dt>
+<dd>テキストの指定範囲内から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所を別の文字列で置き換えて返します。 </dd>
+<dt><a href="lib/Text.html#splitText">string[ ] splitText( string text, string query, int mode ) </a></dt>
+<dd>テキストから、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所で元のテキストを分割したものを、配列にまとめて返します。 </dd>
+<dt><a href="lib/Text.html#splitText">string[ ] splitText( string text, string query, int searchBegin, int mode ) </a></dt>
+<dd>テキストの指定位置以降から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所で元のテキストを分割したものを、配列にまとめて返します。 </dd>
+<dt><a href="lib/Text.html#splitText">string[ ] splitText( string text, string query, int searchBegin, int searchEnd, int mode ) </a></dt>
+<dd>テキストの指定範囲内から、部分文字列（ または正規表現 ）に一致する箇所を検索し、一致箇所で元のテキストを分割したものを、配列にまとめて返します。 </dd>
+<dt><a href="lib/Text.html#split">string[ ] split( string text, string query ) </a></dt>
+<dd>文字列を、特定の文字列の位置で分割し、配列にまとめて返します。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#splitText">splitText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#splitText">splitText</a>(text, query, <a href="Text.htmllib/Text.html#ALL">ALL</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span>なお、この関数では、引数 text のちょうど終端に query が存在する場合、その後に空文字があるとは見なされず、返される配列の最終要素にも空文字は格納されません。この点の挙動は splitText と異なりますが、互換性を保つため、今後も改修されません。 </dd>
+<dt><a href="lib/Text.html#splitPattern">string[ ] splitPattern( string text, string query ) </a></dt>
+<dd>文字列を、特定の正規表現に適合する位置で分割し、配列にまとめて返します。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#splitText">splitText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#splitText">splitText</a>(text, query, <a href="Text.htmllib/Text.html#ALL_PATTERN">ALL_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span>なお、この関数では、引数 text のちょうど終端に query が存在する場合、その後に空文字があるとは見なされず、返される配列の最終要素にも空文字は格納されません。この点の挙動は splitText と異なりますが、互換性を保つため、今後も改修されません。 </dd>
 <dt><a href="lib/Text.html#replace">string replace( string text, string oldText, string newText ) </a></dt>
-<dd>文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。部分文字列の適合箇所が複数存在する場合は、全て置換されます。 </dd>
+<dd>文字列に含まれる部分文字列を、全て別の部分文字列に置換したものを返します。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#replaceText">replaceText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#replaceText">replaceText</a>(text, query, <a href="Text.htmllib/Text.html#ALL">ALL</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
 <dt><a href="lib/Text.html#replacePattern">string replacePattern( string text, string oldText, string newText ) </a></dt>
-<dd>文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。正規表現の適合箇所が複数存在する場合は、全て置換されます。 </dd>
+<dd>文字列内で正規表現に適合する区間を、全て別の部分文字列に置換したものを返します。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#replaceText">replaceText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#replaceText">replaceText</a>(text, query, <a href="Text.htmllib/Text.html#ALL_PATTERN">ALL_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
 <dt><a href="lib/Text.html#replaceFirst">string replaceFirst( string text, string oldText, string newText ) </a></dt>
-<dd>文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。部分文字列の適合箇所が複数存在する場合は、最初のものだけが置換されます。 </dd>
+<dd>文字列に含まれる部分文字列を、最初のものだけ、別の部分文字列に置換したものを返します。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#replaceText">replaceText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#replaceText">replaceText</a>(text, query, <a href="Text.htmllib/Text.html#FIRST">FIRST</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
 <dt><a href="lib/Text.html#replaceFirstPattern">string replaceFirstPattern( string text, string oldText, string newText ) </a></dt>
-<dd>文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。正規表現の適合箇所が複数存在する場合は、最初のものだけが置換されます。 </dd>
+<dd>文字列内で正規表現に適合する区間を、最初のものだけ、別の部分文字列に置換したものを返します。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#replaceText">replaceText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#replaceText">replaceText</a>(text, query, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
 <dt><a href="lib/Text.html#replaceFirst">string replaceFirst( string text, string oldText, string newText, int start ) </a></dt>
-<dd>文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。部分文字列の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。 </dd>
+<dd>文字列に含まれる部分文字列を、別の部分文字列に置換したものを返します。部分文字列の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#replaceText">replaceText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#replaceText">replaceText</a>(text, query, start, <a href="Text.htmllib/Text.html#FIRST">FIRST</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
 <dt><a href="lib/Text.html#replaceFirstPattern">string replaceFirstPattern( string text, string oldText, string newText, int start ) </a></dt>
-<dd>文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。 </dd>
-<dt><a href="lib/Text.html#startsWith">bool startsWith( string text, string word ) </a></dt>
-<dd>文字列が、指定された部分文字列で始まっているかどうか判定します。 </dd>
-<dt><a href="lib/Text.html#endsWith">bool endsWith( string text, string word ) </a></dt>
-<dd>文字列が、指定された部分文字列で終わっているかどうか判定します。 </dd>
-<dt><a href="lib/Text.html#match">string match( string text, string pattern ) </a></dt>
-<dd>この API の使用は推奨されません。<a href="lib/Text.html#matchFirst">matchFirst</a> を使用してください。この関数の機能は、将来的に変更が検討される可能性があります。 </dd>
-<dt><a href="lib/Text.html#match">string match( string text, string pattern, int start ) </a></dt>
-<dd>この API の使用は推奨されません。<a href="lib/Text.html#matchFirst">matchFirst</a> を使用してください。この関数の機能は、将来的に変更が検討される可能性があります。 </dd>
-<dt><a href="lib/Text.html#matchFull">bool matchFull( string text, string pattern ) </a></dt>
-<dd>文字列全体が、正規表現に適合するかどうか判定します。 </dd>
-<dt><a href="lib/Text.html#matchFirst">string matchFirst( string text, string pattern ) </a></dt>
-<dd>文字列全体から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、最初のものだけが選択されます。 </dd>
-<dt><a href="lib/Text.html#matchFirst">string matchFirst( string text, string pattern, int start ) </a></dt>
-<dd>文字列から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降から、最初のものだけが選択されます。 </dd>
-<dt><a href="lib/Text.html#matchLast">string matchLast( string text, string pattern ) </a></dt>
-<dd>文字列全体から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、最後のものだけが選択されます。 </dd>
-<dt><a href="lib/Text.html#matchLast">string matchLast( string text, string pattern, int end ) </a></dt>
-<dd>文字列から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、引数 end に指定したインデックスの位置よりも前から、最後のものだけが選択されます。 </dd>
-<dt><a href="lib/Text.html#indexOf">int indexOf( string text, string word ) </a></dt>
-<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#indexOf">int indexOf( string text, string word, int start ) </a></dt>
-<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、引数 start に指定したインデックス以降から、最初のものが選択されます。存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#indexOfPattern">string indexOfPattern( string text, string word ) </a></dt>
-<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#indexOfPattern">string indexOfPattern( string text, string word, int start ) </a></dt>
-<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最初のものが選択されます。引数 start に指定したインデックス以降から、存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#lastIndexOf">int lastIndexOf( string text, string word ) </a></dt>
-<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#lastIndexOf">int lastIndexOf( string text, string word, int end ) </a></dt>
-<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#lastIndexOfPattern">string lastIndexOfPattern( string text, string word ) </a></dt>
-<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#lastIndexOfPattern">string lastIndexOfPattern( string text, string word, int end ) </a></dt>
-<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。 </dd>
-<dt><a href="lib/Text.html#lengthOf">int lengthOf( string text ) </a></dt>
-<dd>文字列の文字数を返します。 </dd>
-<dt><a href="lib/Text.html#charAt">string charAt( string text, int index ) </a></dt>
-<dd>文字列内の、指定されたインデックスの位置にある文字を返します。 </dd>
+<dd>文字列内で正規表現に適合する区間を、別の部分文字列に置換したものを返します。正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降で、最初のものだけが置換されます。現在は、同様の（またはより高度な）機能を提供する、新しい <a href="Text.htmllib/Text.html#replaceText">replaceText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#replaceText">replaceText</a>(text, query, start, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
 <dt><a href="lib/Text.html#substring">string substring( string text, int start, int end ) </a></dt>
-<dd>文字列内の、指定されたインデックス区間にある部分文字列を返します。 </dd>
+<dd>文字列内の、指定されたインデックス区間にある部分文字列を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#cropText">cropText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#cropText">cropText</a>(text, start, end) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#lengthOf">int lengthOf( string text ) </a></dt>
+<dd>文字列の文字数を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#countText">countText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#countText">countText</a>(text) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#startsWith">bool startsWith( string text, string word ) </a></dt>
+<dd>文字列が、指定された部分文字列で始まっているかどうか判定します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#checkText">checkText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#checkText">checkText</a>(text, word, <a href="Text.htmllib/Text.html#START">START</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#endsWith">bool endsWith( string text, string word ) </a></dt>
+<dd>文字列が、指定された部分文字列で終わっているかどうか判定します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#checkText">checkText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#checkText">checkText</a>(text, word, <a href="Text.htmllib/Text.html#END">END</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#match">string match( string text, string pattern ) </a></dt>
+<dd>この API の使用は推奨されません。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#extractText">extractText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#extractText">extractText</a>(text, pattern, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#match">string match( string text, string pattern, int start ) </a></dt>
+<dd>この API の使用は推奨されません。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#extractText">extractText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#extractText">extractText</a>(text, pattern, start, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#matchFull">bool matchFull( string text, string pattern ) </a></dt>
+<dd>文字列全体が、正規表現に適合するかどうか判定します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#checkText">checkText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#checkText">checkText</a>(text, word, <a href="Text.htmllib/Text.html#FULL_PATTERN">FULL_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#matchFirst">string matchFirst( string text, string pattern ) </a></dt>
+<dd>文字列全体から、正規表現に最初に適合する箇所を抜き出して返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#extractText">extractText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#extractText">extractText</a>(text, pattern, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#matchFirst">string matchFirst( string text, string pattern, int start ) </a></dt>
+<dd>文字列から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、引数 start に指定したインデックス以降から、最初のものだけが選択されます。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#extractText">extractText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#extractText">extractText</a>(text, pattern, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#matchLast">string matchLast( string text, string pattern ) </a></dt>
+<dd>文字列全体から、正規表現に最後に適合する箇所を抜き出して返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#extractText">extractText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#extractText">extractText</a>(text, pattern, <a href="Text.htmllib/Text.html#LAST_PATTERN">LAST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#matchLast">string matchLast( string text, string pattern, int end ) </a></dt>
+<dd>文字列から、正規表現に適合する箇所を抜き出して返します。正規表現の適合箇所が複数存在する場合は、引数 end に指定したインデックスの位置よりも前から、最後のものだけが選択されます。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#extractText">extractText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#extractText">extractText</a>(text, pattern, 0, end, <a href="Text.htmllib/Text.html#LAST_PATTERN">LAST_PATTERN</a>) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#indexOf">int indexOf( string text, string word ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, <a href="Text.htmllib/Text.html#FIRST">FIRST</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）文字列内に部分文字列が含まれているかどうかの判断は、 0 &lt; <a href="Text.htmllib/Text.html#countText">countText</a>(text, word, <a href="Text.htmllib/Text.html#ALL">ALL</a>) などで行えます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#indexOf">int indexOf( string text, string word, int start ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、引数 start に指定したインデックス以降から、最初のものが選択されます。存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, start, <a href="Text.htmllib/Text.html#FIRST">FIRST</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）文字列内の指定位置以降に部分文字列が含まれているかどうかの判断は、 0 &lt; <a href="Text.htmllib/Text.html#countText">countText</a>(text, word, start, <a href="Text.htmllib/Text.html#ALL">ALL</a>) などで行えます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#indexOfPattern">string indexOfPattern( string text, string word ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最初のものが選択されます。存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#indexOfPattern">string indexOfPattern( string text, string word, int start ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最初のものが選択されます。引数 start に指定したインデックス以降から、存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, start, <a href="Text.htmllib/Text.html#FIRST_PATTERN">FIRST_PATTERN</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#lastIndexOf">int lastIndexOf( string text, string word ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, <a href="Text.htmllib/Text.html#LAST">LAST</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#lastIndexOf">int lastIndexOf( string text, string word, int end ) </a></dt>
+<dd>文字列内から、指定された部分文字列の位置を取得します。複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, 0, end, <a href="Text.htmllib/Text.html#LAST">LAST</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#lastIndexOfPattern">string lastIndexOfPattern( string text, string word ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、最後のものが選択されます。存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, <a href="Text.htmllib/Text.html#LAST_PATTERN">LAST_PATTERN</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#lastIndexOfPattern">string lastIndexOfPattern( string text, string word, int end ) </a></dt>
+<dd>文字列内から、指定された正規表現に適合する位置を取得します。複数存在する場合は、引数 end に指定したインデックス以前から、最後のものが選択されます。存在しない場合は -1 を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#findText">findText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#findText">findText</a>(text, word, 0, end, <a href="Text.htmllib/Text.html#LAST_PATTERN">LAST_PATTERN</a>) とすればこの関数と同様の結果が得られます。（ただし、一致部分が無い場合は要素数 0 の配列が返されます。）<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
+<dt><a href="lib/Text.html#charAt">string charAt( string text, int index ) </a></dt>
+<dd>文字列内の、指定されたインデックスの位置にある文字を返します。現在は、同様の機能を提供する、新しい <a href="Text.htmllib/Text.html#atText">atText</a> 関数がサポートされています。例えば、<a href="Text.htmllib/Text.html#atText">atText</a>(text, index) とすればこの関数と同様の結果が得られます。<span style="font-weight:bold;">この関数は互換目的でサポートされています。</span> </dd>
 <dt><a href="lib/Text.html#tokenize">string[ ] tokenize( string text ) </a></dt>
 <dd>文字列内を、空白またはタブ、もしくは改行区切りでトークンに分割し、配列にまとめて返します。 </dd>
 </dl>

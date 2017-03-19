@@ -1,0 +1,1125 @@
+coding UTF-8;
+
+import Text; // 第一階層ライブラリは処理系内にアーカイブされるためファイルの直接読み込みは不可
+
+/**
+ * <p>Text モジュールのテストです。</p>
+ */
+
+
+
+test();
+
+void test() {
+	
+	// atText 関数のテスト
+	testAtText();
+	
+	// cropText 関数のテスト
+	testCropText();
+	
+	// checkText 関数のテスト
+	testCheckText();
+	
+	// countText 関数のテスト
+	testCountText();
+	
+	// findText 関数のテスト
+	testFindText();
+
+	// extractText 関数のテスト
+	testExtractText();
+	
+	// replaceText 関数のテスト
+	testReplaceText();
+	
+	// splitText 関数のテスト
+	testSplitText();
+	
+	println("TextTest: OK.");
+}
+
+
+// atText 関数のテスト
+void testAtText() {
+	string base;
+	string c;
+	
+	base = "ABCabcde12345xcdefgcABcd8x";
+	c = atText(base, 0);
+	assert( c == "A" );
+	c = atText(base, 1);
+	assert( c == "B" );
+	c = atText(base, 2);
+	assert( c == "C" );
+	c = atText(base, countText(base)-1);
+	assert( c == "x" );
+	c = atText(base, countText(base)-2);
+	assert( c == "8" );
+}
+
+
+// cropText 関数のテスト
+void testCropText() {
+	string base;
+	string crop;
+	
+	// 2文字目から(8-1)文字目までを切り抜き
+	base = "012345678901234567890123456789";
+	crop = cropText(base, 2, 8);
+	assert( crop == "234567" );
+	
+	// 最初から元の文字数の長さだけ切り抜き（＝元の文字列のまま）
+	base = "012345678901234567890123456789";
+	crop = cropText(base, 0, countText(base));
+	assert( crop == base );
+}
+
+
+// checkText 関数のテスト
+void testCheckText() {
+	string base;
+	string query;
+	bool check;
+	
+	// 先頭一致判定
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "ABC";
+	check = checkText(base, query, START);
+	assert( check );
+	query = "XYZ";
+	check = checkText(base, query, START);
+	assert( !check );
+	
+	// 終端一致判定
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd8x";
+	check = checkText(base, query, END);
+	assert( check );
+	query = "XYZ";
+	check = checkText(base, query, END);
+	assert( !check );
+	
+	// 正規表現、先頭一致判定
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "...abc";
+	check = checkText(base, query, START_PATTERN);
+	assert( check );
+	query = ".abc";
+	check = checkText(base, query, START_PATTERN);
+	assert( !check );
+	query = ".*2345";
+	check = checkText(base, query, START_PATTERN);
+	assert( check );
+	query = "...2345";
+	check = checkText(base, query, START_PATTERN);
+	assert( !check );
+	query = "^A.*12345";
+	check = checkText(base, query, START_PATTERN);
+	assert( check );
+	
+	// 正規表現、終端一致判定
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "AB..8.";
+	check = checkText(base, query, END_PATTERN);
+	assert( check );
+	query = "AB..8";
+	check = checkText(base, query, END_PATTERN);
+	assert( !check );
+	query = ".x$";
+	check = checkText(base, query, END_PATTERN);
+	assert( check );
+	query = ".X$";
+	check = checkText(base, query, END_PATTERN);
+	assert( !check );
+	
+	// 正規表現、全体一致判定
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "A.*x";
+	check = checkText(base, query, FULL_PATTERN);
+	assert( check );
+	query = "^A.*x$";
+	check = checkText(base, query, FULL_PATTERN);
+	assert( check );
+	query = "B.*x";
+	check = checkText(base, query, FULL_PATTERN);
+	assert( !check );
+	query = ".*cd.*";
+	check = checkText(base, query, FULL_PATTERN);
+	assert( check );
+	query = ".*XYZ.*";
+	check = checkText(base, query, FULL_PATTERN);
+	assert( !check );
+}
+
+
+// countText 関数のテスト
+void testCountText() {
+	
+	string base;
+	string query;
+	string pattern;
+	int count;
+	
+	// 文字数をカウント
+	base = "123456789012345678901234567890";
+	count = countText(base);
+	assert( count == 30 );
+	
+	// 環境依存の改行文字を含んだ文字列に対して、文字数をカウント
+	base = "1234567890" + CR + "1234567890" + LF + "1234567890";
+	count = countText(base);
+	assert( count == 32 );
+	
+	// 指定文字列が含まれる数をカウント
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "C";
+	count = countText(base, query, ALL);
+	assert( count == 1 );
+	query = "cd";
+	count = countText(base, query, ALL);
+	assert( count == 3 );
+	count = countText(base, query, FIRST);
+	assert( count == 1 );
+	count = countText(base, query, LAST);
+	assert( count == 1 );
+	query = "222";
+	count = countText(base, query, ALL);
+	assert( count == 0 );
+	count = countText(base, query, FIRST);
+	assert( count == 0 );
+	count = countText(base, query, LAST);
+	assert( count == 0 );
+	
+	// 検索開始地点を指定して、指定文字列が含まれる数をカウント
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	count = countText(base, query, 0, ALL);
+	assert( count == 3 );
+	count = countText(base, query, 5, ALL);
+	assert( count == 3 );
+	count = countText(base, query, 6, ALL);
+	assert( count == 2 );
+	count = countText(base, query, 14, ALL);
+	assert( count == 2 );
+	count = countText(base, query, 15, ALL);
+	assert( count == 1 );
+	count = countText(base, query, 22, ALL);
+	assert( count == 1 );
+	count = countText(base, query, 23, ALL);
+	assert( count == 0 );
+	
+	// 検索範囲を指定して、指定文字列が含まれる数をカウント
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	count = countText(base, query, 0, 26, ALL);
+	assert( count == 3 );
+	count = countText(base, query, 0, 24, ALL);
+	assert( count == 3 );
+	count = countText(base, query, 0, 23, ALL);
+	assert( count == 2 );
+	count = countText(base, query, 5, 23, ALL);
+	assert( count == 2 );
+	count = countText(base, query, 6, 23, ALL);
+	assert( count == 1 );
+	count = countText(base, query, 6, 16, ALL);
+	assert( count == 1 );
+	count = countText(base, query, 6, 15, ALL);
+	assert( count == 0 );
+	
+	
+	// 正規表現の一致個数をカウント
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 3 );
+	query = "..xyz.";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 0 );
+	query = "a.*5";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 1 );
+	query = "^a.*5";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 0 );
+	query = "^A.*5";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 1 );
+	query = "A.*8";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 2 );
+	query = "A.*8$";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 0 );
+	query = "A.*8x$";
+	count = countText(base, query, ALL_PATTERN);
+	assert( count == 2 );
+	
+	// 検索開始地点を指定して、正規表現の一致個数をカウント
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	count = countText(base, query, 0, ALL_PATTERN);
+	assert( count == 3 );
+	count = countText(base, query, 1, ALL_PATTERN);
+	assert( count == 3 );
+	count = countText(base, query, 2, ALL_PATTERN);
+	assert( count == 2 );
+	count = countText(base, query, 10, ALL_PATTERN);
+	assert( count == 2 );
+	count = countText(base, query, 11, ALL_PATTERN);
+	assert( count == 1 );
+	count = countText(base, query, 18, ALL_PATTERN);
+	assert( count == 1 );
+	count = countText(base, query, 19, ALL_PATTERN);
+	assert( count == 0 );
+	
+	// 検索範囲を指定して、正規表現の一致個数をカウント
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	count = countText(base, query, 0, 24, ALL_PATTERN);
+	assert( count == 3 );
+	count = countText(base, query, 0, 23, ALL_PATTERN);
+	assert( count == 3 );
+	count = countText(base, query, 0, 22, ALL_PATTERN);
+	assert( count == 2 );
+	count = countText(base, query, 1, 22, ALL_PATTERN);
+	assert( count == 2 );
+	count = countText(base, query, 2, 22, ALL_PATTERN);
+	assert( count == 1 );
+	count = countText(base, query, 2, 15, ALL_PATTERN);
+	assert( count == 1 );
+	count = countText(base, query, 2, 14, ALL_PATTERN);
+	assert( count == 0 );
+}
+
+
+// findText 関数のテスト
+void testFindText() {
+	
+	string base;
+	string query;
+	int index[];
+	
+	// 最初の一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, FIRST);
+	assert( index[0] == 5 );
+	
+	// 最後の一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, LAST);
+	assert( index[0] == 22 );
+	
+	// 全ての一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, ALL);
+	assert( length(index,0) == 3 );
+	assert( index[0] == 5 );
+	assert( index[1] == 14 );
+	assert( index[2] == 22 );
+	
+	// 検索開始地点を指定して、最初の一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, 0, FIRST);
+	assert( index[0] == 5 );
+	index = findText(base, query, 5, FIRST);
+	assert( index[0] == 5 );
+	index = findText(base, query, 6, FIRST);
+	assert( index[0] == 14 );
+	index = findText(base, query, 14, FIRST);
+	assert( index[0] == 14 );
+	index = findText(base, query, 15, FIRST);
+	assert( index[0] == 22 );
+	index = findText(base, query, 22, FIRST);
+	assert( index[0] == 22 );
+	index = findText(base, query, 23, FIRST);
+	assert( length(index, 0) == 0 );
+	
+	// 検索開始地点を指定して、全ての一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, 0, ALL);
+	assert( length(index,0) == 3 );
+	assert( index[0] == 5 );
+	assert( index[1] == 14 );
+	assert( index[2] == 22 );
+	index = findText(base, query, 5, ALL);
+	assert( length(index,0) == 3 );
+	assert( index[0] == 5 );
+	assert( index[1] == 14 );
+	assert( index[2] == 22 );
+	index = findText(base, query, 6, ALL);
+	assert( length(index,0) == 2 );
+	assert( index[0] == 14 );
+	assert( index[1] == 22 );
+	index = findText(base, query, 23, ALL);
+	assert( length(index, 0) == 0 );
+	
+	// 検索範囲を指定して、最初の一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, 0, 7, FIRST);
+	assert( index[0] == 5 );
+	index = findText(base, query, 0, 6, FIRST);
+	assert( length(index, 0) == 0 );
+	index = findText(base, query, 10, 16, FIRST);
+	assert( index[0] == 14 );
+	index = findText(base, query, 10, 15, FIRST);
+	assert( length(index, 0) == 0 );
+	
+	// 検索範囲を指定して、最後の一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, 0, 26, LAST);
+	assert( index[0] == 22 );
+	index = findText(base, query, 0, 24, LAST);
+	assert( index[0] == 22 );
+	index = findText(base, query, 0, 23, LAST);
+	assert( index[0] == 14 );
+	index = findText(base, query, 14, 23, LAST);
+	assert( index[0] == 14 );
+	index = findText(base, query, 15, 23, LAST);
+	assert( length(index, 0) == 0 );
+	
+	// 検索範囲を指定して、全ての一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	index = findText(base, query, 0, 26, ALL);
+	assert( length(index, 0) == 3 );
+	assert( index[0] == 5 );
+	assert( index[1] == 14 );
+	assert( index[2] == 22 );
+	index = findText(base, query, 5, 26, ALL);
+	assert( length(index, 0) == 3 );
+	assert( index[0] == 5 );
+	assert( index[1] == 14 );
+	assert( index[2] == 22 );
+	index = findText(base, query, 6, 26, ALL);
+	assert( length(index, 0) == 2 );
+	assert( index[0] == 14 );
+	assert( index[1] == 22 );
+	index = findText(base, query, 6, 24, ALL);
+	assert( length(index, 0) == 2 );
+	assert( index[0] == 14 );
+	assert( index[1] == 22 );
+	index = findText(base, query, 6, 23, ALL);
+	assert( length(index, 0) == 1 );
+	assert( index[0] == 14 );
+	index = findText(base, query, 14, 23, ALL);
+	assert( length(index, 0) == 1 );
+	assert( index[0] == 14 );
+	index = findText(base, query, 15, 23, ALL);
+	assert( length(index, 0) == 0 );
+	
+	
+	// 正規表現、最初の一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	index = findText(base, query, FIRST_PATTERN);
+	assert( index[0] == 3 );
+	
+	// 正規表現、最後の一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	index = findText(base, query, LAST_PATTERN);
+	assert( index[0] == 20 );
+	
+	// 正規表現、全ての一致インデックスを取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	index = findText(base, query, ALL_PATTERN);
+	assert( length(index,0) == 3 );
+	assert( index[0] == 3 );
+	assert( index[1] == 12 );
+	assert( index[2] == 20 );
+	
+	
+	// 正規表現、検索開始地点を指定して、最初の一致インデックスを取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	index = findText(base, query, 0, 24, FIRST_PATTERN);
+	assert( index[0] == 1 );
+	index = findText(base, query, 1, 24, FIRST_PATTERN);
+	assert( index[0] == 1 );
+	index = findText(base, query, 2, 24, FIRST_PATTERN);
+	assert( index[0] == 10 );
+	index = findText(base, query, 10, 24, FIRST_PATTERN);
+	assert( index[0] == 10 );
+	index = findText(base, query, 11, 24, FIRST_PATTERN);
+	assert( index[0] == 18 );
+	index = findText(base, query, 18, 24, FIRST_PATTERN);
+	assert( index[0] == 18 );
+	index = findText(base, query, 19, 24, FIRST_PATTERN);
+	assert( length(index, 0) == 0 );
+	
+	// 正規表現、検索開始地点を指定して、最後の一致インデックスを取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	index = findText(base, query, 0, 24, LAST_PATTERN);
+	assert( index[0] == 18 );
+	index = findText(base, query, 0, 23, LAST_PATTERN);
+	assert( index[0] == 18 );
+	index = findText(base, query, 0, 22, LAST_PATTERN);
+	assert( index[0] == 10 );
+	index = findText(base, query, 0, 15, LAST_PATTERN);
+	assert( index[0] == 10 );
+	index = findText(base, query, 0, 14, LAST_PATTERN);
+	assert( index[0] == 1 );
+	index = findText(base, query, 1, 14, LAST_PATTERN);
+	assert( index[0] == 1 );
+	index = findText(base, query, 2, 14, LAST_PATTERN);
+	assert( length(index, 0) == 0 );
+	
+	// 正規表現、検索開始地点を指定して、全ての一致インデックスを取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	index = findText(base, query, 0, 24, ALL_PATTERN);
+	assert( length(index, 0) == 3 );
+	assert( index[0] == 1 );
+	assert( index[1] == 10 );
+	assert( index[2] == 18 );
+	index = findText(base, query, 1, 24, ALL_PATTERN);
+	assert( length(index, 0) == 3 );
+	assert( index[0] == 1 );
+	assert( index[1] == 10 );
+	assert( index[2] == 18 );
+	index = findText(base, query, 2, 24, ALL_PATTERN);
+	assert( length(index, 0) == 2 );
+	assert( index[0] == 10 );
+	assert( index[1] == 18 );
+	index = findText(base, query, 2, 23, ALL_PATTERN);
+	assert( length(index, 0) == 2 );
+	assert( index[0] == 10 );
+	assert( index[1] == 18 );
+	index = findText(base, query, 2, 22, ALL_PATTERN);
+	assert( length(index, 0) == 1 );
+	assert( index[0] == 10 );
+	index = findText(base, query, 10, 22, ALL_PATTERN);
+	assert( length(index, 0) == 1 );
+	assert( index[0] == 10 );
+	index = findText(base, query, 11, 22, ALL_PATTERN);
+	assert( length(index, 0) == 0 );
+}
+
+
+// extractText 関数のテスト
+void testExtractText() {
+	
+	string base;
+	string query;
+	string ext[];
+	
+	// 正規表現、最初の一致文字列を取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == "abcde" );
+	
+	// 正規表現、最後の一致文字列を取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, LAST_PATTERN);
+	assert( ext[0] == "ABcd8" );
+	
+	// 正規表現、全ての一致文字列を取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, ALL_PATTERN);
+	assert( length(ext,0) == 3 );
+	assert( ext[0] == "abcde" );
+	assert( ext[1] == "5xcde" );
+	assert( ext[2] == "ABcd8" );
+	
+	// 正規表現、最初の最長一致文字列を取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "a.*e";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == "abcde12345xcde" );
+	
+	// 正規表現、最初の最短一致文字列を取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "a.*?e";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == "abcde" );
+	
+	// 正規表現、先頭から最長一致文字列を取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "^A.*e";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == "ABCabcde12345xcde" );
+	
+	// 正規表現、先頭から最短一致文字列を取得
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "^A.*?e";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == "ABCabcde" );
+	
+	// 正規表現、改行を含んだ文字列からの検索
+	base = "ABC" + EOL + "abcde" + EOL + "12345";
+	query = ".*";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == "ABC" );
+	query = "abc.*3";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( length(ext, 0) == 0 );
+	query = "abc(.|[" + EOL + "])*3";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == ("abcde" + EOL + "123") );
+	
+	// 正規表現、全体のパターン一致を確認
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "^A.*x$";
+	ext = extractText(base, query, FIRST_PATTERN);
+	assert( ext[0] == base );
+	
+	// 正規表現、検索開始地点を指定して、最初の一致文字列を取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, 0,  ALL_PATTERN);
+	assert( ext[0] == "abcde" );
+	ext = extractText(base, query, 1, ALL_PATTERN);
+	assert( ext[0] == "abcde" );
+	ext = extractText(base, query, 2, ALL_PATTERN);
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 10, ALL_PATTERN);
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 11, ALL_PATTERN);
+	assert( ext[0] == "ABcd8" );
+	ext = extractText(base, query, 18, ALL_PATTERN);
+	assert( ext[0] == "ABcd8" );
+	ext = extractText(base, query, 19, ALL_PATTERN);
+	assert( length(ext, 0) == 0 );
+	
+	// 正規表現、検索開始地点を指定して、全ての一致文字列を取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, 1, ALL_PATTERN);
+	assert( length(ext, 0) == 3 );
+	assert( ext[0] == "abcde" );
+	assert( ext[1] == "5xcde" );
+	assert( ext[2] == "ABcd8" );
+	ext = extractText(base, query, 2, ALL_PATTERN);
+	assert( length(ext, 0) == 2 );
+	assert( ext[0] == "5xcde" );
+	assert( ext[1] == "ABcd8" );
+	ext = extractText(base, query, 10, ALL_PATTERN);
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 11, ALL_PATTERN);
+	assert( length(ext, 0) == 1 );
+	assert( ext[0] == "ABcd8" );
+	ext = extractText(base, query, 19, ALL_PATTERN);
+	assert( length(ext, 0) == 0 );
+	
+	// 正規表現、検索範囲を指定して、最初の一致文字列を取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, 0, 24, FIRST_PATTERN);
+	assert( ext[0] == "abcde" );
+	ext = extractText(base, query, 2, 24, FIRST_PATTERN);
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 2, 15, FIRST_PATTERN);
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 2, 14, FIRST_PATTERN);
+	assert( length(ext, 0) == 0 );
+	
+	// 正規表現、検索範囲を指定して、最後の一致文字列を取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, 0, 24, LAST_PATTERN);
+	assert( ext[0] == "ABcd8" );
+	ext = extractText(base, query, 0, 23, LAST_PATTERN);
+	assert( ext[0] == "ABcd8" );
+	ext = extractText(base, query, 0, 22, LAST_PATTERN);
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 10, 22, LAST_PATTERN);
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 11, 22, LAST_PATTERN);
+	assert( length(ext, 0) == 0 );
+	
+	// 正規表現、検索範囲を指定して、全ての一致文字列を取得
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	ext = extractText(base, query, 0, 24, ALL_PATTERN);
+	assert( length(ext, 0) == 3 );
+	assert( ext[0] == "abcde" );
+	assert( ext[1] == "5xcde" );
+	assert( ext[2] == "ABcd8" );
+	ext = extractText(base, query, 2, 24, ALL_PATTERN);
+	assert( length(ext, 0) == 2 );
+	assert( ext[0] == "5xcde" );
+	assert( ext[1] == "ABcd8" );
+	ext = extractText(base, query, 2, 15, ALL_PATTERN);
+	assert( length(ext, 0) == 1 );
+	assert( ext[0] == "5xcde" );
+	ext = extractText(base, query, 2, 14, ALL_PATTERN);
+	assert( length(ext, 0) == 0 );
+}
+
+
+// replaceText 関数のテスト
+void testReplaceText() {
+	
+	string base;
+	string query;
+	string to;
+	string replace;
+	
+	// 最初の一致部分を置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	to = "@";
+	replace = replaceText(base, query, to, FIRST);
+	assert( replace == "ABCab@e12345xcdefgcABcd8x" );
+	
+	// 最後の一致部分を置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	to = "@";
+	replace = replaceText(base, query, to, LAST);
+	assert( replace == "ABCabcde12345xcdefgcAB@8x" );
+	
+	// 全ての一致部分を置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	to = "@";
+	replace = replaceText(base, query, to, ALL);
+	assert( replace == "ABCab@e12345x@efgcAB@8x" );
+	
+	
+	// 検索開始地点を指定して、最初の一致部分で置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	replace = replaceText(base, query, to, 0, FIRST);
+	assert( replace == "ABCab@e12345xcdefgcABcd8x" );
+	replace = replaceText(base, query, to, 10, FIRST);
+	assert( replace == "ABCabcde12345x@efgcABcd8x" );
+	replace = replaceText(base, query, to, 23, FIRST);
+	assert( replace == base );
+	
+	// 検索開始地点を指定して、最後の一致部分で置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	replace = replaceText(base, query, to, 0, LAST);
+	assert( replace == "ABCabcde12345xcdefgcAB@8x" );
+	replace = replaceText(base, query, to, 23, LAST);
+	assert( replace == base );
+	
+	// 検索開始地点を指定して、全ての一致部分で置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	replace = replaceText(base, query, to, 0, ALL);
+	assert( replace == "ABCab@e12345x@efgcAB@8x" );
+	replace = replaceText(base, query, to, 5, ALL);
+	assert( replace == "ABCab@e12345x@efgcAB@8x" );
+	replace = replaceText(base, query, to, 6, ALL);
+	assert( replace == "ABCabcde12345x@efgcAB@8x" );
+	replace = replaceText(base, query, to, 22, ALL);
+	assert( replace == "ABCabcde12345xcdefgcAB@8x" );
+	replace = replaceText(base, query, to, 23, ALL);
+	assert( replace == base );
+	replace = replaceText(base, query, to, 26, ALL);
+	assert( replace == base );
+	
+	
+	// 検索範囲を指定して、最初の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	replace = replaceText(base, query, to, 5, 26, FIRST);
+	assert( replace == "ABCab@e12345xcdefgcABcd8x" );
+	replace = replaceText(base, query, to, 6, 26, FIRST);
+	assert( replace == "ABCabcde12345x@efgcABcd8x" );
+	replace = replaceText(base, query, to, 6, 10, FIRST);
+	assert( replace == base );
+	
+	// 検索範囲を指定して、最後の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	replace = replaceText(base, query, to, 0, 24, LAST);
+	assert( replace == "ABCabcde12345xcdefgcAB@8x" );
+	replace = replaceText(base, query, to, 0, 23, LAST);
+	assert( replace == "ABCabcde12345x@efgcABcd8x" );
+	replace = replaceText(base, query, to, 8, 10, LAST);
+	assert( replace == base );
+	
+	// 検索範囲を指定して、全ての一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	replace = replaceText(base, query, to, 5, 24, ALL);
+	assert( replace == "ABCab@e12345x@efgcAB@8x" );
+	replace = replaceText(base, query, to, 5, 23, ALL);
+	assert( replace == "ABCab@e12345x@efgcABcd8x" );
+	replace = replaceText(base, query, to, 6, 23, ALL);
+	assert( replace == "ABCabcde12345x@efgcABcd8x" );
+	replace = replaceText(base, query, to, 10, 12, ALL);
+	assert( replace == base );
+	
+	
+	// 正規表現、最初の一致部分を置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	to = "@";
+	replace = replaceText(base, query, to, FIRST_PATTERN);
+	assert( replace == "ABC@12345xcdefgcABcd8x" );
+	
+	// 正規表現、最後の一致部分を置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	to = "@";
+	replace = replaceText(base, query, to, LAST_PATTERN);
+	assert( replace == "ABCabcde12345xcdefgc@x" );
+	
+	// 正規表現、全ての一致部分を置き換え
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	to = "@";
+	replace = replaceText(base, query, to, ALL_PATTERN);
+	assert( replace == "ABC@1234@fgc@x" );
+	
+	
+	// 正規表現、検索開始地点を指定して、最初の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	replace = replaceText(base, query, to, 0, FIRST_PATTERN);
+	assert( replace == "A@12345xcdefgcABcd8x" );
+	replace = replaceText(base, query, to, 10, FIRST_PATTERN);
+	assert( replace == "Aabcde1234@fgcABcd8x" );
+	replace = replaceText(base, query, to, 23, FIRST_PATTERN);
+	assert( replace == base );
+	
+	// 正規表現、検索開始地点を指定して、最後の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	replace = replaceText(base, query, to, 0, 24, LAST_PATTERN);
+	assert( replace == "Aabcde12345xcdefgc@x" );
+	replace = replaceText(base, query, to, 21, LAST_PATTERN);
+	assert( replace == "Aabcde12345xcdefgcABcd8x" );
+	
+	// 正規表現、検索開始地点を指定して、全ての一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	replace = replaceText(base, query, to, 1, 24, ALL_PATTERN);
+	assert( replace == "A@1234@fgc@x" );
+	replace = replaceText(base, query, to, 2, 24, ALL_PATTERN);
+	assert( replace == "Aabcde1234@fgc@x" );
+	replace = replaceText(base, query, to, 2, 22, ALL_PATTERN);
+	assert( replace == "Aabcde1234@fgcABcd8x" );
+	replace = replaceText(base, query, to, 10, 12, ALL_PATTERN);
+	assert( replace == base );
+	
+	
+	// 正規表現、検索範囲を指定して、最初の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	replace = replaceText(base, query, to, 1, 24, FIRST_PATTERN);
+	assert( replace == "A@12345xcdefgcABcd8x" );
+	replace = replaceText(base, query, to, 2, 24, FIRST_PATTERN);
+	assert( replace == "Aabcde1234@fgcABcd8x" );
+	replace = replaceText(base, query, to, 10, 12, FIRST_PATTERN);
+	assert( replace == base );
+	
+	// 正規表現、検索範囲を指定して、最後の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	replace = replaceText(base, query, to, 1, 23, LAST_PATTERN);
+	assert( replace == "Aabcde12345xcdefgc@x" );
+	replace = replaceText(base, query, to, 1, 22, LAST_PATTERN);
+	assert( replace == "Aabcde1234@fgcABcd8x" );
+	replace = replaceText(base, query, to, 10, 12, LAST_PATTERN);
+	assert( replace == base );
+	
+	// 正規表現、検索範囲を指定して、全ての一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	replace = replaceText(base, query, to, 1, 23, ALL_PATTERN);
+	assert( replace == "A@1234@fgc@x" );
+	replace = replaceText(base, query, to, 1, 22, ALL_PATTERN);
+	assert( replace == "A@1234@fgcABcd8x" );
+	replace = replaceText(base, query, to, 2, 22, ALL_PATTERN);
+	assert( replace == "Aabcde1234@fgcABcd8x" );
+	replace = replaceText(base, query, to, 10, 12, ALL_PATTERN);
+	assert( replace == base );
+}
+
+
+// splitText 関数のテスト
+void testSplitText() {
+	
+	string base;
+	string query;
+	string split[];
+	
+	// 最初の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, FIRST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345xcdefgcABcd8x" );
+	
+	// 最後の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, LAST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345xcdefgcAB" );
+	assert( split[1] == "8x" );
+	
+	// 全ての一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, ALL);
+	assert( length(split,0) == 4 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345x" );
+	assert( split[2] == "efgcAB" );
+	assert( split[3] == "8x" );
+	
+	
+	// 検索開始地点を指定して、最初の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, 0, FIRST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345xcdefgcABcd8x" );
+	split = splitText(base, query, 10, FIRST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345x" );
+	assert( split[1] == "efgcABcd8x" );
+	split = splitText(base, query, 23, FIRST);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	// 検索開始地点を指定して、最後の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, 0, LAST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345xcdefgcAB" );
+	assert( split[1] == "8x" );
+	split = splitText(base, query, 23, LAST);
+	assert( length(split,0) == 1 );
+	assert( split[0] == "ABCabcde12345xcdefgcABcd8x" );
+	
+	// 検索開始地点を指定して、全ての一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, 0, ALL);
+	assert( length(split,0) == 4 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345x" );
+	assert( split[2] == "efgcAB" );
+	assert( split[3] == "8x" );
+	split = splitText(base, query, 5, ALL);
+	assert( length(split,0) == 4 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345x" );
+	assert( split[2] == "efgcAB" );
+	assert( split[3] == "8x" );
+	split = splitText(base, query, 6, ALL);
+	assert( length(split,0) == 3 );
+	assert( split[0] == "ABCabcde12345x" );
+	assert( split[1] == "efgcAB" );
+	assert( split[2] == "8x" );
+	split = splitText(base, query, 22, ALL);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345xcdefgcAB" );
+	assert( split[1] == "8x" );
+	split = splitText(base, query, 23, ALL);
+	assert( length(split,0) == 1 );
+	assert( split[0] == "ABCabcde12345xcdefgcABcd8x" );
+	split = splitText(base, query, 26, ALL);
+	assert( length(split,0) == 1 );
+	assert( split[0] == "ABCabcde12345xcdefgcABcd8x" );
+	
+	
+	// 検索範囲を指定して、最初の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, 5, 26, FIRST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345xcdefgcABcd8x" );
+	split = splitText(base, query, 6, 26, FIRST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345x" );
+	assert( split[1] == "efgcABcd8x" );
+	split = splitText(base, query, 6, 10, FIRST);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	// 検索範囲を指定して、最後の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, 0, 24, LAST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345xcdefgcAB" );
+	assert( split[1] == "8x" );
+	split = splitText(base, query, 0, 23, LAST);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345x" );
+	assert( split[1] == "efgcABcd8x" );
+	split = splitText(base, query, 8, 10, LAST);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	// 検索範囲を指定して、全ての一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "cd";
+	split = splitText(base, query, 5, 24, ALL);
+	assert( length(split,0) == 4 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345x" );
+	assert( split[2] == "efgcAB" );
+	assert( split[3] == "8x" );
+	split = splitText(base, query, 5, 23, ALL);
+	assert( length(split,0) == 3 );
+	assert( split[0] == "ABCab" );
+	assert( split[1] == "e12345x" );
+	assert( split[2] == "efgcABcd8x" );
+	split = splitText(base, query, 6, 23, ALL);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345x" );
+	assert( split[1] == "efgcABcd8x" );
+	split = splitText(base, query, 10, 12, ALL);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	
+	// 正規表現、最初の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, FIRST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABC" );
+	assert( split[1] == "12345xcdefgcABcd8x" );
+	
+	// 正規表現、最後の一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, LAST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "ABCabcde12345xcdefgc" );
+	assert( split[1] == "x" );
+	
+	// 正規表現、全ての一致部分で分割
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, ALL_PATTERN);
+	assert( length(split,0) == 4 );
+	assert( split[0] == "ABC" );
+	assert( split[1] == "1234" );
+	assert( split[2] == "fgc" );
+	assert( split[3] == "x" );
+	
+	
+	// 正規表現、検索開始地点を指定して、最初の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, 0, FIRST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "A" );
+	assert( split[1] == "12345xcdefgcABcd8x" );
+	split = splitText(base, query, 10, FIRST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "Aabcde1234" );
+	assert( split[1] == "fgcABcd8x" );
+	split = splitText(base, query, 23, FIRST_PATTERN);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	// 正規表現、検索開始地点を指定して、最後の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, 0, 24, LAST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "Aabcde12345xcdefgc" );
+	assert( split[1] == "x" );
+	split = splitText(base, query, 21, LAST_PATTERN);
+	assert( length(split,0) == 1 );
+	assert( split[0] == "Aabcde12345xcdefgcABcd8x" );
+	
+	// 正規表現、検索開始地点を指定して、全ての一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, 1, 24, ALL_PATTERN);
+	assert( length(split,0) == 4 );
+	assert( split[0] == "A" );
+	assert( split[1] == "1234" );
+	assert( split[2] == "fgc" );
+	assert( split[3] == "x" );
+	split = splitText(base, query, 2, 24, ALL_PATTERN);
+	assert( length(split,0) == 3 );
+	assert( split[0] == "Aabcde1234" );
+	assert( split[1] == "fgc" );
+	assert( split[2] == "x" );
+	split = splitText(base, query, 2, 22, ALL_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "Aabcde1234" );
+	assert( split[1] == "fgcABcd8x" );
+	split = splitText(base, query, 10, 12, ALL_PATTERN);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	
+	// 正規表現、検索範囲を指定して、最初の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, 1, 24, FIRST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "A" );
+	assert( split[1] == "12345xcdefgcABcd8x" );
+	split = splitText(base, query, 2, 24, FIRST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "Aabcde1234" );
+	assert( split[1] == "fgcABcd8x" );
+	split = splitText(base, query, 10, 12, FIRST_PATTERN);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	// 正規表現、検索範囲を指定して、最後の一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, 1, 23, LAST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "Aabcde12345xcdefgc" );
+	assert( split[1] == "x" );
+	split = splitText(base, query, 1, 22, LAST_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "Aabcde1234" );
+	assert( split[1] == "fgcABcd8x" );
+	split = splitText(base, query, 10, 12, LAST_PATTERN);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+	
+	// 正規表現、検索範囲を指定して、全ての一致部分で分割
+	base = "Aabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	split = splitText(base, query, 1, 23, ALL_PATTERN);
+	assert( length(split,0) == 4 );
+	assert( split[0] == "A" );
+	assert( split[1] == "1234" );
+	assert( split[2] == "fgc" );
+	assert( split[3] == "x" );
+	split = splitText(base, query, 1, 22, ALL_PATTERN);
+	assert( length(split,0) == 3 );
+	assert( split[0] == "A" );
+	assert( split[1] == "1234" );
+	assert( split[2] == "fgcABcd8x" );
+	split = splitText(base, query, 2, 22, ALL_PATTERN);
+	assert( length(split,0) == 2 );
+	assert( split[0] == "Aabcde1234" );
+	assert( split[1] == "fgcABcd8x" );
+	split = splitText(base, query, 10, 12, ALL_PATTERN);
+	assert( length(split,0) == 1 );
+	assert( split[0] == base );
+}
+
+
+
+
+
