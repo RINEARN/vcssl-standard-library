@@ -100,6 +100,15 @@ void testCheckText() {
 	check = checkText(base, query, END);
 	assert( !check );
 	
+	// 存在判定
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "abcde";
+	check = checkText(base, query, CONTAIN);
+	assert( check );
+	query = "aaaaa";
+	check = checkText(base, query, CONTAIN);
+	assert( !check );
+	
 	// 正規表現、先頭一致判定
 	base = "ABCabcde12345xcdefgcABcd8x";
 	query = "...abc";
@@ -131,6 +140,21 @@ void testCheckText() {
 	assert( check );
 	query = ".X$";
 	check = checkText(base, query, END_PATTERN);
+	assert( !check );
+	
+	// 正規表現、存在判定
+	base = "ABCabcde12345xcdefgcABcd8x";
+	query = "..cd.";
+	check = checkText(base, query, CONTAIN_PATTERN);
+	assert( check );
+	query = "..aaaaa.";
+	check = checkText(base, query, CONTAIN_PATTERN);
+	assert( !check );
+	query = "^ABC";
+	check = checkText(base, query, CONTAIN_PATTERN);
+	assert( check );
+	query = "ABC$";
+	check = checkText(base, query, CONTAIN_PATTERN);
 	assert( !check );
 	
 	// 正規表現、全体一致判定

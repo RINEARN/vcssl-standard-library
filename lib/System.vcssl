@@ -844,25 +844,31 @@ public void im( varcomplex value, varfloat imagValue ){
  * ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。
  * 
  * @param filePath ファイル名またはパス
+ * @param 引数のファイルパスがそのまま返されます
  */
-private void checkFilePath(string filePath) {
+private string checkFilePath(string filePath) {
+	return SYSTEM_LIBRARY_INTERNAL_CHECK_FILE_PATH(filePath);
+}
+// private ではマクロ内で使用できない場合に使用する public 版（一般利用は非推奨、互換サポートなし）
+string SYSTEM_LIBRARY_INTERNAL_CHECK_FILE_PATH(string filePath) {
 	if (filePath == "") {
 		___error(ERROR_EMPTY_FILE_PATH);
 		exit();
 	} else if (((bool)(___isdir(filePath)[0]))) {
 		___error(ERROR_FILE_IS_DIRECTORY + filePath);
+		exit();
 	}
+	return filePath;
 }
 
 /**
  * 簡易ファイル出力関数です。string 変数の保持する内容を、ファイルに保存します。
  * 
  * @param filePath ファイル名またはパス
- * @param text ファイルに保存する内容
+ * @param content ファイルに保存する内容
  */
-public void save(string filePath, string text){
-	checkFilePath(filePath);
-	___save(filePath, text);
+public macro save(string filePath, content){
+	___save(SYSTEM_LIBRARY_INTERNAL_CHECK_FILE_PATH(filePath), ((string)content));
 }
 
 /**
