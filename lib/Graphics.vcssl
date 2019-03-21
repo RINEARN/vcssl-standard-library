@@ -173,7 +173,7 @@ int newGraphics( int rgba[][][] ){
  * <br />
  * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
  *
- * @param id 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。
+ * @param baseGraphics 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。
  * @param fromRed 変換対象の色の赤色成分（0 ~ 255）。
  * @param fromGreen 変換対象の色の青色成分（0 ~ 255）。
  * @param fromBlue 変換対象の色の緑色成分（0 ~ 255）。
@@ -184,12 +184,12 @@ int newGraphics( int rgba[][][] ){
  * @param toAlpha 変換後の色のα値成分（0 ~ 255）。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
-int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ){
+int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ){
 
-  int pixR[][] = getGraphicsPixelRed( id );
-  int pixG[][] = getGraphicsPixelGreen( id );
-  int pixB[][] = getGraphicsPixelBlue( id );
-  int pixA[][] = getGraphicsPixelAlpha( id );
+  int pixR[][] = getGraphicsPixelRed( baseGraphics );
+  int pixG[][] = getGraphicsPixelGreen( baseGraphics );
+  int pixB[][] = getGraphicsPixelBlue( baseGraphics );
+  int pixA[][] = getGraphicsPixelAlpha( baseGraphics );
   int width = length(pixR, 1);
   int height = length(pixR, 0);
   
@@ -220,15 +220,39 @@ int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha
  * <br />
  * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
 
- * @param id 変換元のイメージを保持するグラフィックスデータのID。
+ * @param baseGraphics 変換元のイメージを保持するグラフィックスデータのID。
  * @param fromColor 変換対象の色の成分を格納する配列。
  * @param toColor 変換後の色の成分を格納する配列。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
  */
-int newGraphics( int id, int fromColor[], int toColor[] ){
-	int id = newGraphics( id, fromColor[0], fromColor[1], fromColor[2], fromColor[3], toColor[0], toColor[1], toColor[2], toColor[3] );
-	return id;
+int newGraphics( int baseGraphics, int fromColor[], int toColor[] ){
+	int newID = newGraphics( baseGraphics, fromColor[0], fromColor[1], fromColor[2], fromColor[3], toColor[0], toColor[1], toColor[2], toColor[3] );
+	return newID;
 }
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。
+ * 
+ * @param baseGraphics 元のイメージを保持するグラフィックスデータのID。
+ * @param cropX 元の画像から抜き出す領域の左上頂点X座標
+ * @param cropY 元の画像から抜き出す領域の左上頂点Y座標
+ * @param cropWidth 元の画像から抜き出す領域の幅
+ * @param cropHeight 元の画像から抜き出す領域の高さ
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight ) {
+  int newID = newGraphics();
+  int rendererID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( newID, cropWidth, cropHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, baseGraphics,
+  	0, 0, cropWidth, cropHeight, 
+  	cropX, cropY, cropX+cropWidth, cropY+cropHeight );
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
+  return newID;
+}
+
 
 
 /**

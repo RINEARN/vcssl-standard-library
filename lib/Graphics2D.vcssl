@@ -373,19 +373,27 @@ macro drawImage( int rendererID, int vertex_x, int vertex_y, int width, int heig
 /**
  * 画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。
  * 
+ * なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動はドキュメントの引数の説明と異なっていたため、
+ * VCSSL 3.4.10 においてドキュメント通りの挙動に修正されました。
+ * VCSSL 3.4.8 以前の挙動を期待したい場合は、この関数の代わりに drawGraphics 関数を使用するよう、
+ * 呼び出し側のコードの記述を置き換えてください。
+ * 
  * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param width 幅
- * @param height 高さ
- * @param baseX 元の画像から抜き出す領域の左上頂点X座標
- * @param baseY 元の画像から抜き出す領域の左上頂点Y座標
- * @param baseWidth 元の画像から抜き出す領域の幅
- * @param baseHeight 元の画像から抜き出す領域の高さ
+ * @param x 描画する左上頂点X座標
+ * @param y 描画する左上頂点Y座標
+ * @param width 描画する幅
+ * @param height 描画する高さ
+ * @param cropX 元の画像から抜き出す領域の左上頂点X座標
+ * @param cropY 元の画像から抜き出す領域の左上頂点Y座標
+ * @param cropWidth 元の画像から抜き出す領域の幅
+ * @param cropHeight 元の画像から抜き出す領域の高さ
  * @param graphicsID 画像を格納するグラフィックスデータのID
  */
-void drawImage( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ){
-  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, x, y, width, height, baseX, baseY, baseWidth, baseHeight );
+void drawImage( int rendererID, int x, int y, int width, int height, int cropX, int cropY, int cropWidth, int cropHeight, int graphicsID ){
+
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID,
+  	x, y, x+width, y+height, 
+  	cropX, cropY, cropX+cropWidth, cropY+cropHeight );
 }
 
 
@@ -1098,21 +1106,29 @@ macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int width, int h
  * VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
+ * なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動と、ドキュメントにおける引数に関する説明が間違っていたため、
+ * VCSSL 3.4.10 においてドキュメントの記載内容が修正されました。従って、この関数の挙動そのものは変わっていません。
+ * 一方で、より新しい <a href="#drawImage">drawImage</a> 関数の方は、関数の挙動が（元のドキュメントの記述通りに）修正されました。
+ * 従って、旧来のプログラムで互換性を優先する場合はこの関数を使用し、
+ * 新しいプログラムでは <a href="#drawImage">drawImage</a> 関数を使用するよう使い分けてください。
+ * 
  * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param width 幅
- * @param height 高さ
- * @param baseX 元のイメージから抜き出す領域の左上頂点X座標
- * @param baseY 元のイメージから抜き出す領域の左上頂点Y座標
- * @param baseWidth 元のイメージから抜き出す領域の幅
- * @param baseHeight 元のイメージから抜き出す領域の高さ
- * @param graphicsID グラフィックスデータのID
+ * @param fromLeftTopX 元の画像内での、切り抜く領域の左上頂点X座標
+ * @param fromLeftTopY 元の画像内での、切り抜く領域の左上頂点Y座標
+ * @param fromRightBottomX 元の画像内での、切り抜く領域の右下頂点X座標
+ * @param fromRightBottomY 元の画像内での、切り抜く領域の右下頂点Y座標
+ * @param toLeftTopX 描画する位置の左上頂点X座標
+ * @param toLeftTopY 描画する位置の左上頂点Y座標
+ * @param toRightBottomX 描画する位置の右下頂点X座標
+ * @param toRightBottomY 描画する位置の右下頂点Y座標
+ * @param graphicsID 元の画像を格納するグラフィックスデータのID
  */
-void drawGraphics( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ){
-  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, x, y, width, height, baseX, baseY, baseWidth, baseHeight );
-}
+void drawGraphics( int rendererID, int fromLeftTopX, int fromLeftTopY, int fromRightBottomX, int fromRightBottmY, int toLeftTopX, int toLeftTopY, int toRightBottmX, int toRightBottomY, int graphicsID ){
 
+  SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID,
+  	fromLeftTopX, fromLeftTopY, fromRightBottomX, fromRightBottmY, 
+  	toLeftTopX, toLeftTopY, toRightBottmX, toRightBottomY );
+}
 
 
 

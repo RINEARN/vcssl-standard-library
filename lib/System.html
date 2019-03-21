@@ -99,8 +99,10 @@
 <dd>ユーザに選択肢を提示し、選択された項目を取得します。引数は任意型であり、自動的に文字列型に変換され、選択肢として表示されます。 </dd>
 <dt><a href="#alert">macro alert(...) </a></dt>
 <dd>警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href="#pop">pop</a> 関数が利用できます。今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。 </dd>
-<dt><a href="#pop">macro pop(...) </a></dt>
+<dt><a href="#popup">macro popup(...) </a></dt>
 <dd>ポップアップウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。この関数は、現時点では <a href="#alert">alert</a> 関数と全く同じ動作をしますが、警告の意図のないメッセージの出力に使用するため、VCSSL 3.4 から新たにサポートされたものです。alert と使い分ける事で、表示するメッセージが警告なのか通常のメッセージなのか、コード内で意図をはっきりさせる事ができます。将来的には、ウィンドウ上の表示アイコンなどが alert と違うものになる可能性もあります。 </dd>
+<dt><a href="#pop">macro pop(...) </a></dt>
+<dd>popup 関数と同じものです。この関数は、data.Stack ライブラリの pop 関数と同一名称であったため、どちらを呼び出しているかをコード上でわかりやすくしたい場合のため、後に同機能の popup 関数が追加されました。なお、Stack ライブラリの pop 関数は型パラメータを持っており、現在のVCSSLでは型パラメータの省略はできないため、この関数とシグネチャが競合する可能性は、少なくとも現時点ではありません。この関数は互換目的でサポートされており、今後も引き続き使用できますが、混乱をなるべく避けるため、特に事情がなければ今後は popup 関数を優先的に使用する事が推奨されます。 </dd>
 <dt><a href="#confirm">macro confirm(...) </a></dt>
 <dd>メッセージを出力し、ユーザーに 了承 / 拒否 の二択を提示します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。 </dd>
 <dt><a href="#choose">string[ ] choose() </a></dt>
@@ -1188,13 +1190,13 @@
     </tr>
 </tbody></table>
 
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="pop"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="popup"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	macro pop(...) 
+   	 	macro popup(...) 
    	 </td>
     </tr>
     <tr>
@@ -1211,6 +1213,25 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	... : (任意型、可変長引数)メッセージの内容 <br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="pop"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	macro pop(...) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	popup 関数と同じものです。この関数は、data.Stack ライブラリの pop 関数と同一名称であったため、どちらを呼び出しているかをコード上でわかりやすくしたい場合のため、後に同機能の popup 関数が追加されました。なお、Stack ライブラリの pop 関数は型パラメータを持っており、現在のVCSSLでは型パラメータの省略はできないため、この関数とシグネチャが競合する可能性は、少なくとも現時点ではありません。この関数は互換目的でサポートされており、今後も引き続き使用できますが、混乱をなるべく避けるため、特に事情がなければ今後は popup 関数を優先的に使用する事が推奨されます。 
    	 </td>
     </tr>
 </tbody></table>

@@ -65,8 +65,8 @@
 <dd>画像を描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。 </dd>
 <dt><a href="#drawImage">macro drawImage( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ) </a></dt>
 <dd>画像をリサイズして描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。 </dd>
-<dt><a href="#drawImage">void drawImage( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ) </a></dt>
-<dd>画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。 </dd>
+<dt><a href="#drawImage">void drawImage( int rendererID, int x, int y, int width, int height, int cropX, int cropY, int cropWidth, int cropHeight, int graphicsID ) </a></dt>
+<dd>画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動はドキュメントの引数の説明と異なっていたため、VCSSL 3.4.10 においてドキュメント通りの挙動に修正されました。VCSSL 3.4.8 以前の挙動を期待したい場合は、この関数の代わりに drawGraphics 関数を使用するよう、呼び出し側のコードの記述を置き換えてください。 </dd>
 <dt><a href="#setPixel">macro setPixel( int rendererID, int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] ) </a></dt>
 <dd>描画内容を、ピクセル色成分配列で直接的に設定します。 </dd>
 <dt><a href="#setPixel">macro setPixel( int rendererID, int rgba[ ][ ][ ] ) </a></dt>
@@ -151,8 +151,8 @@
 <dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容を描画します。VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="#drawGraphics">macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ) </a></dt>
 <dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容をリサイズして描画します。VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
-<dt><a href="#drawGraphics">void drawGraphics( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ) </a></dt>
-<dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
+<dt><a href="#drawGraphics">void drawGraphics( int rendererID, int fromLeftTopX, int fromLeftTopY, int fromRightBottomX, int fromRightBottmY, int toLeftTopX, int toLeftTopY, int toRightBottmX, int toRightBottomY, int graphicsID ) </a></dt>
+<dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動と、ドキュメントにおける引数に関する説明が間違っていたため、VCSSL 3.4.10 においてドキュメントの記載内容が修正されました。従って、この関数の挙動そのものは変わっていません。一方で、より新しい <a href="#drawImage">drawImage</a> 関数の方は、関数の挙動が（元のドキュメントの記述通りに）修正されました。従って、旧来のプログラムで互換性を優先する場合はこの関数を使用し、新しいプログラムでは <a href="#drawImage">drawImage</a> 関数を使用するよう使い分けてください。 </dd>
 <dt><a href="#newOvalSprite">int newOvalSprite( int x, int y, int width, int height, bool fill ) </a></dt>
 <dd>楕円スプライトを生成し、固有の識別番号（ スプライトID ）を返します。VCSSL 3.3.24 以降では、より新しい <a href="#newEllipseSprite">newEllipseSprite</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="#newRectSprite">int newRectSprite( int x, int y, int width, int height, bool fill ) </a></dt>
@@ -966,7 +966,7 @@
    	 	定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void drawImage( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ) 
+   	 	void drawImage( int rendererID, int x, int y, int width, int height, int cropX, int cropY, int cropWidth, int cropHeight, int graphicsID ) 
    	 </td>
     </tr>
     <tr>
@@ -974,7 +974,7 @@
    	 	詳細<br /> - Details
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。 
+   	 	画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動はドキュメントの引数の説明と異なっていたため、VCSSL 3.4.10 においてドキュメント通りの挙動に修正されました。VCSSL 3.4.8 以前の挙動を期待したい場合は、この関数の代わりに drawGraphics 関数を使用するよう、呼び出し側のコードの記述を置き換えてください。 
    	 </td>
     </tr>
     <tr>
@@ -982,7 +982,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	rendererID : レンダラーID <br />vartex_x : 左上頂点X座標 <br />vartex_y : 左上頂点Y座標 <br />width : 幅 <br />height : 高さ <br />baseX : 元の画像から抜き出す領域の左上頂点X座標 <br />baseY : 元の画像から抜き出す領域の左上頂点Y座標 <br />baseWidth : 元の画像から抜き出す領域の幅 <br />baseHeight : 元の画像から抜き出す領域の高さ <br />graphicsID : 画像を格納するグラフィックスデータのID <br />
+   	 	rendererID : レンダラーID <br />x : 描画する左上頂点X座標 <br />y : 描画する左上頂点Y座標 <br />width : 描画する幅 <br />height : 描画する高さ <br />cropX : 元の画像から抜き出す領域の左上頂点X座標 <br />cropY : 元の画像から抜き出す領域の左上頂点Y座標 <br />cropWidth : 元の画像から抜き出す領域の幅 <br />cropHeight : 元の画像から抜き出す領域の高さ <br />graphicsID : 画像を格納するグラフィックスデータのID <br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2231,7 +2231,7 @@
    	 	定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void drawGraphics( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ) 
+   	 	void drawGraphics( int rendererID, int fromLeftTopX, int fromLeftTopY, int fromRightBottomX, int fromRightBottmY, int toLeftTopX, int toLeftTopY, int toRightBottmX, int toRightBottomY, int graphicsID ) 
    	 </td>
     </tr>
     <tr>
@@ -2239,7 +2239,7 @@
    	 	詳細<br /> - Details
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。 
+   	 	別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動と、ドキュメントにおける引数に関する説明が間違っていたため、VCSSL 3.4.10 においてドキュメントの記載内容が修正されました。従って、この関数の挙動そのものは変わっていません。一方で、より新しい <a href="#drawImage">drawImage</a> 関数の方は、関数の挙動が（元のドキュメントの記述通りに）修正されました。従って、旧来のプログラムで互換性を優先する場合はこの関数を使用し、新しいプログラムでは <a href="#drawImage">drawImage</a> 関数を使用するよう使い分けてください。 
    	 </td>
     </tr>
     <tr>
@@ -2247,7 +2247,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	rendererID : レンダラーID <br />vartex_x : 左上頂点X座標 <br />vartex_y : 左上頂点Y座標 <br />width : 幅 <br />height : 高さ <br />baseX : 元のイメージから抜き出す領域の左上頂点X座標 <br />baseY : 元のイメージから抜き出す領域の左上頂点Y座標 <br />baseWidth : 元のイメージから抜き出す領域の幅 <br />baseHeight : 元のイメージから抜き出す領域の高さ <br />graphicsID : グラフィックスデータのID <br />
+   	 	rendererID : レンダラーID <br />fromLeftTopX : 元の画像内での、切り抜く領域の左上頂点X座標 <br />fromLeftTopY : 元の画像内での、切り抜く領域の左上頂点Y座標 <br />fromRightBottomX : 元の画像内での、切り抜く領域の右下頂点X座標 <br />fromRightBottomY : 元の画像内での、切り抜く領域の右下頂点Y座標 <br />toLeftTopX : 描画する位置の左上頂点X座標 <br />toLeftTopY : 描画する位置の左上頂点Y座標 <br />toRightBottomX : 描画する位置の右下頂点X座標 <br />toRightBottomY : 描画する位置の右下頂点Y座標 <br />graphicsID : 元の画像を格納するグラフィックスデータのID <br />
    	 </td>
     </tr>
 </tbody></table>

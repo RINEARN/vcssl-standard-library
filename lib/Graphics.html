@@ -19,10 +19,12 @@
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 </dd>
 <dt><a href="#newGraphics">int newGraphics( int rgba[ ][ ][ ] ) </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 </dd>
-<dt><a href="#newGraphics">int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ) </a></dt>
+<dt><a href="#newGraphics">int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ) </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 </dd>
-<dt><a href="#newGraphics">int newGraphics( int id, int fromColor[ ], int toColor[ ] ) </a></dt>
+<dt><a href="#newGraphics">int newGraphics( int baseGraphics, int fromColor[ ], int toColor[ ] ) </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 </dd>
+<dt><a href="#newGraphics">int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight ) </a></dt>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。 </dd>
 <dt><a href="#deleteGraphics">void deleteGraphics( int id ) </a></dt>
 <dd>グラフィックスデータを破棄します。 </dd>
 <dt><a href="#getGraphicsWidth">int getGraphicsWidth( int id ) </a></dt>
@@ -193,7 +195,7 @@
    	 	定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ) 
+   	 	int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ) 
    	 </td>
     </tr>
     <tr>
@@ -209,7 +211,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	id : 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。 <br />fromRed : 変換対象の色の赤色成分（0 ~ 255）。 <br />fromGreen : 変換対象の色の青色成分（0 ~ 255）。 <br />fromBlue : 変換対象の色の緑色成分（0 ~ 255）。 <br />fromAlpha : 変換対象の色のα値成分（0 ~ 255）。 <br />toRed : 変換後の色の赤色成分（0 ~ 255）。 <br />toGreen : 変換後の色の青色成分（0 ~ 255）。 <br />toBlue : 変換後の色の緑色成分（0 ~ 255）。 <br />toAlpha : 変換後の色のα値成分（0 ~ 255）。 <br />
+   	 	baseGraphics : 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。 <br />fromRed : 変換対象の色の赤色成分（0 ~ 255）。 <br />fromGreen : 変換対象の色の青色成分（0 ~ 255）。 <br />fromBlue : 変換対象の色の緑色成分（0 ~ 255）。 <br />fromAlpha : 変換対象の色のα値成分（0 ~ 255）。 <br />toRed : 変換後の色の赤色成分（0 ~ 255）。 <br />toGreen : 変換後の色の青色成分（0 ~ 255）。 <br />toBlue : 変換後の色の緑色成分（0 ~ 255）。 <br />toAlpha : 変換後の色のα値成分（0 ~ 255）。 <br />
    	 </td>
     </tr>
     <tr>
@@ -228,7 +230,7 @@
    	 	定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int newGraphics( int id, int fromColor[ ], int toColor[ ] ) 
+   	 	int newGraphics( int baseGraphics, int fromColor[ ], int toColor[ ] ) 
    	 </td>
     </tr>
     <tr>
@@ -244,7 +246,42 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	id : 変換元のイメージを保持するグラフィックスデータのID。 <br />fromColor : 変換対象の色の成分を格納する配列。 <br />toColor : 変換後の色の成分を格納する配列。 <br />
+   	 	baseGraphics : 変換元のイメージを保持するグラフィックスデータのID。 <br />fromColor : 変換対象の色の成分を格納する配列。 <br />toColor : 変換後の色の成分を格納する配列。 <br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	詳細<br /> - Details
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	baseGraphics : 元のイメージを保持するグラフィックスデータのID。 <br />cropX : 元の画像から抜き出す領域の左上頂点X座標 <br />cropY : 元の画像から抜き出す領域の左上頂点Y座標 <br />cropWidth : 元の画像から抜き出す領域の幅 <br />cropHeight : 元の画像から抜き出す領域の高さ <br />
    	 </td>
     </tr>
     <tr>

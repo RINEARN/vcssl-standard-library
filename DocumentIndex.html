@@ -188,8 +188,10 @@
 <dd>ユーザに選択肢を提示し、選択された項目を取得します。引数は任意型であり、自動的に文字列型に変換され、選択肢として表示されます。 </dd>
 <dt><a href="lib/System.html#alert">macro alert(...) </a></dt>
 <dd>警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href="lib/System.html#pop">pop</a> 関数が利用できます。今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。 </dd>
-<dt><a href="lib/System.html#pop">macro pop(...) </a></dt>
+<dt><a href="lib/System.html#popup">macro popup(...) </a></dt>
 <dd>ポップアップウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。この関数は、現時点では <a href="lib/System.html#alert">alert</a> 関数と全く同じ動作をしますが、警告の意図のないメッセージの出力に使用するため、VCSSL 3.4 から新たにサポートされたものです。alert と使い分ける事で、表示するメッセージが警告なのか通常のメッセージなのか、コード内で意図をはっきりさせる事ができます。将来的には、ウィンドウ上の表示アイコンなどが alert と違うものになる可能性もあります。 </dd>
+<dt><a href="lib/System.html#pop">macro pop(...) </a></dt>
+<dd>popup 関数と同じものです。この関数は、data.Stack ライブラリの pop 関数と同一名称であったため、どちらを呼び出しているかをコード上でわかりやすくしたい場合のため、後に同機能の popup 関数が追加されました。なお、Stack ライブラリの pop 関数は型パラメータを持っており、現在のVCSSLでは型パラメータの省略はできないため、この関数とシグネチャが競合する可能性は、少なくとも現時点ではありません。この関数は互換目的でサポートされており、今後も引き続き使用できますが、混乱をなるべく避けるため、特に事情がなければ今後は popup 関数を優先的に使用する事が推奨されます。 </dd>
 <dt><a href="lib/System.html#confirm">macro confirm(...) </a></dt>
 <dd>メッセージを出力し、ユーザーに 了承 / 拒否 の二択を提示します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。 </dd>
 <dt><a href="lib/System.html#choose">string[ ] choose() </a></dt>
@@ -520,10 +522,12 @@
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 </dd>
 <dt><a href="lib/Graphics.html#newGraphics">int newGraphics( int rgba[ ][ ][ ] ) </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 </dd>
-<dt><a href="lib/Graphics.html#newGraphics">int newGraphics( int id, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ) </a></dt>
+<dt><a href="lib/Graphics.html#newGraphics">int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ) </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 </dd>
-<dt><a href="lib/Graphics.html#newGraphics">int newGraphics( int id, int fromColor[ ], int toColor[ ] ) </a></dt>
+<dt><a href="lib/Graphics.html#newGraphics">int newGraphics( int baseGraphics, int fromColor[ ], int toColor[ ] ) </a></dt>
 <dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 </dd>
+<dt><a href="lib/Graphics.html#newGraphics">int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight ) </a></dt>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。 </dd>
 <dt><a href="lib/Graphics.html#deleteGraphics">void deleteGraphics( int id ) </a></dt>
 <dd>グラフィックスデータを破棄します。 </dd>
 <dt><a href="lib/Graphics.html#getGraphicsWidth">int getGraphicsWidth( int id ) </a></dt>
@@ -607,8 +611,8 @@
 <dd>画像を描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。 </dd>
 <dt><a href="lib/Graphics2D.html#drawImage">macro drawImage( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ) </a></dt>
 <dd>画像をリサイズして描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。 </dd>
-<dt><a href="lib/Graphics2D.html#drawImage">void drawImage( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ) </a></dt>
-<dd>画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。 </dd>
+<dt><a href="lib/Graphics2D.html#drawImage">void drawImage( int rendererID, int x, int y, int width, int height, int cropX, int cropY, int cropWidth, int cropHeight, int graphicsID ) </a></dt>
+<dd>画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動はドキュメントの引数の説明と異なっていたため、VCSSL 3.4.10 においてドキュメント通りの挙動に修正されました。VCSSL 3.4.8 以前の挙動を期待したい場合は、この関数の代わりに drawGraphics 関数を使用するよう、呼び出し側のコードの記述を置き換えてください。 </dd>
 <dt><a href="lib/Graphics2D.html#setPixel">macro setPixel( int rendererID, int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] ) </a></dt>
 <dd>描画内容を、ピクセル色成分配列で直接的に設定します。 </dd>
 <dt><a href="lib/Graphics2D.html#setPixel">macro setPixel( int rendererID, int rgba[ ][ ][ ] ) </a></dt>
@@ -693,8 +697,8 @@
 <dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容を描画します。VCSSL 3.3.24 以降では、より新しい <a href="lib/Graphics2D.html#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="lib/Graphics2D.html#drawGraphics">macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ) </a></dt>
 <dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容をリサイズして描画します。VCSSL 3.3.24 以降では、より新しい <a href="lib/Graphics2D.html#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
-<dt><a href="lib/Graphics2D.html#drawGraphics">void drawGraphics( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int graphicsID ) </a></dt>
-<dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。VCSSL 3.3.24 以降では、より新しい <a href="lib/Graphics2D.html#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
+<dt><a href="lib/Graphics2D.html#drawGraphics">void drawGraphics( int rendererID, int fromLeftTopX, int fromLeftTopY, int fromRightBottomX, int fromRightBottmY, int toLeftTopX, int toLeftTopY, int toRightBottmX, int toRightBottomY, int graphicsID ) </a></dt>
+<dd>別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。VCSSL 3.3.24 以降では、より新しい <a href="lib/Graphics2D.html#drawImage">drawImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動と、ドキュメントにおける引数に関する説明が間違っていたため、VCSSL 3.4.10 においてドキュメントの記載内容が修正されました。従って、この関数の挙動そのものは変わっていません。一方で、より新しい <a href="lib/Graphics2D.html#drawImage">drawImage</a> 関数の方は、関数の挙動が（元のドキュメントの記述通りに）修正されました。従って、旧来のプログラムで互換性を優先する場合はこの関数を使用し、新しいプログラムでは <a href="lib/Graphics2D.html#drawImage">drawImage</a> 関数を使用するよう使い分けてください。 </dd>
 <dt><a href="lib/Graphics2D.html#newOvalSprite">int newOvalSprite( int x, int y, int width, int height, bool fill ) </a></dt>
 <dd>楕円スプライトを生成し、固有の識別番号（ スプライトID ）を返します。VCSSL 3.3.24 以降では、より新しい <a href="lib/Graphics2D.html#newEllipseSprite">newEllipseSprite</a> 関数がサポートされています。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="lib/Graphics2D.html#newRectSprite">int newRectSprite( int x, int y, int width, int height, bool fill ) </a></dt>

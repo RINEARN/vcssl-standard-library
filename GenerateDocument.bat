@@ -495,3 +495,5 @@ call vcssldoc lib/gui/TextFieldWindow.vcssl UTF-8:UTF-8 -list:lib/gui/TextFieldW
 echo: ^</body^> >> DocumentIndex.html
 echo: ^</html^> >> DocumentIndex.html
 
+
+cmd
