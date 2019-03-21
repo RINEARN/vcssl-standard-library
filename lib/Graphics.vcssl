@@ -64,9 +64,6 @@ coding UTF-8;
  */
 
 
-
-
-
 /** エラーメッセージ、ファイルが見つからなかった場合。 */
 private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
 
@@ -228,6 +225,28 @@ int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int
 int newGraphics( int baseGraphics, int fromColor[], int toColor[] ){
 	int newID = newGraphics( baseGraphics, fromColor[0], fromColor[1], fromColor[2], fromColor[3], toColor[0], toColor[1], toColor[2], toColor[3] );
 	return newID;
+}
+
+
+/**
+ * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
+ * <br />
+ * この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。
+ * 
+ * @param baseGraphics 元のイメージを保持するグラフィックスデータのID。
+ * @param width 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小）
+ * @param height 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小）
+ * @param antialiasing 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。
+ * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ */
+int newGraphics ( int baseGraphics, int width, int height, bool antialiasing ) {
+  int resizedID = -1;
+  if (antialiasing) {
+    resizedID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createResizedGraphics( baseGraphics, width, height, 2 );
+  } else {
+    resizedID = SYSTEM_PROCESS_DRIVER_GRAPHICS_createResizedGraphics( baseGraphics, width, height, 0 );
+  }
+  return resizedID;
 }
 
 
