@@ -36,7 +36,7 @@
 <dt><a href="#ln">macro ln( float arg ) </a></dt>
 <dd>自然対数を計算します。log と同じです。 </dd>
 <dt><a href="#ln">macro ln( varfloat arg ) </a></dt>
-<dd>自然対数を計算します。log と同じです。内部ではそのまま log(varfloat) が使用されています。 </dd>
+<dd>自然対数を計算します。log と同じです。内部ではそのまま log(varfloat) が使用されています。* @return (varfloat) 計算結果の値。 </dd>
 <dt><a href="#log">macro log( float arg ) </a></dt>
 <dd>自然対数を計算します。ln と同じです。 </dd>
 <dt><a href="#log">varfloat log( varfloat arg ) </a></dt>
@@ -135,14 +135,14 @@
 <dd>ハイパボリックタンジェントの逆関数を計算します。 </dd>
 <dt><a href="#atanh">varfloat atanh( varfloat arg ) </a></dt>
 <dd>ハイパボリックタンジェントの逆関数を計算します。内部では、元の桁数の2.1倍の桁数で、「 絶対値が0.9以下の引数については atanh(x) = 1/2 * log(1+x)/log(1-x) 」によって、それより外側はニュートン法によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。関数の対称性を利用し、負の引数については、正の引数における値を利用して計算されます。<span style="font-weight:bold;">古いバージョンでは、-0.7 以下（負の無限大側）の引数について値を求められません。計算が終わらないか、0 が返されます。この問題は VCSSL 3.3.2 において修正されました。</span> </dd>
-<dt><a href="#deg">macro deg( float angle ) </a></dt>
-<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。 </dd>
-<dt><a href="#deg">varfloat deg(varfloat rad) </a></dt>
-<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。 </dd>
-<dt><a href="#rad">macro rad( float angle ) </a></dt>
+<dt><a href="#deg">macro deg( float rad ) </a></dt>
 <dd>角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。 </dd>
-<dt><a href="#rad">varfloat rad(varfloat deg) </a></dt>
+<dt><a href="#deg">varfloat deg(varfloat rad) </a></dt>
 <dd>角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。内部では、元の桁数の1.34倍の桁数で、「 ラジアン数 = 度数 * π / 180 」によって計算されます。 </dd>
+<dt><a href="#rad">macro rad( float deg ) </a></dt>
+<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。 </dd>
+<dt><a href="#rad">varfloat rad(varfloat deg) </a></dt>
+<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。 </dd>
 </dl>
 <hr />
 <h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
@@ -151,7 +151,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="PI"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	const float PI 
@@ -159,7 +159,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	PI
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	 float精度における、円周率の値です。多倍長精度の varfloat 値を得るには <a href="#pi">pi</a>() を使用してください。 
@@ -170,7 +178,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="E"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	const float E 
@@ -178,7 +186,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	E
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	 float精度における、ネイピア数（自然対数の底）の値です。多倍長精度の varfloat 値を得るには <a href="#exp">exp</a>( 1.0vf ) で計算してください。 
@@ -191,7 +207,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="random"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro random() 
@@ -199,7 +215,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	random
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	0.0以上1.0未満の値を返します。なお、VCSSL3.0.20以前のドキュメントにおいて「0.0 から 1.0 までの乱数値を返します。」と記載されていましたが、この表現は曖昧であり、実際には1.0に完全に一致する値が返される事はありません。 
@@ -210,7 +234,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 乱数値<br />
+   	 	(float型) 乱数値<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float v = random();<br />print(v); // 0.367283... (random)
    	 </td>
     </tr>
 </tbody></table>
@@ -218,7 +250,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="rand"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro rand() 
@@ -226,7 +258,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	rand
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	randomと同様です。現在はrandomの使用が推奨されます。この関数の名称は、整数型の乱数と混同を招くため、現在の使用は推奨されません。将来的に、この関数の型の変更が検討される可能性があります。 
@@ -237,7 +277,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 乱数値<br />
+   	 	(float型) 乱数値<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -245,7 +285,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="pi"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat pi() 
@@ -253,7 +293,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pi
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	円周率の値を計算します。<br />内部では、元の桁数の1.1倍の桁数で、ガウス=ルジャンドル法によって計算されます。<br />高精度な円周率の値は、周期性がある関数の計算や、周期境界をもつシミュレーション（回転系や写像系など）において、引数や座標の円周率による剰余を求めるために必要となります。実際に Math ライブラリでも、varfloat型の三角関数を求める計算などで使用されています。 
@@ -264,7 +312,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	円周率の値。<br />
+   	 	(varfloat型) 円周率の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(100);<br />varfloat pi = pi();<br />print(pi); // 3.14...
    	 </td>
     </tr>
 </tbody></table>
@@ -272,7 +328,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="exp"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro exp( float arg ) 
@@ -280,7 +336,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	exp
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ネイピア数を低とする指数関数を計算します。 
@@ -291,7 +355,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -299,7 +363,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float e = exp(1.0);<br />print(e); // 2.71...
    	 </td>
     </tr>
 </tbody></table>
@@ -307,7 +379,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat exp( varfloat arg ) 
@@ -315,7 +387,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	exp
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ネイピア数を低とする指数関数を計算します。<br />内部では、元の桁数の 1.34 倍の桁数で、マクローリン展開によって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -326,7 +406,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -334,7 +414,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat e = exp(1.0vf);<br />print(e); // 2.71...
    	 </td>
     </tr>
 </tbody></table>
@@ -342,7 +430,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="pow"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro pow( float arg1, float arg2 ) 
@@ -350,7 +438,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pow
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	指数関数を計算します。 
@@ -361,7 +457,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 低。 <br />arg2 : 指数。 <br />
+   	 	(float型) arg1 : 低。 <br />(float型) arg2 : 指数。 
    	 </td>
     </tr>
     <tr>
@@ -369,7 +465,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = pow(1.2, 3.4);<br />print(f); // 1.8587...
    	 </td>
     </tr>
 </tbody></table>
@@ -377,7 +481,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat pow( varfloat arg1, varint arg2 ) 
@@ -385,7 +489,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pow
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	指数が整数の指数関数を計算します。<br />内部では、「 元の桁数 + 指数 ( arg2 ) のオーダーの絶対値 」の2.1倍の桁数で、乗算の繰り返しによって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -396,7 +508,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 低。 <br />arg2 : 指数。 <br />
+   	 	(varfloat型) arg1 : 低。 <br />(varint型) arg2 : 指数。 
    	 </td>
     </tr>
     <tr>
@@ -404,7 +516,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -412,7 +524,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat pow( varfloat arg1, varfloat arg2 ) 
@@ -420,7 +532,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pow
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	指数が浮動小数点数（実数）の指数関数を計算します。<br />内部では、「 元の桁数 + 指数 ( arg2 ) のオーダーの絶対値 」の1.2倍の桁数で、 + マクローリン展開もしくは指数関数と対数関数の組み合わせによって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -431,7 +551,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 低。 <br />arg2 : 指数。 <br />
+   	 	(varfloat型) arg1 : 低。 <br />(varfloat型) arg2 : 指数。 
    	 </td>
     </tr>
     <tr>
@@ -439,7 +559,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = pow(1.2vf, 3.4vf);<br />print(v); // 1.8587...
    	 </td>
     </tr>
 </tbody></table>
@@ -447,7 +575,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat pow( varint arg1, varfloat arg2 ) 
@@ -455,7 +583,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	pow
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	指数関数を計算します。<br />内部では、arg1 を varfloat 型にキャストした上で、 pow( varfloat, varfloat ) が使用されます。 
@@ -466,7 +602,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 低。 <br />arg2 : 指数。 <br />
+   	 	(varint型) arg1 : 低。 <br />(varfloat型) arg2 : 指数。 
    	 </td>
     </tr>
     <tr>
@@ -474,7 +610,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -482,7 +618,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ln"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro ln( float arg ) 
@@ -490,7 +626,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	ln
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	自然対数を計算します。log と同じです。 
@@ -501,7 +645,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -509,7 +653,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = ln(10.0);<br />print(f); // 2.302585...
    	 </td>
     </tr>
 </tbody></table>
@@ -517,7 +669,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro ln( varfloat arg ) 
@@ -525,10 +677,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	自然対数を計算します。log と同じです。<br />内部ではそのまま log(varfloat) が使用されています。 
+   	 	ln
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	自然対数を計算します。log と同じです。<br />内部ではそのまま log(varfloat) が使用されています。* @return (varfloat) 計算結果の値。 
    	 </td>
     </tr>
     <tr>
@@ -536,15 +696,15 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	使用例<br /> - Example
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	digit(50);<br />varfloat v = ln(10.0vf);<br />print(v); // 2.302585...
    	 </td>
     </tr>
 </tbody></table>
@@ -552,7 +712,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="log"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro log( float arg ) 
@@ -560,7 +720,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	log
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	自然対数を計算します。ln と同じです。 
@@ -571,7 +739,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -579,7 +747,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = log(10.0);<br />print(f); // 2.302585...
    	 </td>
     </tr>
 </tbody></table>
@@ -587,7 +763,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat log( varfloat arg ) 
@@ -595,7 +771,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	log
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	自然対数を計算します。ln と同じです。<br />内部では、元の桁数の1.34倍の桁数で、「 1以上の引数ではニュートン法、1以下の引数ではテイラー展開 」によって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -606,7 +790,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -614,7 +798,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = log(10.0vf);<br />print(v); // 2.302585...
    	 </td>
     </tr>
 </tbody></table>
@@ -622,7 +814,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="log10"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro log10( float arg ) 
@@ -630,7 +822,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	log10
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	常用対数を計算します。 
@@ -641,7 +841,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -649,7 +849,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = log(10.0);<br />print(f); // 1.0
    	 </td>
     </tr>
 </tbody></table>
@@ -657,7 +865,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat log10( varfloat arg ) 
@@ -665,7 +873,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	log10
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	常用対数を計算します。<br />内部では、元の桁数の2.2倍の桁数で、「 log10(x) = ln(x) / ln(10) 」によって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -676,7 +892,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -684,7 +900,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = log10(10.0vf);<br />print(v);<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -692,7 +916,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="sqrt"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro sqrt( float arg ) 
@@ -700,7 +924,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	sqrt
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	平方根を計算します。 
@@ -711,7 +943,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -719,7 +951,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = sqrt(2.0);<br />print(f); // 1.4142...
    	 </td>
     </tr>
 </tbody></table>
@@ -727,7 +967,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat sqrt( varfloat arg ) 
@@ -735,7 +975,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	sqrt
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	平方根を計算します。<br />内部では、元の桁数の1.34倍の桁数で、ニュートン法によって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -746,7 +994,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -754,7 +1002,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = sqrt(2.0vf);<br />print(v); // 1.4142...
    	 </td>
     </tr>
 </tbody></table>
@@ -762,7 +1018,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="root"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro root( float arg, int rootPower ) 
@@ -770,7 +1026,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	root
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	N乗根を計算します。 
@@ -781,7 +1045,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />rootPower : N乗根のN。 <br />
+   	 	(float型) arg : 計算対象の値。 <br />(int型) rootPower : N乗根のN。 
    	 </td>
     </tr>
     <tr>
@@ -789,7 +1053,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = root(2.0, 3);<br />print(f); // 1.259921...
    	 </td>
     </tr>
 </tbody></table>
@@ -797,7 +1069,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat root( varfloat arg, varint p ) 
@@ -805,7 +1077,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	root
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	N乗根を計算します。<br />内部では、元の桁数の1.34倍の桁数で、ニュートン法によって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -816,7 +1096,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />p : N乗根のN。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 <br />(varint型) p : N乗根のN。 
    	 </td>
     </tr>
     <tr>
@@ -824,7 +1104,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = root(2.0vf,3v);<br />print(v); // 1.259921...
    	 </td>
     </tr>
 </tbody></table>
@@ -832,7 +1120,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat root( varfloat arg, varfloat vfp ) 
@@ -840,7 +1128,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	root
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	N乗根を計算します。<br />内部では、元の桁数の1.34倍の桁数で、ニュートン法によって計算されます。ただし 10 桁以下では、元の桁数 + 4桁 で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。なお、この関数の第二引数は、常に整数であると見なされます。この関数は、電卓ソフトなどで数値リテラルが浮動小数点数と見なされるモードにおける、利便性確保のためだけにサポートされています。通常の利用シーンでは使用する利点は特に無いため、root( varfloat, varint ) を使用してください。 
@@ -851,7 +1147,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />vfp : N乗根のN。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 <br />(varfloat型) vfp : N乗根のN。 
    	 </td>
     </tr>
     <tr>
@@ -859,7 +1155,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -867,7 +1163,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="abs"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro abs( float arg ) 
@@ -875,7 +1171,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	abs
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	絶対値を計算します。 
@@ -886,7 +1190,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -894,7 +1198,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = abs(-1.2);<br />print(f); // 1.2
    	 </td>
     </tr>
 </tbody></table>
@@ -902,7 +1214,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro abs( int arg ) 
@@ -910,7 +1222,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	abs
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	絶対値を計算します。 
@@ -921,7 +1241,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(int型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -929,7 +1249,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int) 計算結果の値。<br />
+   	 	(int型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int i = abs(-123);<br />print(i); // 123
    	 </td>
     </tr>
 </tbody></table>
@@ -937,7 +1265,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat abs( varfloat arg ) 
@@ -945,7 +1273,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	abs
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	絶対値を計算します。 
@@ -956,7 +1292,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -964,7 +1300,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = abs(-1.2vf);<br />print(v); // 1.2
    	 </td>
     </tr>
 </tbody></table>
@@ -972,7 +1316,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varint abs( varint arg ) 
@@ -980,7 +1324,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	abs
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	絶対値を計算します。 
@@ -991,7 +1343,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varint型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -999,7 +1351,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varint型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varint v = abs(-123v);<br />print(v); // 123
    	 </td>
     </tr>
 </tbody></table>
@@ -1007,7 +1367,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="max"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro max( float arg1, float arg2 ) 
@@ -1015,7 +1375,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	max
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、大きい方を返します。 
@@ -1026,7 +1394,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(float型) arg1 : 計算対象の値。 <br />(float型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1034,7 +1402,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1042,7 +1410,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro max( int arg1, int arg2 ) 
@@ -1050,7 +1418,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	max
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、大きい方を返します。 
@@ -1061,7 +1437,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(int型) arg1 : 計算対象の値。 <br />(int型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1069,7 +1445,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int) 計算結果の値。<br />
+   	 	(int型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1077,7 +1453,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat max( varfloat arg1, varfloat arg2 ) 
@@ -1085,7 +1461,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	max
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、大きい方を返します。 
@@ -1096,7 +1480,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(varfloat型) arg1 : 計算対象の値。 <br />(varfloat型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1104,7 +1488,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1112,7 +1496,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varint max( varint arg1, varint arg2 ) 
@@ -1120,7 +1504,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	max
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、大きい方を返します。 
@@ -1131,7 +1523,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(varint型) arg1 : 計算対象の値。 <br />(varint型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1139,7 +1531,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varint型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1147,7 +1539,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="min"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro min( float arg1, float arg2 ) 
@@ -1155,7 +1547,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	min
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、小さい方を返します。 
@@ -1166,7 +1566,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(float型) arg1 : 計算対象の値。 <br />(float型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1174,7 +1574,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1182,7 +1582,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro min( int arg1, int arg2 ) 
@@ -1190,7 +1590,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	min
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、小さい方を返します。 
@@ -1201,7 +1609,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(int型) arg1 : 計算対象の値。 <br />(int型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1209,7 +1617,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int) 計算結果の値。<br />
+   	 	(int型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1217,7 +1625,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat min( varfloat arg1, varfloat arg2 ) 
@@ -1225,7 +1633,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	min
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、小さい方を返します。 
@@ -1236,7 +1652,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(varfloat型) arg1 : 計算対象の値。 <br />(varfloat型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1244,7 +1660,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1252,7 +1668,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varint min( varint arg1, varint arg2 ) 
@@ -1260,7 +1676,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	min
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2つの引数の内、小さい方を返します。 
@@ -1271,7 +1695,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg1 : 計算対象の値。 <br />arg2 : 計算対象の値。 <br />
+   	 	(varint型) arg1 : 計算対象の値。 <br />(varint型) arg2 : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1279,7 +1703,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varint型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1287,7 +1711,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="fac"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	float fac( float arg ) 
@@ -1295,7 +1719,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	fac
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	階乗を計算します。この関数は引数・戻り値共に float ですが、内部で近い int に丸めて計算されます。変換に伴い、誤差が精度に影響する可能性があります。厳密性を要求する場合は int 引数のものを使用してください。 
@@ -1306,7 +1738,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1314,7 +1746,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) (float) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1322,7 +1754,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro fac( int arg ) 
@@ -1330,7 +1762,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	fac
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	階乗を計算します。 
@@ -1341,7 +1781,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(int型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1349,7 +1789,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int) 計算結果の値。<br />
+   	 	(int型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1357,7 +1797,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varint fac( varint arg ) 
@@ -1365,7 +1805,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	fac
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	階乗を計算します。 
@@ -1376,7 +1824,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varint型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1384,7 +1832,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varint型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1392,7 +1840,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat fac( varfloat arg ) 
@@ -1400,7 +1848,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	fac
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	階乗を計算します。 
@@ -1411,7 +1867,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1419,7 +1875,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1427,7 +1883,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="sin"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro sin( float arg ) 
@@ -1435,7 +1891,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	sin
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	サイン（正弦）関数を計算します。 
@@ -1446,7 +1910,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1454,7 +1918,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = sin(1.0);<br />print(f); // 0.84147...
    	 </td>
     </tr>
 </tbody></table>
@@ -1462,7 +1934,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat sin( varfloat arg ) 
@@ -1470,7 +1942,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	sin
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	サイン（正弦）関数を計算します。<br />内部では、「 元の桁数の1.34倍 + 引数のオーダーの10倍 」の桁数で、マクローリン展開によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 + 引数のオーダーの10倍 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。<br />0 ~ π/2 の範囲以外の引数に対しては、三角関数の対称性と周期性を利用し、内部では 0 ~ π の範囲の値を使用して計算されます。 
@@ -1481,7 +1961,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1489,7 +1969,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = sin(1.0vf);<br />print(v); // 0.84147...
    	 </td>
     </tr>
 </tbody></table>
@@ -1497,7 +1985,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="cos"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro cos( float arg ) 
@@ -1505,7 +1993,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	cos
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	コサイン（余弦）関数を計算します。 
@@ -1516,7 +2012,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1524,7 +2020,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = cos(1.0);<br />print(f); // 0.5403...
    	 </td>
     </tr>
 </tbody></table>
@@ -1532,7 +2036,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat cos( varfloat arg ) 
@@ -1540,7 +2044,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	cos
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	コサイン（余弦）関数を計算します。<br />内部では、「 元の桁数の1.34倍 + 引数のオーダーの10倍 」の桁数で、マクローリン展開によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 + 引数のオーダーの10倍 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。<br />0 ~ π/2 の範囲以外の引数に対しては、三角関数の対称性と周期性を利用し、内部では 0 ~ π の範囲の値を使用して計算されます。 
@@ -1551,7 +2063,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1559,7 +2071,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = cos(1.0vf);<br />print(v); // 0.5403...
    	 </td>
     </tr>
 </tbody></table>
@@ -1567,7 +2087,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="tan"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro tan( float arg ) 
@@ -1575,7 +2095,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	tan
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	タンジェント（正接）関数を計算します。 
@@ -1586,7 +2114,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1594,7 +2122,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = tan(1.0);<br />print(f); // 1.5574...
    	 </td>
     </tr>
 </tbody></table>
@@ -1602,7 +2138,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat tan( varfloat arg ) 
@@ -1610,7 +2146,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	tan
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	タンジェント（正接）関数を計算します。<br />内部では、元の桁数の2.1倍の桁数で、「 tan(x) = sin(x) / cos(x) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -1621,7 +2165,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1629,7 +2173,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = tan(1.0vf);<br />print(v); // 1.5574...
    	 </td>
     </tr>
 </tbody></table>
@@ -1637,7 +2189,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="asin"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro asin( float arg ) 
@@ -1645,7 +2197,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	asin
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	アークサイン関数（サインの逆関数）を計算します。 
@@ -1656,7 +2216,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1664,7 +2224,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1672,7 +2232,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat asin( varfloat arg ) 
@@ -1680,7 +2240,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	asin
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	アークサイン関数（サインの逆関数）を計算します。<br />内部では、元の桁数の1.34倍の桁数で、「 絶対値が0.7以下の引数についてはマクローリン展開、それより外側はニュートン法 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -1691,7 +2259,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1699,7 +2267,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1707,7 +2275,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="acos"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro acos( float arg ) 
@@ -1715,7 +2283,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	acos
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	アークコサイン関数（コサインの逆関数）を計算します。 
@@ -1726,7 +2302,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1734,7 +2310,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1742,7 +2318,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat acos( varfloat arg ) 
@@ -1750,7 +2326,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	acos
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	アークコサイン関数（コサインの逆関数）を計算します。<br />内部では、元の桁数の1.34倍の桁数で、「 acos(x) = π/2 - asin(x) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -1761,7 +2345,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1769,7 +2353,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1777,7 +2361,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="atan"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro atan( float arg ) 
@@ -1785,7 +2369,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	atan
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	アークタンジェント関数（タンジェントの逆関数）を計算します。 
@@ -1796,7 +2388,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1804,7 +2396,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1812,7 +2404,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat atan( varfloat arg ) 
@@ -1820,7 +2412,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	atan
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	アークタンジェント関数（タンジェントの逆関数）を計算します。<br />内部では、元の桁数の1.34倍の桁数で、「 絶対値が0.7以下の引数についてはマクローリン展開、それより外側はニュートン法 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -1831,7 +2431,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1839,7 +2439,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1847,7 +2447,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="sinh"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro sinh( float arg ) 
@@ -1855,7 +2455,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	sinh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックサイン関数を計算します。 
@@ -1866,7 +2474,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1874,7 +2482,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1882,7 +2490,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat sinh( varfloat arg ) 
@@ -1890,7 +2498,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	sinh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックサイン関数を計算します。<br />内部では、元の桁数の2.1倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / 2 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -1901,7 +2517,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1909,7 +2525,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1917,7 +2533,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="cosh"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro cosh( float arg ) 
@@ -1925,7 +2541,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	cosh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックコサイン関数を計算します。 
@@ -1936,7 +2560,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1944,7 +2568,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1952,7 +2576,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat cosh( varfloat arg ) 
@@ -1960,7 +2584,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	cosh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックコサイン関数を計算します。<br />内部では、元の桁数の2.1倍の桁数で、「 sinh(x) = ( exp(x) + exp(-x) ) / 2 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -1971,7 +2603,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -1979,7 +2611,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -1987,7 +2619,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="tanh"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro tanh( float arg ) 
@@ -1995,7 +2627,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	tanh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックコタンジェント関数を計算します。 
@@ -2006,7 +2646,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2014,7 +2654,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2022,7 +2662,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat tanh( varfloat arg ) 
@@ -2030,7 +2670,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	tanh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックコタンジェント関数を計算します。<br />内部では、元の桁数の2.8倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / ( exp(x) + exp(-x) ) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -2041,7 +2689,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2049,7 +2697,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2057,7 +2705,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="asinh"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro asinh( float arg ) 
@@ -2065,7 +2713,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	asinh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックサインの逆関数を計算します。 
@@ -2076,7 +2732,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2084,7 +2740,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2092,7 +2748,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat asinh( varfloat arg ) 
@@ -2100,7 +2756,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	asinh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックサインの逆関数を計算します。<br />内部では、元の桁数の2.1倍の桁数で、「 asinh(x) = ln( x + √( x*x + 1 ) ) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -2111,7 +2775,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2119,7 +2783,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2127,7 +2791,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="acosh"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro acosh( float arg ) 
@@ -2135,7 +2799,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	acosh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックコサインの逆関数を計算します。 
@@ -2146,7 +2818,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2154,7 +2826,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2162,7 +2834,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat acosh( varfloat arg ) 
@@ -2170,7 +2842,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	acosh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックコサインの逆関数を計算します。<br />内部では、元の桁数の2.1倍の桁数で、「 acosh(x) = ln( x + √( x*x - 1 ) ) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。 
@@ -2181,7 +2861,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2189,7 +2869,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2197,7 +2877,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="atanh"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	macro atanh( float arg ) 
@@ -2205,7 +2885,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	atanh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックタンジェントの逆関数を計算します。 
@@ -2216,7 +2904,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(float型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2224,7 +2912,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 計算結果の値。<br />
+   	 	(float型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2232,7 +2920,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	varfloat atanh( varfloat arg ) 
@@ -2240,7 +2928,15 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	atanh
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ハイパボリックタンジェントの逆関数を計算します。<br />内部では、元の桁数の2.1倍の桁数で、「 絶対値が0.9以下の引数については atanh(x) = 1/2 * log(1+x)/log(1-x) 」によって、それより外側はニュートン法によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。関数の対称性を利用し、負の引数については、正の引数における値を利用して計算されます。<br /><span style="font-weight:bold;">古いバージョンでは、-0.7 以下（負の無限大側）の引数について値を求められません。計算が終わらないか、0 が返されます。この問題は VCSSL 3.3.2 において修正されました。</span> 
@@ -2251,7 +2947,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	arg : 計算対象の値。 <br />
+   	 	(varfloat型) arg : 計算対象の値。 
    	 </td>
     </tr>
     <tr>
@@ -2259,7 +2955,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	計算結果の値。<br />
+   	 	(varfloat型) 計算結果の値。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2267,85 +2963,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="deg"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	macro deg( float angle ) 
+   	 	macro deg( float rad ) 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。 
+   	 	deg
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	angle : 度数法の角度。 <br />
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 弧度法（ラジアン）の角度。<br />
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	varfloat deg(varfloat rad) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。<br />内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	angle : 度数法の角度。 <br />
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	弧度法（ラジアン）の角度。<br />
-   	 </td>
-    </tr>
-</tbody></table>
-
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="rad"><tbody>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	macro rad( float angle ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。 
@@ -2356,7 +2990,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	angle : 弧度法（ラジアン）の角度。 <br />
+   	 	(float型) rad : 弧度法（ラジアン）の角度。 
    	 </td>
     </tr>
     <tr>
@@ -2364,7 +2998,15 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float) 度数法の角度。<br />
+   	 	(float型) 度数法の角度。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = deg(PI);<br />print(f); // 180.0
    	 </td>
     </tr>
 </tbody></table>
@@ -2372,15 +3014,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	定義<br /> - Signature
+   	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	varfloat rad(varfloat deg) 
+   	 	varfloat deg(varfloat rad) 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	詳細<br /> - Details
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	deg
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。<br />内部では、元の桁数の1.34倍の桁数で、「 ラジアン数 = 度数 * π / 180 」によって計算されます。 
@@ -2391,7 +3041,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	angle : 弧度法（ラジアン）の角度。 <br />
+   	 	(varfloat型) rad : 弧度法（ラジアン）の角度。 
    	 </td>
     </tr>
     <tr>
@@ -2399,7 +3049,117 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	度数法の角度。<br />
+   	 	(varfloat型) 度数法の角度。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = deg(pi());<br />print(v); // 179.999...9;<br />print( round(v, 40v, HALF_UP) ); // 180.0
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="rad"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	macro rad( float deg ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	rad
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float型) deg : 度数法の角度。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float型) 弧度法（ラジアン）の角度。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float f = rad(180.0);<br />print(f); // 3.14...
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	varfloat rad(varfloat deg) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	rad
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。<br />内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(varfloat型) deg : 度数法の角度。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(varfloat型) 弧度法（ラジアン）の角度。<br />
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例<br /> - Example
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	digit(50);<br />varfloat v = rad(180.0vf);<br />print(v); // 3.14...
    	 </td>
     </tr>
 </tbody></table>
