@@ -100,6 +100,7 @@ private const string ERROR_OUT_OF_DEFINITION = "入力値が定義域の範囲�
  *
  * @param arg 判定対象の値。
  * @return (bool) NaN であれば true 、そうでなければ false 。
+ * @example float x = 0.0/0.0; bool isNaN = nan(x); print("isNaN=" + isNaN);
  */
 macro nan( float arg ){
 	return SYSTEM_PROCESS_FPU_nanF( arg );
@@ -111,6 +112,7 @@ macro nan( float arg ){
  *
  * @param arg 判定対象の値。
  * @return (bool) Inf であれば true 、そうでなければ false 。
+ * @example float x = 1.0/0.0; bool isInf = inf(x); print("isInf=" + isInf);
  */
 macro inf( float arg ){
 	return SYSTEM_PROCESS_FPU_infF( arg );
@@ -137,6 +139,7 @@ macro hex( int number ){
  * @param number1 演算対象の値
  * @param number2 演算対象の値
  * @param (int) 計算結果の値
+ * @example int a = 0b01010101; int b = 0b11110000; int c = and(a, b); print( bin(c) ); // 0b1010000
  */
 macro and( int number1, int number2 ){
 	return SYSTEM_PROCESS_FPU_and( number1, number2 );
@@ -149,6 +152,7 @@ macro and( int number1, int number2 ){
  * @param number1 演算対象の値
  * @param number2 演算対象の値
  * @param (int) 計算結果の値
+ * @example int a = 0b01010101; int b = 0b11110000; int c = or(a, b); print( bin(c) ); // 0b11110101
  */
 macro or( int number1, int number2 ){
 	return SYSTEM_PROCESS_FPU_or( number1, number2 );
@@ -161,6 +165,7 @@ macro or( int number1, int number2 ){
  * @param number1 演算対象の値
  * @param number2 演算対象の値
  * @param (int) 計算結果の値
+ * @example int a = 0b01010101; int b = 0b11110000; int c = xor(a, b); print( bin(c) ); // 0b10100101
  */
 macro xor( int number1, int number2 ){
 	return SYSTEM_PROCESS_FPU_xor( number1, number2 );
@@ -174,6 +179,7 @@ macro xor( int number1, int number2 ){
  * 0.0以上1.0未満の値を返します。なお、VCSSL3.0.20以前のドキュメントにおいて「0.0 から 1.0 までの乱数値を返します。」と記載されていましたが、この表現は曖昧であり、実際には1.0に完全に一致する値が返される事はありません。
  *
  * @return (float) 乱数値
+ * @example float v = random(); print(v); // 0.367283... (random)
  */
 macro random(){
 	return SYSTEM_PROCESS_FPU_rand();
@@ -208,7 +214,7 @@ macro rand(){
  * 実際に Math ライブラリでも、varfloat型の三角関数を求める計算などで使用されています。
  *
  * @return 円周率の値。
- * 
+ * @example digit(100); varfloat pi = pi(); print(pi); // 3.14...
  */
 varfloat pi(){
 	
@@ -292,6 +298,7 @@ varfloat pi(){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float e = exp(1.0); print(e); // 2.71...
  */
 macro exp( float arg ){
 	return SYSTEM_PROCESS_FPU_exp( arg );
@@ -306,6 +313,7 @@ macro exp( float arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
+ * @example digit(50); varfloat e = exp(1.0vf); print(e); // 2.71...
  */
 varfloat exp( varfloat arg ){
 	
@@ -352,6 +360,7 @@ varfloat exp( varfloat arg ){
  * @param arg1 低。
  * @param arg2 指数。
  * @return (float) 計算結果の値。
+ * @example float f = pow(1.2, 3.4); print(f); // 1.8587...
  */
 macro pow( float arg1, float arg2 ){
 	return SYSTEM_PROCESS_FPU_pow( arg1, arg2 );
@@ -431,6 +440,7 @@ varfloat pow( varfloat arg1, varint arg2 ){
  * @param arg1 低。
  * @param arg2 指数。
  * @return 計算結果の値。
+ * @example digit(50); varfloat v = pow(1.2vf, 3.4vf); print(v); // 1.8587...
  */
 varfloat pow( varfloat arg1, varfloat arg2 ){
 	
@@ -586,6 +596,7 @@ varfloat pow( varint arg1, varfloat arg2 ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = ln(10.0); print(f); // 2.302585...
  */
 macro ln( float arg ){
 	return SYSTEM_PROCESS_FPU_ln( arg );
@@ -597,7 +608,8 @@ macro ln( float arg ){
  * 内部ではそのまま log(varfloat) が使用されています。
  *
  * @param arg 計算対象の値。
- * @return 計算結果の値。
+* @return (varfloat) 計算結果の値。
+ * @example digit(50); varfloat v = ln(10.0vf); print(v); // 2.302585...
  */
 macro ln( varfloat arg ){
 	return log( arg );
@@ -612,6 +624,7 @@ macro ln( varfloat arg ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = log(10.0); print(f); // 2.302585...
  */
 macro log( float arg ){
 	return SYSTEM_PROCESS_FPU_ln( arg );
@@ -626,6 +639,7 @@ macro log( float arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
+ * @example digit(50); varfloat v = log(10.0vf); print(v); // 2.302585...
  */
 varfloat log( varfloat arg ){
 	
@@ -714,6 +728,7 @@ varfloat log( varfloat arg ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = log(10.0); print(f); // 1.0
  */
 macro log10( float arg ){
 	return SYSTEM_PROCESS_FPU_log10( arg );
@@ -727,6 +742,7 @@ macro log10( float arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
+ * @example digit(50); varfloat v = log10(10.0vf); print(v);
  */
 varfloat log10( varfloat arg ){
 	
@@ -767,6 +783,7 @@ varfloat log10( varfloat arg ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = sqrt(2.0); print(f); // 1.4142...
  */
 macro sqrt( float arg ){
 	return SYSTEM_PROCESS_FPU_sqrt( arg );
@@ -780,6 +797,7 @@ macro sqrt( float arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
+ * @example digit(50); varfloat v = sqrt(2.0vf); print(v); // 1.4142...
  */
 varfloat sqrt( varfloat arg ){
 	
@@ -824,6 +842,7 @@ varfloat sqrt( varfloat arg ){
  * @param arg 計算対象の値。
  * @param rootPower N乗根のN。
  * @return (float) 計算結果の値。
+ * @example float f = root(2.0, 3); print(f); // 1.259921...
  */
 macro root( float arg, int rootPower ){
 	return SYSTEM_PROCESS_FPU_root( arg, rootPower );
@@ -838,6 +857,7 @@ macro root( float arg, int rootPower ){
  * @param arg 計算対象の値。
  * @param p N乗根のN。
  * @return 計算結果の値。
+ * @example digit(50); varfloat v = root(2.0vf,3v); print(v); // 1.259921...
  */
 varfloat root( varfloat arg, varint p ){
 	
@@ -974,6 +994,7 @@ varfloat root( varfloat arg, varfloat vfp ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = abs(-1.2); print(f); // 1.2
  */
 macro abs( float arg ){
 	return SYSTEM_PROCESS_FPU_abs( arg );
@@ -984,6 +1005,7 @@ macro abs( float arg ){
  *
  * @param arg 計算対象の値。
  * @return (int) 計算結果の値。
+ * @example int i = abs(-123); print(i); // 123
  */
 macro abs( int arg ){
 	return SYSTEM_PROCESS_FPU_abs( arg );
@@ -994,6 +1016,7 @@ macro abs( int arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
+ * @example digit(50); varfloat v = abs(-1.2vf); print(v); // 1.2
  */
 varfloat abs( varfloat arg ){
 	if( arg < 0vf ){
@@ -1007,6 +1030,7 @@ varfloat abs( varfloat arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
+ * @example digit(50); varint v = abs(-123v); print(v); // 123
  */
 varint abs( varint arg ){
 	if( arg < 0v ){
@@ -1214,6 +1238,7 @@ varfloat fac( varfloat arg ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = sin(1.0); print(f); // 0.84147...
  */
 macro sin( float arg ){
 	return SYSTEM_PROCESS_FPU_sin( arg );
@@ -1229,6 +1254,7 @@ macro sin( float arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
+ * @example digit(50); varfloat v = sin(1.0vf); print(v); // 0.84147...
  */
 varfloat sin( varfloat arg ){
 	
@@ -1337,6 +1363,7 @@ varfloat sin( varfloat arg ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = cos(1.0); print(f); // 0.5403...
  */
 macro cos( float arg ){
 	return SYSTEM_PROCESS_FPU_cos( arg );
@@ -1352,7 +1379,7 @@ macro cos( float arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
- * 
+ * @example digit(50); varfloat v = cos(1.0vf); print(v); // 0.5403...
  */
 varfloat cos( varfloat arg ){
 	
@@ -1454,6 +1481,7 @@ varfloat cos( varfloat arg ){
  *
  * @param arg 計算対象の値。
  * @return (float) 計算結果の値。
+ * @example float f = tan(1.0); print(f); // 1.5574...
  */
 macro tan( float arg ){
 	return SYSTEM_PROCESS_FPU_tan( arg );
@@ -1467,7 +1495,7 @@ macro tan( float arg ){
  *
  * @param arg 計算対象の値。
  * @return 計算結果の値。
- * 
+ * @example digit(50); varfloat v = tan(1.0vf); print(v); // 1.5574...
  */
 varfloat tan( varfloat arg ){
 	
@@ -1962,23 +1990,24 @@ varfloat atanh( varfloat arg ){
 
 
 /**
- * 角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。
+ * 角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。
  *
- * @param angle 度数法の角度。
- * @return (float) 弧度法（ラジアン）の角度。
+ * @param rad 弧度法（ラジアン）の角度。
+ * @return (float) 度数法の角度。
+ * @example float f = deg(PI); print(f); // 180.0
  */
-macro deg( float angle ){
-	return SYSTEM_PROCESS_FPU_deg( angle );
+macro deg( float rad ){
+	return SYSTEM_PROCESS_FPU_deg( rad );
 }
 
 /**
- * 角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。
+ * 角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。
  * <br />
- * 内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。
+ * 内部では、元の桁数の1.34倍の桁数で、「 ラジアン数 = 度数 * π / 180 」によって計算されます。
  *
- * @param angle 度数法の角度。
- * @return 弧度法（ラジアン）の角度。
- * 
+ * @param rad 弧度法（ラジアン）の角度。
+ * @return 度数法の角度。
+ * @example digit(50); varfloat v = deg(pi()); print(v); // 179.999...9; print( round(v, 40v, HALF_UP) ); // 180.0
  */
 varfloat deg(varfloat rad){
 	int digitStock = digit();
@@ -1990,23 +2019,24 @@ varfloat deg(varfloat rad){
 
 
 /**
- * 角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。
+ * 角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。
  *
- * @param angle 弧度法（ラジアン）の角度。
- * @return (float) 度数法の角度。
+ * @param deg 度数法の角度。
+ * @return (float) 弧度法（ラジアン）の角度。
+ * @example float f = rad(180.0); print(f); // 3.14...
  */
-macro rad( float angle ){
-	return SYSTEM_PROCESS_FPU_rad( angle );
+macro rad( float deg ){
+	return SYSTEM_PROCESS_FPU_rad( deg );
 }
 
 /**
- * 角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。
+ * 角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。
  * <br />
- * 内部では、元の桁数の1.34倍の桁数で、「 ラジアン数 = 度数 * π / 180 」によって計算されます。
+ * 内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。
  *
- * @param angle 弧度法（ラジアン）の角度。
- * @return 度数法の角度。
- * 
+ * @param deg 度数法の角度。
+ * @return 弧度法（ラジアン）の角度。
+ * @example digit(50); varfloat v = rad(180.0vf); print(v); // 3.14...
  */
 varfloat rad(varfloat deg){
 	int digitStock = digit();
