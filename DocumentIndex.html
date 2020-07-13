@@ -114,8 +114,12 @@
 <dd> float 型の NaN (非数) です。なお、NaN はあらゆる値と等しくありません。つまり、value == NAN といった比較で、変数 value が NaN であるかどうかを判定する事はできません。NaN の判定には <a href="lib/System.html#nan">nan</a> 関数を使用してください。 </dd>
 <dt><a href="lib/System.html#FLOAT_MAX">const float FLOAT_MAX </a></dt>
 <dd> float 型の最大値です。 </dd>
+<dt><a href="lib/System.html#FLOAT_MIN_ABS_NORMAL">const float FLOAT_MIN_ABS_NORMAL </a></dt>
+<dd> 正規化数の範囲内において、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 </dd>
+<dt><a href="lib/System.html#FLOAT_MIN_ABS_DENORMAL">const float FLOAT_MIN_ABS_DENORMAL </a></dt>
+<dd> 非正規化数の範囲を含めて、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 </dd>
 <dt><a href="lib/System.html#FLOAT_MIN">const float FLOAT_MIN </a></dt>
-<dd> float 型の最小値です。 </dd>
+<dd><a href="lib/System.html#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> と同様です。名称が短い代わりに、意味や仕様についてやや曖昧な名称であるため、基本的にはより明示的な名称の <a href="lib/System.html#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> または <a href="lib/System.html#FLOAT_MIN_ABS_NORMAL">FLOAT_MIN_ABS_NORMAL</a> の使用が推奨されます。 </dd>
 <dt><a href="lib/System.html#INT_MAX">const int INT_MAX </a></dt>
 <dd> int 型の最大値です。 </dd>
 <dt><a href="lib/System.html#INT_MIN">const int INT_MIN </a></dt>
@@ -222,12 +226,16 @@
 <dd>処理系をリセットし、別のプログラムを実行します。 </dd>
 <dt><a href="lib/System.html#error">macro error(...) </a></dt>
 <dd>エラーメッセージを出力します。エラーメッセージ出力後、プログラムの実行が終了されるか、継続されるかは、処理系に依存します。確実に終了させたい場合は、続けて <a href="lib/System.html#exit">exit</a> をコールしてください。 </dd>
-<dt><a href="lib/System.html#assert">macro assert(bool expression) </a></dt>
+<dt><a href="lib/System.html#assert">macro assert(bool expectedCondition) </a></dt>
 <dd>式の値を評価し、真であれば何も行わず、偽であればエラーメッセージを出力します。プログラムの実行は恐らく終了されます。この関数はテストに使用します。 </dd>
 <dt><a href="lib/System.html#exec">macro exec(...) </a></dt>
 <dd>オペレーティングシステムのコマンド、または外部プログラムを、別プロセスで非同期で実行します。呼び出し元プログラムの実行は、処理の完了を待機しません。生成したプロセスと並列的に、実行を継続します。処理の実行を待機したり、標準入出力を制御したい場合は、<a href="Process.html">Process</a> ライブラリを使用してください。 </dd>
 <dt><a href="lib/System.html#system">macro system(...) </a></dt>
 <dd>オペレーティングシステムのコマンド、または外部プログラムを、同期実行します。処理が完了するまで、呼び出し元プログラムの実行は待機します。 </dd>
+<dt><a href="lib/System.html#alloc">macro alloc(...) </a></dt>
+<dd>配列の要素数を変更します。変更前後で、同じインデックスの要素は、同じ値に保たれます。 </dd>
+<dt><a href="lib/System.html#free">macro free(...) </a></dt>
+<dd>配列の全次元の要素数を 0 にします。 </dd>
 <dt><a href="lib/System.html#exists">bool exists(string filePath) </a></dt>
 <dd>ファイルが存在するか確認します。 </dd>
 <dt><a href="lib/System.html#mkdir">void mkdir(string directoryPath) </a></dt>
@@ -255,9 +263,11 @@
 <dt><a href="lib/System.html#digit">macro digit() </a></dt>
 <dd>varfloat 型または varcomplex 型の演算桁数を取得します。 </dd>
 <dt><a href="lib/System.html#round">float round(float value, int digit, int mode) </a></dt>
-<dd>float型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
+<dd>float型の値を、指定されたモードで、指定された桁数に丸めます。ただし、float型の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。浮動小数点数の2進数と10進数の変換は、一般に有限の桁に収まらないケースがあり、微小な誤差が生じ得ます。そのため、float 値の内部データの値は、10進数ベースで想像している値とは僅かに食い違っている可能性があります。従って、対象値が丸め処理の切り上げ/切り下げの境界に非常に近い場合、一見すると奇妙な（しかし内部的には正しい処理の）結果となる場合があります。なお、float 値を文字列に変換したり <a href="lib/System.html#print">print</a> 関数で表示した結果と、この関数での丸め結果との対応が一見奇妙に思える場合もありますが、それは、前者においても内部で暗黙の丸め処理が行われるためです。もし、前者と同じ結果から、さらに追加で意図通り丸めた値が欲しい場合は、引数 value を string に変換した上で渡してください。 </dd>
+<dt><a href="lib/System.html#round">string round(string value, int digit, int mode) </a></dt>
+<dd>string 型の値の内容を数値と見なして、指定されたモードで、指定された桁数に丸めます。この関数は、float 値を文字列に変換したり <a href="lib/System.html#print">print</a> 関数で表示した際と同じ内容（内部で暗黙の丸め処理が行われます）を基準として、さらに意図通り丸めたい場合などに使用します。float 型の値を直接丸める場合と比べて、2進/10進変換誤差の影響が少し異なる場合があります。詳細は、引数 value が float 型の場合の説明をご参照ください。 </dd>
 <dt><a href="lib/System.html#round">complex round(complex value, int digit, int mode) </a></dt>
-<dd>complex型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
+<dd>complex型の値を、指定されたモードで、指定された桁数に丸めます。ただし、complex 型の実部と虚部の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。詳細は、引数 value が float 型の場合の説明をご参照ください。 </dd>
 <dt><a href="lib/System.html#round">varfloat round(varfloat value, varint digit, int mode) </a></dt>
 <dd>varfloat型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
 <dt><a href="lib/System.html#round">varcomplex round(varcomplex value, varint digit, int mode) </a></dt>

@@ -25,8 +25,12 @@
 <dd> float 型の NaN (非数) です。なお、NaN はあらゆる値と等しくありません。つまり、value == NAN といった比較で、変数 value が NaN であるかどうかを判定する事はできません。NaN の判定には <a href="#nan">nan</a> 関数を使用してください。 </dd>
 <dt><a href="#FLOAT_MAX">const float FLOAT_MAX </a></dt>
 <dd> float 型の最大値です。 </dd>
+<dt><a href="#FLOAT_MIN_ABS_NORMAL">const float FLOAT_MIN_ABS_NORMAL </a></dt>
+<dd> 正規化数の範囲内において、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 </dd>
+<dt><a href="#FLOAT_MIN_ABS_DENORMAL">const float FLOAT_MIN_ABS_DENORMAL </a></dt>
+<dd> 非正規化数の範囲を含めて、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 </dd>
 <dt><a href="#FLOAT_MIN">const float FLOAT_MIN </a></dt>
-<dd> float 型の最小値です。 </dd>
+<dd><a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> と同様です。名称が短い代わりに、意味や仕様についてやや曖昧な名称であるため、基本的にはより明示的な名称の <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> または <a href="#FLOAT_MIN_ABS_NORMAL">FLOAT_MIN_ABS_NORMAL</a> の使用が推奨されます。 </dd>
 <dt><a href="#INT_MAX">const int INT_MAX </a></dt>
 <dd> int 型の最大値です。 </dd>
 <dt><a href="#INT_MIN">const int INT_MIN </a></dt>
@@ -133,12 +137,16 @@
 <dd>処理系をリセットし、別のプログラムを実行します。 </dd>
 <dt><a href="#error">macro error(...) </a></dt>
 <dd>エラーメッセージを出力します。エラーメッセージ出力後、プログラムの実行が終了されるか、継続されるかは、処理系に依存します。確実に終了させたい場合は、続けて <a href="#exit">exit</a> をコールしてください。 </dd>
-<dt><a href="#assert">macro assert(bool expression) </a></dt>
+<dt><a href="#assert">macro assert(bool expectedCondition) </a></dt>
 <dd>式の値を評価し、真であれば何も行わず、偽であればエラーメッセージを出力します。プログラムの実行は恐らく終了されます。この関数はテストに使用します。 </dd>
 <dt><a href="#exec">macro exec(...) </a></dt>
 <dd>オペレーティングシステムのコマンド、または外部プログラムを、別プロセスで非同期で実行します。呼び出し元プログラムの実行は、処理の完了を待機しません。生成したプロセスと並列的に、実行を継続します。処理の実行を待機したり、標準入出力を制御したい場合は、<a href="Process.html">Process</a> ライブラリを使用してください。 </dd>
 <dt><a href="#system">macro system(...) </a></dt>
 <dd>オペレーティングシステムのコマンド、または外部プログラムを、同期実行します。処理が完了するまで、呼び出し元プログラムの実行は待機します。 </dd>
+<dt><a href="#alloc">macro alloc(...) </a></dt>
+<dd>配列の要素数を変更します。変更前後で、同じインデックスの要素は、同じ値に保たれます。 </dd>
+<dt><a href="#free">macro free(...) </a></dt>
+<dd>配列の全次元の要素数を 0 にします。 </dd>
 <dt><a href="#exists">bool exists(string filePath) </a></dt>
 <dd>ファイルが存在するか確認します。 </dd>
 <dt><a href="#mkdir">void mkdir(string directoryPath) </a></dt>
@@ -166,9 +174,11 @@
 <dt><a href="#digit">macro digit() </a></dt>
 <dd>varfloat 型または varcomplex 型の演算桁数を取得します。 </dd>
 <dt><a href="#round">float round(float value, int digit, int mode) </a></dt>
-<dd>float型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
+<dd>float型の値を、指定されたモードで、指定された桁数に丸めます。ただし、float型の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。浮動小数点数の2進数と10進数の変換は、一般に有限の桁に収まらないケースがあり、微小な誤差が生じ得ます。そのため、float 値の内部データの値は、10進数ベースで想像している値とは僅かに食い違っている可能性があります。従って、対象値が丸め処理の切り上げ/切り下げの境界に非常に近い場合、一見すると奇妙な（しかし内部的には正しい処理の）結果となる場合があります。なお、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した結果と、この関数での丸め結果との対応が一見奇妙に思える場合もありますが、それは、前者においても内部で暗黙の丸め処理が行われるためです。もし、前者と同じ結果から、さらに追加で意図通り丸めた値が欲しい場合は、引数 value を string に変換した上で渡してください。 </dd>
+<dt><a href="#round">string round(string value, int digit, int mode) </a></dt>
+<dd>string 型の値の内容を数値と見なして、指定されたモードで、指定された桁数に丸めます。この関数は、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した際と同じ内容（内部で暗黙の丸め処理が行われます）を基準として、さらに意図通り丸めたい場合などに使用します。float 型の値を直接丸める場合と比べて、2進/10進変換誤差の影響が少し異なる場合があります。詳細は、引数 value が float 型の場合の説明をご参照ください。 </dd>
 <dt><a href="#round">complex round(complex value, int digit, int mode) </a></dt>
-<dd>complex型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
+<dd>complex型の値を、指定されたモードで、指定された桁数に丸めます。ただし、complex 型の実部と虚部の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。詳細は、引数 value が float 型の場合の説明をご参照ください。 </dd>
 <dt><a href="#round">varfloat round(varfloat value, varint digit, int mode) </a></dt>
 <dd>varfloat型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
 <dt><a href="#round">varcomplex round(varcomplex value, varint digit, int mode) </a></dt>
@@ -477,6 +487,60 @@
     </tr>
 </tbody></table>
 
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="FLOAT_MIN_ABS_NORMAL"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const float FLOAT_MIN_ABS_NORMAL 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	FLOAT_MIN_ABS_NORMAL
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 正規化数の範囲内において、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="FLOAT_MIN_ABS_DENORMAL"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const float FLOAT_MIN_ABS_DENORMAL 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	FLOAT_MIN_ABS_DENORMAL
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 非正規化数の範囲を含めて、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="FLOAT_MIN"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
@@ -499,7 +563,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 float 型の最小値です。 
+   	 	<a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> と同様です。名称が短い代わりに、意味や仕様についてやや曖昧な名称であるため、基本的にはより明示的な名称の <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> または <a href="#FLOAT_MIN_ABS_NORMAL">FLOAT_MIN_ABS_NORMAL</a> の使用が推奨されます。 
    	 </td>
     </tr>
 </tbody></table>
@@ -2191,7 +2255,7 @@
    	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	macro assert(bool expression) 
+   	 	macro assert(bool expectedCondition) 
    	 </td>
     </tr>
     <tr>
@@ -2215,7 +2279,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(bool型) expression : 評価対象の式 
+   	 	expression : 評価対象の式 
    	 </td>
     </tr>
 </tbody></table>
@@ -2302,6 +2366,76 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	(int型)実行したコマンドや外部プログラムの終了ステータスコード<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="alloc"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	macro alloc(...) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	alloc
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	配列の要素数を変更します。変更前後で、同じインデックスの要素は、同じ値に保たれます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(任意型)配列, : (int)左端次元の要素数, (int)次の次元の要素数, ..., (int)右端次元の要素数 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="free"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	macro free(...) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	free
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	配列の全次元の要素数を 0 にします。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(任意型)配列 : 
    	 </td>
     </tr>
 </tbody></table>
@@ -2871,7 +3005,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	float型の値を、指定されたモードで、指定された桁数に丸めます。 
+   	 	float型の値を、指定されたモードで、指定された桁数に丸めます。ただし、float型の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。浮動小数点数の2進数と10進数の変換は、一般に有限の桁に収まらないケースがあり、微小な誤差が生じ得ます。そのため、float 値の内部データの値は、10進数ベースで想像している値とは僅かに食い違っている可能性があります。従って、対象値が丸め処理の切り上げ/切り下げの境界に非常に近い場合、一見すると奇妙な（しかし内部的には正しい処理の）結果となる場合があります。なお、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した結果と、この関数での丸め結果との対応が一見奇妙に思える場合もありますが、それは、前者においても内部で暗黙の丸め処理が行われるためです。もし、前者と同じ結果から、さらに追加で意図通り丸めた値が欲しい場合は、引数 value を string に変換した上で渡してください。 
    	 </td>
     </tr>
     <tr>
@@ -2879,7 +3013,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float型) value : 丸めたい値 <br />(int型) digit : 丸めた後の桁数 <br />(int型) mode : 丸めモード ( &lt;a href=&quot;#UP_SIGNIF&quot;&gt;UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#DOWN_SIGNIF&quot;&gt;DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_UP_SIGNIF&quot;&gt;HALF_UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_DOWN_SIGNIF&quot;&gt;HALF_DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_TO_EVEN_SIGNIF&quot;&gt;HALF_TO_EVEN_SIGNIF&lt;/a&gt;, &lt;a href=&quot;#UP&quot;&gt;UP&lt;/a&gt;、&lt;a href=&quot;#DOWN&quot;&gt;DOWN&lt;/a&gt;、&lt;a href=&quot;#HALF_UP&quot;&gt;HALF_UP&lt;/a&gt;、&lt;a href=&quot;#HALF_DOWN&quot;&gt;HALF_DOWN&lt;/a&gt;、&lt;a href=&quot;#HALF_TO_EVEN&quot;&gt;HALF_TO_EVEN&lt;/a&gt; ) 
+   	 	(float型) value : 丸めたい値 <br />(int型) digit : 丸めた後の桁数 <br />(int型) mode : 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ) 
    	 </td>
     </tr>
     <tr>
@@ -2888,6 +3022,49 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	(float型) 丸められた値<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string round(string value, int digit, int mode) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	round
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	string 型の値の内容を数値と見なして、指定されたモードで、指定された桁数に丸めます。この関数は、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した際と同じ内容（内部で暗黙の丸め処理が行われます）を基準として、さらに意図通り丸めたい場合などに使用します。float 型の値を直接丸める場合と比べて、2進/10進変換誤差の影響が少し異なる場合があります。詳細は、引数 value が float 型の場合の説明をご参照ください。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string型) value : 丸めたい値 <br />(int型) digit : 丸めた後の桁数 <br />(int型) mode : 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string型) 丸められた値<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -2914,7 +3091,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	complex型の値を、指定されたモードで、指定された桁数に丸めます。 
+   	 	complex型の値を、指定されたモードで、指定された桁数に丸めます。ただし、complex 型の実部と虚部の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。詳細は、引数 value が float 型の場合の説明をご参照ください。 
    	 </td>
     </tr>
     <tr>
@@ -2922,7 +3099,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(complex型) value : 丸めたい値 <br />(int型) digit : 丸めた後の桁数 <br />(int型) mode : 丸めモード ( &lt;a href=&quot;#UP_SIGNIF&quot;&gt;UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#DOWN_SIGNIF&quot;&gt;DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_UP_SIGNIF&quot;&gt;HALF_UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_DOWN_SIGNIF&quot;&gt;HALF_DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_TO_EVEN_SIGNIF&quot;&gt;HALF_TO_EVEN_SIGNIF&lt;/a&gt;, &lt;a href=&quot;#UP&quot;&gt;UP&lt;/a&gt;、&lt;a href=&quot;#DOWN&quot;&gt;DOWN&lt;/a&gt;、&lt;a href=&quot;#HALF_UP&quot;&gt;HALF_UP&lt;/a&gt;、&lt;a href=&quot;#HALF_DOWN&quot;&gt;HALF_DOWN&lt;/a&gt;、&lt;a href=&quot;#HALF_TO_EVEN&quot;&gt;HALF_TO_EVEN&lt;/a&gt; ) 
+   	 	(complex型) value : 丸めたい値 <br />(int型) digit : 丸めた後の桁数 <br />(int型) mode : 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ) 
    	 </td>
     </tr>
     <tr>
@@ -2965,7 +3142,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(varfloat型) value : 丸めたい値 <br />(varint型) digit : 丸めた後の桁数 <br />(int型) mode : 丸めモード ( &lt;a href=&quot;#UP_SIGNIF&quot;&gt;UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#DOWN_SIGNIF&quot;&gt;DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_UP_SIGNIF&quot;&gt;HALF_UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_DOWN_SIGNIF&quot;&gt;HALF_DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_TO_EVEN_SIGNIF&quot;&gt;HALF_TO_EVEN_SIGNIF&lt;/a&gt;, &lt;a href=&quot;#UP&quot;&gt;UP&lt;/a&gt;、&lt;a href=&quot;#DOWN&quot;&gt;DOWN&lt;/a&gt;、&lt;a href=&quot;#HALF_UP&quot;&gt;HALF_UP&lt;/a&gt;、&lt;a href=&quot;#HALF_DOWN&quot;&gt;HALF_DOWN&lt;/a&gt;、&lt;a href=&quot;#HALF_TO_EVEN&quot;&gt;HALF_TO_EVEN&lt;/a&gt; ) 
+   	 	(varfloat型) value : 丸めたい値 <br />(varint型) digit : 丸めた後の桁数 <br />(int型) mode : 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ) 
    	 </td>
     </tr>
     <tr>
@@ -3051,7 +3228,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) mode : 丸めモード ( &lt;a href=&quot;#UP_SIGNIF&quot;&gt;UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#DOWN_SIGNIF&quot;&gt;DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_UP_SIGNIF&quot;&gt;HALF_UP_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_DOWN_SIGNIF&quot;&gt;HALF_DOWN_SIGNIF&lt;/a&gt;、&lt;a href=&quot;#HALF_TO_EVEN_SIGNIF&quot;&gt;HALF_TO_EVEN_SIGNIF&lt;/a&gt; ) 
+   	 	(int型) mode : 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a> ) 
    	 </td>
     </tr>
     <tr>
@@ -3594,7 +3771,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string型) filePath : ファイル名またはパス <br />(string型) mode : ファイル入出力モード（ &quot;r&quot; または &lt;a href=&quot;#READ&quot;&gt;READ&lt;/a&gt;、 &quot;w&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE&lt;/a&gt;、 &quot;a&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND&lt;/a&gt;、 &quot;rtsv&quot; または &lt;a href=&quot;#READ&quot;&gt;READ_TSV&lt;/a&gt;、 &quot;wtsv&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE_TSV&lt;/a&gt;、 &quot;atsv&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND_TSV&lt;/a&gt;、 &quot;rcsv&quot; または &lt;a href=&quot;#READ&quot;&gt;READ_CSV&lt;/a&gt;、 &quot;rcsv&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE_CSV&lt;/a&gt;、 &quot;acsv&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND_CSV&lt;/a&gt;、 &quot;rb&quot; または &lt;a href=&quot;#READ&quot;&gt;READ_BINARY&lt;/a&gt;、 &quot;wb&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE_BINARY&lt;/a&gt;、 &quot;ab&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND_BINARY&lt;/a&gt; ） 
+   	 	(string型) filePath : ファイル名またはパス <br />(string型) mode : ファイル入出力モード（ "r" または <a href="#READ">READ</a>、 "w" または <a href="#WRITE">WRITE</a>、 "a" または <a href="#APPEND">APPEND</a>、 "rtsv" または <a href="#READ">READ_TSV</a>、 "wtsv" または <a href="#WRITE">WRITE_TSV</a>、 "atsv" または <a href="#APPEND">APPEND_TSV</a>、 "rcsv" または <a href="#READ">READ_CSV</a>、 "rcsv" または <a href="#WRITE">WRITE_CSV</a>、 "acsv" または <a href="#APPEND">APPEND_CSV</a>、 "rb" または <a href="#READ">READ_BINARY</a>、 "wb" または <a href="#WRITE">WRITE_BINARY</a>、 "ab" または <a href="#APPEND">APPEND_BINARY</a> ） 
    	 </td>
     </tr>
     <tr>
@@ -3637,7 +3814,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string型) filePath : ファイル名またはパス <br />(string型) mode : ファイル入出力モード（ &quot;r&quot; または &lt;a href=&quot;#READ&quot;&gt;READ&lt;/a&gt;、 &quot;w&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE&lt;/a&gt;、 &quot;a&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND&lt;/a&gt;、 &quot;rtsv&quot; または &lt;a href=&quot;#READ&quot;&gt;READ_TSV&lt;/a&gt;、 &quot;wtsv&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE_TSV&lt;/a&gt;、 &quot;atsv&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND_TSV&lt;/a&gt;、 &quot;rcsv&quot; または &lt;a href=&quot;#READ&quot;&gt;READ_CSV&lt;/a&gt;、 &quot;rcsv&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE_CSV&lt;/a&gt;、 &quot;acsv&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND_CSV&lt;/a&gt;、 &quot;rb&quot; または &lt;a href=&quot;#READ&quot;&gt;READ_BINARY&lt;/a&gt;、 &quot;wb&quot; または &lt;a href=&quot;#WRITE&quot;&gt;WRITE_BINARY&lt;/a&gt;、 &quot;ab&quot; または &lt;a href=&quot;#APPEND&quot;&gt;APPEND_BINARY&lt;/a&gt; ） <br />(string型) textEncoding : 文字コード（ &quot;Shift_JIS&quot;、 &quot;UTF-8&quot;、 &quot;EUC-JP&quot; ） 
+   	 	(string型) filePath : ファイル名またはパス <br />(string型) mode : ファイル入出力モード（ "r" または <a href="#READ">READ</a>、 "w" または <a href="#WRITE">WRITE</a>、 "a" または <a href="#APPEND">APPEND</a>、 "rtsv" または <a href="#READ">READ_TSV</a>、 "wtsv" または <a href="#WRITE">WRITE_TSV</a>、 "atsv" または <a href="#APPEND">APPEND_TSV</a>、 "rcsv" または <a href="#READ">READ_CSV</a>、 "rcsv" または <a href="#WRITE">WRITE_CSV</a>、 "acsv" または <a href="#APPEND">APPEND_CSV</a>、 "rb" または <a href="#READ">READ_BINARY</a>、 "wb" または <a href="#WRITE">WRITE_BINARY</a>、 "ab" または <a href="#APPEND">APPEND_BINARY</a> ） <br />(string型) textEncoding : 文字コード（ "Shift_JIS"、 "UTF-8"、 "EUC-JP" ） 
    	 </td>
     </tr>
     <tr>
@@ -5105,7 +5282,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string型) functionName : 関数名 <br />(string[]型) argumentType : 引数の型を文字列で記述した配列（ 例えば &quot;int&quot; や &quot;float&quot; を格納 ） <br />(string型) functionCode : 関数の（プログラムとしての）記述内容 
+   	 	(string型) functionName : 関数名 <br />(string[]型) argumentType : 引数の型を文字列で記述した配列（ 例えば "int" や "float" を格納 ） <br />(string型) functionCode : 関数の（プログラムとしての）記述内容 
    	 </td>
     </tr>
 </tbody></table>
