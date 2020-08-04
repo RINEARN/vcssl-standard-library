@@ -216,6 +216,8 @@
 <dd>コンソールを非表示にします。ただし、この関数の挙動は処理系依存です。例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。 </dd>
 <dt><a href="lib/System.html#show">void show() </a></dt>
 <dd>コンソールが非表示にされている場合、表示します。ただし、この関数の挙動は処理系依存です。例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。 </dd>
+<dt><a href="lib/System.html#time">int time() </a></dt>
+<dd>プログラム実行開始からの経過時間を、ミリ秒単位で返します。 </dd>
 <dt><a href="lib/System.html#sleep">macro sleep(int milliSecond) </a></dt>
 <dd>プログラムの実行を一時停止します。 </dd>
 <dt><a href="lib/System.html#exit">void exit() </a></dt>
@@ -2145,17 +2147,17 @@
 <p>時間計測や、時刻取得などの機能を提供するライブラリです。</p> 
 <dl>
 <dt><a href="lib/Time.html#time">int time() </a></dt>
-<dd>プログラム実行開始からの経過時間を返します。通常、単位はミリ秒ですが、仕様上は処理系です。厳密に任意の単位で測るには、<a href="lib/Time.html#millisecond">millisecond</a> などを噛ませて変換してください。 </dd>
+<dd>プログラム実行開始からの経過時間を、ミリ秒単位で返します。<span style="font-weight: bold;">この関数は使用頻度が高いため、VCSSL 3.4.22 以降において、System ライブラリでもサポートされる事になりました。そのため現在は、この関数は Time ライブラリを import しなくても使用できます。</span>（ System ライブラリに属する関数群は、全て import 不要で使用できるためです。 ) </dd>
 <dt><a href="lib/Time.html#millisecond">int millisecond( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、ミリ秒単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、ミリ秒単位に変換します（つまり、そのまま返します）。 </dd>
 <dt><a href="lib/Time.html#second">int second( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、秒単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、秒単位に変換します。秒に満たない余りは切り捨てられます。 </dd>
 <dt><a href="lib/Time.html#minute">int minute( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、分単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、分単位に変換します。分に満たない余りは切り捨てられます。 </dd>
 <dt><a href="lib/Time.html#hour">int hour( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。1時間に満たない余りは切り捨てられます。 </dd>
 <dt><a href="lib/Time.html#day">int day( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、日単位に変換します。自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、日単位に変換します。1日に満たない余りは切り捨てられます。なお、自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 </dd>
 <dt><a href="lib/Time.html#year">int year() </a></dt>
 <dd>西暦カレンダーにおける現在の年を返します。 </dd>
 <dt><a href="lib/Time.html#month">int month() </a></dt>
