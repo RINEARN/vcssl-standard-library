@@ -8,21 +8,21 @@
 <h1>Time</h1>
 <hr />
 <h2 id="abstract">概要 - Abstract</h2>
-<p>VCSSL Time ライブラリ は、時間計測や、時刻取得などの機能を提供する標準ライブラリです。</p><p>時間を取得する機能は <a href="#time">time</a>() 関数によって提供されます。この関数は、プログラム実行開始からの経過時間を返します。<br />（ いくつかの言語では、こうした関数は 1970年 1月 1日 午前 0 時 からの経過時間を返しますが、VCSSL ではそうではありません。 ）</p><p>time 関数が返す時間の精度（単位）は処理系定義です。公式実装ではミリ秒ですが、将来的に、あらゆる処理系において常にミリ秒精度が保証されるとは限りません。<br />そうした処理系への依存性を回避するために、time 関数の戻り値を、様々な時間単位に変換する関数も提供されています。<br />具体的には、<a href="#millisecond">millisecond</a> 関数はミリ秒単位、<a href="#second">second</a> 関数は秒単位、<a href="#minute">minute</a> 関数は分単位、<a href="#hour">hour</a> 関数は時間単位、<a href="#day">day</a> 関数は日単位に変換します。<br />例として、適当な処理をさせて、その間の所要時間を計測するには、以下のようにします：<div class="code">int t1 = time();// 終了時間を計測<br /><br />[ ここで適当に時間のかかる処理を行う ]<br /><br />int t2 = time(); // 開始時間を計測<br />int sec = second( t2 - t1 ); // 所要時間（時間の差）を秒単位で取得<br />print( "所要時間 [ 秒 ] = " +  sec ); // 出力<br /></div></p><p>また、<a href="#second">second</a> 関数、<a href="#minute">minute</a> 関数、<a href="#hour">hour</a> 関数を引数なしでコールすると、現在の時計的な時刻を返します。<br />同様に、<a href="#day">day</a> 関数、<a href="#month">month</a> 関数、<a href="#year">year</a> 関数を引数なしでコールすると、現在のカレンダーにおける日付を返します。<br />例として、現在の日付と時刻を表示するには、以下のようにします：<div class="code">print( year() + "年" + month() + "月" + day() + "日" + hour() + "時" + minute() + "分" + second() + "秒" );</div></p> <hr />
+<p>VCSSL Time ライブラリ は、時間計測や、時刻取得などの機能を提供する標準ライブラリです。</p><p>時間を取得する機能は <a href="#time">time</a>() 関数によって提供されます。この関数は、プログラム実行開始からの経過時間を返します。<br />（ いくつかの言語では、こうした関数は 1970年 1月 1日 午前 0 時 からの経過時間を返しますが、VCSSL ではそうではありません。 ）</p><p>time 関数が返す時間の精度（単位）は、標準の処理系においてはミリ秒単位です。しかし、単位変換の際に「 /1000 」のような決め打ちの数値を書く事を避けたい場合や、単位の異なる特別な処理系（現状では存在しません）への移植性を考慮したい場合などのために、time 関数の戻り値を、様々な時間単位に変換する関数も提供されています。<br />具体的には、<a href="#millisecond">millisecond</a> 関数はミリ秒単位、<a href="#second">second</a> 関数は秒単位、<a href="#minute">minute</a> 関数は分単位、<a href="#hour">hour</a> 関数は時間単位、<a href="#day">day</a> 関数は日単位に変換します。<br />例として、適当な処理をさせて、その間の所要時間を計測するには、以下のようにします：<div class="code">int t1 = time();// 終了時間を計測<br /><br />[ ここで適当に時間のかかる処理を行う ]<br /><br />int t2 = time(); // 開始時間を計測<br />int sec = second( t2 - t1 ); // 所要時間（時間の差）を秒単位で取得<br />print( "所要時間 [ 秒 ] = " +  sec ); // 出力<br /></div></p><p>また、<a href="#second">second</a> 関数、<a href="#minute">minute</a> 関数、<a href="#hour">hour</a> 関数を引数なしでコールすると、現在の時計的な時刻を返します。<br />同様に、<a href="#day">day</a> 関数、<a href="#month">month</a> 関数、<a href="#year">year</a> 関数を引数なしでコールすると、現在のカレンダーにおける日付を返します。<br />例として、現在の日付と時刻を表示するには、以下のようにします：<div class="code">print( year() + "年" + month() + "月" + day() + "日" + hour() + "時" + minute() + "分" + second() + "秒" );</div></p> <hr />
 <h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
 <dl>
 <dt><a href="#time">int time() </a></dt>
-<dd>プログラム実行開始からの経過時間を返します。通常、単位はミリ秒ですが、仕様上は処理系です。厳密に任意の単位で測るには、<a href="#millisecond">millisecond</a> などを噛ませて変換してください。 </dd>
+<dd>プログラム実行開始からの経過時間を、ミリ秒単位で返します。<span style="font-weight: bold;">この関数は使用頻度が高いため、VCSSL 3.4.22 以降において、System ライブラリでもサポートされる事になりました。そのため現在は、この関数は Time ライブラリを import しなくても使用できます。</span>（ System ライブラリに属する関数群は、全て import 不要で使用できるためです。 ) </dd>
 <dt><a href="#millisecond">int millisecond( int t ) </a></dt>
-<dd><a href="#time">time</a> 関数が返す値などを、ミリ秒単位に変換します。 </dd>
+<dd><a href="#time">time</a> 関数が返す値などを、ミリ秒単位に変換します（つまり、そのまま返します）。 </dd>
 <dt><a href="#second">int second( int t ) </a></dt>
-<dd><a href="#time">time</a> 関数が返す値などを、秒単位に変換します。 </dd>
+<dd><a href="#time">time</a> 関数が返す値などを、秒単位に変換します。秒に満たない余りは切り捨てられます。 </dd>
 <dt><a href="#minute">int minute( int t ) </a></dt>
-<dd><a href="#time">time</a> 関数が返す値などを、分単位に変換します。 </dd>
+<dd><a href="#time">time</a> 関数が返す値などを、分単位に変換します。分に満たない余りは切り捨てられます。 </dd>
 <dt><a href="#hour">int hour( int t ) </a></dt>
-<dd><a href="#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。 </dd>
+<dd><a href="#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。1時間に満たない余りは切り捨てられます。 </dd>
 <dt><a href="#day">int day( int t ) </a></dt>
-<dd><a href="#time">time</a> 関数が返す値などを、日単位に変換します。自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 </dd>
+<dd><a href="#time">time</a> 関数が返す値などを、日単位に変換します。1日に満たない余りは切り捨てられます。なお、自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 </dd>
 <dt><a href="#year">int year() </a></dt>
 <dd>西暦カレンダーにおける現在の年を返します。 </dd>
 <dt><a href="#month">int month() </a></dt>
@@ -67,7 +67,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	プログラム実行開始からの経過時間を返します。<br />通常、単位はミリ秒ですが、仕様上は処理系です。厳密に任意の単位で測るには、<a href="#millisecond">millisecond</a> などを噛ませて変換してください。 
+   	 	プログラム実行開始からの経過時間を、ミリ秒単位で返します。<br /><span style="font-weight: bold;">この関数は使用頻度が高いため、VCSSL 3.4.22 以降において、System ライブラリでもサポートされる事になりました。そのため現在は、この関数は Time ライブラリを import しなくても使用できます。</span><br />（ System ライブラリに属する関数群は、全て import 不要で使用できるためです。 ) 
    	 </td>
     </tr>
     <tr>
@@ -75,7 +75,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) 
+   	 	(int型) プログラム実行開始からの経過時間（ミリ秒単位）。<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -102,7 +102,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	<a href="#time">time</a> 関数が返す値などを、ミリ秒単位に変換します。 
+   	 	<a href="#time">time</a> 関数が返す値などを、ミリ秒単位に変換します（つまり、そのまま返します）。 
    	 </td>
     </tr>
     <tr>
@@ -145,7 +145,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	<a href="#time">time</a> 関数が返す値などを、秒単位に変換します。 
+   	 	<a href="#time">time</a> 関数が返す値などを、秒単位に変換します。秒に満たない余りは切り捨てられます。 
    	 </td>
     </tr>
     <tr>
@@ -188,7 +188,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	<a href="#time">time</a> 関数が返す値などを、分単位に変換します。 
+   	 	<a href="#time">time</a> 関数が返す値などを、分単位に変換します。分に満たない余りは切り捨てられます。 
    	 </td>
     </tr>
     <tr>
@@ -231,7 +231,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	<a href="#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。 
+   	 	<a href="#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。1時間に満たない余りは切り捨てられます。 
    	 </td>
     </tr>
     <tr>
@@ -274,7 +274,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	<a href="#time">time</a> 関数が返す値などを、日単位に変換します。自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 
+   	 	<a href="#time">time</a> 関数が返す値などを、日単位に変換します。1日に満たない余りは切り捨てられます。なお、自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 
    	 </td>
     </tr>
     <tr>
