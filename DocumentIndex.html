@@ -114,8 +114,12 @@
 <dd> float 型の NaN (非数) です。なお、NaN はあらゆる値と等しくありません。つまり、value == NAN といった比較で、変数 value が NaN であるかどうかを判定する事はできません。NaN の判定には <a href="lib/System.html#nan">nan</a> 関数を使用してください。 </dd>
 <dt><a href="lib/System.html#FLOAT_MAX">const float FLOAT_MAX </a></dt>
 <dd> float 型の最大値です。 </dd>
+<dt><a href="lib/System.html#FLOAT_MIN_ABS_NORMAL">const float FLOAT_MIN_ABS_NORMAL </a></dt>
+<dd> 正規化数の範囲内において、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 </dd>
+<dt><a href="lib/System.html#FLOAT_MIN_ABS_DENORMAL">const float FLOAT_MIN_ABS_DENORMAL </a></dt>
+<dd> 非正規化数の範囲を含めて、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 </dd>
 <dt><a href="lib/System.html#FLOAT_MIN">const float FLOAT_MIN </a></dt>
-<dd> float 型の最小値です。 </dd>
+<dd><a href="lib/System.html#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> と同様です。名称が短い代わりに、意味や仕様についてやや曖昧な名称であるため、基本的にはより明示的な名称の <a href="lib/System.html#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> または <a href="lib/System.html#FLOAT_MIN_ABS_NORMAL">FLOAT_MIN_ABS_NORMAL</a> の使用が推奨されます。 </dd>
 <dt><a href="lib/System.html#INT_MAX">const int INT_MAX </a></dt>
 <dd> int 型の最大値です。 </dd>
 <dt><a href="lib/System.html#INT_MIN">const int INT_MIN </a></dt>
@@ -212,6 +216,8 @@
 <dd>コンソールを非表示にします。ただし、この関数の挙動は処理系依存です。例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。 </dd>
 <dt><a href="lib/System.html#show">void show() </a></dt>
 <dd>コンソールが非表示にされている場合、表示します。ただし、この関数の挙動は処理系依存です。例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。 </dd>
+<dt><a href="lib/System.html#time">int time() </a></dt>
+<dd>プログラム実行開始からの経過時間を、ミリ秒単位で返します。 </dd>
 <dt><a href="lib/System.html#sleep">macro sleep(int milliSecond) </a></dt>
 <dd>プログラムの実行を一時停止します。 </dd>
 <dt><a href="lib/System.html#exit">void exit() </a></dt>
@@ -222,12 +228,16 @@
 <dd>処理系をリセットし、別のプログラムを実行します。 </dd>
 <dt><a href="lib/System.html#error">macro error(...) </a></dt>
 <dd>エラーメッセージを出力します。エラーメッセージ出力後、プログラムの実行が終了されるか、継続されるかは、処理系に依存します。確実に終了させたい場合は、続けて <a href="lib/System.html#exit">exit</a> をコールしてください。 </dd>
-<dt><a href="lib/System.html#assert">macro assert(bool expression) </a></dt>
+<dt><a href="lib/System.html#assert">macro assert(bool expectedCondition) </a></dt>
 <dd>式の値を評価し、真であれば何も行わず、偽であればエラーメッセージを出力します。プログラムの実行は恐らく終了されます。この関数はテストに使用します。 </dd>
 <dt><a href="lib/System.html#exec">macro exec(...) </a></dt>
 <dd>オペレーティングシステムのコマンド、または外部プログラムを、別プロセスで非同期で実行します。呼び出し元プログラムの実行は、処理の完了を待機しません。生成したプロセスと並列的に、実行を継続します。処理の実行を待機したり、標準入出力を制御したい場合は、<a href="Process.html">Process</a> ライブラリを使用してください。 </dd>
 <dt><a href="lib/System.html#system">macro system(...) </a></dt>
 <dd>オペレーティングシステムのコマンド、または外部プログラムを、同期実行します。処理が完了するまで、呼び出し元プログラムの実行は待機します。 </dd>
+<dt><a href="lib/System.html#alloc">macro alloc(...) </a></dt>
+<dd>配列の要素数を変更します。変更前後で、同じインデックスの要素は、同じ値に保たれます。 </dd>
+<dt><a href="lib/System.html#free">macro free(...) </a></dt>
+<dd>配列の全次元の要素数を 0 にします。 </dd>
 <dt><a href="lib/System.html#exists">bool exists(string filePath) </a></dt>
 <dd>ファイルが存在するか確認します。 </dd>
 <dt><a href="lib/System.html#mkdir">void mkdir(string directoryPath) </a></dt>
@@ -255,9 +265,11 @@
 <dt><a href="lib/System.html#digit">macro digit() </a></dt>
 <dd>varfloat 型または varcomplex 型の演算桁数を取得します。 </dd>
 <dt><a href="lib/System.html#round">float round(float value, int digit, int mode) </a></dt>
-<dd>float型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
+<dd>float型の値を、指定されたモードで、指定された桁数に丸めます。ただし、float型の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。浮動小数点数の2進数と10進数の変換は、一般に有限の桁に収まらないケースがあり、微小な誤差が生じ得ます。そのため、float 値の内部データの値は、10進数ベースで想像している値とは僅かに食い違っている可能性があります。従って、対象値が丸め処理の切り上げ/切り下げの境界に非常に近い場合、一見すると奇妙な（しかし内部的には正しい処理の）結果となる場合があります。なお、float 値を文字列に変換したり <a href="lib/System.html#print">print</a> 関数で表示した結果と、この関数での丸め結果との対応が一見奇妙に思える場合もありますが、それは、前者においても内部で暗黙の丸め処理が行われるためです。もし、前者と同じ結果から、さらに追加で意図通り丸めた値が欲しい場合は、引数 value を string に変換した上で渡してください。 </dd>
+<dt><a href="lib/System.html#round">string round(string value, int digit, int mode) </a></dt>
+<dd>string 型の値の内容を数値と見なして、指定されたモードで、指定された桁数に丸めます。この関数は、float 値を文字列に変換したり <a href="lib/System.html#print">print</a> 関数で表示した際と同じ内容（内部で暗黙の丸め処理が行われます）を基準として、さらに意図通り丸めたい場合などに使用します。float 型の値を直接丸める場合と比べて、2進/10進変換誤差の影響が少し異なる場合があります。詳細は、引数 value が float 型の場合の説明をご参照ください。 </dd>
 <dt><a href="lib/System.html#round">complex round(complex value, int digit, int mode) </a></dt>
-<dd>complex型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
+<dd>complex型の値を、指定されたモードで、指定された桁数に丸めます。ただし、complex 型の実部と虚部の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。詳細は、引数 value が float 型の場合の説明をご参照ください。 </dd>
 <dt><a href="lib/System.html#round">varfloat round(varfloat value, varint digit, int mode) </a></dt>
 <dd>varfloat型の値を、指定されたモードで、指定された桁数に丸めます。 </dd>
 <dt><a href="lib/System.html#round">varcomplex round(varcomplex value, varint digit, int mode) </a></dt>
@@ -402,7 +414,7 @@
 <dt><a href="lib/Math.html#ln">macro ln( float arg ) </a></dt>
 <dd>自然対数を計算します。log と同じです。 </dd>
 <dt><a href="lib/Math.html#ln">macro ln( varfloat arg ) </a></dt>
-<dd>自然対数を計算します。log と同じです。内部ではそのまま log(varfloat) が使用されています。 </dd>
+<dd>自然対数を計算します。log と同じです。内部ではそのまま log(varfloat) が使用されています。* @return (varfloat) 計算結果の値。 </dd>
 <dt><a href="lib/Math.html#log">macro log( float arg ) </a></dt>
 <dd>自然対数を計算します。ln と同じです。 </dd>
 <dt><a href="lib/Math.html#log">varfloat log( varfloat arg ) </a></dt>
@@ -501,14 +513,14 @@
 <dd>ハイパボリックタンジェントの逆関数を計算します。 </dd>
 <dt><a href="lib/Math.html#atanh">varfloat atanh( varfloat arg ) </a></dt>
 <dd>ハイパボリックタンジェントの逆関数を計算します。内部では、元の桁数の2.1倍の桁数で、「 絶対値が0.9以下の引数については atanh(x) = 1/2 * log(1+x)/log(1-x) 」によって、それより外側はニュートン法によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。関数の対称性を利用し、負の引数については、正の引数における値を利用して計算されます。<span style="font-weight:bold;">古いバージョンでは、-0.7 以下（負の無限大側）の引数について値を求められません。計算が終わらないか、0 が返されます。この問題は VCSSL 3.3.2 において修正されました。</span> </dd>
-<dt><a href="lib/Math.html#deg">macro deg( float angle ) </a></dt>
-<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。 </dd>
-<dt><a href="lib/Math.html#deg">varfloat deg(varfloat rad) </a></dt>
-<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。 </dd>
-<dt><a href="lib/Math.html#rad">macro rad( float angle ) </a></dt>
+<dt><a href="lib/Math.html#deg">macro deg( float rad ) </a></dt>
 <dd>角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。 </dd>
-<dt><a href="lib/Math.html#rad">varfloat rad(varfloat deg) </a></dt>
+<dt><a href="lib/Math.html#deg">varfloat deg(varfloat rad) </a></dt>
 <dd>角度の単位変換です。弧度法（ラジアン）の角度を、度数法の角度に変換します。内部では、元の桁数の1.34倍の桁数で、「 ラジアン数 = 度数 * π / 180 」によって計算されます。 </dd>
+<dt><a href="lib/Math.html#rad">macro rad( float deg ) </a></dt>
+<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。 </dd>
+<dt><a href="lib/Math.html#rad">varfloat rad(varfloat deg) </a></dt>
+<dd>角度の単位変換です。度数法の角度を、弧度法（ラジアン）の角度に変換します。内部では、元の桁数の1.34倍の桁数で、「 度数 = ラジアン数 * 180 / π 」によって計算されます。 </dd>
 </dl>
 
 <h3><a href="lib/Graphics.html">Graphics ライブラリ</a></h3> 
@@ -2135,17 +2147,17 @@
 <p>時間計測や、時刻取得などの機能を提供するライブラリです。</p> 
 <dl>
 <dt><a href="lib/Time.html#time">int time() </a></dt>
-<dd>プログラム実行開始からの経過時間を返します。通常、単位はミリ秒ですが、仕様上は処理系です。厳密に任意の単位で測るには、<a href="lib/Time.html#millisecond">millisecond</a> などを噛ませて変換してください。 </dd>
+<dd>プログラム実行開始からの経過時間を、ミリ秒単位で返します。<span style="font-weight: bold;">この関数は使用頻度が高いため、VCSSL 3.4.22 以降において、System ライブラリでもサポートされる事になりました。そのため現在は、この関数は Time ライブラリを import しなくても使用できます。</span>（ System ライブラリに属する関数群は、全て import 不要で使用できるためです。 ) </dd>
 <dt><a href="lib/Time.html#millisecond">int millisecond( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、ミリ秒単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、ミリ秒単位に変換します（つまり、そのまま返します）。 </dd>
 <dt><a href="lib/Time.html#second">int second( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、秒単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、秒単位に変換します。秒に満たない余りは切り捨てられます。 </dd>
 <dt><a href="lib/Time.html#minute">int minute( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、分単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、分単位に変換します。分に満たない余りは切り捨てられます。 </dd>
 <dt><a href="lib/Time.html#hour">int hour( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、時間(hour)単位に変換します。1時間に満たない余りは切り捨てられます。 </dd>
 <dt><a href="lib/Time.html#day">int day( int t ) </a></dt>
-<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、日単位に変換します。自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 </dd>
+<dd><a href="lib/Time.html#time">time</a> 関数が返す値などを、日単位に変換します。1日に満たない余りは切り捨てられます。なお、自転速度の揺らぎや閏秒など、天文学的・物理学的な効果は考慮されません。単純に 86400000 ミリ秒を 1 日として変換します。 </dd>
 <dt><a href="lib/Time.html#year">int year() </a></dt>
 <dd>西暦カレンダーにおける現在の年を返します。 </dd>
 <dt><a href="lib/Time.html#month">int month() </a></dt>
@@ -2331,6 +2343,8 @@
 <dd>座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 </dd>
 <dt><a href="lib/tool/Graph2D.html#setGraph2DConfigurationFile">void setGraph2DConfigurationFile( int graphID, string file ) </a></dt>
 <dd>設定ファイルを読み込み、グラフに自動で設定を行います。 </dd>
+<dt><a href="lib/tool/Graph2D.html#setGraph2DConfigurationCode">void setGraph2DConfigurationCode( int graphID, string code ) </a></dt>
+<dd>設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。 </dd>
 <dt><a href="lib/tool/Graph2D.html#setGraph2DRange">void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax ) </a></dt>
 <dd>プロット範囲を設定します。 </dd>
 <dt><a href="lib/tool/Graph2D.html#setGraph2DRangeX">void setGraph2DRangeX( int graphID, double xMin, double xMax ) </a></dt>
@@ -2402,6 +2416,8 @@
 <dd>座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 </dd>
 <dt><a href="lib/tool/Graph3D.html#setGraph3DConfigurationFile">void setGraph3DConfigurationFile( int graphID, string file ) </a></dt>
 <dd>設定ファイルを読み込み、グラフに自動で設定を行います。 </dd>
+<dt><a href="lib/tool/Graph3D.html#setGraph3DConfigurationCode">void setGraph3DConfigurationCode( int graphID, string code ) </a></dt>
+<dd>設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。 </dd>
 <dt><a href="lib/tool/Graph3D.html#setGraph3DRange">void setGraph3DRange( int graphID, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax ) </a></dt>
 <dd>プロット範囲を設定します。 </dd>
 <dt><a href="lib/tool/Graph3D.html#setGraph3DRangeX">void setGraph3DRangeX( int graphID, double xMin, double xMax ) </a></dt>
@@ -2412,6 +2428,14 @@
 <dd>Z軸のプロット範囲を設定します。 </dd>
 <dt><a href="lib/tool/Graph3D.html#setGraph3DAutoRange">void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ) </a></dt>
 <dd>プロット範囲の自動調整機能を有効化または無効化します。 </dd>
+<dt><a href="lib/tool/Graph3D.html#setGraph3DCameraAngle">void setGraph3DCameraAngle( int graphID, float horizontalAngle, float verticalAngle, string mode ) </a></dt>
+<dd>カメラアングルを設定します。引数 horizontalAngle と verticalAngle には、グラフ原点からカメラ位置を見るベクトル（カメラ方向ベクトル）を、天頂軸（後述）を基準とした水平角と垂直角で指定します。垂直角は、カメラ方向ベクトルが天頂軸となす角度を指定します。水平角は、天頂軸と鉛直な面への、カメラ方向ベクトルの射影の向きを角度で指定します。ここで天頂軸は、引数 mode に以下の値を指定する事によって、X/Y/Z軸から選択できます：    ZENITH_X :      X軸を天頂軸とする角度指定モード ,    ZENITH_Y :      Y軸を天頂軸とする角度指定モード ,    ZENITH_Z :      Z軸を天頂軸とする角度指定モード ,   </dd>
+<dt><a href="lib/tool/Graph3D.html#setGraph3DCameraMagnification">void setGraph3DCameraMagnification( int graphID, float magnification ) </a></dt>
+<dd>カメラ倍率を設定します。 </dd>
+<dt><a href="lib/tool/Graph3D.html#setGraph3DCameraDistance">void setGraph3DCameraDistance( int graphID, float distance ) </a></dt>
+<dd>カメラ距離を設定します。 </dd>
+<dt><a href="lib/tool/Graph3D.html#setGraph3DCameraPerspective">void setGraph3DCameraPerspective( int graphID, bool perspective ) </a></dt>
+<dd>カメラの遠近感の有効/無効を設定します。 </dd>
 <dt><a href="lib/tool/Graph3D.html#setGraph3DOption">void setGraph3DOption( int graphID, string option, bool value ) </a></dt>
 <dd>グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：    WITH_POINTS :      点プロット ,    WITH_LINES :      線プロット ,    WITH_MESHES :      メッシュプロット ,    WITH_MEMBRANES :      曲面プロット ,    FLAT :      平面化 ,    FRAME :      枠線描画 ,    SCALE :      目盛り描画 ,    GRID_LINE :      グリッドライン描画 ,    GRADATION :      Z値によるグラデーション彩色 ,    ALPHA :      半透明描画 ,    LOG_X :      X対数軸表示 ,    LOG_Y :      Y対数軸表示 ,    LOG_Z :      Z対数軸表示 ,    REVERSE_X :      X軸反転表示 ,    REVERSE_Y :      Y軸反転表示 ,    REVERSE_Z :      Z軸反転表示 ,   </dd>
 <dt><a href="lib/tool/Graph3D.html#setGraph3DMenu">void setGraph3DMenu( int graphID, string option, string value ) </a></dt>
@@ -2429,181 +2453,181 @@
 <h3><a href="lib/data/DataWrapper.html">data.DataWrapper ライブラリ</a></h3> 
 <p>任意型の変数値を構造体でラッピングする機能を提供するライブラリです。</p> 
 <dl>
-<dt><a href="lib/data/DataWrapper.html#DataWrapper">struct DataWrapper&lt;Type&gt; </a></dt>
+<dt><a href="lib/data/DataWrapper.html#DataWrapper">struct DataWrapper<Type> </a></dt>
 <dd>任意型のデータをラッピングする構造体です。 </dd>
-<dt><a href="lib/data/DataWrapper.html#wrap">DataWrapper&lt;Type&gt; wrap&lt;Type&gt;(Type arg) </a></dt>
+<dt><a href="lib/data/DataWrapper.html#wrap">DataWrapper<Type> wrap<Type>(Type arg) </a></dt>
 <dd>任意型のデータをラッピングします。 </dd>
-<dt><a href="lib/data/DataWrapper.html#unwrap">Type unwrap&lt;Type&gt;(DataWrapper&lt;Type&gt; wrapper) </a></dt>
+<dt><a href="lib/data/DataWrapper.html#unwrap">Type unwrap<Type>(DataWrapper<Type> wrapper) </a></dt>
 <dd>ラッピングしているデータを取り出します。 </dd>
 </dl>
 
 <h3><a href="lib/data/List.html">data.List ライブラリ</a></h3> 
 <p>リスト型のデータ構造を提供するライブラリです。配列には対応していません。</p> 
 <dl>
-<dt><a href="lib/data/List.html#List">struct List&lt;Type&gt; </a></dt>
+<dt><a href="lib/data/List.html#List">struct List<Type> </a></dt>
 <dd>リスト構造体です。リストのデータを保持します。 </dd>
-<dt><a href="lib/data/List.html#clear">void clear&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/List.html#clear">void clear<Type>( List<Type> &list ) </a></dt>
 <dd>要素を全て削除します。 </dd>
-<dt><a href="lib/data/List.html#size">int size&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/List.html#size">int size<Type>( List<Type> &list ) </a></dt>
 <dd>使用中のサイズを返します。 </dd>
-<dt><a href="lib/data/List.html#add">void add&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type value ) </a></dt>
+<dt><a href="lib/data/List.html#add">void add<Type>( List<Type> &list, Type value ) </a></dt>
 <dd>リストの末尾に要素を追加します。 </dd>
-<dt><a href="lib/data/List.html#get">Type get&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index ) </a></dt>
+<dt><a href="lib/data/List.html#get">Type get<Type>( List<Type> &list, int index ) </a></dt>
 <dd>特定インデックスの要素を取得します。 </dd>
-<dt><a href="lib/data/List.html#set">void set&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index, Type element ) </a></dt>
+<dt><a href="lib/data/List.html#set">void set<Type>( List<Type> &list, int index, Type element ) </a></dt>
 <dd>特定インデックスの要素を代入します。そのインデックスの位置にあった要素は上書きされます。 </dd>
-<dt><a href="lib/data/List.html#insert">Type insert&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index, Type value ) </a></dt>
+<dt><a href="lib/data/List.html#insert">Type insert<Type>( List<Type> &list, int index, Type value ) </a></dt>
 <dd>特定インデックスに要素を挿入します。そのインデックスの位置にあった要素は、次のインデックスの位置に移動します。また、それ以降の全ての要素も、インデックスが後方に 1 ずつ移動します。 </dd>
-<dt><a href="lib/data/List.html#contains">bool contains&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/List.html#contains">bool contains<Type>( List<Type> &list, Type element ) </a></dt>
 <dd>リストが指定された要素を含んでいるか判定します。 </dd>
-<dt><a href="lib/data/List.html#removeAt">Type removeAt&lt;Type&gt;( List&lt;Type&gt; &amp;list, int index ) </a></dt>
+<dt><a href="lib/data/List.html#removeAt">Type removeAt<Type>( List<Type> &list, int index ) </a></dt>
 <dd>特定インデックスの要素を削除します。 </dd>
-<dt><a href="lib/data/List.html#remove">void remove&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/List.html#remove">void remove<Type>( List<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を削除します。複数存在する場合は、最初のものだけが削除されます。 </dd>
-<dt><a href="lib/data/List.html#removeAll">void removeAll&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/List.html#removeAll">void removeAll<Type>( List<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を全て削除します。 </dd>
-<dt><a href="lib/data/List.html#indexOf">int indexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/List.html#indexOf">int indexOf<Type>( List<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を、先頭から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/List.html#indexOf">int indexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element, int from ) </a></dt>
+<dt><a href="lib/data/List.html#indexOf">int indexOf<Type>( List<Type> &list, Type element, int from ) </a></dt>
 <dd>指定された要素を、指定インデックスの位置から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/List.html#lastIndexOf">int lastIndexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/List.html#lastIndexOf">int lastIndexOf<Type>( List<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を、末尾から前方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/List.html#lastIndexOf">int lastIndexOf&lt;Type&gt;( List&lt;Type&gt; &amp;list, Type element, int from ) </a></dt>
+<dt><a href="lib/data/List.html#lastIndexOf">int lastIndexOf<Type>( List<Type> &list, Type element, int from ) </a></dt>
 <dd>指定された要素を、指定インデックスの位置から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/List.html#reverse">void reverse&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/List.html#reverse">void reverse<Type>( List<Type> &list ) </a></dt>
 <dd>リストが保持する全要素の順序を反転させます。 </dd>
-<dt><a href="lib/data/List.html#toArray">Type[ ] toArray&lt;Type&gt;( List&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/List.html#toArray">Type[ ] toArray<Type>( List<Type> &list ) </a></dt>
 <dd>リストが保持する全要素を、1次元の配列に格納して返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/Queue.html">data.Queue ライブラリ</a></h3> 
 <p>キュー型のデータ構造を提供するライブラリです。配列には対応していません。</p> 
 <dl>
-<dt><a href="lib/data/Queue.html#Queue">struct Queue&lt;Type&gt; </a></dt>
+<dt><a href="lib/data/Queue.html#Queue">struct Queue<Type> </a></dt>
 <dd>キュー構造体です。キューのデータを保持します。 </dd>
-<dt><a href="lib/data/Queue.html#clear">void clear&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/Queue.html#clear">void clear<Type>( Queue<Type> &queue ) </a></dt>
 <dd>要素を全て削除します。 </dd>
-<dt><a href="lib/data/Queue.html#size">int size&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/Queue.html#size">int size<Type>( Queue<Type> &queue ) </a></dt>
 <dd>使用中のサイズを返します。 </dd>
-<dt><a href="lib/data/Queue.html#enqueue">void enqueue&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue, Type value ) </a></dt>
+<dt><a href="lib/data/Queue.html#enqueue">void enqueue<Type>( Queue<Type> &queue, Type value ) </a></dt>
 <dd>キューに要素を追加します。 </dd>
-<dt><a href="lib/data/Queue.html#dequeue">Type dequeue&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/Queue.html#dequeue">Type dequeue<Type>( Queue<Type> &queue ) </a></dt>
 <dd>キューから要素を取り出します。取り出した要素は、キューから削除されます。 </dd>
-<dt><a href="lib/data/Queue.html#peek">Type peek&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/Queue.html#peek">Type peek<Type>( Queue<Type> &queue ) </a></dt>
 <dd>キューから要素を削除せずに取り出します。 </dd>
-<dt><a href="lib/data/Queue.html#contains">bool contains&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue, Type element ) </a></dt>
+<dt><a href="lib/data/Queue.html#contains">bool contains<Type>( Queue<Type> &queue, Type element ) </a></dt>
 <dd>キューが指定された要素を含んでいるか判定します。 </dd>
-<dt><a href="lib/data/Queue.html#reverse">void reverse&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/Queue.html#reverse">void reverse<Type>( Queue<Type> &queue ) </a></dt>
 <dd>キューが保持する全要素の順序を反転させます。 </dd>
-<dt><a href="lib/data/Queue.html#toArray">Type[ ] toArray&lt;Type&gt;( Queue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/Queue.html#toArray">Type[ ] toArray<Type>( Queue<Type> &queue ) </a></dt>
 <dd>キューが保持する全要素を、1次元の配列に変換して返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/Stack.html">data.Stack ライブラリ</a></h3> 
 <p>スタック型のデータ構造を提供するライブラリです。配列には対応していません。</p> 
 <dl>
-<dt><a href="lib/data/Stack.html#Stack">struct Stack&lt;Type&gt; </a></dt>
+<dt><a href="lib/data/Stack.html#Stack">struct Stack<Type> </a></dt>
 <dd>スタック構造体です。スタックのデータを保持します。 </dd>
-<dt><a href="lib/data/Stack.html#clear">void clear&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/Stack.html#clear">void clear<Type>( Stack<Type> &stack ) </a></dt>
 <dd>要素を全て削除します。 </dd>
-<dt><a href="lib/data/Stack.html#size">int size&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/Stack.html#size">int size<Type>( Stack<Type> &stack ) </a></dt>
 <dd>使用中のサイズを返します。 </dd>
-<dt><a href="lib/data/Stack.html#push">void push&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack, Type value ) </a></dt>
+<dt><a href="lib/data/Stack.html#push">void push<Type>( Stack<Type> &stack, Type value ) </a></dt>
 <dd>スタックに要素を追加します。 </dd>
-<dt><a href="lib/data/Stack.html#pop">Type pop&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/Stack.html#pop">Type pop<Type>( Stack<Type> &stack ) </a></dt>
 <dd>スタックから要素を取り出します。取り出した要素は、スタックから削除されます。 </dd>
-<dt><a href="lib/data/Stack.html#peek">Type peek&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/Stack.html#peek">Type peek<Type>( Stack<Type> &stack ) </a></dt>
 <dd>スタックから要素を削除せずに取り出します。 </dd>
-<dt><a href="lib/data/Stack.html#contains">bool contains&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack, Type element ) </a></dt>
+<dt><a href="lib/data/Stack.html#contains">bool contains<Type>( Stack<Type> &stack, Type element ) </a></dt>
 <dd>スタックが指定された要素を含んでいるか判定します。 </dd>
-<dt><a href="lib/data/Stack.html#reverse">void reverse&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/Stack.html#reverse">void reverse<Type>( Stack<Type> &stack ) </a></dt>
 <dd>スタックが保持する全要素の順序を反転させます。 </dd>
-<dt><a href="lib/data/Stack.html#toArray">Type[ ] toArray&lt;Type&gt;( Stack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/Stack.html#toArray">Type[ ] toArray<Type>( Stack<Type> &stack ) </a></dt>
 <dd>スタックが保持する全要素を、1次元の配列に変換して返します。なお、順序は pop や peek で最初に得られる要素が [ 0 ] になります。 </dd>
 </dl>
 
 <h3><a href="lib/data/WrappedList.html">data.WrappedList ライブラリ</a></h3> 
 <p>リスト型のデータ構造を提供するライブラリです。配列に対応しています。</p> 
 <dl>
-<dt><a href="lib/data/WrappedList.html#WrappedList">struct WrappedList&lt;Type&gt; </a></dt>
+<dt><a href="lib/data/WrappedList.html#WrappedList">struct WrappedList<Type> </a></dt>
 <dd>リスト構造体です。リストのデータを保持します。 </dd>
-<dt><a href="lib/data/WrappedList.html#clear">void clear&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#clear">void clear<Type>( WrappedList<Type> &list ) </a></dt>
 <dd>要素を全て削除します。 </dd>
-<dt><a href="lib/data/WrappedList.html#size">int size&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#size">int size<Type>( WrappedList<Type> &list ) </a></dt>
 <dd>使用中のサイズを返します。 </dd>
-<dt><a href="lib/data/WrappedList.html#add">void add&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type value ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#add">void add<Type>( WrappedList<Type> &list, Type value ) </a></dt>
 <dd>リストの末尾に要素を追加します。 </dd>
-<dt><a href="lib/data/WrappedList.html#get">Type get&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, int index ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#get">Type get<Type>( WrappedList<Type> &list, int index ) </a></dt>
 <dd>特定インデックスの要素を取得します。 </dd>
-<dt><a href="lib/data/WrappedList.html#set">void set&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, int index, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#set">void set<Type>( WrappedList<Type> &list, int index, Type element ) </a></dt>
 <dd>特定インデックスの要素を代入します。そのインデックスの位置にあった要素は上書きされます。 </dd>
-<dt><a href="lib/data/WrappedList.html#insert">Type insert&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, int index, Type value ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#insert">Type insert<Type>( WrappedList<Type> &list, int index, Type value ) </a></dt>
 <dd>特定インデックスに要素を挿入します。そのインデックスの位置にあった要素は、次のインデックスの位置に移動します。また、それ以降の全ての要素も、インデックスが後方に 1 ずつ移動します。 </dd>
-<dt><a href="lib/data/WrappedList.html#contains">bool contains&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#contains">bool contains<Type>( WrappedList<Type> &list, Type element ) </a></dt>
 <dd>リストが指定された要素を含んでいるか判定します。 </dd>
-<dt><a href="lib/data/WrappedList.html#removeAt">Type removeAt&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, int index ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#removeAt">Type removeAt<Type>( WrappedList<Type> &list, int index ) </a></dt>
 <dd>特定インデックスの要素を削除します。 </dd>
-<dt><a href="lib/data/WrappedList.html#remove">void remove&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#remove">void remove<Type>( WrappedList<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を削除します。複数存在する場合は、最初のものだけが削除されます。 </dd>
-<dt><a href="lib/data/WrappedList.html#removeAll">void removeAll&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#removeAll">void removeAll<Type>( WrappedList<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を全て削除します。 </dd>
-<dt><a href="lib/data/WrappedList.html#indexOf">int indexOf&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#indexOf">int indexOf<Type>( WrappedList<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を、先頭から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/WrappedList.html#indexOf">int indexOf&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type element, int from ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#indexOf">int indexOf<Type>( WrappedList<Type> &list, Type element, int from ) </a></dt>
 <dd>指定された要素を、指定インデックスの位置から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/WrappedList.html#lastIndexOf">int lastIndexOf&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#lastIndexOf">int lastIndexOf<Type>( WrappedList<Type> &list, Type element ) </a></dt>
 <dd>指定された要素を、末尾から前方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/WrappedList.html#lastIndexOf">int lastIndexOf&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list, Type element, int from ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#lastIndexOf">int lastIndexOf<Type>( WrappedList<Type> &list, Type element, int from ) </a></dt>
 <dd>指定された要素を、指定インデックスの位置から後方検索し、存在すればそのインデックスを、存在しなければ-1を返します。 </dd>
-<dt><a href="lib/data/WrappedList.html#reverse">void reverse&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#reverse">void reverse<Type>( WrappedList<Type> &list ) </a></dt>
 <dd>リストが保持する全要素の順序を反転させます。 </dd>
-<dt><a href="lib/data/WrappedList.html#toDataWrapperArray">DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedList&lt;Type&gt; &amp;list ) </a></dt>
+<dt><a href="lib/data/WrappedList.html#toDataWrapperArray">DataWrapper<Type>[ ] toDataWrapperArray<Type>( WrappedList<Type> &list ) </a></dt>
 <dd>リストが保持する全要素を、DataWrapper配列に格納して返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/WrappedQueue.html">data.WrappedQueue ライブラリ</a></h3> 
 <p>キュー型のデータ構造を提供するライブラリです。配列に対応しています。</p> 
 <dl>
-<dt><a href="lib/data/WrappedQueue.html#WrappedQueue">struct WrappedQueue&lt;Type&gt; </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#WrappedQueue">struct WrappedQueue<Type> </a></dt>
 <dd>キュー構造体です。キューのデータを保持します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#clear">void clear&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#clear">void clear<Type>( WrappedQueue<Type> &queue ) </a></dt>
 <dd>要素を全て削除します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#size">int size&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#size">int size<Type>( WrappedQueue<Type> &queue ) </a></dt>
 <dd>使用中のサイズを返します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#enqueue">void enqueue&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue, Type value ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#enqueue">void enqueue<Type>( WrappedQueue<Type> &queue, Type value ) </a></dt>
 <dd>キューに要素を追加します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#dequeue">Type dequeue&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#dequeue">Type dequeue<Type>( WrappedQueue<Type> &queue ) </a></dt>
 <dd>キューから要素を取り出します。取り出した要素は、キューから削除されます。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#peek">Type peek&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#peek">Type peek<Type>( WrappedQueue<Type> &queue ) </a></dt>
 <dd>キューから要素を削除せずに取り出します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#contains">bool contains&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#contains">bool contains<Type>( WrappedQueue<Type> &queue, Type element ) </a></dt>
 <dd>キューが指定された要素を含んでいるか判定します。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#reverse">void reverse&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#reverse">void reverse<Type>( WrappedQueue<Type> &queue ) </a></dt>
 <dd>キューが保持する全要素の順序を反転させます。 </dd>
-<dt><a href="lib/data/WrappedQueue.html#toDataWrapperArray">DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedQueue&lt;Type&gt; &amp;queue ) </a></dt>
+<dt><a href="lib/data/WrappedQueue.html#toDataWrapperArray">DataWrapper<Type>[ ] toDataWrapperArray<Type>( WrappedQueue<Type> &queue ) </a></dt>
 <dd>キューが保持する全要素を、DataWrapper配列に変換して返します。 </dd>
 </dl>
 
 <h3><a href="lib/data/WrappedStack.html">data.WrappedStack ライブラリ</a></h3> 
 <p>スタック型のデータ構造を提供するライブラリです。配列に対応しています。</p> 
 <dl>
-<dt><a href="lib/data/WrappedStack.html#WrappedStack">struct WrappedStack&lt;Type&gt; </a></dt>
+<dt><a href="lib/data/WrappedStack.html#WrappedStack">struct WrappedStack<Type> </a></dt>
 <dd>スタック構造体です。スタックのデータを保持します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#clear">void clear&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#clear">void clear<Type>( WrappedStack<Type> &stack ) </a></dt>
 <dd>要素を全て削除します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#size">int size&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#size">int size<Type>( WrappedStack<Type> &stack ) </a></dt>
 <dd>使用中のサイズを返します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#push">void push&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack, Type value ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#push">void push<Type>( WrappedStack<Type> &stack, Type value ) </a></dt>
 <dd>スタックに要素を追加します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#pop">Type pop&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#pop">Type pop<Type>( WrappedStack<Type> &stack ) </a></dt>
 <dd>スタックから要素を取り出します。取り出した要素は、スタックから削除されます。 </dd>
-<dt><a href="lib/data/WrappedStack.html#peek">Type peek&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#peek">Type peek<Type>( WrappedStack<Type> &stack ) </a></dt>
 <dd>スタックから要素を削除せずに取り出します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#contains">bool contains&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack, Type element ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#contains">bool contains<Type>( WrappedStack<Type> &stack, Type element ) </a></dt>
 <dd>スタックが指定された要素を含んでいるか判定します。 </dd>
-<dt><a href="lib/data/WrappedStack.html#reverse">void reverse&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#reverse">void reverse<Type>( WrappedStack<Type> &stack ) </a></dt>
 <dd>スタックが保持する全要素の順序を反転させます。 </dd>
-<dt><a href="lib/data/WrappedStack.html#toDataWrapperArray">DataWrapper&lt;Type&gt;[ ] toDataWrapperArray&lt;Type&gt;( WrappedStack&lt;Type&gt; &amp;stack ) </a></dt>
+<dt><a href="lib/data/WrappedStack.html#toDataWrapperArray">DataWrapper<Type>[ ] toDataWrapperArray<Type>( WrappedStack<Type> &stack ) </a></dt>
 <dd>スタックが保持する全要素を、DataWrapper配列に格納して返します。なお、順序は pop や peek で最初に得られる要素を格納するものが [ 0 ] になります。 </dd>
 </dl>
 
@@ -2805,41 +2829,41 @@
 <dd>ファイル名とモードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。    <a href="lib/file/TextFile.html#WRITE">WRITE</a> :    特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#APPEND">APPEND</a> :    特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#READ">READ</a> :    特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#WRITE_CSV">WRITE_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="lib/file/TextFile.html#APPEND_CSV">APPEND_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された追記モードです。 ,    <a href="lib/file/TextFile.html#READ_CSV">READ_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された読み込みモードです。 ,    <a href="lib/file/TextFile.html#WRITE_TSV">WRITE_TSV</a> :    TSV（タブ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="lib/file/TextFile.html#APPEND_TSV">APPEND_TSV</a> :    TSV（タブ区切り）ファイル用に設定された追記モードです。 ,    <a href="lib/file/TextFile.html#READ_TSV">READ_TSV</a> :    TSV（タブ区切り）ファイル用に設定された読み込みモードです。 ,   </dd>
 <dt><a href="lib/file/TextFile.html#openTextFile">TextFile openTextFile(string filePath, string mode, string textEncoding) </a></dt>
 <dd>ファイル名、モード、文字コードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。    <a href="lib/file/TextFile.html#WRITE">WRITE</a> :    特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#APPEND">APPEND</a> :    特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#READ">READ</a> :    特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。 ,    <a href="lib/file/TextFile.html#WRITE_CSV">WRITE_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="lib/file/TextFile.html#APPEND_CSV">APPEND_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された追記モードです。 ,    <a href="lib/file/TextFile.html#READ_CSV">READ_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された読み込みモードです。 ,    <a href="lib/file/TextFile.html#WRITE_TSV">WRITE_TSV</a> :    TSV（タブ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="lib/file/TextFile.html#APPEND_TSV">APPEND_TSV</a> :    TSV（タブ区切り）ファイル用に設定された追記モードです。 ,    <a href="lib/file/TextFile.html#READ_TSV">READ_TSV</a> :    TSV（タブ区切り）ファイル用に設定された読み込みモードです。 ,  また、文字コードは下記の文字列リテラルから選択ます。    &quotShift_JIS&quot :    Shift_JIS です。ハイフン（ - ）では無くアンダーバー（ _ ）である事に注意して下さい。 ,    &quotUTF-8&quot :    UTF-8 です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。 ,    &quotEUC-JP&quot :    EUC-JP です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。 ,   </dd>
-<dt><a href="lib/file/TextFile.html#close">void close(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#close">void close(TextFile &textFile) </a></dt>
 <dd>テキストファイルへのアクセスを閉じます。特に書き込みアクセス後には、バッファされている内容を最後まで書き込み切るためにも、必ず呼び出す必要があります。 </dd>
-<dt><a href="lib/file/TextFile.html#getEndOfLineCode">string getEndOfLineCode(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#getEndOfLineCode">string getEndOfLineCode(TextFile &textFile) </a></dt>
 <dd>ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, CR, LF の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, CR, LF の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href="lib/file/TextFile.html#setEndOfLineCode">setEndOfLineCode</a> 関数で改行コードを明示指定した後は、その指定値が返されます。 </dd>
-<dt><a href="lib/file/TextFile.html#setEndOfLineCode">void setEndOfLineCode(TextFile &amp;textFile, string endOfLineCode) </a></dt>
+<dt><a href="lib/file/TextFile.html#setEndOfLineCode">void setEndOfLineCode(TextFile &textFile, string endOfLineCode) </a></dt>
 <dd>ファイル入出力に使用する改行コードを指定します。改行コードの指定には、System ライブラリに定義されている、以下の定数を使用する事が推奨されます。    LF :    文字コードで 0x0A, 一般的なエスケープシーケンスで \n に対応する改行コードです。 ,    CR :    文字コードで 0x0D, 一般的なエスケープシーケンスで \r に対応する改行コードです。 ,    CR+LF :    文字コードで 0x0D 0x0A, 一般的なエスケープシーケンスで \r\n に対応する改行コードです。（これは1つの定数では無く、CRとLFを加算した式です。） ,    EOL :    実行環境におけるデフォルトの文字コードを表します。通常は CR, LF, CR+LF のいずれかが使用されます。 ,   </dd>
-<dt><a href="lib/file/TextFile.html#setCommentLineCode">void setCommentLineCode(TextFile &amp;textFile, string commentLineCode) </a></dt>
+<dt><a href="lib/file/TextFile.html#setCommentLineCode">void setCommentLineCode(TextFile &textFile, string commentLineCode) </a></dt>
 <dd>コメント行を表す行頭文字列を指定します。ここで指定した文字列で始まる行は、読み込み時に無視されます。また、<a href="lib/file/TextFile.html#commentln">commentln</a> 関数でコメント行を出力する際に、ここで指定した文字列が使用されます。なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。この項目は、デフォルトでは何も設定されていないため、コメント行を考慮する際は必ず設定する必要があります。一般的によく用いられる行頭文字列は、以下のようなものがあります。    "lib/file/TextFile.html#" (ナンバー記号) :    CSV/TSVファイルや、スクリプトなどによく用いられます。 ,    ":" （コロン） :    一部の設定ファイルやスクリプトなどで用いられます。 ,    ";" （セミコロン） :    一部の設定ファイルやスクリプトなどで用いられます。 ,    "//" （ダブルスラッシュ） :    一部のプログラミング言語で用いられます。 ,   </dd>
-<dt><a href="lib/file/TextFile.html#getCommentLineCode">string getCommentLineCode(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#getCommentLineCode">string getCommentLineCode(TextFile &textFile) </a></dt>
 <dd>コメント行を表す行頭文字列を返します。 </dd>
-<dt><a href="lib/file/TextFile.html#isReadable">bool isReadable(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#isReadable">bool isReadable(TextFile &textFile) </a></dt>
 <dd>ファイルが読み込み可能な状態であるか確認します。 </dd>
-<dt><a href="lib/file/TextFile.html#isWritable">bool isWritable(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#isWritable">bool isWritable(TextFile &textFile) </a></dt>
 <dd>ファイルが読み込み可能な状態であるか確認します。 </dd>
-<dt><a href="lib/file/TextFile.html#setDelimiter">void setDelimiter(TextFile &amp;textFile, string delimiter) </a></dt>
+<dt><a href="lib/file/TextFile.html#setDelimiter">void setDelimiter(TextFile &textFile, string delimiter) </a></dt>
 <dd>値の区切り文字（デリミタ）を設定します。区切り文字を設定すると、 <a href="lib/file/TextFile.html#read">read</a> 関数や<a href="lib/file/TextFile.html#readln">readln</a> 関数が、値を区切って配列として返すようになります。一般的によく用いられる区切り文字は、以下のようなものがあります。また、<a href="lib/file/TextFile.html#write">write</a> 関数や<a href="lib/file/TextFile.html#writeln">writeln</a>が、書き込み時に値を区切り文字で区切るようになります。    "," (カンマ記号) :    CSVファイルに用いられます。 ,    "	" (タブ記号) :    TSVファイルに用いられます。 ,    "&nbsp" (半角スペース記号) :    SSVファイルに用いられます。 ,    ";" (セミコロン記号) :    一部の設定ファイルに用いられます。 ,  なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。 </dd>
-<dt><a href="lib/file/TextFile.html#setEnclosure">void setEnclosure(TextFile &amp;textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption) </a></dt>
+<dt><a href="lib/file/TextFile.html#setEnclosure">void setEnclosure(TextFile &textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption) </a></dt>
 <dd>値を囲む引用符記号（エンクロージャ）を設定します。引用符記号を設定すると、<a href="lib/file/TextFile.html#write">write</a> 関数や<a href="lib/file/TextFile.html#writeln">writeln</a>が、書き込み時に値を引用符記号で囲むようになります。また、<a href="lib/file/TextFile.html#read">read</a> 関数や<a href="lib/file/TextFile.html#readln">readln</a> 関数が、読み込み時に引用符記号を解釈するようになります。引用符記号は、enclosure に指定します。引数一般によく用いられる引用符記号は、以下のようなものがあります。    &quot\&quot&quot （ダブルクォーテーション） :    「 &quot 」記号です。CSV/TSV形式ファイルでよく用いられます。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。 ,    &quot'&quot （シングルクォーテーション） :    一部のファイルで使用されます。 ,  なお、値が必ず引用符記号で囲まれるべきか、必要な場合のみ囲まれるべきかは、引数のオプション enclosingOption で指定します。このオプションの指定値は以下の定数から選択します。    <a href="lib/file/TextFile.html#ENCLOSED_ALL">ENCLOSED_ALL</a> :    値が必ず引用符で囲まれる形式です。 ,    <a href="lib/file/TextFile.html#ENCLOSED_ALL">ENCLOSED_IF_NECESSARY</a> :    必要な場合のみ、値が引用符記号で囲まれる形式です。必要な場合とは、書き込み/読み込み内容が、   「 区切り文字（デリミタ）、引用符記号、コメント行頭記号、改行 」のいずれかを含む場合です。 ,    <a href="lib/file/TextFile.html#ENCLOSED_ALL">ENCLOSED_NONE</a> :    いかなる場合においても、値が引用符で囲まれない形式です。 ,  もしも、引用符記号で囲む値が、さらに引用符記号を含んでいる場合、それは別の記号でエスケープされる必要があります。これは引数 enclosureEscapeCharacter で指定します。一般的によく用いられるエスケープ記号は、以下のようなものがあります。    &quot\&quot&quot （ダブルクォーテーション） :    「 &quot 」記号です。CSV/TSV形式ファイルで、    引用符記号がダブルクォーテーションの場合、よく用いられます。    エスケープ結果は連続したダブルクォーテーションとなります。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。 ,    &quot\\&quot （バックスラッシュ） :      「 \ 」記号です。プログラミング言語などでよく使用されます。    VCSSLでは、バックスラッシュは特別な意味を持つため、    このように &quot\\&quot というようなリテラルで指定します。 ,  なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。 </dd>
-<dt><a href="lib/file/TextFile.html#write">void write(TextFile &amp;textFile, ... string value[ ]) </a></dt>
+<dt><a href="lib/file/TextFile.html#write">void write(TextFile &textFile, ... string value[ ]) </a></dt>
 <dd>テキストファイルに文字列を書き込みます。複数の内容を指定した場合、区切り文字（デリミタ）が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href="lib/file/TextFile.html#setEnclosure">setEnclosure</a> で行います。なお、最後の書き込み内容の末尾に、区切り文字は付加されません。従って、連続的に呼び出して書き込みを行う場合、必要に応じて<a href="lib/file/TextFile.html#delimit">delimit</a> 関数で区切り文字を挟む必要があります。 </dd>
-<dt><a href="lib/file/TextFile.html#writeln">void writeln(TextFile &amp;textFile, ... string value[ ]) </a></dt>
+<dt><a href="lib/file/TextFile.html#writeln">void writeln(TextFile &textFile, ... string value[ ]) </a></dt>
 <dd>テキストファイルに文字列を書き込み、改行します。複数の内容を指定した場合、区切り文字が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href="lib/file/TextFile.html#setEnclosure">setEnclosure</a> で行います。 </dd>
-<dt><a href="lib/file/TextFile.html#delimit">void delimit(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#delimit">void delimit(TextFile &textFile) </a></dt>
 <dd>テキストファイルに区切り文字を書き込みます。 </dd>
-<dt><a href="lib/file/TextFile.html#commentln">void commentln(TextFile &amp;textFile, string comment) </a></dt>
+<dt><a href="lib/file/TextFile.html#commentln">void commentln(TextFile &textFile, string comment) </a></dt>
 <dd>テキストファイルにコメント行を書き込みます。この関数をコールするよりも前に、<a href="lib/file/TextFile.html#setCommentLineCode">setCommentLineCode</a> 関数で、コメント行の行頭文字列を設定する必要があります。 </dd>
-<dt><a href="lib/file/TextFile.html#readln">string[ ] readln(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#readln">string[ ] readln(TextFile &textFile) </a></dt>
 <dd>テキストファイルから、一行分の内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href="lib/file/TextFile.html#setEnclosure">setEnclosure</a> で行います。 </dd>
-<dt><a href="lib/file/TextFile.html#read">string[ ] read(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#read">string[ ] read(TextFile &textFile) </a></dt>
 <dd>テキストファイルから、全ての内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字または改行で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href="lib/file/TextFile.html#setEnclosure">setEnclosure</a> で行います。 </dd>
-<dt><a href="lib/file/TextFile.html#loadln">string loadln(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#loadln">string loadln(TextFile &textFile) </a></dt>
 <dd>ファイルから一行を読み込み、そのまま返します。ただし、引用符記号が設定されていて、引用符記号で囲まれた内部に改行がある場合、それは行末とは見なされません。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。また、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。 </dd>
-<dt><a href="lib/file/TextFile.html#load">string load(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#load">string load(TextFile &textFile) </a></dt>
 <dd>ファイルから全行を読み込み、そのまま返します。ただし、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。なお、ファイル内に複数の改行コードが混在している場合は統一されます。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。 </dd>
-<dt><a href="lib/file/TextFile.html#countln">int countln(TextFile &amp;textFile) </a></dt>
+<dt><a href="lib/file/TextFile.html#countln">int countln(TextFile &textFile) </a></dt>
 <dd>テキストファイルの有効行数をカウントします。引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。この関数が返す有効行数を超えてreadln関数をコールする事はできません。 </dd>
 </dl>
 
@@ -3098,29 +3122,29 @@
 <dd> ボタンパネルの構造体です。 </dd>
 <dt><a href="lib/gui/ButtonPanel.html#newButtonPanel">ButtonPanel newButtonPanel(int x, int y, int width, int height, string labelText[ ]) </a></dt>
 <dd>ボタンパネルを生成します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#deleteComponent">void deleteComponent(ButtonPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#deleteComponent">void deleteComponent(ButtonPanel &panelInstance) </a></dt>
 <dd>ボタンパネルを破棄します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#paintComponent">void paintComponent(ButtonPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#paintComponent">void paintComponent(ButtonPanel &panelInstance) </a></dt>
 <dd>ボタンパネルを再描画します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#mountComponent">void mountComponent(ButtonPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#mountComponent">void mountComponent(ButtonPanel &panelInstance, int componentID) </a></dt>
 <dd>ボタンパネルを、別のGUIコンポーネント上に配置します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#demountComponent">void demountComponent(ButtonPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#demountComponent">void demountComponent(ButtonPanel &panelInstance, int componentID) </a></dt>
 <dd>ボタンパネルを、別のGUIコンポーネントから配置解除します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#getPanel">int getPanel(ButtonPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#getPanel">int getPanel(ButtonPanel &panelInstance) </a></dt>
 <dd>パネルのコンポーネントIDを返します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#getButton">int getButton(ButtonPanel &amp;panelInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#getButton">int getButton(ButtonPanel &panelInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するボタンを取得します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#getButton">int getButton(ButtonPanel &amp;panelInstance, int index) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#getButton">int getButton(ButtonPanel &panelInstance, int index) </a></dt>
 <dd>指定されたインデックスのボタンを取得します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#getComponentSize">int[ ] getComponentSize(ButtonPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#getComponentSize">int[ ] getComponentSize(ButtonPanel &panelInstance) </a></dt>
 <dd>パネルのサイズを返します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#setComponentSize">void setComponentSize(ButtonPanel &amp;panelInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#setComponentSize">void setComponentSize(ButtonPanel &panelInstance, int width, int height) </a></dt>
 <dd>パネルのサイズを設定します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#setComponentSize">void setComponentSize(ButtonPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#setComponentSize">void setComponentSize(ButtonPanel &panelInstance) </a></dt>
 <dd>パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#getComponentLocation">int[ ] getComponentLocation(ButtonPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#getComponentLocation">int[ ] getComponentLocation(ButtonPanel &panelInstance) </a></dt>
 <dd>パネルの位置を返します。 </dd>
-<dt><a href="lib/gui/ButtonPanel.html#setComponentLocation">void setComponentLocation(ButtonPanel &amp;panelInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/ButtonPanel.html#setComponentLocation">void setComponentLocation(ButtonPanel &panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
 </dl>
 
@@ -3133,29 +3157,29 @@
 <dd>ボタンウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/ButtonWindow.html#newButtonWindow">ButtonWindow newButtonWindow(string labelText[ ]) </a></dt>
 <dd>自動でウィンドウサイズを決定し、ボタンウィンドウを生成します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#deleteComponent">void deleteComponent(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#deleteComponent">void deleteComponent(ButtonWindow &windowInstance) </a></dt>
 <dd>ボタンウィンドウを破棄します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#getWindow">int getWindow(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#getWindow">int getWindow(ButtonWindow &windowInstance) </a></dt>
 <dd>ウィンドウのGUIコンポーネントIDを取得します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#getButton">int getButton(ButtonWindow &amp;windowInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#getButton">int getButton(ButtonWindow &windowInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するボタンを取得します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#getButton">int getButton(ButtonWindow &amp;windowInstance, int index) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#getButton">int getButton(ButtonWindow &windowInstance, int index) </a></dt>
 <dd>指定されたインデックスのボタンを取得します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#setComponentSize">void setComponentSize(ButtonWindow &amp;windowInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#setComponentSize">void setComponentSize(ButtonWindow &windowInstance, int width, int height) </a></dt>
 <dd>ウィンドウのサイズを設定します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#setComponentSize">void setComponentSize(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#setComponentSize">void setComponentSize(ButtonWindow &windowInstance) </a></dt>
 <dd>ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#getComponentSize">int[ ] getComponentSize(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#getComponentSize">int[ ] getComponentSize(ButtonWindow &windowInstance) </a></dt>
 <dd>ウィンドウのサイズを返します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#getComponentLocation">int[ ] getComponentLocation(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#getComponentLocation">int[ ] getComponentLocation(ButtonWindow &windowInstance) </a></dt>
 <dd>ウィンドウの位置を返します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#setComponentLocation">void setComponentLocation(ButtonWindow &amp;windowInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#setComponentLocation">void setComponentLocation(ButtonWindow &windowInstance, int x, int y) </a></dt>
 <dd>ウィンドウの位置を設定します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#paintComponent">void paintComponent(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#paintComponent">void paintComponent(ButtonWindow &windowInstance) </a></dt>
 <dd>ウィンドウを再描画します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#hideComponent">void hideComponent(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#hideComponent">void hideComponent(ButtonWindow &windowInstance) </a></dt>
 <dd>ウィンドウを不可視化します。 </dd>
-<dt><a href="lib/gui/ButtonWindow.html#showComponent">void showComponent(ButtonWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ButtonWindow.html#showComponent">void showComponent(ButtonWindow &windowInstance) </a></dt>
 <dd>ウィンドウを可視化します。 </dd>
 </dl>
 
@@ -3166,29 +3190,29 @@
 <dd>チェックボックスパネルの構造体です。 </dd>
 <dt><a href="lib/gui/CheckBoxPanel.html#newCheckBoxPanel">CheckBoxPanel newCheckBoxPanel(int x, int y, int width, int height, string labelText[ ], bool defaultValue[ ]) </a></dt>
 <dd>チェックボックスパネルを生成します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#deleteComponent">void deleteComponent(CheckBoxPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#deleteComponent">void deleteComponent(CheckBoxPanel &panelInstance) </a></dt>
 <dd>チェックボックスパネルを破棄します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#paintComponent">void paintComponent(CheckBoxPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#paintComponent">void paintComponent(CheckBoxPanel &panelInstance) </a></dt>
 <dd>チェックボックスパネルを再描画します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#mountComponent">void mountComponent(CheckBoxPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#mountComponent">void mountComponent(CheckBoxPanel &panelInstance, int componentID) </a></dt>
 <dd>チェックボックスパネルを、別のGUIコンポーネント上に配置します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#demountComponent">void demountComponent(CheckBoxPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#demountComponent">void demountComponent(CheckBoxPanel &panelInstance, int componentID) </a></dt>
 <dd>チェックボックスパネルを、別のGUIコンポーネントから配置解除します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#getPanel">int getPanel(CheckBoxPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#getPanel">int getPanel(CheckBoxPanel &panelInstance) </a></dt>
 <dd>パネルのコンポーネントIDを返します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#getCheckBox">int getCheckBox(CheckBoxPanel &amp;panelInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#getCheckBox">int getCheckBox(CheckBoxPanel &panelInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するチェックボックスを取得します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#getCheckBox">int getCheckBox(CheckBoxPanel &amp;panelInstance, int index) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#getCheckBox">int getCheckBox(CheckBoxPanel &panelInstance, int index) </a></dt>
 <dd>指定されたインデックスのチェックボックスを取得します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#getComponentSize">int[ ] getComponentSize(CheckBoxPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#getComponentSize">int[ ] getComponentSize(CheckBoxPanel &panelInstance) </a></dt>
 <dd>パネルのサイズを返します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#setComponentSize">void setComponentSize(CheckBoxPanel &amp;panelInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#setComponentSize">void setComponentSize(CheckBoxPanel &panelInstance, int width, int height) </a></dt>
 <dd>パネルのサイズを設定します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#setComponentSize">void setComponentSize(CheckBoxPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#setComponentSize">void setComponentSize(CheckBoxPanel &panelInstance) </a></dt>
 <dd>パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#getComponentLocation">int[ ] getComponentLocation(CheckBoxPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#getComponentLocation">int[ ] getComponentLocation(CheckBoxPanel &panelInstance) </a></dt>
 <dd>パネルの位置を返します。 </dd>
-<dt><a href="lib/gui/CheckBoxPanel.html#setComponentLocation">void setComponentLocation(CheckBoxPanel &amp;panelInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/CheckBoxPanel.html#setComponentLocation">void setComponentLocation(CheckBoxPanel &panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
 </dl>
 
@@ -3201,33 +3225,33 @@
 <dd>チェックボックスウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/CheckBoxWindow.html#newCheckBoxWindow">CheckBoxWindow newCheckBoxWindow(string labelText[ ], bool[ ] defaultValue) </a></dt>
 <dd>自動でウィンドウサイズを決定し、チェックボックスウィンドウを生成します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#deleteComponent">void deleteComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#deleteComponent">void deleteComponent(CheckBoxWindow &windowInstance) </a></dt>
 <dd>チェックボックスウィンドウを破棄します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#setButton">void setButton(CheckBoxWindow &amp;windowInstance, string label) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#setButton">void setButton(CheckBoxWindow &windowInstance, string label) </a></dt>
 <dd>ウィンドウ下部に、決定ボタンを出現させます。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#getButton">int getButton(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#getButton">int getButton(CheckBoxWindow &windowInstance) </a></dt>
 <dd>決定ボタンのコンポーネントIDを取得します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#getWindow">int getWindow(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#getWindow">int getWindow(CheckBoxWindow &windowInstance) </a></dt>
 <dd>ウィンドウのGUIコンポーネントIDを取得します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#getCheckBox">int getCheckBox(CheckBoxWindow &amp;windowInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#getCheckBox">int getCheckBox(CheckBoxWindow &windowInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するチェックボックスを取得します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#getCheckBox">int getCheckBox(CheckBoxWindow &amp;windowInstance, int index) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#getCheckBox">int getCheckBox(CheckBoxWindow &windowInstance, int index) </a></dt>
 <dd>指定されたインデックスのチェックボックスを取得します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#getComponentSize">int[ ] getComponentSize(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#getComponentSize">int[ ] getComponentSize(CheckBoxWindow &windowInstance) </a></dt>
 <dd>ウィンドウのサイズを返します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#setComponentSize">void setComponentSize(CheckBoxWindow &amp;windowInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#setComponentSize">void setComponentSize(CheckBoxWindow &windowInstance, int width, int height) </a></dt>
 <dd>ウィンドウのサイズを設定します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#setComponentSize">void setComponentSize(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#setComponentSize">void setComponentSize(CheckBoxWindow &windowInstance) </a></dt>
 <dd>ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#getComponentLocation">int[ ] getComponentLocation(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#getComponentLocation">int[ ] getComponentLocation(CheckBoxWindow &windowInstance) </a></dt>
 <dd>ウィンドウの位置を返します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#setComponentLocation">void setComponentLocation(CheckBoxWindow &amp;windowInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#setComponentLocation">void setComponentLocation(CheckBoxWindow &windowInstance, int x, int y) </a></dt>
 <dd>ウィンドウの位置を設定します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#paintComponent">void paintComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#paintComponent">void paintComponent(CheckBoxWindow &windowInstance) </a></dt>
 <dd>ウィンドウを再描画します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#hideComponent">void hideComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#hideComponent">void hideComponent(CheckBoxWindow &windowInstance) </a></dt>
 <dd>ウィンドウを不可視化します。 </dd>
-<dt><a href="lib/gui/CheckBoxWindow.html#showComponent">void showComponent(CheckBoxWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/CheckBoxWindow.html#showComponent">void showComponent(CheckBoxWindow &windowInstance) </a></dt>
 <dd>ウィンドウを可視化します。 </dd>
 </dl>
 
@@ -3240,29 +3264,29 @@
 <dd>画像ラベルウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/ImageLabelWindow.html#newImageLabelWindow">ImageLabelWindow newImageLabelWindow(int graphics) </a></dt>
 <dd>自動でウィンドウサイズを決定し、画像ラベルウィンドウを生成します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#deleteComponent">void deleteComponent(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#deleteComponent">void deleteComponent(ImageLabelWindow &windowInstance) </a></dt>
 <dd>画像ラベルウィンドウを破棄します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#getWindow">int getWindow(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#getWindow">int getWindow(ImageLabelWindow &windowInstance) </a></dt>
 <dd>ウィンドウのGUIコンポーネントIDを返します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#getImageLabel">int getImageLabel(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#getImageLabel">int getImageLabel(ImageLabelWindow &windowInstance) </a></dt>
 <dd>画像ラベルのGUIコンポーネントIDを返します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#setComponentSize">void setComponentSize(ImageLabelWindow &amp;windowInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#setComponentSize">void setComponentSize(ImageLabelWindow &windowInstance, int width, int height) </a></dt>
 <dd>ウィンドウサイズを設定します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#setComponentSize">void setComponentSize(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#setComponentSize">void setComponentSize(ImageLabelWindow &windowInstance) </a></dt>
 <dd>ウィンドウの現在のサイズに合わせて、内部コンポーネントのレイアウトを自動設定します。ウインドウのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#getComponentSize">int[ ] getComponentSize(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#getComponentSize">int[ ] getComponentSize(ImageLabelWindow &windowInstance) </a></dt>
 <dd>ウィンドウのサイズを返します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#fitComponentSize">void fitComponentSize(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#fitComponentSize">void fitComponentSize(ImageLabelWindow &windowInstance) </a></dt>
 <dd>グラフィックスリソースにちょうど適切なウィンドウサイズを設定します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#setComponentLocation">void setComponentLocation(ImageLabelWindow &amp;windowInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#setComponentLocation">void setComponentLocation(ImageLabelWindow &windowInstance, int x, int y) </a></dt>
 <dd>ウィンドウの位置を設定します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#getComponentLocation">int[ ] getComponentLocation(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#getComponentLocation">int[ ] getComponentLocation(ImageLabelWindow &windowInstance) </a></dt>
 <dd>ウィンドウの位置を返します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#paintComponent">void paintComponent(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#paintComponent">void paintComponent(ImageLabelWindow &windowInstance) </a></dt>
 <dd>ウィンドウを再描画します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#hideComponent">void hideComponent(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#hideComponent">void hideComponent(ImageLabelWindow &windowInstance) </a></dt>
 <dd>ウィンドウを不可視化します。 </dd>
-<dt><a href="lib/gui/ImageLabelWindow.html#showComponent">void showComponent(ImageLabelWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/ImageLabelWindow.html#showComponent">void showComponent(ImageLabelWindow &windowInstance) </a></dt>
 <dd>ウィンドウを可視化します。 </dd>
 </dl>
 
@@ -3275,33 +3299,33 @@
 <dd>スライダーパネルを生成します。 </dd>
 <dt><a href="lib/gui/HorizontalSliderPanel.html#newHorizontalSliderPanel">HorizontalSliderPanel newHorizontalSliderPanel(int x, int y, int width, int height, string labelText[ ], int defaultValue[ ], int minValue[ ], int maxValue[ ]) </a></dt>
 <dd>スライダーパネルを生成します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#deleteComponent">void deleteComponent(HorizontalSliderPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#deleteComponent">void deleteComponent(HorizontalSliderPanel &panelInstance) </a></dt>
 <dd>スライダーパネルを破棄します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#paintComponent">void paintComponent(HorizontalSliderPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#paintComponent">void paintComponent(HorizontalSliderPanel &panelInstance) </a></dt>
 <dd>スライダーパネルを再描画します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#mountComponent">void mountComponent(HorizontalSliderPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#mountComponent">void mountComponent(HorizontalSliderPanel &panelInstance, int componentID) </a></dt>
 <dd>スライダーパネルを、別のGUIコンポーネント上に配置します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#demountComponent">void demountComponent(HorizontalSliderPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#demountComponent">void demountComponent(HorizontalSliderPanel &panelInstance, int componentID) </a></dt>
 <dd>スライダーパネルを、別のGUIコンポーネントから配置解除します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#setTextLabelWidth">void setTextLabelWidth(HorizontalSliderPanel &amp;panelInstance, int labelWidth) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#setTextLabelWidth">void setTextLabelWidth(HorizontalSliderPanel &panelInstance, int labelWidth) </a></dt>
 <dd>ラベル部分の幅を設定します。 </dd>
 <dt><a href="lib/gui/HorizontalSliderPanel.html#setLabelWidth">void setLabelWidth(HorizontalSliderPanel panelInstance, int labelWidth) </a></dt>
 <dd>（この関数は互換目的でサポートされています。getTextLabelWidth を使用して下さい。）ラベル部分の幅を設定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#getPanel">int getPanel(HorizontalSliderPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#getPanel">int getPanel(HorizontalSliderPanel &panelInstance) </a></dt>
 <dd>パネルのコンポーネントIDを返します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderPanel &amp;panelInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderPanel &panelInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するスライダーを取得します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderPanel &amp;panelInstance, int index) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderPanel &panelInstance, int index) </a></dt>
 <dd>指定されたインデックスのスライダーを取得します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#getComponentSize">int[ ] getComponentSize(HorizontalSliderPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#getComponentSize">int[ ] getComponentSize(HorizontalSliderPanel &panelInstance) </a></dt>
 <dd>パネルのサイズを返します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#setComponentSize">void setComponentSize(HorizontalSliderPanel &amp;panelInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#setComponentSize">void setComponentSize(HorizontalSliderPanel &panelInstance, int width, int height) </a></dt>
 <dd>パネルのサイズを設定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#setComponentSize">void setComponentSize(HorizontalSliderPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#setComponentSize">void setComponentSize(HorizontalSliderPanel &panelInstance) </a></dt>
 <dd>パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#getComponentLocation">int[ ] getComponentLocation(HorizontalSliderPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#getComponentLocation">int[ ] getComponentLocation(HorizontalSliderPanel &panelInstance) </a></dt>
 <dd>パネルの位置を返します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderPanel.html#setComponentLocation">void setComponentLocation(HorizontalSliderPanel &amp;panelInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderPanel.html#setComponentLocation">void setComponentLocation(HorizontalSliderPanel &panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
 </dl>
 
@@ -3318,37 +3342,37 @@
 <dd>スライダーウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/HorizontalSliderWindow.html#newHorizontalSliderWindow">HorizontalSliderWindow newHorizontalSliderWindow(string labelText[ ], int defaultValue[ ], int minValue[ ], int maxValue[ ]) </a></dt>
 <dd>自動でウィンドウサイズを決定し、スライダーウィンドウを生成します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#deleteComponent">void deleteComponent(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#deleteComponent">void deleteComponent(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>スライダーウィンドウを破棄します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#setTextLabelWidth">void setTextLabelWidth(HorizontalSliderWindow &amp;windowInstance, int labelWidth) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#setTextLabelWidth">void setTextLabelWidth(HorizontalSliderWindow &windowInstance, int labelWidth) </a></dt>
 <dd>ラベル部分の幅を設定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#setButton">void setButton(HorizontalSliderWindow &amp;windowInstance, string label) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#setButton">void setButton(HorizontalSliderWindow &windowInstance, string label) </a></dt>
 <dd>ウィンドウ下部に、決定ボタンを出現させます。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#getButton">int getButton(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#getButton">int getButton(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>決定ボタンのGUIコンポーネントIDを取得します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#getWindow">int getWindow(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#getWindow">int getWindow(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>ウィンドウのGUIコンポーネントIDを取得します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderWindow &amp;windowInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderWindow &windowInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するスライダーを取得します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderWindow &amp;windowInstance, int index) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#getHorizontalSlider">int getHorizontalSlider(HorizontalSliderWindow &windowInstance, int index) </a></dt>
 <dd>指定されたインデックスのスライダーを取得します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#getComponentSize">int[ ] getComponentSize(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#getComponentSize">int[ ] getComponentSize(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>ウィンドウのサイズを返します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentSize">void setComponentSize(HorizontalSliderWindow &amp;windowInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentSize">void setComponentSize(HorizontalSliderWindow &windowInstance, int width, int height) </a></dt>
 <dd>ウィンドウのサイズを設定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentSize">void setComponentSize(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentSize">void setComponentSize(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#getComponentLocation">int[ ] getComponentLocation(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#getComponentLocation">int[ ] getComponentLocation(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>ウィンドウの位置を返します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentLocation">void setComponentLocation(HorizontalSliderWindow &amp;windowInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentLocation">void setComponentLocation(HorizontalSliderWindow &windowInstance, int x, int y) </a></dt>
 <dd>ウィンドウの位置を設定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentLocation">void setComponentLocation(HorizontalSliderWindow &amp;windowInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#setComponentLocation">void setComponentLocation(HorizontalSliderWindow &windowInstance, int x, int y) </a></dt>
 <dd>ウィンドウの位置を設定します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#paintComponent">void paintComponent(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#paintComponent">void paintComponent(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>ウィンドウを再描画します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#hideComponent">void hideComponent(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#hideComponent">void hideComponent(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>ウィンドウを不可視化します。 </dd>
-<dt><a href="lib/gui/HorizontalSliderWindow.html#showComponent">void showComponent(HorizontalSliderWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/HorizontalSliderWindow.html#showComponent">void showComponent(HorizontalSliderWindow &windowInstance) </a></dt>
 <dd>ウィンドウを可視化します。 </dd>
 </dl>
 
@@ -3359,33 +3383,33 @@
 <dd> テキストフィールドパネルの構造体です。 </dd>
 <dt><a href="lib/gui/TextFieldPanel.html#newTextFieldPanel">TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, string labelText[ ], string defaultText[ ]) </a></dt>
 <dd>テキストフィールドパネルを生成します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#deleteComponent">void deleteComponent(TextFieldPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#deleteComponent">void deleteComponent(TextFieldPanel &panelInstance) </a></dt>
 <dd>テキストフィールドパネルを破棄します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#paintComponent">void paintComponent(TextFieldPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#paintComponent">void paintComponent(TextFieldPanel &panelInstance) </a></dt>
 <dd>テキストフィールドパネルを再描画します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#mountComponent">void mountComponent(TextFieldPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#mountComponent">void mountComponent(TextFieldPanel &panelInstance, int componentID) </a></dt>
 <dd>テキストフィールドパネルを、別のGUIコンポーネント上に配置します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#demountComponent">void demountComponent(TextFieldPanel &amp;panelInstance, int componentID) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#demountComponent">void demountComponent(TextFieldPanel &panelInstance, int componentID) </a></dt>
 <dd>テキストパネルを、別のGUIコンポーネントから配置解除します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#setLabelWidth">void setLabelWidth(TextFieldPanel &amp;panelInstance, int labelWidth) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#setLabelWidth">void setLabelWidth(TextFieldPanel &panelInstance, int labelWidth) </a></dt>
 <dd>（この関数は互換目的でサポートされています。getTextLabelWidth を使用して下さい。）ラベル部分の幅を設定します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#setTextLabelWidth">void setTextLabelWidth(TextFieldPanel &amp;panelInstance, int labelWidth) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#setTextLabelWidth">void setTextLabelWidth(TextFieldPanel &panelInstance, int labelWidth) </a></dt>
 <dd>ラベル部分の幅を設定します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#getPanel">int getPanel(TextFieldPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#getPanel">int getPanel(TextFieldPanel &panelInstance) </a></dt>
 <dd>パネルのコンポーネントIDを返します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#getTextField">int getTextField(TextFieldPanel &amp;panelInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#getTextField">int getTextField(TextFieldPanel &panelInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するテキストフィールドを取得します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#getTextField">int getTextField(TextFieldPanel &amp;panelInstance, int index) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#getTextField">int getTextField(TextFieldPanel &panelInstance, int index) </a></dt>
 <dd>指定されたインデックスのテキストフィールドを取得します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#getComponentSize">int[ ] getComponentSize(TextFieldPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#getComponentSize">int[ ] getComponentSize(TextFieldPanel &panelInstance) </a></dt>
 <dd>パネルのサイズを返します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#setComponentSize">void setComponentSize(TextFieldPanel &amp;panelInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#setComponentSize">void setComponentSize(TextFieldPanel &panelInstance, int width, int height) </a></dt>
 <dd>パネルのサイズを設定します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#setComponentSize">void setComponentSize(TextFieldPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#setComponentSize">void setComponentSize(TextFieldPanel &panelInstance) </a></dt>
 <dd>パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#getComponentLocation">int[ ] getComponentLocation(TextFieldPanel &amp;panelInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#getComponentLocation">int[ ] getComponentLocation(TextFieldPanel &panelInstance) </a></dt>
 <dd>パネルの位置を返します。 </dd>
-<dt><a href="lib/gui/TextFieldPanel.html#setComponentLocation">void setComponentLocation(TextFieldPanel &amp;panelInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/TextFieldPanel.html#setComponentLocation">void setComponentLocation(TextFieldPanel &panelInstance, int x, int y) </a></dt>
 <dd>パネルの位置を設定します。 </dd>
 </dl>
 
@@ -3398,37 +3422,37 @@
 <dd>自動でウィンドウサイズを決定し、テキストフィールドウィンドウを生成します。 </dd>
 <dt><a href="lib/gui/TextFieldWindow.html#newTextFieldWindow">TextFieldWindow newTextFieldWindow(string labelText[ ], string defaultValue[ ]) </a></dt>
 <dd>自動でウィンドウサイズを決定し、テキストフィールドウィンドウを生成します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#deleteComponent">void deleteComponent(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#deleteComponent">void deleteComponent(TextFieldWindow &windowInstance) </a></dt>
 <dd>テキストフィールドウィンドウを破棄します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#setTextLabelWidth">void setTextLabelWidth(TextFieldWindow &amp;windowInstance, int labelWidth) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#setTextLabelWidth">void setTextLabelWidth(TextFieldWindow &windowInstance, int labelWidth) </a></dt>
 <dd>ラベル部分の幅を設定します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#setButton">void setButton(TextFieldWindow &amp;windowInstance, string label) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#setButton">void setButton(TextFieldWindow &windowInstance, string label) </a></dt>
 <dd>ウィンドウ下部に、決定ボタンを出現させます。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#getButton">int getButton(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#getButton">int getButton(TextFieldWindow &windowInstance) </a></dt>
 <dd>決定ボタンのGUIコンポーネントIDを取得します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#getWindow">int getWindow(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#getWindow">int getWindow(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウのGUIコンポーネントIDを取得します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#getTextField">int getTextField(TextFieldWindow &amp;windowInstance, string labelText) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#getTextField">int getTextField(TextFieldWindow &windowInstance, string labelText) </a></dt>
 <dd>指定されたラベルに対応するチェックボックスを取得します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#getTextField">int getTextField(TextFieldWindow &amp;windowInstance, int index) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#getTextField">int getTextField(TextFieldWindow &windowInstance, int index) </a></dt>
 <dd>指定されたインデックスのチェックボックスを取得します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#getComponentSize">int[ ] getComponentSize(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#getComponentSize">int[ ] getComponentSize(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウのサイズを返します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#setComponentSize">void setComponentSize(TextFieldWindow &amp;windowInstance, int width, int height) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#setComponentSize">void setComponentSize(TextFieldWindow &windowInstance, int width, int height) </a></dt>
 <dd>ウィンドウのサイズを設定します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#setComponentSize">void setComponentSize(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#setComponentSize">void setComponentSize(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#getComponentLocation">int[ ] getComponentLocation(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#getComponentLocation">int[ ] getComponentLocation(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウの位置を返します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#getComponentLocation">int[ ] getComponentLocation(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#getComponentLocation">int[ ] getComponentLocation(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウの位置を返します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#setComponentLocation">void setComponentLocation(TextFieldWindow &amp;windowInstance, int x, int y) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#setComponentLocation">void setComponentLocation(TextFieldWindow &windowInstance, int x, int y) </a></dt>
 <dd>ウィンドウの位置を設定します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#paintComponent">void paintComponent(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#paintComponent">void paintComponent(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウを再描画します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#hideComponent">void hideComponent(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#hideComponent">void hideComponent(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウを不可視化します。 </dd>
-<dt><a href="lib/gui/TextFieldWindow.html#showComponent">void showComponent(TextFieldWindow &amp;windowInstance) </a></dt>
+<dt><a href="lib/gui/TextFieldWindow.html#showComponent">void showComponent(TextFieldWindow &windowInstance) </a></dt>
 <dd>ウィンドウを可視化します。 </dd>
 </dl>
 

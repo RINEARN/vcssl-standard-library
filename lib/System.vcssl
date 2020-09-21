@@ -96,8 +96,19 @@ public const float NAN = ___NAN;
 /** float 型の最大値です。 */
 public const float FLOAT_MAX = ___FLOAT_MAX;
 
-/** float 型の最小値です。 */
-public const float FLOAT_MIN = ___FLOAT_MIN;
+/** 正規化数の範囲内において、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 */
+public const float FLOAT_MIN_ABS_NORMAL = ___FLOAT_MIN_ABS_NORMAL;
+
+/** 非正規化数の範囲を含めて、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 */
+public const float FLOAT_MIN_ABS_DENORMAL = ___FLOAT_MIN_ABS_DENORMAL;
+
+/**
+ * <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> と同様です。
+ * 名称が短い代わりに、意味や仕様についてやや曖昧な名称であるため、基本的には
+ * より明示的な名称の <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> または 
+ * <a href="#FLOAT_MIN_ABS_NORMAL">FLOAT_MIN_ABS_NORMAL</a> の使用が推奨されます。
+ */
+public const float FLOAT_MIN = ___FLOAT_MIN_ABS_DENORMAL;
 
 /** int 型の最大値です。 */
 public const int INT_MAX = ___INT_MAX;
@@ -409,6 +420,15 @@ public void show(){
 
 
 
+/**
+ * プログラム実行開始からの経過時間を、ミリ秒単位で返します。
+ * 
+ * @return プログラム実行開始からの経過時間（ミリ秒）
+ */
+int time(){
+  return SYSTEM_PROCESS_CLOCK_millisecond();
+}
+
 
 /**
  * プログラムの実行を一時停止します。
@@ -477,8 +497,8 @@ public macro error(...){
  * 
  * @param expression 評価対象の式
  */
-public macro assert(bool expression){
-	___assert(expression);
+public macro assert(bool expectedCondition){
+	___assert(expectedCondition);
 }
 
 
@@ -513,10 +533,25 @@ public macro system(...){
 
 
 
+/**
+ * 配列の要素数を変更します。
+ * 変更前後で、同じインデックスの要素は、同じ値に保たれます。
+ * 
+ * @param (任意型)配列, (int)左端次元の要素数, (int)次の次元の要素数, ..., (int)右端次元の要素数
+ */
+public macro alloc(...) {
+	SYSTEM_PROCESS_MMU_alloc(...);
+}
 
 
-
-
+/**
+ * 配列の全次元の要素数を 0 にします。
+ * 
+ * @param (任意型)配列
+ */
+public macro free(...) {
+	SYSTEM_PROCESS_MMU_free(...);
+}
 
 
 
@@ -681,8 +716,17 @@ public macro digit(){
 }
 
 
+
+
+
 /**
  * float型の値を、指定されたモードで、指定された桁数に丸めます。
+ * ただし、float型の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。
+ * 浮動小数点数の2進数と10進数の変換は、一般に有限の桁に収まらないケースがあり、微小な誤差が生じ得ます。
+ * そのため、float 値の内部データの値は、10進数ベースで想像している値とは僅かに食い違っている可能性があります。
+ * 従って、対象値が丸め処理の切り上げ/切り下げの境界に非常に近い場合、一見すると奇妙な（しかし内部的には正しい処理の）結果となる場合があります。
+ * なお、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した結果と、この関数での丸め結果との対応が一見奇妙に思える場合もありますが、
+ * それは、前者においても内部で暗黙の丸め処理が行われるためです。もし、前者と同じ結果から、さらに追加で意図通り丸めた値が欲しい場合は、引数 value を string に変換した上で渡してください。
  * 
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
@@ -695,7 +739,25 @@ public float round(float value, int digit, int mode) {
 
 
 /**
+ * string 型の値の内容を数値と見なして、指定されたモードで、指定された桁数に丸めます。
+ * この関数は、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した際と同じ内容（内部で暗黙の丸め処理が行われます）を基準として、
+ * さらに意図通り丸めたい場合などに使用します。float 型の値を直接丸める場合と比べて、2進/10進変換誤差の影響が少し異なる場合があります。
+ * 詳細は、引数 value が float 型の場合の説明をご参照ください。
+ * 
+ * @param value 丸めたい値
+ * @param digit 丸めた後の桁数
+ * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
+ * @return 丸められた値
+ */
+public string round(string value, int digit, int mode) {
+	return ___sround(value, digit, mode);
+}
+
+
+/**
  * complex型の値を、指定されたモードで、指定された桁数に丸めます。
+ * ただし、complex 型の実部と虚部の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。
+ * 詳細は、引数 value が float 型の場合の説明をご参照ください。
  * 
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数

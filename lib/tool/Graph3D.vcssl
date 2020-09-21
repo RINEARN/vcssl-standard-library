@@ -293,6 +293,18 @@ void setGraph3DConfigurationFile( int graphID, string file ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DConfigurationFile( graphID, file );
 }
 
+
+/**
+ * 設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。
+ * 
+ * @param graphID 対象グラフのID
+ * @param line 設定コードの内容
+ */
+void setGraph3DConfigurationCode( int graphID, string code ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DConfigurationLine( graphID, code );
+}
+
+
 void setGraph3DBackgroundColor( int graphID, int red, int green, int blue, int alpha ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DBackgroundColor( graphID, red, green, blue, alpha );
 }
@@ -363,6 +375,65 @@ void setGraph3DRangeZ( int graphID, double zMin, double zMax ){
 void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DAutoRange( graphID, autoX, autoY, autoZ );
 }
+
+
+/**
+ * カメラアングルを設定します。
+ * 引数 horizontalAngle と verticalAngle には、グラフ原点からカメラ位置を見るベクトル（カメラ方向ベクトル）を、天頂軸（後述）を基準とした水平角と垂直角で指定します。
+ * 垂直角は、カメラ方向ベクトルが天頂軸となす角度を指定します。
+ * 水平角は、天頂軸と鉛直な面への、カメラ方向ベクトルの射影の向きを角度で指定します。
+ * ここで天頂軸は、引数 mode に以下の値を指定する事によって、X/Y/Z軸から選択できます：
+ * <dl>
+ *   <dt>ZENITH_X</dt>
+ *     <dd>X軸を天頂軸とする角度指定モード</dd>
+ *   <dt>ZENITH_Y</dt>
+ *     <dd>Y軸を天頂軸とする角度指定モード</dd>
+ *   <dt>ZENITH_Z</dt>
+ *     <dd>Z軸を天頂軸とする角度指定モード</dd>
+ * </dl>
+ * 
+ * @param graphID 対象グラフのID
+ * @param horizontalAngle 水平角
+ * @param verticalAngle 垂直角
+ * @param mode 角度指定モード（値は上記のリスト参照）
+ */
+void setGraph3DCameraAngle( int graphID, float horizontalAngle, float verticalAngle, string mode ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraAngle( graphID, horizontalAngle, verticalAngle, mode );
+}
+
+
+/**
+ * カメラ倍率を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param magnification カメラ倍率
+ */
+void setGraph3DCameraMagnification( int graphID, float magnification ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraMagnification( graphID, magnification );
+}
+
+
+/**
+ * カメラ距離を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param distance カメラ距離
+ */
+void setGraph3DCameraDistance( int graphID, float distance ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraDistance( graphID, distance );
+}
+
+
+/**
+ * カメラの遠近感の有効/無効を設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param perspective 遠近感の有効/無効（有効な場合にtrue）
+ */
+void setGraph3DCameraPerspective( int graphID, bool perspective ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraPerspective( graphID, perspective );
+}
+
 
 /**
  * グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：
@@ -468,9 +539,7 @@ void setGraph3DAnimation( int graphID, string option, bool state ){
  * @param 形式（ "PNG" または "JPEG" ）
  */
 void exportGraph3D( int graphID, string filename, string format ){
-  int graphicsID = SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3DGraphics( graphID );
-  SYSTEM_PROCESS_DRIVER_GRAPHICS_exportGraphics( graphicsID, filename, format, 100.0 );
-  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( graphicsID );
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_exportGraph3D( graphID, filename, format, 100.0 );
 }
 
 /**
@@ -482,9 +551,7 @@ void exportGraph3D( int graphID, string filename, string format ){
  * @param quality 品質（ 0.0 ~ 100.0 ）
  */
 void exportGraph3D( int graphID, string filename, string format, float quality ){
-  int graphicsID = SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3DGraphics( graphID );
-  SYSTEM_PROCESS_DRIVER_GRAPHICS_exportGraphics( graphicsID, filename, format, quality );
-  SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( graphicsID );
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_exportGraph3D( graphID, filename, format, quality );
 }
 
 
