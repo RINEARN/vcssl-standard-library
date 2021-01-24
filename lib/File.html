@@ -18,9 +18,11 @@
 <dt><a href="#PARENT">const int PARENT </a></dt>
 <dd> 親階層を意味する設定値です。 </dd>
 <dt><a href="#HOME">const int HOME </a></dt>
-<dd> ホームディレクトリを意味する設定値です。 </dd>
+<dd> ユーザーのホームディレクトリを意味する設定値です。 </dd>
 <dt><a href="#ROOT">const int ROOT </a></dt>
 <dd> ルートディレクトリを意味する設定値です。 </dd>
+<dt><a href="#TMP">const int TMP </a></dt>
+<dd> コンピュータ側で用意されている一時ファイル用ディレクトリを意味する設定値です。 </dd>
 <dt><a href="#UNORDERED">const int UNORDERED </a></dt>
 <dd> 特に整列されていないファイル順序を意味する設定値です。 </dd>
 <dt><a href="#LEXICAL">const int LEXICAL </a></dt>
@@ -54,7 +56,7 @@
 <dt><a href="#getFilePath">string getFilePath( string pathOrName, string directory, int type ) </a></dt>
 <dd>指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスまたは（実行プログラム基準の）相対パス、もしくは（実行プログラム基準の）親階層パスに変換して返します。 </dd>
 <dt><a href="#getFilePath">string[ ] getFilePath( int target ) </a></dt>
-<dd>実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 </dd>
+<dd>実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。 </dd>
 <dt><a href="#getMainDirectory">string getMainDirectory() </a></dt>
 <dd>実行プログラムがあるディレクトリのパスを返します。現在は <a href="#getFilePath">getFilePath</a>(".") で取得できます。この関数は互換目的でサポートされています。 </dd>
 <dt><a href="#getHomeDirectory">string getHomeDirectory() </a></dt>
@@ -175,7 +177,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 ホームディレクトリを意味する設定値です。 
+   	 	 ユーザーのホームディレクトリを意味する設定値です。 
    	 </td>
     </tr>
 </tbody></table>
@@ -203,6 +205,33 @@
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	 ルートディレクトリを意味する設定値です。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="TMP"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int TMP 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	TMP
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 コンピュータ側で用意されている一時ファイル用ディレクトリを意味する設定値です。 
    	 </td>
     </tr>
 </tbody></table>
@@ -887,7 +916,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 
+   	 	実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。 
    	 </td>
     </tr>
     <tr>
@@ -895,7 +924,7 @@
    	 	引数<br /> - Arguments
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) target : 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> を指定します。それぞれルートディレクトリ、ホームディレクトリを意味します。 
+   	 	(int型) target : 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> または <a href="#TMP">TMP</a> を指定します。 
    	 </td>
     </tr>
     <tr>
