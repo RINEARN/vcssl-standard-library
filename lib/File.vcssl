@@ -43,14 +43,16 @@ public const int RELATIVE = 1;
 /** 親階層を意味する設定値です。 */
 public const int PARENT = 3;
 
-/** ホームディレクトリを意味する設定値です。 */
+/** ユーザーのホームディレクトリを意味する設定値です。 */
 public const int HOME = 4;
 
 /** ルートディレクトリを意味する設定値です。 */
 public const int ROOT = 5;
 
-
 public const int RUNTIME_HOME = 6;
+
+/** コンピュータ側で用意されている一時ファイル用ディレクトリを意味する設定値です。 */
+public const int TMP = 7;
 
 
 /** 特に整列されていないファイル順序を意味する設定値です。 */
@@ -299,7 +301,8 @@ string getFilePath( string pathOrName, string directory, int type ){
 /**
  * 実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。
  *
- * @param target 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> を指定します。それぞれルートディレクトリ、ホームディレクトリを意味します。
+ * @param target 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> または <a href="#TMP">TMP</a> を指定します。
+ それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。
  * @return 特別な場所のパス。場所は引数 target で指定します。target に <a href="#ROOT">ROOT</a> を取得した場合の挙動はオペレーティングシステムに依存します。単一のルートが存在しないオペレーティングシステムでは、恐らくドライブ名が配列で返されます。
  */
 string[] getFilePath( int target ){
@@ -311,6 +314,8 @@ string[] getFilePath( int target ){
 		path[0] = SYSTEM_PROCESS_DRIVER_FILE_getHomeDirectory();
 	}else if(target == ROOT){
 		path = SYSTEM_PROCESS_DRIVER_FILE_getRootDirectory();
+	}else if(target == TMP){
+		path = SYSTEM_PROCESS_DRIVER_FILE_getTmpDirectory();
 	/*
 	}else if(target == LIBRARY){
 		path = SYSTEM_PROCESS_DRIVER_FILE_getLibraryDirectory();

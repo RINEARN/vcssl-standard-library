@@ -41,41 +41,41 @@
 <dd>ファイル名とモードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。    <a href="#WRITE">WRITE</a> :    特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。 ,    <a href="#APPEND">APPEND</a> :    特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。 ,    <a href="#READ">READ</a> :    特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。 ,    <a href="#WRITE_CSV">WRITE_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="#APPEND_CSV">APPEND_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された追記モードです。 ,    <a href="#READ_CSV">READ_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された読み込みモードです。 ,    <a href="#WRITE_TSV">WRITE_TSV</a> :    TSV（タブ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="#APPEND_TSV">APPEND_TSV</a> :    TSV（タブ区切り）ファイル用に設定された追記モードです。 ,    <a href="#READ_TSV">READ_TSV</a> :    TSV（タブ区切り）ファイル用に設定された読み込みモードです。 ,   </dd>
 <dt><a href="#openTextFile">TextFile openTextFile(string filePath, string mode, string textEncoding) </a></dt>
 <dd>ファイル名、モード、文字コードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。    <a href="#WRITE">WRITE</a> :    特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。 ,    <a href="#APPEND">APPEND</a> :    特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。 ,    <a href="#READ">READ</a> :    特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。 ,    <a href="#WRITE_CSV">WRITE_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="#APPEND_CSV">APPEND_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された追記モードです。 ,    <a href="#READ_CSV">READ_CSV</a> :    CSV（カンマ区切り）ファイル用に設定された読み込みモードです。 ,    <a href="#WRITE_TSV">WRITE_TSV</a> :    TSV（タブ区切り）ファイル用に設定された書き込みモードです。 ,    <a href="#APPEND_TSV">APPEND_TSV</a> :    TSV（タブ区切り）ファイル用に設定された追記モードです。 ,    <a href="#READ_TSV">READ_TSV</a> :    TSV（タブ区切り）ファイル用に設定された読み込みモードです。 ,  また、文字コードは下記の文字列リテラルから選択ます。    &quotShift_JIS&quot :    Shift_JIS です。ハイフン（ - ）では無くアンダーバー（ _ ）である事に注意して下さい。 ,    &quotUTF-8&quot :    UTF-8 です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。 ,    &quotEUC-JP&quot :    EUC-JP です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。 ,   </dd>
-<dt><a href="#close">void close(TextFile &textFile) </a></dt>
+<dt><a href="#close">void close(TextFile &amp;textFile) </a></dt>
 <dd>テキストファイルへのアクセスを閉じます。特に書き込みアクセス後には、バッファされている内容を最後まで書き込み切るためにも、必ず呼び出す必要があります。 </dd>
-<dt><a href="#getEndOfLineCode">string getEndOfLineCode(TextFile &textFile) </a></dt>
+<dt><a href="#getEndOfLineCode">string getEndOfLineCode(TextFile &amp;textFile) </a></dt>
 <dd>ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, CR, LF の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, CR, LF の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href="#setEndOfLineCode">setEndOfLineCode</a> 関数で改行コードを明示指定した後は、その指定値が返されます。 </dd>
-<dt><a href="#setEndOfLineCode">void setEndOfLineCode(TextFile &textFile, string endOfLineCode) </a></dt>
+<dt><a href="#setEndOfLineCode">void setEndOfLineCode(TextFile &amp;textFile, string endOfLineCode) </a></dt>
 <dd>ファイル入出力に使用する改行コードを指定します。改行コードの指定には、System ライブラリに定義されている、以下の定数を使用する事が推奨されます。    LF :    文字コードで 0x0A, 一般的なエスケープシーケンスで \n に対応する改行コードです。 ,    CR :    文字コードで 0x0D, 一般的なエスケープシーケンスで \r に対応する改行コードです。 ,    CR+LF :    文字コードで 0x0D 0x0A, 一般的なエスケープシーケンスで \r\n に対応する改行コードです。（これは1つの定数では無く、CRとLFを加算した式です。） ,    EOL :    実行環境におけるデフォルトの文字コードを表します。通常は CR, LF, CR+LF のいずれかが使用されます。 ,   </dd>
-<dt><a href="#setCommentLineCode">void setCommentLineCode(TextFile &textFile, string commentLineCode) </a></dt>
+<dt><a href="#setCommentLineCode">void setCommentLineCode(TextFile &amp;textFile, string commentLineCode) </a></dt>
 <dd>コメント行を表す行頭文字列を指定します。ここで指定した文字列で始まる行は、読み込み時に無視されます。また、<a href="#commentln">commentln</a> 関数でコメント行を出力する際に、ここで指定した文字列が使用されます。なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。この項目は、デフォルトでは何も設定されていないため、コメント行を考慮する際は必ず設定する必要があります。一般的によく用いられる行頭文字列は、以下のようなものがあります。    "#" (ナンバー記号) :    CSV/TSVファイルや、スクリプトなどによく用いられます。 ,    ":" （コロン） :    一部の設定ファイルやスクリプトなどで用いられます。 ,    ";" （セミコロン） :    一部の設定ファイルやスクリプトなどで用いられます。 ,    "//" （ダブルスラッシュ） :    一部のプログラミング言語で用いられます。 ,   </dd>
-<dt><a href="#getCommentLineCode">string getCommentLineCode(TextFile &textFile) </a></dt>
+<dt><a href="#getCommentLineCode">string getCommentLineCode(TextFile &amp;textFile) </a></dt>
 <dd>コメント行を表す行頭文字列を返します。 </dd>
-<dt><a href="#isReadable">bool isReadable(TextFile &textFile) </a></dt>
+<dt><a href="#isReadable">bool isReadable(TextFile &amp;textFile) </a></dt>
 <dd>ファイルが読み込み可能な状態であるか確認します。 </dd>
-<dt><a href="#isWritable">bool isWritable(TextFile &textFile) </a></dt>
+<dt><a href="#isWritable">bool isWritable(TextFile &amp;textFile) </a></dt>
 <dd>ファイルが読み込み可能な状態であるか確認します。 </dd>
-<dt><a href="#setDelimiter">void setDelimiter(TextFile &textFile, string delimiter) </a></dt>
+<dt><a href="#setDelimiter">void setDelimiter(TextFile &amp;textFile, string delimiter) </a></dt>
 <dd>値の区切り文字（デリミタ）を設定します。区切り文字を設定すると、 <a href="#read">read</a> 関数や<a href="#readln">readln</a> 関数が、値を区切って配列として返すようになります。一般的によく用いられる区切り文字は、以下のようなものがあります。また、<a href="#write">write</a> 関数や<a href="#writeln">writeln</a>が、書き込み時に値を区切り文字で区切るようになります。    "," (カンマ記号) :    CSVファイルに用いられます。 ,    "	" (タブ記号) :    TSVファイルに用いられます。 ,    "&nbsp" (半角スペース記号) :    SSVファイルに用いられます。 ,    ";" (セミコロン記号) :    一部の設定ファイルに用いられます。 ,  なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。 </dd>
-<dt><a href="#setEnclosure">void setEnclosure(TextFile &textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption) </a></dt>
+<dt><a href="#setEnclosure">void setEnclosure(TextFile &amp;textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption) </a></dt>
 <dd>値を囲む引用符記号（エンクロージャ）を設定します。引用符記号を設定すると、<a href="#write">write</a> 関数や<a href="#writeln">writeln</a>が、書き込み時に値を引用符記号で囲むようになります。また、<a href="#read">read</a> 関数や<a href="#readln">readln</a> 関数が、読み込み時に引用符記号を解釈するようになります。引用符記号は、enclosure に指定します。引数一般によく用いられる引用符記号は、以下のようなものがあります。    &quot\&quot&quot （ダブルクォーテーション） :    「 &quot 」記号です。CSV/TSV形式ファイルでよく用いられます。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。 ,    &quot'&quot （シングルクォーテーション） :    一部のファイルで使用されます。 ,  なお、値が必ず引用符記号で囲まれるべきか、必要な場合のみ囲まれるべきかは、引数のオプション enclosingOption で指定します。このオプションの指定値は以下の定数から選択します。    <a href="#ENCLOSED_ALL">ENCLOSED_ALL</a> :    値が必ず引用符で囲まれる形式です。 ,    <a href="#ENCLOSED_ALL">ENCLOSED_IF_NECESSARY</a> :    必要な場合のみ、値が引用符記号で囲まれる形式です。必要な場合とは、書き込み/読み込み内容が、   「 区切り文字（デリミタ）、引用符記号、コメント行頭記号、改行 」のいずれかを含む場合です。 ,    <a href="#ENCLOSED_ALL">ENCLOSED_NONE</a> :    いかなる場合においても、値が引用符で囲まれない形式です。 ,  もしも、引用符記号で囲む値が、さらに引用符記号を含んでいる場合、それは別の記号でエスケープされる必要があります。これは引数 enclosureEscapeCharacter で指定します。一般的によく用いられるエスケープ記号は、以下のようなものがあります。    &quot\&quot&quot （ダブルクォーテーション） :    「 &quot 」記号です。CSV/TSV形式ファイルで、    引用符記号がダブルクォーテーションの場合、よく用いられます。    エスケープ結果は連続したダブルクォーテーションとなります。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。 ,    &quot\\&quot （バックスラッシュ） :      「 \ 」記号です。プログラミング言語などでよく使用されます。    VCSSLでは、バックスラッシュは特別な意味を持つため、    このように &quot\\&quot というようなリテラルで指定します。 ,  なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。 </dd>
-<dt><a href="#write">void write(TextFile &textFile, ... string value[ ]) </a></dt>
+<dt><a href="#write">void write(TextFile &amp;textFile, ... string value[ ]) </a></dt>
 <dd>テキストファイルに文字列を書き込みます。複数の内容を指定した場合、区切り文字（デリミタ）が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。なお、最後の書き込み内容の末尾に、区切り文字は付加されません。従って、連続的に呼び出して書き込みを行う場合、必要に応じて<a href="#delimit">delimit</a> 関数で区切り文字を挟む必要があります。 </dd>
-<dt><a href="#writeln">void writeln(TextFile &textFile, ... string value[ ]) </a></dt>
+<dt><a href="#writeln">void writeln(TextFile &amp;textFile, ... string value[ ]) </a></dt>
 <dd>テキストファイルに文字列を書き込み、改行します。複数の内容を指定した場合、区切り文字が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。 </dd>
-<dt><a href="#delimit">void delimit(TextFile &textFile) </a></dt>
+<dt><a href="#delimit">void delimit(TextFile &amp;textFile) </a></dt>
 <dd>テキストファイルに区切り文字を書き込みます。 </dd>
-<dt><a href="#commentln">void commentln(TextFile &textFile, string comment) </a></dt>
+<dt><a href="#commentln">void commentln(TextFile &amp;textFile, string comment) </a></dt>
 <dd>テキストファイルにコメント行を書き込みます。この関数をコールするよりも前に、<a href="#setCommentLineCode">setCommentLineCode</a> 関数で、コメント行の行頭文字列を設定する必要があります。 </dd>
-<dt><a href="#readln">string[ ] readln(TextFile &textFile) </a></dt>
+<dt><a href="#readln">string[ ] readln(TextFile &amp;textFile) </a></dt>
 <dd>テキストファイルから、一行分の内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。 </dd>
-<dt><a href="#read">string[ ] read(TextFile &textFile) </a></dt>
+<dt><a href="#read">string[ ] read(TextFile &amp;textFile) </a></dt>
 <dd>テキストファイルから、全ての内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字または改行で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。 </dd>
-<dt><a href="#loadln">string loadln(TextFile &textFile) </a></dt>
+<dt><a href="#loadln">string loadln(TextFile &amp;textFile) </a></dt>
 <dd>ファイルから一行を読み込み、そのまま返します。ただし、引用符記号が設定されていて、引用符記号で囲まれた内部に改行がある場合、それは行末とは見なされません。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。また、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。 </dd>
-<dt><a href="#load">string load(TextFile &textFile) </a></dt>
+<dt><a href="#load">string load(TextFile &amp;textFile) </a></dt>
 <dd>ファイルから全行を読み込み、そのまま返します。ただし、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。なお、ファイル内に複数の改行コードが混在している場合は統一されます。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。 </dd>
-<dt><a href="#countln">int countln(TextFile &textFile) </a></dt>
+<dt><a href="#countln">int countln(TextFile &amp;textFile) </a></dt>
 <dd>テキストファイルの有効行数をカウントします。引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。この関数が返す有効行数を超えてreadln関数をコールする事はできません。 </dd>
 </dl>
 <hr />
@@ -91,7 +91,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	変数名<br /> - Name
+   	 	構造体名<br /> - Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	TextFile
