@@ -179,6 +179,43 @@ void setGraph3DFile( int graphID, string filePath ){
 }
 
 /**
+ * ファイルを指定したモードで読み込み、グラフにプロットします。
+ * <br />
+ * モードは、以下の値を文字列として指定します。
+ * <dl>
+ *   <dt>AUTO</dt>
+ *     <dd>ファイルの内容から書式を自動判定するモード</dd>
+ *   <dt>MATRIX_CSV</dt>
+ *     <dd>カンマ区切りのマトリックス書式として読み込むモード</dd>
+ *   <dt>MATRIX_STSV</dt>
+ *     <dd>タブまたは空白区切りのマトリックス書式として読み込むモード</dd>
+ *   <dt>3COL_CSV または 3COLUMNS_CSV</dt>
+ *     <dd>カンマ区切りの3カラム書式として読み込むモード</dd>
+ *   <dt>3COL_STSV または 3COLUMNS_STSV</dt>
+ *     <dd>タブまたは空白区切りの3カラム書式として読み込むモード</dd>
+ *   <dt>4COL_CSV または 3COLUMNS_CSV</dt>
+ *     <dd>カンマ区切りの4カラム書式として読み込むモード</dd>
+ *   <dt>4COL_STSV または 4COLUMNS_STSV</dt>
+ *     <dd>タブまたは空白区切りの4カラム書式として読み込むモード</dd>
+ * </dl>
+ * なお、区切り記号については、指定モードと実際のファイル内容が食い違っても読み込める場合があります（例えばCSVファイルをSTSV系のモードで読めたり、その逆など）。
+ * しかし、これはグラフソフト側の訂正機構による挙動であり、将来のバージョンでも開ける保証はありません。そのため、可能な限り正しく指定してください。
+ * 
+ * @param graphID 対象グラフのID
+ * @param filePath プロットするファイルのファイル名またはパス
+ * @param mode プロットするファイルのモード
+ */
+void setGraph3DFile( int graphID, string filePath, string mode ){
+  bool exist = ___exists(filePath);
+  if(!exist){
+    error(ERROR_FILE_NOT_FOUND + filePath);
+    exit();
+  }
+  
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DFileWithMode( graphID, filePath, mode );
+}
+
+/**
  * 複数のファイルを読み込み、グラフにプロットします。
  * 
  * @param graphID 対象グラフのID
@@ -192,6 +229,47 @@ void setGraph3DFile( int graphID, string file[] ){
     arg[ i ] = file[ i - 1 ];
   }
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DFiles( arg );
+}
+
+/**
+ * 複数のファイルを、指定したモードで読み込み、グラフにプロットします。
+ * <br />
+ * モードは、以下の値を文字列として指定します。
+ * <dl>
+ *   <dt>AUTO</dt>
+ *     <dd>ファイルの内容から書式を自動判定するモード</dd>
+ *   <dt>MATRIX_CSV</dt>
+ *     <dd>カンマ区切りのマトリックス書式として読み込むモード</dd>
+ *   <dt>MATRIX_STSV</dt>
+ *     <dd>タブまたは空白区切りのマトリックス書式として読み込むモード</dd>
+ *   <dt>3COL_CSV または 3COLUMNS_CSV</dt>
+ *     <dd>カンマ区切りの3カラム書式として読み込むモード</dd>
+ *   <dt>3COL_STSV または 3COLUMNS_STSV</dt>
+ *     <dd>タブまたは空白区切りの3カラム書式として読み込むモード</dd>
+ *   <dt>4COL_CSV または 3COLUMNS_CSV</dt>
+ *     <dd>カンマ区切りの4カラム書式として読み込むモード</dd>
+ *   <dt>4COL_STSV または 4COLUMNS_STSV</dt>
+ *     <dd>タブまたは空白区切りの4カラム書式として読み込むモード</dd>
+ * </dl>
+ * なお、区切り記号については、指定モードと実際のファイル内容が食い違っても読み込める場合があります（例えばCSVファイルをSTSV系のモードで読めたり、その逆など）。
+ * しかし、これはグラフソフト側の訂正機構による挙動であり、将来のバージョンでも開ける保証はありません。そのため、可能な限り正しく指定してください。
+ * 
+ * @param graphID 対象グラフのID
+ * @param file プロットする各ファイルの、ファイル名またはパスを格納する配列
+ * @param mode プロットする各ファイルの、モードを格納する配列
+ */
+void setGraph3DFile( int graphID, string file[], string mode[] ){
+  int n = length(file);
+  string arg[ 2 * n + 1 ];
+  arg[ 0 ] = graphID;
+  for( int i=1; i<n+1; i++ ){
+    arg[ i ] = file[ i - 1 ];
+  }
+  for( int j=0; j<n; j++) {
+    int i = 1 + n + j;
+  	arg[i] = mode[j];
+  }
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DFilesWithModes( arg );
 }
 
 
