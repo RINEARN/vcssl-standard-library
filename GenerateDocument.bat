@@ -3,7 +3,7 @@ echo: > DocumentIndex.html
 echo ^<html^> >> DocumentIndex.html
 echo ^<head^> >> DocumentIndex.html
 echo ^<title^>VCSSL 標準ライブラリ APIリファレンス^</title^> >> DocumentIndex.html
-echo ^<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"^> >> DocumentIndex.html
+echo ^<meta http-equiv="Content-Type" content="text/html;charset=Shift_JIS"^> >> DocumentIndex.html
 echo ^</head^> >> DocumentIndex.html
 echo ^<body^> >> DocumentIndex.html
 echo ^<h1^>VCSSL 標準ライブラリ APIリファレンス^</h1^> >> DocumentIndex.html
