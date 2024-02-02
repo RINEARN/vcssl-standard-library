@@ -52,7 +52,7 @@ coding UTF-8;
 
 
 /** エラーメッセージ、ファイルが見つからなかった場合。 */
-private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+private const string ERROR_FILE_NOT_FOUND = "File Not Found Error / ファイルが見つかりません: ";
 
 
 /**
@@ -226,7 +226,12 @@ void setGraph3DFile( int graphID, string file[] ){
   string arg[ n + 1 ];
   arg[ 0 ] = graphID;
   for( int i=1; i<n+1; i++ ){
-    arg[ i ] = file[ i - 1 ];
+  	arg[ i ] = file[ i - 1 ];
+    bool exist = ___exists(file[ i - 1 ]);
+    if(!exist){
+      error(ERROR_FILE_NOT_FOUND + file[ i - 1 ]);
+      exit();
+    }
   }
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DFiles( arg );
 }
@@ -264,6 +269,11 @@ void setGraph3DFile( int graphID, string file[], string mode[] ){
   arg[ 0 ] = graphID;
   for( int i=1; i<n+1; i++ ){
     arg[ i ] = file[ i - 1 ];
+    bool exist = ___exists(file[ i - 1 ]);
+    if(!exist){
+      error(ERROR_FILE_NOT_FOUND + file[ i - 1 ]);
+      exit();
+    }
   }
   for( int j=0; j<n; j++) {
     int i = 1 + n + j;
