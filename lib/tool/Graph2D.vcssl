@@ -339,6 +339,121 @@ void setGraph2DAutoRange( int graphID, bool autoX, bool autoY ){
 
 
 /**
+ * 各軸のラベルを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param xLabel X軸のラベル
+ * @param yLabel Y軸のラベル
+ */
+void setGraph2DLabel( int graphID, string xLabel, string yLabel ){
+  SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DLabelX( graphID, xLabel );
+  SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DLabelY( graphID, yLabel );
+}
+
+/**
+ * X軸のラベルを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param label X軸のラベル
+ */
+void setGraph2DLabelX( int graphID, string label ){
+  SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DLabelX( graphID, label );
+}
+
+/**
+ * Y軸のラベルを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param label Y軸のラベル
+ */
+void setGraph2DLabelY( int graphID, string label ){
+  SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DLabelY( graphID, label );
+}
+
+
+/**
+ * 各軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param xTickCoords X軸の目盛り刻み位置の座標値
+ * @param xTickLabels X軸の目盛りのラベル
+ * @param yTickCoords Y軸の目盛り刻み位置の座標値
+ * @param yTickLabels Y軸の目盛りのラベル
+ */
+void setGraph2DTick( int graphID, double xTickCoords[], string xTickLabels[], double yTickCoords[], string yTickLabels[] ){
+	setGraph2DTickX(graphID, xTickCoords, xTickLabels);
+	setGraph2DTickY(graphID, yTickCoords, yTickLabels);
+}
+
+/**
+ * X軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param tickCoords 目盛り刻み位置の座標値
+ * @param tickLabels 目盛りのラベル
+ */
+void setGraph2DTickX( int graphID, double tickCoords[], string tickLabels[] ){
+	int tickCoordsN = length(tickCoords, 0);
+	int tickLabelsN = length(tickLabels, 0);
+	if (tickCoordsN != tickLabelsN) {
+		error(
+			"引数 tickCoords と tickLabels の要素数は同じに揃っている必要がありますが、異なっています。"
+			+ EOL +
+			"The length of tickCoords and tickLabels must be the same but different."
+		);
+		return;
+	}
+	string args[2 + tickCoordsN + tickLabelsN];
+	args[0] = graphID;
+	args[1] = tickCoordsN;
+	int iarg = 2;
+	for (int itick=0; itick<tickCoordsN; itick++) {
+		args[iarg] = tickCoords[itick];
+		iarg++;
+	}
+	for (int itick=0; itick<tickLabelsN; itick++) {
+		args[iarg] = tickLabels[itick];
+		iarg++;
+	}
+	SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DTickX(args);
+}
+
+
+/**
+ * Y軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param tickCoords 目盛り刻み位置の座標値
+ * @param tickLabels 目盛りのラベル
+ */
+void setGraph2DTickY( int graphID, double tickCoords[], string tickLabels[] ){
+	int tickCoordsN = length(tickCoords, 0);
+	int tickLabelsN = length(tickLabels, 0);
+	if (tickCoordsN != tickLabelsN) {
+		error(
+			"引数 tickCoords と tickLabels の要素数は同じに揃っている必要がありますが、異なっています。"
+			+ EOL +
+			"The length of tickCoords and tickLabels must be the same but different."
+		);
+		return;
+	}
+	string args[2 + tickCoordsN + tickLabelsN];
+	args[0] = graphID;
+	args[1] = tickCoordsN;
+	int iarg = 2;
+	for (int itick=0; itick<tickCoordsN; itick++) {
+		args[iarg] = tickCoords[itick];
+		iarg++;
+	}
+	for (int itick=0; itick<tickLabelsN; itick++) {
+		args[iarg] = tickLabels[itick];
+		iarg++;
+	}
+	SYSTEM_PROCESS_DRIVER_GRAPH2D_setGraph2DTickY(args);
+}
+
+
+/**
  * グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：
  * <dl>
  *   <dt>WITH_POINTS</dt>
@@ -368,6 +483,10 @@ void setGraph2DOption( int graphID, string option, bool value ){
 }
 
 /**
+ * ※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph2DLabel 関数やsetGraph2DLabelX/Y 関数などで代替可能です。
+ * そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。
+ * <br />
+ * <br />
  * グラフのメニュー項目を設定します。項目名は処理系に依存します。
  * 
  * @param graphID 対象グラフのID
