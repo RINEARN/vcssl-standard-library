@@ -466,6 +466,210 @@ void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ){
 
 
 /**
+ * 各軸のラベルを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param xLabel X軸のラベル
+ * @param yLabel Y軸のラベル
+ * @param zLabel Z軸のラベル
+ */
+void setGraph3DLabel( int graphID, string xLabel, string yLabel, string zLabel ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelX( graphID, xLabel );
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelY( graphID, yLabel );
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelZ( graphID, zLabel );
+}
+
+/**
+ * X軸のラベルを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param label X軸のラベル
+ */
+void setGraph3DLabelX( int graphID, string label ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelX( graphID, label );
+}
+
+/**
+ * Y軸のラベルを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param label Y軸のラベル
+ */
+void setGraph3DLabelY( int graphID, string label ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelY( graphID, label );
+}
+
+/**
+ * Z軸のラベルを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param label Z軸のラベル
+ */
+void setGraph3DLabelZ( int graphID, string label ){
+  SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelZ( graphID, label );
+}
+
+
+
+
+/**
+ * 各軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param xTickCoords X軸の目盛り刻み位置の座標値
+ * @param xTickLabels X軸の目盛りのラベル
+ * @param yTickCoords Y軸の目盛り刻み位置の座標値
+ * @param yTickLabels Y軸の目盛りのラベル
+ * @param zTickCoords Z軸の目盛り刻み位置の座標値
+ * @param zTickLabels Z軸の目盛りのラベル
+ * @param colorBarTickCoords カラーバーの目盛り刻み位置の座標値
+ * @param colorBarTickLabels カラーバーの目盛りのラベル
+ */
+void setGraph3DTick( int graphID, double xTickCoords[], string xTickLabels[], double yTickCoords[], string yTickLabels[], double zTickCoords[], string zTickLabels[], double colorBarTickCoords[], string colorBarTickLabels[] ){
+	setGraph3DTickX(graphID, xTickCoords, xTickLabels);
+	setGraph3DTickY(graphID, yTickCoords, yTickLabels);
+	setGraph3DTickZ(graphID, zTickCoords, zTickLabels);
+	setGraph3DTickColorBar(graphID, colorBarTickCoords, colorBarTickLabels);
+}
+
+/**
+ * X軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param tickCoords 目盛り刻み位置の座標値
+ * @param tickLabels 目盛りのラベル
+ */
+void setGraph3DTickX( int graphID, double tickCoords[], string tickLabels[] ){
+	int tickCoordsN = length(tickCoords, 0);
+	int tickLabelsN = length(tickLabels, 0);
+	if (tickCoordsN != tickLabelsN) {
+		error(
+			"引数 tickCoords と tickLabels の要素数は同じに揃っている必要がありますが、異なっています。"
+			+ EOL +
+			"The length of tickCoords and tickLabels must be the same but different."
+		);
+		return;
+	}
+	string args[2 + tickCoordsN + tickLabelsN];
+	args[0] = graphID;
+	args[1] = tickCoordsN;
+	int iarg = 2;
+	for (int itick=0; itick<tickCoordsN; itick++) {
+		args[iarg] = tickCoords[itick];
+		iarg++;
+	}
+	for (int itick=0; itick<tickLabelsN; itick++) {
+		args[iarg] = tickLabels[itick];
+		iarg++;
+	}
+	SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DTickX(args);
+}
+
+
+/**
+ * Y軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param tickCoords 目盛り刻み位置の座標値
+ * @param tickLabels 目盛りのラベル
+ */
+void setGraph3DTickY( int graphID, double tickCoords[], string tickLabels[] ){
+	int tickCoordsN = length(tickCoords, 0);
+	int tickLabelsN = length(tickLabels, 0);
+	if (tickCoordsN != tickLabelsN) {
+		error(
+			"引数 tickCoords と tickLabels の要素数は同じに揃っている必要がありますが、異なっています。"
+			+ EOL +
+			"The length of tickCoords and tickLabels must be the same but different."
+		);
+		return;
+	}
+	string args[2 + tickCoordsN + tickLabelsN];
+	args[0] = graphID;
+	args[1] = tickCoordsN;
+	int iarg = 2;
+	for (int itick=0; itick<tickCoordsN; itick++) {
+		args[iarg] = tickCoords[itick];
+		iarg++;
+	}
+	for (int itick=0; itick<tickLabelsN; itick++) {
+		args[iarg] = tickLabels[itick];
+		iarg++;
+	}
+	SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DTickY(args);
+}
+
+
+/**
+ * Z軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param tickCoords 目盛り刻み位置の座標値
+ * @param tickLabels 目盛りのラベル
+ */
+void setGraph3DTickZ( int graphID, double tickCoords[], string tickLabels[] ){
+	int tickCoordsN = length(tickCoords, 0);
+	int tickLabelsN = length(tickLabels, 0);
+	if (tickCoordsN != tickLabelsN) {
+		error(
+			"引数 tickCoords と tickLabels の要素数は同じに揃っている必要がありますが、異なっています。"
+			+ EOL +
+			"The length of tickCoords and tickLabels must be the same but different."
+		);
+		return;
+	}
+	string args[2 + tickCoordsN + tickLabelsN];
+	args[0] = graphID;
+	args[1] = tickCoordsN;
+	int iarg = 2;
+	for (int itick=0; itick<tickCoordsN; itick++) {
+		args[iarg] = tickCoords[itick];
+		iarg++;
+	}
+	for (int itick=0; itick<tickLabelsN; itick++) {
+		args[iarg] = tickLabels[itick];
+		iarg++;
+	}
+	SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DTickZ(args);
+}
+
+
+/**
+ * カラーバー軸の目盛りを設定します。
+ * 
+ * @param graphID 対象グラフのID
+ * @param tickCoords 目盛り刻み位置の座標値
+ * @param tickLabels 目盛りのラベル
+ */
+void setGraph3DTickColorBar( int graphID, double tickCoords[], string tickLabels[] ){
+	int tickCoordsN = length(tickCoords, 0);
+	int tickLabelsN = length(tickLabels, 0);
+	if (tickCoordsN != tickLabelsN) {
+		error(
+			"引数 tickCoords と tickLabels の要素数は同じに揃っている必要がありますが、異なっています。"
+			+ EOL +
+			"The length of tickCoords and tickLabels must be the same but different."
+		);
+		return;
+	}
+	string args[2 + tickCoordsN + tickLabelsN];
+	args[0] = graphID;
+	args[1] = tickCoordsN;
+	int iarg = 2;
+	for (int itick=0; itick<tickCoordsN; itick++) {
+		args[iarg] = tickCoords[itick];
+		iarg++;
+	}
+	for (int itick=0; itick<tickLabelsN; itick++) {
+		args[iarg] = tickLabels[itick];
+		iarg++;
+	}
+	SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DTickColorBar(args);
+}
+
+
+
+/**
  * カメラアングルを設定します。
  * 引数 horizontalAngle と verticalAngle には、グラフ原点からカメラ位置を見るベクトル（カメラ方向ベクトル）を、天頂軸（後述）を基準とした水平角と垂直角で指定します。
  * 垂直角は、カメラ方向ベクトルが天頂軸となす角度を指定します。
@@ -570,7 +774,12 @@ void setGraph3DOption( int graphID, string option, bool value ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DOption( graphID, option, value );
 }
 
+
 /**
+ * ※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph3DLabel 関数やsetGraph3DLabelX/Y/Z 関数などで代替可能です。
+ * そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。
+ * <br />
+ * <br />
  * グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：
  * <dl>
  *   <dt>SET_LABEL_X</dt>
@@ -588,6 +797,7 @@ void setGraph3DOption( int graphID, string option, bool value ){
 void setGraph3DMenu( int graphID, string option, string value ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DMenu( graphID, option, value );
 }
+
 
 /**
  * グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：
