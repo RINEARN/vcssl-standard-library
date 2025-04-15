@@ -265,8 +265,8 @@ call vcssldoc lib/tool/Graph2D.vcssl UTF-8:UTF-8 -list:lib/tool/Graph2D.html -ev
 
 echo ^<h3^>^<a href="lib/tool/Graph3D.html"^>tool.Graph3D ライブラリ^</a^>^</h3^> >> DocumentIndex.html
 echo ^<p^>3次元グラフソフトを制御するAPIライブラリです。^</p^> >> DocumentIndex.html
-call vcssldoc lib/tool/Graph3D.vcssl UTF-8:UTF-8 -event:Graph2DEventHandler.vcssl
-call vcssldoc lib/tool/Graph3D.vcssl UTF-8:UTF-8 -list:lib/tool/Graph3D.html -event:Graph2DEventHandler.vcssl -body >> DocumentIndex.html
+call vcssldoc lib/tool/Graph3D.vcssl UTF-8:UTF-8 -event:Graph3DEventHandler.vcssl
+call vcssldoc lib/tool/Graph3D.vcssl UTF-8:UTF-8 -list:lib/tool/Graph3D.html -event:Graph3DEventHandler.vcssl -body >> DocumentIndex.html
 
 
 
