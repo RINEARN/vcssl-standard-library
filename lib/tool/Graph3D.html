@@ -67,6 +67,24 @@
 <dd>Z軸のプロット範囲を設定します。 </dd>
 <dt><a href="#setGraph3DAutoRange">void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ) </a></dt>
 <dd>プロット範囲の自動調整機能を有効化または無効化します。 </dd>
+<dt><a href="#setGraph3DLabel">void setGraph3DLabel( int graphID, string xLabel, string yLabel, string zLabel ) </a></dt>
+<dd>各軸のラベルを設定します。 </dd>
+<dt><a href="#setGraph3DLabelX">void setGraph3DLabelX( int graphID, string label ) </a></dt>
+<dd>X軸のラベルを設定します。 </dd>
+<dt><a href="#setGraph3DLabelY">void setGraph3DLabelY( int graphID, string label ) </a></dt>
+<dd>Y軸のラベルを設定します。 </dd>
+<dt><a href="#setGraph3DLabelZ">void setGraph3DLabelZ( int graphID, string label ) </a></dt>
+<dd>Z軸のラベルを設定します。 </dd>
+<dt><a href="#setGraph3DTick">void setGraph3DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ], double zTickCoords[ ], string zTickLabels[ ], double colorBarTickCoords[ ], string colorBarTickLabels[ ] ) </a></dt>
+<dd>各軸の目盛りを設定します。 </dd>
+<dt><a href="#setGraph3DTickX">void setGraph3DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] ) </a></dt>
+<dd>X軸の目盛りを設定します。 </dd>
+<dt><a href="#setGraph3DTickY">void setGraph3DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] ) </a></dt>
+<dd>Y軸の目盛りを設定します。 </dd>
+<dt><a href="#setGraph3DTickZ">void setGraph3DTickZ( int graphID, double tickCoords[ ], string tickLabels[ ] ) </a></dt>
+<dd>Z軸の目盛りを設定します。 </dd>
+<dt><a href="#setGraph3DTickColorBar">void setGraph3DTickColorBar( int graphID, double tickCoords[ ], string tickLabels[ ] ) </a></dt>
+<dd>カラーバー軸の目盛りを設定します。 </dd>
 <dt><a href="#setGraph3DCameraAngle">void setGraph3DCameraAngle( int graphID, float horizontalAngle, float verticalAngle, string mode ) </a></dt>
 <dd>カメラアングルを設定します。引数 horizontalAngle と verticalAngle には、グラフ原点からカメラ位置を見るベクトル（カメラ方向ベクトル）を、天頂軸（後述）を基準とした水平角と垂直角で指定します。垂直角は、カメラ方向ベクトルが天頂軸となす角度を指定します。水平角は、天頂軸と鉛直な面への、カメラ方向ベクトルの射影の向きを角度で指定します。ここで天頂軸は、引数 mode に以下の値を指定する事によって、X/Y/Z軸から選択できます：    ZENITH_X :      X軸を天頂軸とする角度指定モード ,    ZENITH_Y :      Y軸を天頂軸とする角度指定モード ,    ZENITH_Z :      Z軸を天頂軸とする角度指定モード ,   </dd>
 <dt><a href="#setGraph3DCameraMagnification">void setGraph3DCameraMagnification( int graphID, float magnification ) </a></dt>
@@ -78,14 +96,14 @@
 <dt><a href="#setGraph3DOption">void setGraph3DOption( int graphID, string option, bool value ) </a></dt>
 <dd>グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：    WITH_POINTS :      点プロット ,    WITH_LINES :      線プロット ,    WITH_MESHES :      メッシュプロット ,    WITH_MEMBRANES :      曲面プロット ,    FLAT :      平面化 ,    FRAME :      枠線描画 ,    SCALE :      目盛り描画 ,    GRID_LINE :      グリッドライン描画 ,    GRADATION :      Z値によるグラデーション彩色 ,    ALPHA :      半透明描画 ,    LOG_X :      X対数軸表示 ,    LOG_Y :      Y対数軸表示 ,    LOG_Z :      Z対数軸表示 ,    REVERSE_X :      X軸反転表示 ,    REVERSE_Y :      Y軸反転表示 ,    REVERSE_Z :      Z軸反転表示 ,   </dd>
 <dt><a href="#setGraph3DMenu">void setGraph3DMenu( int graphID, string option, string value ) </a></dt>
-<dd>グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：    SET_LABEL_X :      X軸ラベル ,    SET_LABEL_Y :      Y軸ラベル ,    SET_LABEL_Z :      Z軸ラベル ,   </dd>
+<dd>※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph3DLabel 関数やsetGraph3DLabelX/Y/Z 関数などで代替可能です。そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：    SET_LABEL_X :      X軸ラベル ,    SET_LABEL_Y :      Y軸ラベル ,    SET_LABEL_Z :      Z軸ラベル ,   </dd>
 <dt><a href="#setGraph3DAnimation">void setGraph3DAnimation( int graphID, string option, bool state ) </a></dt>
 <dd>グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：     TRACE :      点をアニメーションし、軌跡を残す ,    INDEX :      点をアニメーションする ,    INDEX-SERIES :      系列をアニメーションする ,    INDEX-X :      メッシュデータのX方向ラインをアニメーションする ,    INDEX-Y :      メッシュデータのY方向ラインをアニメーションする ,    RANGE-X :      プロット範囲をX方向にスライドさせる ,    RANGE-Y :      プロット範囲をY方向にスライドさせる ,    RANGE-Z :      プロット範囲をZ方向にスライドさせる ,   </dd>
 <dt><a href="#exportGraph3D">void exportGraph3D( int graphID, string filename, string format ) </a></dt>
 <dd>グラフを画像に出力します。 </dd>
 <dt><a href="#exportGraph3D">void exportGraph3D( int graphID, string filename, string format, float quality ) </a></dt>
 <dd>グラフを画像に出力します。 </dd>
-<dt><a href="#onGraph2DClose">void onGraph2DClose( int graphID ) </a></dt>
+<dt><a href="#onGraph3DClose">void onGraph3DClose( int graphID ) </a></dt>
 <dd>グラフウィンドウが閉じられた際にコールされます。 </dd>
 </dl>
 <hr />
@@ -1283,6 +1301,393 @@
     </tr>
 </tbody></table>
 
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DLabel"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DLabel( int graphID, string xLabel, string yLabel, string zLabel ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DLabel
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	各軸のラベルを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(string型) xLabel : X軸のラベル <br />(string型) yLabel : Y軸のラベル <br />(string型) zLabel : Z軸のラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DLabelX"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DLabelX( int graphID, string label ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DLabelX
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	X軸のラベルを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(string型) label : X軸のラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DLabelY"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DLabelY( int graphID, string label ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DLabelY
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Y軸のラベルを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(string型) label : Y軸のラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DLabelZ"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DLabelZ( int graphID, string label ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DLabelZ
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Z軸のラベルを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(string型) label : Z軸のラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DTick"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ], double zTickCoords[ ], string zTickLabels[ ], double colorBarTickCoords[ ], string colorBarTickLabels[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DTick
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	各軸の目盛りを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(double[]型) xTickCoords : X軸の目盛り刻み位置の座標値 <br />(string[]型) xTickLabels : X軸の目盛りのラベル <br />(double[]型) yTickCoords : Y軸の目盛り刻み位置の座標値 <br />(string[]型) yTickLabels : Y軸の目盛りのラベル <br />(double[]型) zTickCoords : Z軸の目盛り刻み位置の座標値 <br />(string[]型) zTickLabels : Z軸の目盛りのラベル <br />(double[]型) colorBarTickCoords : カラーバーの目盛り刻み位置の座標値 <br />(string[]型) colorBarTickLabels : カラーバーの目盛りのラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DTickX"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DTickX
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	X軸の目盛りを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(double[]型) tickCoords : 目盛り刻み位置の座標値 <br />(string[]型) tickLabels : 目盛りのラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DTickY"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DTickY
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Y軸の目盛りを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(double[]型) tickCoords : 目盛り刻み位置の座標値 <br />(string[]型) tickLabels : 目盛りのラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DTickZ"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DTickZ( int graphID, double tickCoords[ ], string tickLabels[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DTickZ
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Z軸の目盛りを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(double[]型) tickCoords : 目盛り刻み位置の座標値 <br />(string[]型) tickLabels : 目盛りのラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DTickColorBar"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	void setGraph3DTickColorBar( int graphID, double tickCoords[ ], string tickLabels[ ] ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	setGraph3DTickColorBar
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	カラーバー軸の目盛りを設定します。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) graphID : 対象グラフのID <br />(double[]型) tickCoords : 目盛り刻み位置の座標値 <br />(string[]型) tickLabels : 目盛りのラベル 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void型) 
+   	 </td>
+    </tr>
+</tbody></table>
+
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph3DCameraAngle"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
@@ -1520,7 +1925,7 @@
    	 	役割<br /> - Role
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：<dl>  <dt>SET_LABEL_X</dt>    <dd>X軸ラベル</dd>  <dt>SET_LABEL_Y</dt>    <dd>Y軸ラベル</dd>  <dt>SET_LABEL_Z</dt>    <dd>Z軸ラベル</dd></dl> 
+   	 	※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph3DLabel 関数やsetGraph3DLabelX/Y/Z 関数などで代替可能です。そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。<br /><br />グラフのメニュー項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：<dl>  <dt>SET_LABEL_X</dt>    <dd>X軸ラベル</dd>  <dt>SET_LABEL_Y</dt>    <dd>Y軸ラベル</dd>  <dt>SET_LABEL_Z</dt>    <dd>Z軸ラベル</dd></dl> 
    	 </td>
     </tr>
     <tr>
@@ -1672,13 +2077,13 @@
 
 <hr />
 <h2 id="event" style="page-break-before:always;" >イベントハンドラ - Event Handler</h2>
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onGraph2DClose"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onGraph3DClose"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	文法的定義<br /> - Signature
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void onGraph2DClose( int graphID ) 
+   	 	void onGraph3DClose( int graphID ) 
    	 </td>
     </tr>
     <tr>
@@ -1686,7 +2091,7 @@
    	 	関数名<br /> - Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	onGraph2DClose
+   	 	onGraph3DClose
    	 </td>
     </tr>
     <tr>
