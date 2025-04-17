@@ -2180,7 +2180,7 @@
 <p>ネイティブプロセスの実行機能を提供するライブラリです。</p> 
 <dl>
 <dt><a href="lib/Process.html#newProcess">int newProcess( string command[ ] ) </a></dt>
-<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：string command[] = { getFilePath("test.exe"), "1", "2", "3" }int processID = newProcess(command);などとします。実行を開始するには、続けて：<a href="lib/Process.html#startProcess">startProcess</a>(processID);とします。終了まで待機するには、続けて：<a href="lib/Process.html#waitForProcess">waitForProcess</a>(processID);とします。 </dd>
+<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：string command[] = { getFilePath("test.exe"), "1", "2", "3" }int processID = newProcess(command);などとします。実行を開始するには、続けて：<a href="lib/Process.html#startProcess">startProcess</a>(processID);とします。終了まで待機するには、続けて：<a href="lib/Process.html#waitForProcess">waitForProcess</a>(processID);とします。なお、実行されたプロセスの作業ディレクトリは、デフォルトでは、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）になります。必要に応じて、<a href="lib/Process.html#setProcessWorkingDirectory">setProcessWorkingDirectory</a> を用いて作業ディレクトリを設定できます。自動的にプロセスの実行ファイルの場所には設定されない事に注意してください。 </dd>
 <dt><a href="lib/Process.html#newProcess">int newProcess( string command ) </a></dt>
 <dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。 </dd>
 <dt><a href="lib/Process.html#startProcess">void startProcess( int processID ) </a></dt>
@@ -2209,6 +2209,8 @@
 <dd>プロセスの標準出力内容のテキストエンコーディングを設定します。この設定は、プロセスの標準出力の使用前に済ませる必要があります。既に何らかの標準出力が行われた後に設定しても、反映されない可能性があります。 </dd>
 <dt><a href="lib/Process.html#setProcessErrorEncoding">void setProcessErrorEncoding( int processID, string errorEncoding ) </a></dt>
 <dd>プロセスの標準エラー出力内容のテキストエンコーディングを設定します。この設定は、プロセスの標準エラー出力の使用前に済ませる必要があります。既に何らかの標準エラー出力が行われた後に設定しても、反映されない可能性があります。 </dd>
+<dt><a href="lib/Process.html#setProcessWorkingDirectory">void setProcessWorkingDirectory( int processID, string workingDirectoryPath ) </a></dt>
+<dd>プロセスの作業ディレクトリを設定します。この設定は、startProcess によるプロセスの実行開始前に済ませる必要があります。実行開始後に設定しても、反映されません。なお、作業ディレクトリを何も設定せずにプロセスを実行した場合、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）が作業ディレクトリになります。プロセスの実行ファイルがあるディレクトリではない事に注意してください。 </dd>
 <dt><a href="lib/Process.html#getProcessExitValue">int getProcessExitValue( int processID ) </a></dt>
 <dd>プロセスの終了ステータスコードを返します。 </dd>
 <dt><a href="lib/Process.html#waitForProcess">void waitForProcess( int processID ) </a></dt>

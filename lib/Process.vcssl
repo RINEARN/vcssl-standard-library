@@ -58,7 +58,7 @@ coding UTF-8;
  * 
  * <p>
  * プロセスの標準出力を取得するには、二通りの方法があります。
- * 一つは、<a href="#getProcessOutput">setProcessOutput</a> 関数を呼び出し、任意のタイミングで能動的に取得する方法です。
+ * 一つは、<a href="#getProcessOutput">getProcessOutput</a> 関数を呼び出し、任意のタイミングで能動的に取得する方法です。
  * これは、プロセスの終了後に、標準出力内容を一括して取得したい場合などに便利です。
  * もう一つは、<a href="#onProcessOutput">onProcessOutput</a>イベントハンドラを用いて受動的に取得する方法です。
  * こちらは、受け取った標準出力内容に応じて、標準入力にレスポンスを返したいような場合に便利です。
@@ -98,8 +98,12 @@ coding UTF-8;
  * <a href="#waitForProcess">waitForProcess</a>(processID);
  * <br />
  * とします。
+ * <br />
+ * なお、実行されたプロセスの作業ディレクトリは、デフォルトでは、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）になります。
+ * 必要に応じて、<a href="#setProcessWorkingDirectory">setProcessWorkingDirectory</a> を用いて作業ディレクトリを設定できます。
+ * 自動的にプロセスの実行ファイルの場所には設定されない事に注意してください。
  *
- * @param command[] オペレーティングシステムに渡すコマンド。一般的な環境では [0] にアプリケーションの絶対パス、[1] 以降に起動時のコマンドライン引数を指定します。なお、絶対パスは <a href="File.html#getFilePath">File.getFilePath</a> で取得できます。
+ * @param command[] オペレーティングシステムに渡すコマンド。一般的な環境では [0] に実行ファイル（アプリケーション）の絶対パス、[1] 以降に起動時のコマンドライン引数を指定します。実行ファイルの絶対パスは <a href="File.html#getFilePath">File.getFilePath</a> を使用して取得できます。なお、環境変数 PATH/Path にパスが登録されている実行ファイルは、絶対パスではなく実行ファイル名のみもで実行できる場合があります（環境依存）。
  * @return 生成したプロセスに割り振られたプロセスID（識別番号）。
  */
 int newProcess( string command[] ){
@@ -298,6 +302,23 @@ void setProcessOutputEncoding( int processID, string outputEncoding ){
  */
 void setProcessErrorEncoding( int processID, string errorEncoding ){
   SYSTEM_PROCESS_DRIVER_NATIVE_setProcessErrorEncoding( processID, errorEncoding );
+}
+
+
+/**
+ * プロセスの作業ディレクトリを設定します。
+ * <br />
+ * この設定は、startProcess によるプロセスの実行開始前に済ませる必要があります。
+ * 実行開始後に設定しても、反映されません。
+ * <br />
+ * なお、作業ディレクトリを何も設定せずにプロセスを実行した場合、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）が作業ディレクトリになります。
+ * プロセスの実行ファイルがあるディレクトリではない事に注意してください。
+ *
+ * @param processID 対象プロセスのプロセスID。
+ * @param workingDirectoryPath 作業ディレクトリのパス
+ */
+void setProcessWorkingDirectory( int processID, string workingDirectoryPath ){
+  SYSTEM_PROCESS_DRIVER_NATIVE_setProcessWorkingDirectory( processID, workingDirectoryPath );
 }
 
 
