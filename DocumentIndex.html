@@ -2180,9 +2180,9 @@
 <p>ネイティブプロセスの実行機能を提供するライブラリです。</p> 
 <dl>
 <dt><a href="lib/Process.html#newProcess">int newProcess( string command[ ] ) </a></dt>
-<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：string command[] = { getFilePath("test.exe"), "1", "2", "3" }int processID = newProcess(command);などとします。実行を開始するには、続けて：<a href="lib/Process.html#startProcess">startProcess</a>(processID);とします。終了まで待機するには、続けて：<a href="lib/Process.html#waitForProcess">waitForProcess</a>(processID);とします。なお、実行されたプロセスの作業ディレクトリは、デフォルトでは、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）になります。必要に応じて、<a href="lib/Process.html#setProcessWorkingDirectory">setProcessWorkingDirectory</a> を用いて作業ディレクトリを設定できます。自動的にプロセスの実行ファイルの場所には設定されない事に注意してください。 </dd>
+<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：string command[] = { getFilePath("test.exe"), "1", "2", "3" }int processID = newProcess(command);などとします。実行を開始するには、続けて：<a href="lib/Process.html#startProcess">startProcess</a>(processID);とします。終了まで待機するには、続けて：<a href="lib/Process.html#waitForProcess">waitForProcess</a>(processID);とします。生成されるプロセスの作業ディレクトリは、デフォルトでは、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）に設定されます。必要に応じて、<a href="lib/Process.html#setProcessWorkingDirectory">setProcessWorkingDirectory</a> を用いて作業ディレクトリを設定できます。いずれも、特殊なパス形式の場合は設定できない可能性があります。詳細はこのページ冒頭の概要説明を参照してください。 </dd>
 <dt><a href="lib/Process.html#newProcess">int newProcess( string command ) </a></dt>
-<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。この関数によるプロセスの生成後、<a href="lib/Process.html#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href="System.htmllib/Process.html#exec">System.exec</a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。 </dd>
+<dd>ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。基本的には newProcess(string command[]) と同じ機能ですが、引数を配列に区切らなくても、コマンドライン端末のように1行でまとめて記述する事ができます。そのため簡便に使えますが、内容の区切られ方は環境依存/実装依存であるため、異種環境での実行やバージョン変更の際などに、逆にデバッグがややこしい挙動を招く可能性があります。期待通りに動作しない場合や、将来の安定性を重視したい場合は、引数を明示的に配列に区切って渡す newProcess(string command[]) の方の使用が推奨されます。 </dd>
 <dt><a href="lib/Process.html#startProcess">void startProcess( int processID ) </a></dt>
 <dd>ネイティブアプリケーションのプロセスを実行開始します。実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。プロセスの実行完了まで、VCSSL側の処理を待機させたい場合は、<a href="lib/Process.html#waitForProcess">waitForProcess</a> をコールしてください。 </dd>
 <dt><a href="lib/Process.html#deleteProcess">void deleteProcess( int processID ) </a></dt>
@@ -2190,11 +2190,11 @@
 <dt><a href="lib/Process.html#destroyProcess">void destroyProcess( int processID ) </a></dt>
 <dd>ネイティブアプリケーションのプロセスを、実行途中で強制終了します。 </dd>
 <dt><a href="lib/Process.html#setProcessInput">void setProcessInput( int processID, string command ) </a></dt>
-<dd>プロセスに渡す標準入力内容を設定します。入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。例として、順に「1」,「2」,「3」と入力する場合には：setProcessInput(processID, "1" + EOL + "2" + EOL + "3" + EOL);などとします。なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。 </dd>
+<dd>プロセスに渡す標準入力内容を設定します。入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。例として、順に「1」,「2」,「3」と入力する場合には：setProcessInput(processID, "1" + EOL + "2" + EOL + "3" + EOL);などとします。入力内容が文字化けする場合は、<a href="lib/Process.html#setProcessInputEncoding">setProcessInputEncoding</a> で、プロセスに合った文字コードを設定してください。なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。 </dd>
 <dt><a href="lib/Process.html#getProcessOutput">string getProcessOutput( int processID ) </a></dt>
-<dd>コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準出力内容が多いネイティブアプリケーションについては、<a href="lib/Process.html#clearProcessOutput">clearProcessOutput</a> で適時バッファをクリアしてください。 </dd>
+<dd>コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準出力内容が多いネイティブアプリケーションについては、<a href="lib/Process.html#clearProcessOutput">clearProcessOutput</a> で適時バッファをクリアしてください。なお、取得内容が文字化けする場合は、<a href="lib/Process.html#setProcessOutputEncoding">setProcessOutputEncoding</a> で、プロセスに合った文字コードを設定してください。 </dd>
 <dt><a href="lib/Process.html#getProcessError">string getProcessError( int processID ) </a></dt>
-<dd>コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準エラー出力内容が多いネイティブアプリケーションについては、<a href="lib/Process.html#clearProcessError">clearProcessError</a> で適時バッファをクリアしてください。 </dd>
+<dd>コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準エラー出力内容が多いネイティブアプリケーションについては、<a href="lib/Process.html#clearProcessError">clearProcessError</a> で適時バッファをクリアしてください。なお、取得内容が文字化けする場合は、<a href="lib/Process.html#setProcessErrorEncoding">setProcessErrorEncoding</a> で、プロセスに合った文字コードを設定してください。 </dd>
 <dt><a href="lib/Process.html#clearProcessOutput">void clearProcessOutput( int processID ) </a></dt>
 <dd>プロセスの標準出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 </dd>
 <dt><a href="lib/Process.html#clearProcessError">void clearProcessError( int processID ) </a></dt>
@@ -2210,7 +2210,7 @@
 <dt><a href="lib/Process.html#setProcessErrorEncoding">void setProcessErrorEncoding( int processID, string errorEncoding ) </a></dt>
 <dd>プロセスの標準エラー出力内容のテキストエンコーディングを設定します。この設定は、プロセスの標準エラー出力の使用前に済ませる必要があります。既に何らかの標準エラー出力が行われた後に設定しても、反映されない可能性があります。 </dd>
 <dt><a href="lib/Process.html#setProcessWorkingDirectory">void setProcessWorkingDirectory( int processID, string workingDirectoryPath ) </a></dt>
-<dd>プロセスの作業ディレクトリを設定します。この設定は、startProcess によるプロセスの実行開始前に済ませる必要があります。実行開始後に設定しても、反映されません。なお、作業ディレクトリを何も設定せずにプロセスを実行した場合、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）が作業ディレクトリになります。プロセスの実行ファイルがあるディレクトリではない事に注意してください。 </dd>
+<dd>プロセスの作業ディレクトリを設定します。この設定は、startProcess によるプロセスの実行開始前に済ませる必要があります。実行開始後に設定しても、反映されません。作業ディレクトリを何も設定せずにプロセスを実行した場合、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）が作業ディレクトリになります。プロセスの実行ファイルがあるディレクトリではない事に注意してください。なお、プロセスの作業ディレクトリは、環境によっては、必ずしも期待通りに設定されるとは限りません（デフォルト設定のディレクトリについても同様です）。例えば、古典的なシェル/コマンドライン端末上で、カレントディレクトリに設定できない特殊なパスは、作業ディレクトリとしての割り当てに失敗する可能性があります。失敗する既知の具体例としては、「ネットワークドライブとして接続されていない、ネットワーク上のディレクトリを指すUNC形式のパス」などがあります。作業ディレクトリなどの諸条件を確実に制御し、デバッグもしやすくするには、「実行コマンドをシェルスクリプト等で包んで実行し、そのシェルスクリプト内で作業ディレクトリを設定する」などの方法が有効です。 </dd>
 <dt><a href="lib/Process.html#getProcessExitValue">int getProcessExitValue( int processID ) </a></dt>
 <dd>プロセスの終了ステータスコードを返します。 </dd>
 <dt><a href="lib/Process.html#waitForProcess">void waitForProcess( int processID ) </a></dt>
@@ -2220,9 +2220,9 @@
 <dt><a href="lib/Process.html#onProcessEnd">void onProcessEnd(int processID) </a></dt>
 <dd>プロセスが終了した際にコールされます。 </dd>
 <dt><a href="lib/Process.html#onProcessOutput">void onProcessOutput(int processID, string output) </a></dt>
-<dd>プロセスが標準出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="lib/Process.html#flushProcessOutput">flushProcessOutput</a> 関数を使用してください。 </dd>
+<dd>プロセスが標準出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="lib/Process.html#flushProcessOutput">flushProcessOutput</a> 関数を使用してください。出力内容が文字化けする場合は、<a href="lib/Process.html#setProcessOutputEncoding">setProcessOutputEncoding</a> で、プロセスに合った文字コードを設定してください。 </dd>
 <dt><a href="lib/Process.html#onProcessError">void onProcessError(int processID, string output) </a></dt>
-<dd>プロセスが標準エラー出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="lib/Process.html#flushProcessError">flushProcessError</a> 関数を使用してください。 </dd>
+<dd>プロセスが標準エラー出力を行った際にコールされます。ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。その場合、このイベントハンドラにも、出力内容が行単位で渡されます（ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="lib/Process.html#flushProcessError">flushProcessError</a> 関数を使用してください。出力内容が文字化けする場合は、<a href="lib/Process.html#setProcessErrorEncoding">setProcessErrorEncoding</a> で、プロセスに合った文字コードを設定してください。 </dd>
 </dl>
 
 <h3><a href="lib/Thread.html">Thread ライブラリ</a></h3> 
