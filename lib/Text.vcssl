@@ -78,6 +78,16 @@ public const int CONTAIN_PATTERN = 10006;
 public const int FULL_PATTERN = 10007;
 
 
+/** 前後の空白・改行を切り詰める、adjustText 関数のモードです。 */
+public const int TRIM = 20001;
+
+/** 小文字のアルファベットを大文字にする、adjustText 関数のモードです。 */
+public const int LOWER_CASE = 20002;
+
+/** 大文字のアルファベットを小文字にする、adjustText 関数のモードです。 */
+public const int UPPER_CASE = 20003;
+
+
 /** エラーメッセージ、不明な検索モードが指定された場合 */
 private const string ERROR_UNKNOWN_MODE = "指定されたモードは、この関数では未対応です：";
 
@@ -109,6 +119,12 @@ private string toConstName(int mode) {
 		return "CONTAIN_PATTERN";
 	} else if (mode == FULL_PATTERN) {
 		return "FULL_PATTERN";
+	} else if (mode == UPPER_CASE) {
+		return "UPPER_CASE";
+	} else if (mode == LOWER_CASE) {
+		return "LOWER_CASE";
+	} else if (mode == TRIM) {
+		return "TRIM";
 	} else {
 		return mode;
 	}
@@ -219,6 +235,25 @@ public bool checkText( string text, string query, int mode ) {
 
 
 /**
+ * テキストを、指定されたモードで調整します。
+ * <br />
+ * モードに応じて、テキストの前後に含まれている空白・改行部分を取り除いたり、アルファベットを大文字/小文字に揃えたりできます。
+ * 
+ * @param text 対象のテキスト
+ * @param mode 調整モード（ <a href="#TRIM">TRIM</a>, <a href="#LOWER_CASE">LOWER_CASE</a>, <a href="#UPPER_CASE">UPPER_CASE</a>）
+ * @return 調整済みのテキスト
+ */
+public string adjustText( string text, int mode ){
+  if (mode == LOWER_CASE || mode == UPPER_CASE || mode == TRIM) {
+    return SYSTEM_PROCESS_DRIVER_TEXT_adjust( text, mode );
+
+  } else {
+    System.error(ERROR_UNKNOWN_MODE + toConstName(mode));
+  }
+}
+
+
+/**
  * テキストから、指定された範囲を抜き出したものを返します。
  * <br />
  * 抜き出す範囲は、テキストの各文字に、先頭を 0 としてインデックスを割りふると、cropBegin 番目から cropEnd - 1 番目までの文字列となります。
@@ -227,7 +262,7 @@ public bool checkText( string text, string query, int mode ) {
  * @param text 対象のテキスト
  * @param cropBegin 抜き出す範囲の開始位置
  * @param cropEnd 抜き出す範囲の終了位置
- * @return 検索一致箇所で分割したテキストの配列
+ * @return 抜き出された範囲のテキスト
  */
 public string cropText( string text, int cropBegin, int cropEnd ){
   return SYSTEM_PROCESS_DRIVER_TEXT_getSubtext( text, cropBegin, cropEnd );
