@@ -37,10 +37,18 @@
 <dd> 文字列のどこかに、正規表現と一致する部分が存在するかを判断する判定モードです。 </dd>
 <dt><a href="#FULL_PATTERN">const int FULL_PATTERN </a></dt>
 <dd> 文字列の全体が、正規表現と一致するかを判断する判定モードです。 </dd>
+<dt><a href="#TRIM">const int TRIM </a></dt>
+<dd> 前後の空白・改行を切り詰める、adjustText 関数のモードです。 </dd>
+<dt><a href="#LOWER_CASE">const int LOWER_CASE </a></dt>
+<dd> 小文字のアルファベットを大文字にする、adjustText 関数のモードです。 </dd>
+<dt><a href="#UPPER_CASE">const int UPPER_CASE </a></dt>
+<dd> 大文字のアルファベットを小文字にする、adjustText 関数のモードです。 </dd>
 <dt><a href="#atText">string atText( string text, int index ) </a></dt>
 <dd>文字列内の、指定されたインデックスの位置にある文字を、1文字のstring型変数として返します。 </dd>
 <dt><a href="#checkText">bool checkText( string text, string query, int mode ) </a></dt>
 <dd>文字列の先頭、末尾、または全体が、指定された文字列か正規表現に一致するかを判定します。 </dd>
+<dt><a href="#adjustText">string adjustText( string text, int mode ) </a></dt>
+<dd>テキストを、指定されたモードで調整します。モードに応じて、テキストの前後に含まれている空白・改行部分を取り除いたり、アルファベットを大文字/小文字に揃えたりできます。 </dd>
 <dt><a href="#cropText">string cropText( string text, int cropBegin, int cropEnd ) </a></dt>
 <dd>テキストから、指定された範囲を抜き出したものを返します。抜き出す範囲は、テキストの各文字に、先頭を 0 としてインデックスを割りふると、cropBegin 番目から cropEnd - 1 番目までの文字列となります。また、文字と文字の「 隙間（すきま） 」にインデックスを割りふると、抜き出す範囲はちょうど cropBegin 番目から cropEnd 番目までの隙間に挟まれた範囲となります。 </dd>
 <dt><a href="#countText">int countText( string text ) </a></dt>
@@ -489,6 +497,87 @@
     </tr>
 </tbody></table>
 
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="TRIM"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int TRIM 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	TRIM
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 前後の空白・改行を切り詰める、adjustText 関数のモードです。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="LOWER_CASE"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int LOWER_CASE 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	LOWER_CASE
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 小文字のアルファベットを大文字にする、adjustText 関数のモードです。 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="UPPER_CASE"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	const int UPPER_CASE 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	変数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	UPPER_CASE
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	 大文字のアルファベットを小文字にする、adjustText 関数のモードです。 
+   	 </td>
+    </tr>
+</tbody></table>
+
 <hr />
 <h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="atText"><tbody>
@@ -577,6 +666,49 @@
     </tr>
 </tbody></table>
 
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="adjustText"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	文法的定義<br /> - Signature
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	string adjustText( string text, int mode ) 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名<br /> - Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	adjustText
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	役割<br /> - Role
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	テキストを、指定されたモードで調整します。<br />モードに応じて、テキストの前後に含まれている空白・改行部分を取り除いたり、アルファベットを大文字/小文字に揃えたりできます。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数<br /> - Arguments
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string型) text : 対象のテキスト <br />(int型) mode : 調整モード（ <a href="#TRIM">TRIM</a>, <a href="#LOWER_CASE">LOWER_CASE</a>, <a href="#UPPER_CASE">UPPER_CASE</a>） 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値<br /> - Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string型) 調整済みのテキスト<br />
+   	 </td>
+    </tr>
+</tbody></table>
+
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="cropText"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
@@ -615,7 +747,7 @@
    	 	戻り値<br /> - Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string型) 検索一致箇所で分割したテキストの配列<br />
+   	 	(string型) 抜き出された範囲のテキスト<br />
    	 </td>
     </tr>
 </tbody></table>

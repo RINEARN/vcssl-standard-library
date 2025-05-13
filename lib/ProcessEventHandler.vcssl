@@ -24,6 +24,7 @@ void onProcessEnd(int processID) {
  * その場合、このイベントハンドラにも、出力内容が行単位で渡されます
  * （ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。
  * なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessOutput">flushProcessOutput</a> 関数を使用してください。
+ * 出力内容が文字化けする場合は、<a href="#setProcessOutputEncoding">setProcessOutputEncoding</a> で、プロセスに合った文字コードを設定してください。
  * 
  * @param processID イベント発生元のプロセスID
  * @param processID 標準出力内容
@@ -38,11 +39,12 @@ void onProcessOutput(int processID, string output) {
  * その場合、このイベントハンドラにも、出力内容が行単位で渡されます
  * （ただし、処理系のバッファ容量を超過するような長い行では、1行の内容が区切られ、複数回に渡ってコールされる可能性もあります）。
  * なお、改行を待たずに、任意のタイミングでバッファを強制的にフラッシュさせるには、<a href="#flushProcessError">flushProcessError</a> 関数を使用してください。
+ * 出力内容が文字化けする場合は、<a href="#setProcessErrorEncoding">setProcessErrorEncoding</a> で、プロセスに合った文字コードを設定してください。
  * 
  * @param processID イベント発生元のプロセスID
  * @param processID 標準エラー出力内容
  */
-void onProcessOutput(int processID, string output) {
+void onProcessError(int processID, string output) {
 }
 
 
