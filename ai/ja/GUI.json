@@ -1,0 +1,1641 @@
+{
+	"libraryName": "GUI",
+	"libraryDescription": "<p>VCSSL GUI ライブラリ は、VCSSLでグラフィカル・ユーザー・インターフェイスを扱うための標準ライブラリです。</p><p>GUIライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。具体的な使用方法については、「 VCSSL公式開発ガイド 」をご参照ください。</p><div style="border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;"><div style="font-weight:bold;">- 注意 -</div><div style="padding:10px;">GUIを用いたプログラムでは、イベントハンドラの使用が必須となります。VCSSLでは、イベントハンドラの処理は独立スレッドで実行されます。現行版の RINEARN VCSSL Runtime では、マルチスレッド処理への対応が十分ではありません。 これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。 これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。 RINEARN VCSSL Runtime でイベントハンドラに処理を記述するには、この事情を把握した上で行って下さい。現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。 </div><div style="font-weight:bold;">・同一の配列変数へ、複数スレッドから同時アクセスした場合における、インデックスの不整合</div><div style="padding:10px;">現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。 </div><div style="font-weight:bold;">・同一の関数への、非常に頻繁な複数スレッド同時アクセスに伴う、エンジンの緊急停止</div><div style="padding:10px;">原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。 しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。 ※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。</div>以上のような不都合が生じる可能性があるため、現状の RINEARN VCSSL Runtime においてイベントハンドラ内の処理を記述する際は、上記の点を認識した上で、以下のようなガイドラインに基づいた設計を行って下さい。<br /><div style="font-weight:bold;">・イベントハンドラでは、イベント情報をグローバル変数に控える等の軽い処理に留めておき、実際の処理はなるべくメインスレッドで行う</div><br /><div style="font-weight:bold;">・メインスレッドで頻繁にアクセスしている配列変数に、イベントハンドラや別スレッドからアクセスしない</div></div> ",
+	"structs": {
+	},
+	"variables": {
+		"variable0": {
+			"name": "MOUSE_LEFT",
+			"declaration": "const int MOUSE_LEFT",
+			"description": " マウスの左ボタンを表す定数です。 "
+		},
+		"variable1": {
+			"name": "MOUSE_MIDDLE",
+			"declaration": "const int MOUSE_MIDDLE",
+			"description": " マウスの中央ボタンを表す定数です。 "
+		},
+		"variable2": {
+			"name": "MOUSE_RIGHT",
+			"declaration": "const int MOUSE_RIGHT",
+			"description": " マウスの右ボタンを表す定数です。 "
+		},
+		"variable3": {
+			"name": "MOUSE_SINGLE",
+			"declaration": "const int MOUSE_SINGLE",
+			"description": " マウスのシングルクリックを表す定数です。 "
+		},
+		"variable4": {
+			"name": "MOUSE_DOUBLE",
+			"declaration": "const int MOUSE_DOUBLE",
+			"description": " マウスのダブルクリックを表す定数です。 "
+		},
+		"variable5": {
+			"name": "KEY_SPACE",
+			"declaration": "const int KEY_SPACE",
+			"description": " スペースキーを表す定数です。 "
+		},
+		"variable6": {
+			"name": "KEY_ENTER",
+			"declaration": "const int KEY_ENTER",
+			"description": " エンターキーを表す定数です。 "
+		},
+		"variable7": {
+			"name": "KEY_SHIFT",
+			"declaration": "const int KEY_SHIFT",
+			"description": " シフトキーを表す定数です。 "
+		},
+		"variable8": {
+			"name": "KEY_ALT",
+			"declaration": "const int KEY_ALT",
+			"description": " Alt キーを表す定数です。 "
+		},
+		"variable9": {
+			"name": "KEY_AT",
+			"declaration": "const int KEY_AT",
+			"description": " @ キーを表す定数です。 "
+		},
+		"variable10": {
+			"name": "KEY_TAB",
+			"declaration": "const int KEY_TAB",
+			"description": " Tab キーを表す定数です。 "
+		},
+		"variable11": {
+			"name": "KEY_CONTROL",
+			"declaration": "const int KEY_CONTROL",
+			"description": " Ctrl キーを表す定数です。 "
+		},
+		"variable12": {
+			"name": "KEY_BACK_SPACE",
+			"declaration": "const int KEY_BACK_SPACE",
+			"description": " Backspace キーを表す定数です。 "
+		},
+		"variable13": {
+			"name": "KEY_A",
+			"declaration": "const int KEY_A",
+			"description": " A キーを表す定数です。 "
+		},
+		"variable14": {
+			"name": "KEY_B",
+			"declaration": "const int KEY_B",
+			"description": " B キーを表す定数です。 "
+		},
+		"variable15": {
+			"name": "KEY_C",
+			"declaration": "const int KEY_C",
+			"description": " C キーを表す定数です。 "
+		},
+		"variable16": {
+			"name": "KEY_D",
+			"declaration": "const int KEY_D",
+			"description": " D キーを表す定数です。 "
+		},
+		"variable17": {
+			"name": "KEY_E",
+			"declaration": "const int KEY_E",
+			"description": " E キーを表す定数です。 "
+		},
+		"variable18": {
+			"name": "KEY_F",
+			"declaration": "const int KEY_F",
+			"description": " F キーを表す定数です。 "
+		},
+		"variable19": {
+			"name": "KEY_G",
+			"declaration": "const int KEY_G",
+			"description": " G キーを表す定数です。 "
+		},
+		"variable20": {
+			"name": "KEY_H",
+			"declaration": "const int KEY_H",
+			"description": " H キーを表す定数です。 "
+		},
+		"variable21": {
+			"name": "KEY_I",
+			"declaration": "const int KEY_I",
+			"description": " I キーを表す定数です。 "
+		},
+		"variable22": {
+			"name": "KEY_J",
+			"declaration": "const int KEY_J",
+			"description": " J キーを表す定数です。 "
+		},
+		"variable23": {
+			"name": "KEY_K",
+			"declaration": "const int KEY_K",
+			"description": " K キーを表す定数です。 "
+		},
+		"variable24": {
+			"name": "KEY_L",
+			"declaration": "const int KEY_L",
+			"description": " L キーを表す定数です。 "
+		},
+		"variable25": {
+			"name": "KEY_M",
+			"declaration": "const int KEY_M",
+			"description": " M キーを表す定数です。 "
+		},
+		"variable26": {
+			"name": "KEY_N",
+			"declaration": "const int KEY_N",
+			"description": " N キーを表す定数です。 "
+		},
+		"variable27": {
+			"name": "KEY_O",
+			"declaration": "const int KEY_O",
+			"description": " O キーを表す定数です。 "
+		},
+		"variable28": {
+			"name": "KEY_P",
+			"declaration": "const int KEY_P",
+			"description": " P キーを表す定数です。 "
+		},
+		"variable29": {
+			"name": "KEY_Q",
+			"declaration": "const int KEY_Q",
+			"description": " Q キーを表す定数です。 "
+		},
+		"variable30": {
+			"name": "KEY_R",
+			"declaration": "const int KEY_R",
+			"description": " R キーを表す定数です。 "
+		},
+		"variable31": {
+			"name": "KEY_S",
+			"declaration": "const int KEY_S",
+			"description": " S キーを表す定数です。 "
+		},
+		"variable32": {
+			"name": "KEY_T",
+			"declaration": "const int KEY_T",
+			"description": " T キーを表す定数です。 "
+		},
+		"variable33": {
+			"name": "KEY_U",
+			"declaration": "const int KEY_U",
+			"description": " U キーを表す定数です。 "
+		},
+		"variable34": {
+			"name": "KEY_V",
+			"declaration": "const int KEY_V",
+			"description": " V キーを表す定数です。 "
+		},
+		"variable35": {
+			"name": "KEY_W",
+			"declaration": "const int KEY_W",
+			"description": " W キーを表す定数です。 "
+		},
+		"variable36": {
+			"name": "KEY_X",
+			"declaration": "const int KEY_X",
+			"description": " X キーを表す定数です。 "
+		},
+		"variable37": {
+			"name": "KEY_Y",
+			"declaration": "const int KEY_Y",
+			"description": " Y キーを表す定数です。 "
+		},
+		"variable38": {
+			"name": "KEY_Z",
+			"declaration": "const int KEY_Z",
+			"description": " Z キーを表す定数です。 "
+		},
+		"variable39": {
+			"name": "KEY_0",
+			"declaration": "const int KEY_0",
+			"description": " 0 キーを表す定数です。 "
+		},
+		"variable40": {
+			"name": "KEY_1",
+			"declaration": "const int KEY_1",
+			"description": " 1 キーを表す定数です。 "
+		},
+		"variable41": {
+			"name": "KEY_2",
+			"declaration": "const int KEY_2",
+			"description": " 2 キーを表す定数です。 "
+		},
+		"variable42": {
+			"name": "KEY_3",
+			"declaration": "const int KEY_3",
+			"description": " 3 キーを表す定数です。 "
+		},
+		"variable43": {
+			"name": "KEY_4",
+			"declaration": "const int KEY_4",
+			"description": " 4 キーを表す定数です。 "
+		},
+		"variable44": {
+			"name": "KEY_5",
+			"declaration": "const int KEY_5",
+			"description": " 5 キーを表す定数です。 "
+		},
+		"variable45": {
+			"name": "KEY_6",
+			"declaration": "const int KEY_6",
+			"description": " 6 キーを表す定数です。 "
+		},
+		"variable46": {
+			"name": "KEY_7",
+			"declaration": "const int KEY_7",
+			"description": " 7 キーを表す定数です。 "
+		},
+		"variable47": {
+			"name": "KEY_8",
+			"declaration": "const int KEY_8",
+			"description": " 8 キーを表す定数です。 "
+		},
+		"variable48": {
+			"name": "KEY_9",
+			"declaration": "const int KEY_9",
+			"description": " 9 キーを表す定数です。 "
+		},
+		"variable49": {
+			"name": "KEY_NUMPAD0",
+			"declaration": "const int KEY_NUMPAD0",
+			"description": " 0 キーを表す定数です。 "
+		},
+		"variable50": {
+			"name": "KEY_NUMPAD1",
+			"declaration": "const int KEY_NUMPAD1",
+			"description": " 1 キーを表す定数です。 "
+		},
+		"variable51": {
+			"name": "KEY_NUMPAD2",
+			"declaration": "const int KEY_NUMPAD2",
+			"description": " 2 キーを表す定数です。 "
+		},
+		"variable52": {
+			"name": "KEY_NUMPAD3",
+			"declaration": "const int KEY_NUMPAD3",
+			"description": " 3 キーを表す定数です。 "
+		},
+		"variable53": {
+			"name": "KEY_NUMPAD4",
+			"declaration": "const int KEY_NUMPAD4",
+			"description": " 4 キーを表す定数です。 "
+		},
+		"variable54": {
+			"name": "KEY_NUMPAD5",
+			"declaration": "const int KEY_NUMPAD5",
+			"description": " 5 キーを表す定数です。 "
+		},
+		"variable55": {
+			"name": "KEY_NUMPAD6",
+			"declaration": "const int KEY_NUMPAD6",
+			"description": " 6 キーを表す定数です。 "
+		},
+		"variable56": {
+			"name": "KEY_NUMPAD7",
+			"declaration": "const int KEY_NUMPAD7",
+			"description": " 7 キーを表す定数です。 "
+		},
+		"variable57": {
+			"name": "KEY_NUMPAD8",
+			"declaration": "const int KEY_NUMPAD8",
+			"description": " 8 キーを表す定数です。 "
+		},
+		"variable58": {
+			"name": "KEY_NUMPAD9",
+			"declaration": "const int KEY_NUMPAD9",
+			"description": " 9 キーを表す定数です。 "
+		},
+		"variable59": {
+			"name": "KEY_UP",
+			"declaration": "const int KEY_UP",
+			"description": " 上 キーを表す定数です。 "
+		},
+		"variable60": {
+			"name": "KEY_DOWN",
+			"declaration": "const int KEY_DOWN",
+			"description": " 下 キーを表す定数です。 "
+		},
+		"variable61": {
+			"name": "KEY_RIGHT",
+			"declaration": "const int KEY_RIGHT",
+			"description": " 右 キーを表す定数です。 "
+		},
+		"variable62": {
+			"name": "KEY_LEFT",
+			"declaration": "const int KEY_LEFT",
+			"description": " 左 キーを表す定数です。 "
+		},
+		"variable63": {
+			"name": "KEY_INSERT",
+			"declaration": "const int KEY_INSERT",
+			"description": " Insert キーを表す定数です。 "
+		},
+		"variable64": {
+			"name": "KEY_HOME",
+			"declaration": "const int KEY_HOME",
+			"description": " Home キーを表す定数です。 "
+		},
+		"variable65": {
+			"name": "KEY_DELETE",
+			"declaration": "const int KEY_DELETE",
+			"description": " Delete キーを表す定数です。 "
+		},
+		"variable66": {
+			"name": "KEY_END",
+			"declaration": "const int KEY_END",
+			"description": " End キーを表す定数です。 "
+		},
+		"variable67": {
+			"name": "KEY_PAGE_UP",
+			"declaration": "const int KEY_PAGE_UP",
+			"description": " Page Up キーを表す定数です。 "
+		},
+		"variable68": {
+			"name": "KEY_PAGE_DOWN",
+			"declaration": "const int KEY_PAGE_DOWN",
+			"description": " Page Down キーを表す定数です。 "
+		},
+		"variable69": {
+			"name": "KEY_CAPS_LOCK",
+			"declaration": "const int KEY_CAPS_LOCK",
+			"description": " Caps Lock キーを表す定数です。 "
+		},
+		"variable70": {
+			"name": "KEY_BACK_SLASH",
+			"declaration": "const int KEY_BACK_SLASH",
+			"description": " バックスラッシュ キーを表す定数です。 "
+		},
+		"variable71": {
+			"name": "KEY_SLASH",
+			"declaration": "const int KEY_SLASH",
+			"description": " \/ キーを表す定数です。 "
+		},
+		"variable72": {
+			"name": "KEY_MINUS",
+			"declaration": "const int KEY_MINUS",
+			"description": " - キーを表す定数です。 "
+		},
+		"variable73": {
+			"name": "KEY_PLUS",
+			"declaration": "const int KEY_PLUS",
+			"description": " + キーを表す定数です。 "
+		},
+		"variable74": {
+			"name": "KEY_NUMBER",
+			"declaration": "const int KEY_NUMBER",
+			"description": " # キーを表す定数です。 "
+		},
+		"variable75": {
+			"name": "KEY_SEMICOLON",
+			"declaration": "const int KEY_SEMICOLON",
+			"description": " ; キーを表す定数です。 "
+		},
+		"variable76": {
+			"name": "KEY_COLON",
+			"declaration": "const int KEY_COLON",
+			"description": " : キーを表す定数です。 "
+		},
+		"variable77": {
+			"name": "KEY_COMMA",
+			"declaration": "const int KEY_COMMA",
+			"description": " , キーを表す定数です。 "
+		},
+		"variable78": {
+			"name": "KEY_PERIOD",
+			"declaration": "const int KEY_PERIOD",
+			"description": " . キーを表す定数です。 "
+		},
+		"variable79": {
+			"name": "KEY_UNDERSCORE",
+			"declaration": "const int KEY_UNDERSCORE",
+			"description": " _ キーを表す定数です。 "
+		},
+		"variable80": {
+			"name": "KEY_EXCLAMATION",
+			"declaration": "const int KEY_EXCLAMATION",
+			"description": " ! キーを表す定数です。 "
+		},
+		"variable81": {
+			"name": "KEY_EQUALS",
+			"declaration": "const int KEY_EQUALS",
+			"description": " = キーを表す定数です。 "
+		},
+		"variable82": {
+			"name": "KEY_DOLLAR",
+			"declaration": "const int KEY_DOLLAR",
+			"description": " $ キーを表す定数です。 "
+		},
+		"variable83": {
+			"name": "KEY_CIRCUMFLEX",
+			"declaration": "const int KEY_CIRCUMFLEX",
+			"description": " ^ キーを表す定数です。 "
+		},
+		"variable84": {
+			"name": "KEY_LEFT_SQUARE_BRACKET",
+			"declaration": "const int KEY_LEFT_SQUARE_BRACKET",
+			"description": " [ キーを表す定数です。 "
+		},
+		"variable85": {
+			"name": "KEY_RIGHT_SQUARE_BRACKET",
+			"declaration": "const int KEY_RIGHT_SQUARE_BRACKET",
+			"description": " ] キーを表す定数です。 "
+		},
+		"variable86": {
+			"name": "KEY_LEFT_PARENTHESIS",
+			"declaration": "const int KEY_LEFT_PARENTHESIS",
+			"description": " ( キーを表す定数です。 "
+		},
+		"variable87": {
+			"name": "KEY_RIGHT_PARENTHESIS",
+			"declaration": "const int KEY_RIGHT_PARENTHESIS",
+			"description": " ) キーを表す定数です。 "
+		},
+		"variable88": {
+			"name": "KEY_SEPARATOR",
+			"declaration": "const int KEY_SEPARATOR",
+			"description": " | キーを表す定数です。 "
+		},
+		"variable89": {
+			"name": "KEY_ADD",
+			"declaration": "const int KEY_ADD",
+			"description": " 加算キーを表す定数です。 "
+		},
+		"variable90": {
+			"name": "KEY_SUBTRACT",
+			"declaration": "const int KEY_SUBTRACT",
+			"description": " 減算キーを表す定数です。 "
+		},
+		"variable91": {
+			"name": "KEY_DIVIDE",
+			"declaration": "const int KEY_DIVIDE",
+			"description": " 除算キーを表す定数です。 "
+		},
+		"variable92": {
+			"name": "KEY_MULTIPLY",
+			"declaration": "const int KEY_MULTIPLY",
+			"description": " 乗算キーを表す定数です。 "
+		},
+		"variable93": {
+			"name": "KEY_F1",
+			"declaration": "const int KEY_F1",
+			"description": " F1 キーを表す定数です。 "
+		},
+		"variable94": {
+			"name": "KEY_F2",
+			"declaration": "const int KEY_F2",
+			"description": " F2 キーを表す定数です。 "
+		},
+		"variable95": {
+			"name": "KEY_F3",
+			"declaration": "const int KEY_F3",
+			"description": " F3 キーを表す定数です。 "
+		},
+		"variable96": {
+			"name": "KEY_F4",
+			"declaration": "const int KEY_F4",
+			"description": " F4 キーを表す定数です。 "
+		},
+		"variable97": {
+			"name": "KEY_F5",
+			"declaration": "const int KEY_F5",
+			"description": " F5 キーを表す定数です。 "
+		},
+		"variable98": {
+			"name": "KEY_F6",
+			"declaration": "const int KEY_F6",
+			"description": " F6 キーを表す定数です。 "
+		},
+		"variable99": {
+			"name": "KEY_F7",
+			"declaration": "const int KEY_F7",
+			"description": " F7 キーを表す定数です。 "
+		},
+		"variable100": {
+			"name": "KEY_F8",
+			"declaration": "const int KEY_F8",
+			"description": " F8 キーを表す定数です。 "
+		},
+		"variable101": {
+			"name": "KEY_F9",
+			"declaration": "const int KEY_F9",
+			"description": " F9 キーを表す定数です。 "
+		},
+		"variable102": {
+			"name": "KEY_F10",
+			"declaration": "const int KEY_F10",
+			"description": " F10 キーを表す定数です。 "
+		},
+		"variable103": {
+			"name": "KEY_F11",
+			"declaration": "const int KEY_F11",
+			"description": " F11 キーを表す定数です。 "
+		},
+		"variable104": {
+			"name": "KEY_F12",
+			"declaration": "const int KEY_F12",
+			"description": " F12 キーを表す定数です。 "
+		},
+		"variable105": {
+			"name": "KEY_F13",
+			"declaration": "const int KEY_F13",
+			"description": " F13 キーを表す定数です。 "
+		},
+		"variable106": {
+			"name": "KEY_F14",
+			"declaration": "const int KEY_F14",
+			"description": " F14 キーを表す定数です。 "
+		},
+		"variable107": {
+			"name": "KEY_F15",
+			"declaration": "const int KEY_F15",
+			"description": " F15 キーを表す定数です。 "
+		},
+		"variable108": {
+			"name": "KEY_F16",
+			"declaration": "const int KEY_F16",
+			"description": " F16 キーを表す定数です。 "
+		},
+		"variable109": {
+			"name": "KEY_F17",
+			"declaration": "const int KEY_F17",
+			"description": " F17 キーを表す定数です。 "
+		},
+		"variable110": {
+			"name": "KEY_F18",
+			"declaration": "const int KEY_F18",
+			"description": " F18 キーを表す定数です。 "
+		},
+		"variable111": {
+			"name": "KEY_F19",
+			"declaration": "const int KEY_F19",
+			"description": " F19 キーを表す定数です。 "
+		},
+		"variable112": {
+			"name": "KEY_F20",
+			"declaration": "const int KEY_F20",
+			"description": " F20 キーを表す定数です。 "
+		},
+		"variable113": {
+			"name": "INNER",
+			"declaration": "const int INNER",
+			"description": " GUIコンポーネントの内側を指定するための定数です。<a href=\"#getComponentSize\">getComponentSize<\/a> 関数で使用します。 "
+		},
+		"variable114": {
+			"name": "OUTER",
+			"declaration": "const int OUTER",
+			"description": " GUIコンポーネントの外側を指定するための定数です。<a href=\"#getComponentSize\">getComponentSize<\/a> 関数で使用します。 "
+		},
+		"variable115": {
+			"name": "LISTED",
+			"declaration": "const int LISTED",
+			"description": " リストアップされている項目全てを指定するための定数です。<a href=\"#setComponentStringArray\">setComponentStringArray<\/a> 関数や <a href=\"#getComponentStringArray\">getComponentStringArray<\/a> 関数で使用します。 "
+		},
+		"variable116": {
+			"name": "SELECTED",
+			"declaration": "const int SELECTED",
+			"description": " 選択されている項目全てを指定するための定数です。<a href=\"#setComponentStringArray\">setComponentStringArray<\/a> 関数や <a href=\"#getComponentStringArray\">getComponentStringArray<\/a> 関数で使用します。 "
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "mountComponent",
+			"declaration": "void mountComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを、別のGUIコンポーネント上に配置します。 ",
+			"parameters": "(int type) componentID : 配置するGUIコンポーネントのID \n(int type) parentComponentID : 配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function1": {
+			"name": "demountComponent",
+			"declaration": "void demountComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを配置解除します。 ",
+			"parameters": "(int type) componentID : 配置解除するGUIコンポーネントのID \n(int type) parentComponentID : 現在の配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function2": {
+			"name": "deleteComponent",
+			"declaration": "void deleteComponent( int componentID )",
+			"description": "GUIコンポーネントを破棄します。 ",
+			"parameters": "(int type) componentID : 破棄するGUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "newWindow",
+			"declaration": "int newWindow( int x, int y, int w, int h, string title )",
+			"description": "ウィンドウを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : ウィンドウタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function4": {
+			"name": "newButton",
+			"declaration": "int newButton( int x, int y, int w, int h, string text )",
+			"description": "ボタンを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : ボタンに表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function5": {
+			"name": "newTextField",
+			"declaration": "int newTextField( int x, int y, int w, int h, string text )",
+			"description": "テキストフィールド（ 1行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 初期値として表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function6": {
+			"name": "newTextArea",
+			"declaration": "int newTextArea( int x, int y, int w, int h, string text )",
+			"description": "テキストエリア（ 複数行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 初期値として表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function7": {
+			"name": "newTextLabel",
+			"declaration": "int newTextLabel( int x, int y, int w, int h, string text )",
+			"description": "テキストラベル（ 1行のテキストを表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function8": {
+			"name": "newImageLabel",
+			"declaration": "int newImageLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "画像ラベルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) graphicsID : 画像を格納するグラフィックスリソースのID ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function9": {
+			"name": "newCheckBox",
+			"declaration": "int newCheckBox( int x, int y, int w, int h, string text, boolean b )",
+			"description": "チェックボックスを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 表示するテキスト \n(boolean type) b : 初期値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function10": {
+			"name": "newSelectField",
+			"declaration": "int newSelectField( int x, int y, int w, int h, string str[  ] )",
+			"description": "セレクトフィールド（ 選択肢から1つの項目を選択可能な、1行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string[] type) str : 選択肢 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function11": {
+			"name": "newSelectArea",
+			"declaration": "int newSelectArea( int x, int y, int w, int h, string str[  ] )",
+			"description": "セレクトエリア（ 選択肢から複数項目を選択可能な、複数行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string[] type) str : 選択肢 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function12": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value )",
+			"description": "0.0 ～ 1.0 の範囲でfloat 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function13": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "float 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 \n(float type) min : 最小値 \n(float type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function14": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "int 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) value : 初期値 \n(int type) min : 最小値 \n(int type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function15": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value )",
+			"description": "0.0 ～ 1.0 の範囲でfloat 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function16": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "float 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 \n(float type) min : 最小値 \n(float type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function17": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "int 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) value : 初期値 \n(int type) min : 最小値 \n(int type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function18": {
+			"name": "newPanel",
+			"declaration": "int newPanel( int x, int y, int w, int h, string title )",
+			"description": "任意座標レイアウト用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function19": {
+			"name": "newGridPanel",
+			"declaration": "int newGridPanel( int x, int y, int w, int h, string title, int rows, int columns )",
+			"description": "グリッド配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function20": {
+			"name": "newFlowPanel",
+			"declaration": "int newFlowPanel( int x, int y, int w, int h, string title )",
+			"description": "フロー配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function21": {
+			"name": "newTabPanel",
+			"declaration": "int newTabPanel( int x, int y, int w, int h, string title )",
+			"description": "タブ表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function22": {
+			"name": "newScrollPanel",
+			"declaration": "int newScrollPanel( int x, int y, int w, int h, string title )",
+			"description": "スクロール表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function23": {
+			"name": "paintComponent",
+			"declaration": "macro paintComponent( int componentID )",
+			"description": "GUIコンポーネントを再描画します。再描画は、表示内容のテキストやグラフィックスデータが変化した際に必要です。及び自身に配置されている子コンポーネントの表示内容が変化した際にも必要となります。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID "
+		},
+		"function24": {
+			"name": "setComponentLocation",
+			"declaration": "void setComponentLocation( int componentID, int x, int y )",
+			"description": "GUIコンポーネントの位置を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "getComponentLocation",
+			"declaration": "int[ ] getComponentLocation( int componentID )",
+			"description": "GUIコンポーネントの位置を取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[] type) 左上頂点座標（ [0] が X, [1] が Y ）\n"
+		},
+		"function26": {
+			"name": "setComponentSize",
+			"declaration": "void setComponentSize( int componentID, int width, int height )",
+			"description": "GUIコンポーネントの大きさを設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) width : 幅 \n(int type) height : 高さ ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID )",
+			"description": "GUIコンポーネントの大きさを取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[] type) 大きさ（ [0] が 幅, [1] が 高さ ）\n"
+		},
+		"function28": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID, int option )",
+			"description": "GUIコンポーネントの特定部分の大きさを取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) option : 部分指定オプション（ <a href=\"#OUTER\">OUTER<\/a>、 <a href=\"#INNER\">INNER<\/a> ） ",
+			"returnValue": "(int[] type) 大きさ（ [0] が 幅, [1] が 高さ ）\n"
+		},
+		"function29": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fr, int fg, int fb, int fa, int br, int bg, int bb, int ba )",
+			"description": "GUIコンポーネントの色を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) fr : 前景色の赤色成分（ 0 - 255 ） \n(int type) fg : 前景色の緑色成分（ 0 - 255 ） \n(int type) fb : 前景色の青色成分（ 0 - 255 ） \n(int type) fa : 前景色のα値成分（ 0 - 255 ） \n(int type) br : 前景色の赤色成分（ 0 - 255 ） \n(int type) bg : 前景色の緑色成分（ 0 - 255 ） \n(int type) bb : 前景色の青色成分（ 0 - 255 ） \n(int type) ba : 前景色のα値成分（ 0 - 255 ） ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fgRGBA[ ], int bgRGBA[ ] )",
+			"description": "GUIコンポーネントの色を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int[] type) fgRGBA : 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ） \n(int[] type) bgRGBA : 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ） ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "getComponentColor",
+			"declaration": "macro getComponentColor( int componentID )",
+			"description": "GUIコンポーネントの色を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[][] type)色色成分を格納する配列（ [0][0]が前景の赤、[0][1]が前景の緑、[0][2]が前景の青、[0][3]が前景のα、[1][0]が背景の赤、[1][1]が背景の緑、[1][2]が背景の青、[1][3]が背景のαで、各色 0 - 255 ）\n"
+		},
+		"function32": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text )",
+			"description": "GUIコンポーネントのテキスト情報を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(string type) text : テキスト情報 ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "getComponentText",
+			"declaration": "string getComponentText( int componentID )",
+			"description": "GUIコンポーネントのテキスト情報を取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(string type) text テキスト情報\n"
+		},
+		"function34": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text[ ], int option )",
+			"description": "GUIコンポーネントのテキスト情報を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(string[] type) text : テキスト情報 \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "getComponentText",
+			"declaration": "string[ ] getComponentText( int componentID, int option )",
+			"description": "GUIコンポーネントのテキスト情報を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(string[] type) テキスト情報\n"
+		},
+		"function36": {
+			"name": "setComponentImage",
+			"declaration": "void setComponentImage( int componentID, int graphicsID )",
+			"description": "GUIコンポーネントの画像を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) graphicsID : 画像を格納するグラフィックスデータのID ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "getComponentGraphics",
+			"declaration": "int getComponentGraphics( int componentID )",
+			"description": "GUIコンポーネントの画像を格納する、グラフィックスデータのIDを返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int type) graphicsID 画像を格納するグラフィックスデータのID\n"
+		},
+		"function38": {
+			"name": "showComponent",
+			"declaration": "void showComponent( int componentID )",
+			"description": "GUIコンポーネントの非表示にします。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "hideComponent",
+			"declaration": "void hideComponent( int componentID )",
+			"description": "GUIコンポーネントの表示します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "setComponentFont",
+			"declaration": "void setComponentFont( int componentID, string name )",
+			"description": "GUIコンポーネントのフォントを設定します ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(string type) name : フォント名（処理系依存、環境依存） ",
+			"returnValue": "(void type) "
+		},
+		"function41": {
+			"name": "setComponentFontSize",
+			"declaration": "void setComponentFontSize( int componentID, int size )",
+			"description": "GUIコンポーネントのフォントサイズを設定します ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) size : フォントサイズ ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "setComponentFontBold",
+			"declaration": "void setComponentFontBold( int componentID, bool isBold )",
+			"description": "GUIコンポーネントのフォントを太字に設定または解除します。イタリック体と併用はできません。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(bool type) isBold : 太字設定 ",
+			"returnValue": "(void type) "
+		},
+		"function43": {
+			"name": "setComponentFontItalic",
+			"declaration": "void setComponentFontItalic( int componentID, bool isItalic )",
+			"description": "GUIコンポーネントのフォントをイタリック体に設定または解除します。太字と併用はできません。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(bool type) isItalic : イタリック体設定 ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "setComponentFloat",
+			"declaration": "void setComponentFloat( int componentID, float value )",
+			"description": "GUIコンポーネントが保持する float 型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(float type) value : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function45": {
+			"name": "getComponentFloat",
+			"declaration": "float getComponentFloat( int componentID )",
+			"description": "GUIコンポーネントが保持する float 型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(float type) 保持値\n"
+		},
+		"function46": {
+			"name": "setComponentInt",
+			"declaration": "void setComponentInt( int componentID, int value )",
+			"description": "GUIコンポーネントが保持する int 型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) value : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function47": {
+			"name": "getComponentInt",
+			"declaration": "int getComponentInt( int componentID )",
+			"description": "GUIコンポーネントが保持する int  型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int type) 保持値\n"
+		},
+		"function48": {
+			"name": "setComponentBool",
+			"declaration": "void setComponentBool( int componentID, bool state )",
+			"description": "GUIコンポーネントが保持する bool 型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \nvalue : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function49": {
+			"name": "getComponentBool",
+			"declaration": "bool getComponentBool( int componentID )",
+			"description": "GUIコンポーネントが保持する bool  型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(bool type) 保持値\n"
+		},
+		"function50": {
+			"name": "setComponentString",
+			"declaration": "void setComponentString( int componentID, string text )",
+			"description": "GUIコンポーネントが保持する string  型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \nvalue : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function51": {
+			"name": "getComponentString",
+			"declaration": "string getComponentString( int componentID )",
+			"description": "GUIコンポーネントが保持する string  型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(string type) 保持値\n"
+		},
+		"function52": {
+			"name": "setComponentStringArray",
+			"declaration": "void setComponentStringArray( int componentID, string text[ ], int option )",
+			"description": "GUIコンポーネントが保持する string  型配列の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \nvalue : 保持値 \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(void type) "
+		},
+		"function53": {
+			"name": "getComponentStringArray",
+			"declaration": "string[ ] getComponentStringArray( int componentID, int option )",
+			"description": "GUIコンポーネントが保持する string 型配列の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(string[] type) 保持値\n"
+		},
+		"function54": {
+			"name": "setComponentIntArray",
+			"declaration": "void setComponentIntArray( int componentID, int value[ ] )",
+			"description": "GUIコンポーネントが保持する int  型配列の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int[] type) value : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function55": {
+			"name": "getComponentIntArray",
+			"declaration": "int[ ] getComponentIntArray( int componentID )",
+			"description": "GUIコンポーネントが保持する int 型配列の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[] type) 保持値\n"
+		},
+		"function56": {
+			"name": "addComponent",
+			"declaration": "void addComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを、別のGUIコンポーネント上に配置します。VCSSL 3 以降では、より新しい <a href=\"#mountComponent\">mountComponent<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 配置するGUIコンポーネントのID \n(int type) componentID : 配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function57": {
+			"name": "removeComponent",
+			"declaration": "void removeComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを配置解除します。VCSSL 3 以降では、より新しい <a href=\"#demountComponent\">demountComponent<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 配置解除するGUIコンポーネントのID \n(int type) componentID : 現在の配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "newGraphicsLabel",
+			"declaration": "int newGraphicsLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "グラフィックスラベル（ 描画内容や画像を表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。VCSSL 3.3.24 以降では、より新しい <a href=\"#newImageLabel\">newImageLabel<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) graphicsID : 表示内容のグラフィックスID ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function59": {
+			"name": "setComponentGraphics",
+			"declaration": "void setComponentGraphics( int componentID, int graphicsID )",
+			"description": "GUIコンポーネントのグラフィックスデータIDを設定します。VCSSL 3.3.24 以降では、より新しい <a href=\"#setComponentImage\">setComponentImage<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) graphicsID : グラフィックスデータID ",
+			"returnValue": "(void type) "
+		},
+		"function60": {
+			"name": "getComponentGraphics",
+			"declaration": "int getComponentGraphics( int componentID )",
+			"description": "GUIコンポーネントのグラフィックスデータIDを返します。VCSSL 3.3.24 以降では、より新しい <a href=\"#getComponentGraphics\">getComponentGraphics<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int type) graphicsID グラフィックスデータID\n"
+		},
+		"function61": {
+			"name": "setComponentVisible",
+			"declaration": "void setComponentVisible( int componentID, bool b )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function62": {
+			"name": "getComponentVisible",
+			"declaration": "bool getComponentVisible( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(bool type) "
+		},
+		"function63": {
+			"name": "getComponentInnerSize",
+			"declaration": "int[ ] getComponentInnerSize( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(int[] type) "
+		},
+		"function64": {
+			"name": "getComponentInner",
+			"declaration": "int[ ] getComponentInner( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(int[] type) "
+		},
+		"function65": {
+			"name": "setComponentValue",
+			"declaration": "void setComponentValue( int componentID, float value )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function66": {
+			"name": "getComponentValue",
+			"declaration": "float getComponentValue( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(float type) "
+		},
+		"function67": {
+			"name": "setComponentState",
+			"declaration": "void setComponentState( int componentID, bool state )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function68": {
+			"name": "getComponentState",
+			"declaration": "bool getComponentState( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(bool type) "
+		},
+		"function69": {
+			"name": "setComponentValueFloat",
+			"declaration": "void setComponentValueFloat( int componentID, float value )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function70": {
+			"name": "getComponentValueFloat",
+			"declaration": "float getComponentValueFloat( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(float type) "
+		},
+		"function71": {
+			"name": "setComponentValueInt",
+			"declaration": "void setComponentValueInt( int componentID, int value )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function72": {
+			"name": "getComponentValueInt",
+			"declaration": "int getComponentValueInt( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(int type) "
+		},
+		"function73": {
+			"name": "setComponentValueBool",
+			"declaration": "void setComponentValueBool( int componentID, bool state )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function74": {
+			"name": "getComponentValueBool",
+			"declaration": "bool getComponentValueBool( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(bool type) "
+		},
+		"function75": {
+			"name": "setComponentValueString",
+			"declaration": "void setComponentValueString( int componentID, string text )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function76": {
+			"name": "getComponentValueString",
+			"declaration": "string getComponentValueString( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(string type) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "mountComponent",
+			"declaration": "void mountComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを、別のGUIコンポーネント上に配置します。 ",
+			"parameters": "(int type) componentID : 配置するGUIコンポーネントのID \n(int type) parentComponentID : 配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function1": {
+			"name": "demountComponent",
+			"declaration": "void demountComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを配置解除します。 ",
+			"parameters": "(int type) componentID : 配置解除するGUIコンポーネントのID \n(int type) parentComponentID : 現在の配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function2": {
+			"name": "deleteComponent",
+			"declaration": "void deleteComponent( int componentID )",
+			"description": "GUIコンポーネントを破棄します。 ",
+			"parameters": "(int type) componentID : 破棄するGUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "newWindow",
+			"declaration": "int newWindow( int x, int y, int w, int h, string title )",
+			"description": "ウィンドウを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : ウィンドウタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function4": {
+			"name": "newButton",
+			"declaration": "int newButton( int x, int y, int w, int h, string text )",
+			"description": "ボタンを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : ボタンに表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function5": {
+			"name": "newTextField",
+			"declaration": "int newTextField( int x, int y, int w, int h, string text )",
+			"description": "テキストフィールド（ 1行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 初期値として表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function6": {
+			"name": "newTextArea",
+			"declaration": "int newTextArea( int x, int y, int w, int h, string text )",
+			"description": "テキストエリア（ 複数行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 初期値として表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function7": {
+			"name": "newTextLabel",
+			"declaration": "int newTextLabel( int x, int y, int w, int h, string text )",
+			"description": "テキストラベル（ 1行のテキストを表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 表示するテキスト ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function8": {
+			"name": "newImageLabel",
+			"declaration": "int newImageLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "画像ラベルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) graphicsID : 画像を格納するグラフィックスリソースのID ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function9": {
+			"name": "newCheckBox",
+			"declaration": "int newCheckBox( int x, int y, int w, int h, string text, boolean b )",
+			"description": "チェックボックスを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) text : 表示するテキスト \n(boolean type) b : 初期値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function10": {
+			"name": "newSelectField",
+			"declaration": "int newSelectField( int x, int y, int w, int h, string str[  ] )",
+			"description": "セレクトフィールド（ 選択肢から1つの項目を選択可能な、1行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string[] type) str : 選択肢 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function11": {
+			"name": "newSelectArea",
+			"declaration": "int newSelectArea( int x, int y, int w, int h, string str[  ] )",
+			"description": "セレクトエリア（ 選択肢から複数項目を選択可能な、複数行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string[] type) str : 選択肢 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function12": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value )",
+			"description": "0.0 ～ 1.0 の範囲でfloat 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function13": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "float 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 \n(float type) min : 最小値 \n(float type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function14": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "int 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) value : 初期値 \n(int type) min : 最小値 \n(int type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function15": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value )",
+			"description": "0.0 ～ 1.0 の範囲でfloat 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function16": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "float 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(float type) value : 初期値 \n(float type) min : 最小値 \n(float type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function17": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "int 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) value : 初期値 \n(int type) min : 最小値 \n(int type) max : 最大値 ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function18": {
+			"name": "newPanel",
+			"declaration": "int newPanel( int x, int y, int w, int h, string title )",
+			"description": "任意座標レイアウト用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function19": {
+			"name": "newGridPanel",
+			"declaration": "int newGridPanel( int x, int y, int w, int h, string title, int rows, int columns )",
+			"description": "グリッド配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function20": {
+			"name": "newFlowPanel",
+			"declaration": "int newFlowPanel( int x, int y, int w, int h, string title )",
+			"description": "フロー配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function21": {
+			"name": "newTabPanel",
+			"declaration": "int newTabPanel( int x, int y, int w, int h, string title )",
+			"description": "タブ表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function22": {
+			"name": "newScrollPanel",
+			"declaration": "int newScrollPanel( int x, int y, int w, int h, string title )",
+			"description": "スクロール表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(string type) title : パネルタイトル ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function23": {
+			"name": "paintComponent",
+			"declaration": "macro paintComponent( int componentID )",
+			"description": "GUIコンポーネントを再描画します。再描画は、表示内容のテキストやグラフィックスデータが変化した際に必要です。及び自身に配置されている子コンポーネントの表示内容が変化した際にも必要となります。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID "
+		},
+		"function24": {
+			"name": "setComponentLocation",
+			"declaration": "void setComponentLocation( int componentID, int x, int y )",
+			"description": "GUIコンポーネントの位置を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "getComponentLocation",
+			"declaration": "int[ ] getComponentLocation( int componentID )",
+			"description": "GUIコンポーネントの位置を取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[] type) 左上頂点座標（ [0] が X, [1] が Y ）\n"
+		},
+		"function26": {
+			"name": "setComponentSize",
+			"declaration": "void setComponentSize( int componentID, int width, int height )",
+			"description": "GUIコンポーネントの大きさを設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) width : 幅 \n(int type) height : 高さ ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID )",
+			"description": "GUIコンポーネントの大きさを取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[] type) 大きさ（ [0] が 幅, [1] が 高さ ）\n"
+		},
+		"function28": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID, int option )",
+			"description": "GUIコンポーネントの特定部分の大きさを取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) option : 部分指定オプション（ <a href=\"#OUTER\">OUTER<\/a>、 <a href=\"#INNER\">INNER<\/a> ） ",
+			"returnValue": "(int[] type) 大きさ（ [0] が 幅, [1] が 高さ ）\n"
+		},
+		"function29": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fr, int fg, int fb, int fa, int br, int bg, int bb, int ba )",
+			"description": "GUIコンポーネントの色を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) fr : 前景色の赤色成分（ 0 - 255 ） \n(int type) fg : 前景色の緑色成分（ 0 - 255 ） \n(int type) fb : 前景色の青色成分（ 0 - 255 ） \n(int type) fa : 前景色のα値成分（ 0 - 255 ） \n(int type) br : 前景色の赤色成分（ 0 - 255 ） \n(int type) bg : 前景色の緑色成分（ 0 - 255 ） \n(int type) bb : 前景色の青色成分（ 0 - 255 ） \n(int type) ba : 前景色のα値成分（ 0 - 255 ） ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fgRGBA[ ], int bgRGBA[ ] )",
+			"description": "GUIコンポーネントの色を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int[] type) fgRGBA : 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ） \n(int[] type) bgRGBA : 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ） ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "getComponentColor",
+			"declaration": "macro getComponentColor( int componentID )",
+			"description": "GUIコンポーネントの色を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[][] type)色色成分を格納する配列（ [0][0]が前景の赤、[0][1]が前景の緑、[0][2]が前景の青、[0][3]が前景のα、[1][0]が背景の赤、[1][1]が背景の緑、[1][2]が背景の青、[1][3]が背景のαで、各色 0 - 255 ）\n"
+		},
+		"function32": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text )",
+			"description": "GUIコンポーネントのテキスト情報を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(string type) text : テキスト情報 ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "getComponentText",
+			"declaration": "string getComponentText( int componentID )",
+			"description": "GUIコンポーネントのテキスト情報を取得します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(string type) text テキスト情報\n"
+		},
+		"function34": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text[ ], int option )",
+			"description": "GUIコンポーネントのテキスト情報を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(string[] type) text : テキスト情報 \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "getComponentText",
+			"declaration": "string[ ] getComponentText( int componentID, int option )",
+			"description": "GUIコンポーネントのテキスト情報を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(string[] type) テキスト情報\n"
+		},
+		"function36": {
+			"name": "setComponentImage",
+			"declaration": "void setComponentImage( int componentID, int graphicsID )",
+			"description": "GUIコンポーネントの画像を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) graphicsID : 画像を格納するグラフィックスデータのID ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "getComponentGraphics",
+			"declaration": "int getComponentGraphics( int componentID )",
+			"description": "GUIコンポーネントの画像を格納する、グラフィックスデータのIDを返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int type) graphicsID 画像を格納するグラフィックスデータのID\n"
+		},
+		"function38": {
+			"name": "showComponent",
+			"declaration": "void showComponent( int componentID )",
+			"description": "GUIコンポーネントの非表示にします。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "hideComponent",
+			"declaration": "void hideComponent( int componentID )",
+			"description": "GUIコンポーネントの表示します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "setComponentFont",
+			"declaration": "void setComponentFont( int componentID, string name )",
+			"description": "GUIコンポーネントのフォントを設定します ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(string type) name : フォント名（処理系依存、環境依存） ",
+			"returnValue": "(void type) "
+		},
+		"function41": {
+			"name": "setComponentFontSize",
+			"declaration": "void setComponentFontSize( int componentID, int size )",
+			"description": "GUIコンポーネントのフォントサイズを設定します ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) size : フォントサイズ ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "setComponentFontBold",
+			"declaration": "void setComponentFontBold( int componentID, bool isBold )",
+			"description": "GUIコンポーネントのフォントを太字に設定または解除します。イタリック体と併用はできません。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(bool type) isBold : 太字設定 ",
+			"returnValue": "(void type) "
+		},
+		"function43": {
+			"name": "setComponentFontItalic",
+			"declaration": "void setComponentFontItalic( int componentID, bool isItalic )",
+			"description": "GUIコンポーネントのフォントをイタリック体に設定または解除します。太字と併用はできません。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(bool type) isItalic : イタリック体設定 ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "setComponentFloat",
+			"declaration": "void setComponentFloat( int componentID, float value )",
+			"description": "GUIコンポーネントが保持する float 型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(float type) value : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function45": {
+			"name": "getComponentFloat",
+			"declaration": "float getComponentFloat( int componentID )",
+			"description": "GUIコンポーネントが保持する float 型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(float type) 保持値\n"
+		},
+		"function46": {
+			"name": "setComponentInt",
+			"declaration": "void setComponentInt( int componentID, int value )",
+			"description": "GUIコンポーネントが保持する int 型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) value : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function47": {
+			"name": "getComponentInt",
+			"declaration": "int getComponentInt( int componentID )",
+			"description": "GUIコンポーネントが保持する int  型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int type) 保持値\n"
+		},
+		"function48": {
+			"name": "setComponentBool",
+			"declaration": "void setComponentBool( int componentID, bool state )",
+			"description": "GUIコンポーネントが保持する bool 型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \nvalue : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function49": {
+			"name": "getComponentBool",
+			"declaration": "bool getComponentBool( int componentID )",
+			"description": "GUIコンポーネントが保持する bool  型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(bool type) 保持値\n"
+		},
+		"function50": {
+			"name": "setComponentString",
+			"declaration": "void setComponentString( int componentID, string text )",
+			"description": "GUIコンポーネントが保持する string  型の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \nvalue : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function51": {
+			"name": "getComponentString",
+			"declaration": "string getComponentString( int componentID )",
+			"description": "GUIコンポーネントが保持する string  型の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(string type) 保持値\n"
+		},
+		"function52": {
+			"name": "setComponentStringArray",
+			"declaration": "void setComponentStringArray( int componentID, string text[ ], int option )",
+			"description": "GUIコンポーネントが保持する string  型配列の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \nvalue : 保持値 \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(void type) "
+		},
+		"function53": {
+			"name": "getComponentStringArray",
+			"declaration": "string[ ] getComponentStringArray( int componentID, int option )",
+			"description": "GUIコンポーネントが保持する string 型配列の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) option : オプション（ <a href=\"#LISTED\">LISTED<\/a>、 <a href=\"#SELECTED\">SELECTED<\/a> ） ",
+			"returnValue": "(string[] type) 保持値\n"
+		},
+		"function54": {
+			"name": "setComponentIntArray",
+			"declaration": "void setComponentIntArray( int componentID, int value[ ] )",
+			"description": "GUIコンポーネントが保持する int  型配列の値を設定します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int[] type) value : 保持値 ",
+			"returnValue": "(void type) "
+		},
+		"function55": {
+			"name": "getComponentIntArray",
+			"declaration": "int[ ] getComponentIntArray( int componentID )",
+			"description": "GUIコンポーネントが保持する int 型配列の値を返します。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int[] type) 保持値\n"
+		},
+		"function56": {
+			"name": "addComponent",
+			"declaration": "void addComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを、別のGUIコンポーネント上に配置します。VCSSL 3 以降では、より新しい <a href=\"#mountComponent\">mountComponent<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 配置するGUIコンポーネントのID \n(int type) componentID : 配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function57": {
+			"name": "removeComponent",
+			"declaration": "void removeComponent( int componentID, int parentComponentID )",
+			"description": "GUIコンポーネントを配置解除します。VCSSL 3 以降では、より新しい <a href=\"#demountComponent\">demountComponent<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 配置解除するGUIコンポーネントのID \n(int type) componentID : 現在の配置先GUIコンポーネントのID ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "newGraphicsLabel",
+			"declaration": "int newGraphicsLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "グラフィックスラベル（ 描画内容や画像を表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。VCSSL 3.3.24 以降では、より新しい <a href=\"#newImageLabel\">newImageLabel<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) x : 左上頂点のX座標 \n(int type) y : 左上頂点のY座標 \nwidth : 幅 \nheight : 高さ \n(int type) graphicsID : 表示内容のグラフィックスID ",
+			"returnValue": "(int type) GUIコンポーネントID\n"
+		},
+		"function59": {
+			"name": "setComponentGraphics",
+			"declaration": "void setComponentGraphics( int componentID, int graphicsID )",
+			"description": "GUIコンポーネントのグラフィックスデータIDを設定します。VCSSL 3.3.24 以降では、より新しい <a href=\"#setComponentImage\">setComponentImage<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID \n(int type) graphicsID : グラフィックスデータID ",
+			"returnValue": "(void type) "
+		},
+		"function60": {
+			"name": "getComponentGraphics",
+			"declaration": "int getComponentGraphics( int componentID )",
+			"description": "GUIコンポーネントのグラフィックスデータIDを返します。VCSSL 3.3.24 以降では、より新しい <a href=\"#getComponentGraphics\">getComponentGraphics<\/a> 関数がサポートされています。この関数は互換目的でサポートされています。 ",
+			"parameters": "(int type) componentID : 対象GUIコンポーネントのID ",
+			"returnValue": "(int type) graphicsID グラフィックスデータID\n"
+		},
+		"function61": {
+			"name": "setComponentVisible",
+			"declaration": "void setComponentVisible( int componentID, bool b )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function62": {
+			"name": "getComponentVisible",
+			"declaration": "bool getComponentVisible( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(bool type) "
+		},
+		"function63": {
+			"name": "getComponentInnerSize",
+			"declaration": "int[ ] getComponentInnerSize( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(int[] type) "
+		},
+		"function64": {
+			"name": "getComponentInner",
+			"declaration": "int[ ] getComponentInner( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(int[] type) "
+		},
+		"function65": {
+			"name": "setComponentValue",
+			"declaration": "void setComponentValue( int componentID, float value )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function66": {
+			"name": "getComponentValue",
+			"declaration": "float getComponentValue( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(float type) "
+		},
+		"function67": {
+			"name": "setComponentState",
+			"declaration": "void setComponentState( int componentID, bool state )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function68": {
+			"name": "getComponentState",
+			"declaration": "bool getComponentState( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(bool type) "
+		},
+		"function69": {
+			"name": "setComponentValueFloat",
+			"declaration": "void setComponentValueFloat( int componentID, float value )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function70": {
+			"name": "getComponentValueFloat",
+			"declaration": "float getComponentValueFloat( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(float type) "
+		},
+		"function71": {
+			"name": "setComponentValueInt",
+			"declaration": "void setComponentValueInt( int componentID, int value )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function72": {
+			"name": "getComponentValueInt",
+			"declaration": "int getComponentValueInt( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(int type) "
+		},
+		"function73": {
+			"name": "setComponentValueBool",
+			"declaration": "void setComponentValueBool( int componentID, bool state )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function74": {
+			"name": "getComponentValueBool",
+			"declaration": "bool getComponentValueBool( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(bool type) "
+		},
+		"function75": {
+			"name": "setComponentValueString",
+			"declaration": "void setComponentValueString( int componentID, string text )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(void type) "
+		},
+		"function76": {
+			"name": "getComponentValueString",
+			"declaration": "string getComponentValueString( int componentID )",
+			"description": "この関数の使用は推奨されません。この関数は、互換目的でサポートされています。 ",
+			"returnValue": "(string type) "
+		}
+	}
+}

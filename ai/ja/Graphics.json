@@ -1,0 +1,149 @@
+{
+	"libraryName": "Graphics",
+	"libraryDescription": "<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。</p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br />その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。</p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br />いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br />つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。</p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br />例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class="code">int g1 = newGraphics("input.png");  // 画像ファイルからグラフィックスデータ g1 を生成<br />int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br />exportGraphics(g2, "output.png", "PNG");  // g2 を画像ファイルに出力<br />deleteGraphics(g1);  // g1 を破棄<br />deleteGraphics(g2);  // g2 を破棄</div></p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br />より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。</p> ",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics()",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。 ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function1": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( string filePath )",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。 ",
+			"parameters": "(string type) filePath : 画像ファイルの名称またはパス。 ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function2": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 ",
+			"parameters": "red[][] : ピクセルの赤色成分（[Y][X]、0 ~ 255）。 \ngreen[][] : ピクセルの緑色成分（[Y][X]、0 ~ 255）。 \nblue[][] : ピクセルの青色成分（[Y][X]、0 ~ 255）。 \nalpha[][] : ピクセルのα値成分（[Y][X]、0 ~ 255）。 ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function3": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int rgba[ ][ ][ ] )",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 ",
+			"parameters": "rgba[][][] : ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 \/ 1=緑 \/ 2=青 \/ 3=α」、値の範囲は0 ~ 255）。 ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function4": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha )",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 ",
+			"parameters": "(int type) baseGraphics : 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。 \n(int type) fromRed : 変換対象の色の赤色成分（0 ~ 255）。 \n(int type) fromGreen : 変換対象の色の青色成分（0 ~ 255）。 \n(int type) fromBlue : 変換対象の色の緑色成分（0 ~ 255）。 \n(int type) fromAlpha : 変換対象の色のα値成分（0 ~ 255）。 \n(int type) toRed : 変換後の色の赤色成分（0 ~ 255）。 \n(int type) toGreen : 変換後の色の青色成分（0 ~ 255）。 \n(int type) toBlue : 変換後の色の緑色成分（0 ~ 255）。 \n(int type) toAlpha : 変換後の色のα値成分（0 ~ 255）。 ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function5": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int baseGraphics, int fromColor[ ], int toColor[ ] )",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 ",
+			"parameters": "(int type) baseGraphics : 変換元のイメージを保持するグラフィックスデータのID。 \n(int[] type) fromColor : 変換対象の色の成分を格納する配列。 \n(int[] type) toColor : 変換後の色の成分を格納する配列。 ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function6": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics ( int baseGraphics, int width, int height, bool antialiasing )",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。 ",
+			"parameters": "(int type) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int type) width : 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小） \n(int type) height : 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小） \n(bool type) antialiasing : 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。 ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function7": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight )",
+			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。 ",
+			"parameters": "(int type) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int type) cropX : 元の画像から抜き出す領域の左上頂点X座標 \n(int type) cropY : 元の画像から抜き出す領域の左上頂点Y座標 \n(int type) cropWidth : 元の画像から抜き出す領域の幅 \n(int type) cropHeight : 元の画像から抜き出す領域の高さ ",
+			"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。\n"
+		},
+		"function8": {
+			"name": "deleteGraphics",
+			"declaration": "void deleteGraphics( int id )",
+			"description": "グラフィックスデータを破棄します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "getGraphicsWidth",
+			"declaration": "int getGraphicsWidth( int id )",
+			"description": "グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 \n対象グラフィックスデータの幅（ピクセル数）。 : ",
+			"returnValue": "(int type) "
+		},
+		"function10": {
+			"name": "getGraphicsHeight",
+			"declaration": "int getGraphicsHeight( int id )",
+			"description": "グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 \n対象グラフィックスデータの高さ（ピクセル数）。 : ",
+			"returnValue": "(int type) "
+		},
+		"function11": {
+			"name": "exportGraphics",
+			"declaration": "void exportGraphics( int id, string name, string format )",
+			"description": "グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 \n(string type) name : 出力ファイル名。 \n(string type) format : 出力ファイルの形式。\"JPEG\" または \"PNG\"、もしくは \"BMP\" を指定します。 ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "exportGraphics",
+			"declaration": "void exportGraphics( int id, string name, string format, double quality )",
+			"description": "グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 \n(string type) name : 出力ファイル名。 \n(string type) format : 出力ファイルの形式。\"JPEG\" または \"PNG\"、もしくは \"BMP\" を指定します。 \n(double type) quality : 画質（0.0 ~ 100.0）。JPEG の場合に有効です。大きいほど高画質です。 ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setGraphicsPixel",
+			"declaration": "void setGraphicsPixel( int id, int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )",
+			"description": "グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 \nred[][] : ピクセルの赤色成分（[Y][X]、0 ~ 255）。 \ngreen[][] : ピクセルの緑色成分（[Y][X]、0 ~ 255）。 \nblue[][] : ピクセルの青色成分（[Y][X]、0 ~ 255）。 \nalpha[][] : ピクセルのα値成分（[Y][X]、0 ~ 255）。 ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setGraphicsPixel",
+			"declaration": "void setGraphicsPixel( int id, int rgba[ ][ ][ ] )",
+			"description": "グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 \nrgba[][][] : ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 \/ 1=緑 \/ 2=青 \/ 3=α」、値の範囲は0 ~ 255）。 ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "getGraphicsPixel",
+			"declaration": "int[ ][ ][ ] getGraphicsPixel( int id )",
+			"description": "イメージの全ピクセル色成分を格納する配列を返します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(int[][][] type) ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 \/ 1=緑 \/ 2=青 \/ 3=α」、値の範囲は0 ~ 255）。\n"
+		},
+		"function16": {
+			"name": "getGraphicsPixelRed",
+			"declaration": "int[ ][ ] getGraphicsPixelRed( int id )",
+			"description": "イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(int[][] type) ピクセルの赤色成分（[Y][X]、値の範囲は0 ~ 255）。\n"
+		},
+		"function17": {
+			"name": "getGraphicsPixelGreen",
+			"declaration": "int[ ][ ] getGraphicsPixelGreen( int id )",
+			"description": "イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(int[][] type) ピクセルの緑色成分（[Y][X]、値の範囲は0 ~ 255）。\n"
+		},
+		"function18": {
+			"name": "getGraphicsPixelBlue",
+			"declaration": "int[ ][ ] getGraphicsPixelBlue( int id )",
+			"description": "イメージの全ピクセルについて、青色成分のみを格納する配列を返します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(int[][] type) ピクセルの青色成分（[Y][X]、値の範囲は0 ~ 255）。\n"
+		},
+		"function19": {
+			"name": "getGraphicsPixelAlpha",
+			"declaration": "int[ ][ ] getGraphicsPixelAlpha( int id )",
+			"description": "イメージの全ピクセルについて、α値成分のみを格納する配列を返します。 ",
+			"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(int[][] type) ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。\n"
+		}
+	}
+}

@@ -1,0 +1,264 @@
+{
+	"libraryName": "Process",
+	"libraryDescription": "<p>VCSSL Process ライブラリ は、オペレーティングシステムと通信し、プロセスを起動・制御するための標準ライブラリです。起動したプロセスと、標準入出力でやり取りする事も可能です。</p><p>Process ライブラリは、VCSSLからオペレーティングシステムのコマンドを実行したり、別のアプリケーションを起動したりといった機能を提供します。また、VCSSL のプログラムと、VCSSL 以外の言語で開発されたプログラムを連携させる（他言語連携）場合においても必要となります。</p><p>VCSSL におけるプロセス制御の基本的な流れは、以下の通りです。</p><p>まず、<a href="#newProcess">newProcess</a> 関数でプロセスを生成します。この時点では、まだ実行は開始されません。この関数は、プロセスに固有のID（プロセスID）を割り振って返します（ ここでのプロセスIDは、VCSSL処理系によって割り振られるIDであり、オペレーティングシステムによって割り振られるIDとは一般に一致しません ）。</p><p>続いて、<a href="#startProcess">startProcess</a> 関数でプロセスの実行を開始します。プロセスの実行は、VCSSLプログラムの実行とは非同期で行われます。つまり、プロセスの再生終了を待つことなく、VCSSL の処理も引き続き実行されていきます。もしも、プロセスの終了までVCSSL側の処理を待機させたい場合は、<a href="#waitForProcess">waitForProcess</a> 関数を使用してください。</p><p>プロセスの再生が終了すると、<a href="#onProcessEnd">onProcessEnd</a> イベントハンドラがコールされます。ここでプロセスの破棄などを行います。</p><p>プロセスの標準出力を取得するには、二通りの方法があります。一つは、<a href="#getProcessOutput">getProcessOutput</a> 関数を呼び出し、任意のタイミングで能動的に取得する方法です。これは、プロセスの終了後に、標準出力内容を一括して取得したい場合などに便利です。もう一つは、<a href="#onProcessOutput">onProcessOutput</a>イベントハンドラを用いて受動的に取得する方法です。こちらは、受け取った標準出力内容に応じて、標準入力にレスポンスを返したいような場合に便利です。ただしこの場合、標準出力内容が（恐らく行単位で）バッファされ、イベントハンドラに渡されるまでにタイムラグが生じる事に注意してください（特に、改行が行われないままプロセスが入力待ちとなるような場合には注意が必要です）。このタイムラグが問題になるようなやり取りを行うには、必要に応じてループなどから<a href="#flushProcessOutput">flushProcessOutput</a> 関数をコールし、適時バッファをフラッシュするなどしてください。なお、標準出力やエラーメッセージが文字化けする場合は、<a href="#setProcessOutputEncoding">setProcessOutputEncoding</a> や <a href="#setProcessErrorEncoding">setProcessErrorEncoding</a> によって文字コードを設定してください。</p><p>生成されるプロセスの作業ディレクトリは、デフォルトでは、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）になります。必要に応じて、<a href="#setProcessWorkingDirectory">setProcessWorkingDirectory</a> を用いて作業ディレクトリを設定できます。自動的にプロセスの実行ファイルの場所には設定されない事に注意してください。なお、プロセスの作業ディレクトリは、環境によっては、必ずしも期待通りに設定されるとは限りません（デフォルト設定のディレクトリについても同様です）。例えば、古典的なシェル/コマンドライン端末上で、カレントディレクトリに設定できない特殊なパスは、作業ディレクトリとしての割り当てに失敗する可能性があります。失敗する既知の具体例としては、「ネットワークドライブとして接続されていない、ネットワーク上のディレクトリを指すUNC形式のパス」などがあります。</p><p>作業ディレクトリなどの諸条件を確実に制御し、デバッグもしやすくするには、「実行コマンドをシェルスクリプト等で包んで実行し、そのシェルスクリプト内で作業ディレクトリを設定する」などの方法が有効です。</p> ",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "newProcess",
+			"declaration": "int newProcess( string command[ ] )",
+			"description": "ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。<br \/>この関数によるプロセスの生成後、<a href=\"#startProcess\">startProcess<\/a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href=\"System.html#exec\">System.exec<\/a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。<br \/>例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：<br \/>string command[] = { getFilePath(\"test.exe\"), \"1\", \"2\", \"3\" }<br \/>int processID = newProcess(command);<br \/>などとします。実行を開始するには、続けて：<br \/><a href=\"#startProcess\">startProcess<\/a>(processID);<br \/>とします。終了まで待機するには、続けて：<br \/><a href=\"#waitForProcess\">waitForProcess<\/a>(processID);<br \/>とします。<br \/>生成されるプロセスの作業ディレクトリは、デフォルトでは、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）に設定されます。必要に応じて、<a href=\"#setProcessWorkingDirectory\">setProcessWorkingDirectory<\/a> を用いて作業ディレクトリを設定できます。いずれも、特殊なパス形式の場合は設定できない可能性があります。詳細はこのページ冒頭の概要説明を参照してください。 ",
+			"parameters": "command[] : オペレーティングシステムに渡すコマンド。一般的な環境では [0] に実行ファイル（アプリケーション）の絶対パス、[1] 以降に起動時のコマンドライン引数を指定します。実行ファイルの絶対パスは <a href=\"File.html#getFilePath\">File.getFilePath<\/a> を使用して取得できます。なお、環境変数 PATH\/Path にパスが登録されている実行ファイルは、絶対パスではなく実行ファイル名のみもで実行できる場合があります（環境依存）。 ",
+			"returnValue": "(int type) 生成したプロセスに割り振られたプロセスID（識別番号）。\n"
+		},
+		"function1": {
+			"name": "newProcess",
+			"declaration": "int newProcess( string command )",
+			"description": "ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。<br \/>基本的には newProcess(string command[]) と同じ機能ですが、引数を配列に区切らなくても、コマンドライン端末のように1行でまとめて記述する事ができます。そのため簡便に使えますが、内容の区切られ方は環境依存\/実装依存であるため、異種環境での実行やバージョン変更の際などに、逆にデバッグがややこしい挙動を招く可能性があります。期待通りに動作しない場合や、将来の安定性を重視したい場合は、引数を明示的に配列に区切って渡す newProcess(string command[]) の方の使用が推奨されます。 ",
+			"parameters": "(string type) command : オペレーティングシステムに渡すコマンド。コマンド入力端末に入力するように、1行にまとめて指定します。ただし環境によっては使用できない場合があります。 ",
+			"returnValue": "(int type) 生成したプロセスに割り振られたプロセスID（識別番号）。\n"
+		},
+		"function2": {
+			"name": "startProcess",
+			"declaration": "void startProcess( int processID )",
+			"description": "ネイティブアプリケーションのプロセスを実行開始します。<br \/>実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。プロセスの実行完了まで、VCSSL側の処理を待機させたい場合は、<a href=\"#waitForProcess\">waitForProcess<\/a> をコールしてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "deleteProcess",
+			"declaration": "void deleteProcess( int processID )",
+			"description": "ネイティブアプリケーションのプロセスに関するリソースを破棄します。プロセスの実行終了後にコールしてください。<br \/>ただし、プロセスの実行途中でコールしてはいけません。プロセスを実行途中で破棄するには先に <a href=\"#destroyProcess\">destroyProcess<\/a> で強制終了させてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "destroyProcess",
+			"declaration": "void destroyProcess( int processID )",
+			"description": "ネイティブアプリケーションのプロセスを、実行途中で強制終了します。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "setProcessInput",
+			"declaration": "void setProcessInput( int processID, string command )",
+			"description": "プロセスに渡す標準入力内容を設定します。<br \/>入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。<br \/>例として、順に「1」,「2」,「3」と入力する場合には：<br \/>setProcessInput(processID, \"1\" + EOL + \"2\" + EOL + \"3\" + EOL);<br \/>などとします。<br \/>入力内容が文字化けする場合は、<a href=\"#setProcessInputEncoding\">setProcessInputEncoding<\/a> で、プロセスに合った文字コードを設定してください。<br \/>なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function6": {
+			"name": "getProcessOutput",
+			"declaration": "string getProcessOutput( int processID )",
+			"description": "コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。<br \/>環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準出力内容が多いネイティブアプリケーションについては、<a href=\"#clearProcessOutput\">clearProcessOutput<\/a> で適時バッファをクリアしてください。なお、取得内容が文字化けする場合は、<a href=\"#setProcessOutputEncoding\">setProcessOutputEncoding<\/a> で、プロセスに合った文字コードを設定してください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(string type) プロセスのバッファされている標準出力内容。\n"
+		},
+		"function7": {
+			"name": "getProcessError",
+			"declaration": "string getProcessError( int processID )",
+			"description": "コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。<br \/>環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準エラー出力内容が多いネイティブアプリケーションについては、<a href=\"#clearProcessError\">clearProcessError<\/a> で適時バッファをクリアしてください。なお、取得内容が文字化けする場合は、<a href=\"#setProcessErrorEncoding\">setProcessErrorEncoding<\/a> で、プロセスに合った文字コードを設定してください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(string type) プロセスのバッファされている標準エラー出力内容。\n"
+		},
+		"function8": {
+			"name": "clearProcessOutput",
+			"declaration": "void clearProcessOutput( int processID )",
+			"description": "プロセスの標準出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "clearProcessError",
+			"declaration": "void clearProcessError( int processID )",
+			"description": "プロセスの標準エラー出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "flushProcessOutput",
+			"declaration": "void flushProcessOutput( int processID )",
+			"description": "プロセスの標準出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessOutput に流されます。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function11": {
+			"name": "flushProcessError",
+			"declaration": "void flushProcessError( int processID )",
+			"description": "プロセスの標準エラー出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessError に流されます。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "setProcessInputEncoding",
+			"declaration": "void setProcessInputEncoding( int processID, string inputEncoding )",
+			"description": "プロセスに渡す標準入力のテキストエンコーディングを設定します。<br \/>この設定は、プロセスの標準入力の使用前に済ませる必要があります。既に何らかの標準入力が行われた後に設定しても、反映されない可能性があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) inputEncoding : 標準入力内容のテキストエンコーディング。 ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setProcessOutputEncoding",
+			"declaration": "void setProcessOutputEncoding( int processID, string outputEncoding )",
+			"description": "プロセスの標準出力内容のテキストエンコーディングを設定します。<br \/>この設定は、プロセスの標準出力の使用前に済ませる必要があります。既に何らかの標準出力が行われた後に設定しても、反映されない可能性があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) outputEncoding : 標準出力内容のテキストエンコーディング。 ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setProcessErrorEncoding",
+			"declaration": "void setProcessErrorEncoding( int processID, string errorEncoding )",
+			"description": "プロセスの標準エラー出力内容のテキストエンコーディングを設定します。<br \/>この設定は、プロセスの標準エラー出力の使用前に済ませる必要があります。既に何らかの標準エラー出力が行われた後に設定しても、反映されない可能性があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) errorEncoding : 標準エラー出力内容のテキストエンコーディング。 ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "setProcessWorkingDirectory",
+			"declaration": "void setProcessWorkingDirectory( int processID, string workingDirectoryPath )",
+			"description": "プロセスの作業ディレクトリを設定します。<br \/>この設定は、startProcess によるプロセスの実行開始前に済ませる必要があります。実行開始後に設定しても、反映されません。<br \/>作業ディレクトリを何も設定せずにプロセスを実行した場合、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）が作業ディレクトリになります。プロセスの実行ファイルがあるディレクトリではない事に注意してください。<br \/><br \/>なお、プロセスの作業ディレクトリは、環境によっては、必ずしも期待通りに設定されるとは限りません（デフォルト設定のディレクトリについても同様です）。例えば、古典的なシェル\/コマンドライン端末上で、カレントディレクトリに設定できない特殊なパスは、作業ディレクトリとしての割り当てに失敗する可能性があります。失敗する既知の具体例としては、「ネットワークドライブとして接続されていない、ネットワーク上のディレクトリを指すUNC形式のパス」などがあります。<br \/>作業ディレクトリなどの諸条件を確実に制御し、デバッグもしやすくするには、「実行コマンドをシェルスクリプト等で包んで実行し、そのシェルスクリプト内で作業ディレクトリを設定する」などの方法が有効です。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) workingDirectoryPath : 作業ディレクトリのパス ",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "getProcessExitValue",
+			"declaration": "int getProcessExitValue( int processID )",
+			"description": "プロセスの終了ステータスコードを返します。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(int type) プロセスの終了ステータスコード。\n"
+		},
+		"function17": {
+			"name": "waitForProcess",
+			"declaration": "void waitForProcess( int processID )",
+			"description": "プロセスの実行が終了するまで、VCSSL側の実行を待機します。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "newProcess",
+			"declaration": "int newProcess( string command[ ] )",
+			"description": "ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。<br \/>この関数によるプロセスの生成後、<a href=\"#startProcess\">startProcess<\/a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。プロセスの生成は <a href=\"System.html#exec\">System.exec<\/a> でも可能ですが、exec はプロセス生成と同時に実行開始も行います。<br \/>例として、「test.exe」にコマンドライン引数「1」「2」「3」を指定して起動するには、File ライブラリと Process ライブラリを import した上で：<br \/>string command[] = { getFilePath(\"test.exe\"), \"1\", \"2\", \"3\" }<br \/>int processID = newProcess(command);<br \/>などとします。実行を開始するには、続けて：<br \/><a href=\"#startProcess\">startProcess<\/a>(processID);<br \/>とします。終了まで待機するには、続けて：<br \/><a href=\"#waitForProcess\">waitForProcess<\/a>(processID);<br \/>とします。<br \/>生成されるプロセスの作業ディレクトリは、デフォルトでは、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）に設定されます。必要に応じて、<a href=\"#setProcessWorkingDirectory\">setProcessWorkingDirectory<\/a> を用いて作業ディレクトリを設定できます。いずれも、特殊なパス形式の場合は設定できない可能性があります。詳細はこのページ冒頭の概要説明を参照してください。 ",
+			"parameters": "command[] : オペレーティングシステムに渡すコマンド。一般的な環境では [0] に実行ファイル（アプリケーション）の絶対パス、[1] 以降に起動時のコマンドライン引数を指定します。実行ファイルの絶対パスは <a href=\"File.html#getFilePath\">File.getFilePath<\/a> を使用して取得できます。なお、環境変数 PATH\/Path にパスが登録されている実行ファイルは、絶対パスではなく実行ファイル名のみもで実行できる場合があります（環境依存）。 ",
+			"returnValue": "(int type) 生成したプロセスに割り振られたプロセスID（識別番号）。\n"
+		},
+		"function1": {
+			"name": "newProcess",
+			"declaration": "int newProcess( string command )",
+			"description": "ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。<br \/>基本的には newProcess(string command[]) と同じ機能ですが、引数を配列に区切らなくても、コマンドライン端末のように1行でまとめて記述する事ができます。そのため簡便に使えますが、内容の区切られ方は環境依存\/実装依存であるため、異種環境での実行やバージョン変更の際などに、逆にデバッグがややこしい挙動を招く可能性があります。期待通りに動作しない場合や、将来の安定性を重視したい場合は、引数を明示的に配列に区切って渡す newProcess(string command[]) の方の使用が推奨されます。 ",
+			"parameters": "(string type) command : オペレーティングシステムに渡すコマンド。コマンド入力端末に入力するように、1行にまとめて指定します。ただし環境によっては使用できない場合があります。 ",
+			"returnValue": "(int type) 生成したプロセスに割り振られたプロセスID（識別番号）。\n"
+		},
+		"function2": {
+			"name": "startProcess",
+			"declaration": "void startProcess( int processID )",
+			"description": "ネイティブアプリケーションのプロセスを実行開始します。<br \/>実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。プロセスの実行完了まで、VCSSL側の処理を待機させたい場合は、<a href=\"#waitForProcess\">waitForProcess<\/a> をコールしてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "deleteProcess",
+			"declaration": "void deleteProcess( int processID )",
+			"description": "ネイティブアプリケーションのプロセスに関するリソースを破棄します。プロセスの実行終了後にコールしてください。<br \/>ただし、プロセスの実行途中でコールしてはいけません。プロセスを実行途中で破棄するには先に <a href=\"#destroyProcess\">destroyProcess<\/a> で強制終了させてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "destroyProcess",
+			"declaration": "void destroyProcess( int processID )",
+			"description": "ネイティブアプリケーションのプロセスを、実行途中で強制終了します。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "setProcessInput",
+			"declaration": "void setProcessInput( int processID, string command )",
+			"description": "プロセスに渡す標準入力内容を設定します。<br \/>入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。そのためプロセスの終了までに必要な標準入力内容を、改行コード区切りで全てまとめて設定しておく事もできます。<br \/>例として、順に「1」,「2」,「3」と入力する場合には：<br \/>setProcessInput(processID, \"1\" + EOL + \"2\" + EOL + \"3\" + EOL);<br \/>などとします。<br \/>入力内容が文字化けする場合は、<a href=\"#setProcessInputEncoding\">setProcessInputEncoding<\/a> で、プロセスに合った文字コードを設定してください。<br \/>なお、バッファに頼らず、標準出力内容の取得と合わせて、対話的に（逐次的に）標準入力を行っていく事もできます。その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function6": {
+			"name": "getProcessOutput",
+			"declaration": "string getProcessOutput( int processID )",
+			"description": "コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。<br \/>環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準出力内容が多いネイティブアプリケーションについては、<a href=\"#clearProcessOutput\">clearProcessOutput<\/a> で適時バッファをクリアしてください。なお、取得内容が文字化けする場合は、<a href=\"#setProcessOutputEncoding\">setProcessOutputEncoding<\/a> で、プロセスに合った文字コードを設定してください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(string type) プロセスのバッファされている標準出力内容。\n"
+		},
+		"function7": {
+			"name": "getProcessError",
+			"declaration": "string getProcessError( int processID )",
+			"description": "コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。<br \/>環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。そのため、標準エラー出力内容が多いネイティブアプリケーションについては、<a href=\"#clearProcessError\">clearProcessError<\/a> で適時バッファをクリアしてください。なお、取得内容が文字化けする場合は、<a href=\"#setProcessErrorEncoding\">setProcessErrorEncoding<\/a> で、プロセスに合った文字コードを設定してください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(string type) プロセスのバッファされている標準エラー出力内容。\n"
+		},
+		"function8": {
+			"name": "clearProcessOutput",
+			"declaration": "void clearProcessOutput( int processID )",
+			"description": "プロセスの標準出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "clearProcessError",
+			"declaration": "void clearProcessError( int processID )",
+			"description": "プロセスの標準エラー出力バッファをクリアします。標準出力内容が多いネイティブアプリケーションについては、バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "flushProcessOutput",
+			"declaration": "void flushProcessOutput( int processID )",
+			"description": "プロセスの標準出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessOutput に流されます。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function11": {
+			"name": "flushProcessError",
+			"declaration": "void flushProcessError( int processID )",
+			"description": "プロセスの標準エラー出力バッファをフラッシュします。フラッシュを行うと、その時点でバッファされている内容が全てonProcessError に流されます。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "setProcessInputEncoding",
+			"declaration": "void setProcessInputEncoding( int processID, string inputEncoding )",
+			"description": "プロセスに渡す標準入力のテキストエンコーディングを設定します。<br \/>この設定は、プロセスの標準入力の使用前に済ませる必要があります。既に何らかの標準入力が行われた後に設定しても、反映されない可能性があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) inputEncoding : 標準入力内容のテキストエンコーディング。 ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setProcessOutputEncoding",
+			"declaration": "void setProcessOutputEncoding( int processID, string outputEncoding )",
+			"description": "プロセスの標準出力内容のテキストエンコーディングを設定します。<br \/>この設定は、プロセスの標準出力の使用前に済ませる必要があります。既に何らかの標準出力が行われた後に設定しても、反映されない可能性があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) outputEncoding : 標準出力内容のテキストエンコーディング。 ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setProcessErrorEncoding",
+			"declaration": "void setProcessErrorEncoding( int processID, string errorEncoding )",
+			"description": "プロセスの標準エラー出力内容のテキストエンコーディングを設定します。<br \/>この設定は、プロセスの標準エラー出力の使用前に済ませる必要があります。既に何らかの標準エラー出力が行われた後に設定しても、反映されない可能性があります。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) errorEncoding : 標準エラー出力内容のテキストエンコーディング。 ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "setProcessWorkingDirectory",
+			"declaration": "void setProcessWorkingDirectory( int processID, string workingDirectoryPath )",
+			"description": "プロセスの作業ディレクトリを設定します。<br \/>この設定は、startProcess によるプロセスの実行開始前に済ませる必要があります。実行開始後に設定しても、反映されません。<br \/>作業ディレクトリを何も設定せずにプロセスを実行した場合、VCSSLスクリプトがあるディレクトリ（メインディレクトリ）が作業ディレクトリになります。プロセスの実行ファイルがあるディレクトリではない事に注意してください。<br \/><br \/>なお、プロセスの作業ディレクトリは、環境によっては、必ずしも期待通りに設定されるとは限りません（デフォルト設定のディレクトリについても同様です）。例えば、古典的なシェル\/コマンドライン端末上で、カレントディレクトリに設定できない特殊なパスは、作業ディレクトリとしての割り当てに失敗する可能性があります。失敗する既知の具体例としては、「ネットワークドライブとして接続されていない、ネットワーク上のディレクトリを指すUNC形式のパス」などがあります。<br \/>作業ディレクトリなどの諸条件を確実に制御し、デバッグもしやすくするには、「実行コマンドをシェルスクリプト等で包んで実行し、そのシェルスクリプト内で作業ディレクトリを設定する」などの方法が有効です。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 \n(string type) workingDirectoryPath : 作業ディレクトリのパス ",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "getProcessExitValue",
+			"declaration": "int getProcessExitValue( int processID )",
+			"description": "プロセスの終了ステータスコードを返します。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(int type) プロセスの終了ステータスコード。\n"
+		},
+		"function17": {
+			"name": "waitForProcess",
+			"declaration": "void waitForProcess( int processID )",
+			"description": "プロセスの実行が終了するまで、VCSSL側の実行を待機します。 ",
+			"parameters": "(int type) processID : 対象プロセスのプロセスID。 ",
+			"returnValue": "(void type) "
+		}
+	}
+}
