@@ -7,114 +7,116 @@
 <body>
 <h1>Graph2D</h1>
 <hr />
-<h2 id="abstract">概要 - Abstract</h2>
+<h2 id="abstract">Abstract</h2>
 <p>tool.Graph2D APIライブラリ（以下、Graph2Dライブラリ）は、2次元グラフソフトウェアを制御するためのライブラリです。</p><p>Graph2D ライブラリは拡張ライブラリであり、VCSSLの言語仕様における標準ライブラリには含まれていません。従って、全てのVCSSL処理系において、必ずしもGraph2D ライブラリの実装がサポートされるわけではありません。</p><p>Graph2D ライブラリの仕様は、広く一般的な2次元グラフソフトウェアをVCSSLから制御する事を想定して定義されており、特定の2次元グラフソフトウェアを前提としたものではありません。 Graph2D ライブラリの実装において、制御対象にどのような2次元グラフソフトウェアが採用されるかは処理系依存であり、処理系の開発元（ベンダー）、バージョン、またはグラフソフトウェアとの通信機能を提供するプラグインなどに依存します。このような事情があるため、Graph2D ライブラリが提供する各種関数も、異なる処理系に関しては、厳密に同一の挙動を期待すべきではありません。</p><p>また、同一の処理系であっても、Graph2D ライブラリは標準ライブラリでは無いため、その実装において、恒久的に同様の挙動が保証されるものではありません。Graph2D ライブラリの実装は、あくまで処理系が独自にサポートする拡張機能であるという点に留意しておく必要があります。例えば、グラフソフトウェアの大幅なアップデートが行われると、 それに伴い、Graph2D ライブラリの挙動も微妙に変化してしまうケースなどが考えられます。</p><p>RINEARN VCSSLランタイム、及びそれを搭載するVCSSL対応ソフトウェア（リニアンプロセッサーなど）では、Graph2D ライブラリをサポートしており、その実装には科学技術分野用グラフソフトウェア「 リニアングラフ2D 」を採用しています。リニアングラフ2D本体（ RinearnGraph2D.jar ）はVCSSLランタイムの配布パッケージ内に同梱されているため、別途何かを用意する必要はありません。</p> <hr />
-<h2 id="abstract" style="page-break-before:always;" >目次 - Index</h2>
+<h2 id="abstract" style="page-break-before:always;" >Index</h2>
 <dl>
-<dt><a href="#newGraph2D">int newGraph2D() </a></dt>
+<dt><a href="#newGraph2D">int newGraph2D()</a></dt>
 <dd>2次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 </dd>
-<dt><a href="#newGraph2D">int newGraph2D( int x, int y, int width, int height, string title ) </a></dt>
+<dt><a href="#newGraph2D">int newGraph2D( int x, int y, int width, int height, string title )</a></dt>
 <dd>2次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 </dd>
-<dt><a href="#getGraph2D">int getGraph2D() </a></dt>
+<dt><a href="#getGraph2D">int getGraph2D()</a></dt>
 <dd>処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。 </dd>
-<dt><a href="#deleteGraph2D">void deleteGraph2D( int graphID ) </a></dt>
+<dt><a href="#deleteGraph2D">void deleteGraph2D( int graphID )</a></dt>
 <dd>グラフを破棄します。 </dd>
-<dt><a href="#clearGraph2D">void clearGraph2D( int graphID ) </a></dt>
+<dt><a href="#clearGraph2D">void clearGraph2D( int graphID )</a></dt>
 <dd>グラフの内容をクリアします。 </dd>
-<dt><a href="#getGraph2DGraphics">int getGraph2DGraphics( int graphID ) </a></dt>
+<dt><a href="#getGraph2DGraphics">int getGraph2DGraphics( int graphID )</a></dt>
 <dd>グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。変換されたグラフィックスデータは、2D/3Dレンダラ―などで加工できます。 </dd>
-<dt><a href="#setGraph2DLocation">void setGraph2DLocation( int graphID, int x, int y ) </a></dt>
+<dt><a href="#setGraph2DLocation">void setGraph2DLocation( int graphID, int x, int y )</a></dt>
 <dd>グラフウィンドウの位置を設定します。 </dd>
-<dt><a href="#setGraph2DSize">void setGraph2DSize( int graphID, int width, int height ) </a></dt>
+<dt><a href="#setGraph2DSize">void setGraph2DSize( int graphID, int width, int height )</a></dt>
 <dd>グラフウィンドウの大きさを設定します。 </dd>
-<dt><a href="#hideGraph2D">void hideGraph2D( int graphID ) </a></dt>
+<dt><a href="#hideGraph2D">void hideGraph2D( int graphID )</a></dt>
 <dd>グラフウィンドウを不可視化します。 </dd>
-<dt><a href="#showGraph2D">void showGraph2D( int graphID ) </a></dt>
+<dt><a href="#showGraph2D">void showGraph2D( int graphID )</a></dt>
 <dd>グラフウィンドウを可視化します。 </dd>
-<dt><a href="#setGraph2DFile">void setGraph2DFile( int graphID, string filePath ) </a></dt>
+<dt><a href="#setGraph2DFile">void setGraph2DFile( int graphID, string filePath )</a></dt>
 <dd>ファイルを読み込み、グラフにプロットします。 </dd>
-<dt><a href="#setGraph2DFile">void setGraph2DFile( int graphID, string file[ ] ) </a></dt>
+<dt><a href="#setGraph2DFile">void setGraph2DFile( int graphID, string file[ ] )</a></dt>
 <dd>複数のファイルを読み込み、グラフにプロットします。 </dd>
-<dt><a href="#setGraph2DData">void setGraph2DData( int graphID, string data ) </a></dt>
+<dt><a href="#setGraph2DData">void setGraph2DData( int graphID, string data )</a></dt>
 <dd>ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。 </dd>
-<dt><a href="#setGraph2DData">void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] ) </a></dt>
+<dt><a href="#setGraph2DData">void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] )</a></dt>
 <dd>座標値を格納する float 型配列を読み込み、グラフにプロットします。 </dd>
-<dt><a href="#setGraph2DData">void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] ) </a></dt>
+<dt><a href="#setGraph2DData">void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )</a></dt>
 <dd>座標値を格納する float 型配列を読み込み、グラフにプロットします。 </dd>
-<dt><a href="#addGraph2DData">void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] ) </a></dt>
+<dt><a href="#addGraph2DData">void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] )</a></dt>
 <dd>座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 </dd>
-<dt><a href="#addGraph2DData">void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] ) </a></dt>
+<dt><a href="#addGraph2DData">void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )</a></dt>
 <dd>座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 </dd>
-<dt><a href="#setGraph2DConfigurationFile">void setGraph2DConfigurationFile( int graphID, string file ) </a></dt>
+<dt><a href="#setGraph2DConfigurationFile">void setGraph2DConfigurationFile( int graphID, string file )</a></dt>
 <dd>設定ファイルを読み込み、グラフに自動で設定を行います。 </dd>
-<dt><a href="#setGraph2DConfigurationCode">void setGraph2DConfigurationCode( int graphID, string code ) </a></dt>
+<dt><a href="#setGraph2DConfigurationCode">void setGraph2DConfigurationCode( int graphID, string code )</a></dt>
 <dd>設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。 </dd>
-<dt><a href="#setGraph2DRange">void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax ) </a></dt>
+<dt><a href="#setGraph2DRange">void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax )</a></dt>
 <dd>プロット範囲を設定します。 </dd>
-<dt><a href="#setGraph2DRangeX">void setGraph2DRangeX( int graphID, double xMin, double xMax ) </a></dt>
+<dt><a href="#setGraph2DRangeX">void setGraph2DRangeX( int graphID, double xMin, double xMax )</a></dt>
 <dd>X軸のプロット範囲を設定します。 </dd>
-<dt><a href="#setGraph2DRangeY">void setGraph2DRangeY( int graphID, double yMin, double yMax ) </a></dt>
+<dt><a href="#setGraph2DRangeY">void setGraph2DRangeY( int graphID, double yMin, double yMax )</a></dt>
 <dd>Y軸のプロット範囲を設定します。 </dd>
-<dt><a href="#setGraph2DAutoRange">void setGraph2DAutoRange( int graphID, bool autoX, bool autoY ) </a></dt>
+<dt><a href="#setGraph2DAutoRange">void setGraph2DAutoRange( int graphID, bool autoX, bool autoY )</a></dt>
 <dd>プロット範囲の自動調整機能を有効化または無効化します。 </dd>
-<dt><a href="#setGraph2DLabel">void setGraph2DLabel( int graphID, string xLabel, string yLabel ) </a></dt>
+<dt><a href="#setGraph2DLabel">void setGraph2DLabel( int graphID, string xLabel, string yLabel )</a></dt>
 <dd>各軸のラベルを設定します。 </dd>
-<dt><a href="#setGraph2DLabelX">void setGraph2DLabelX( int graphID, string label ) </a></dt>
+<dt><a href="#setGraph2DLabelX">void setGraph2DLabelX( int graphID, string label )</a></dt>
 <dd>X軸のラベルを設定します。 </dd>
-<dt><a href="#setGraph2DLabelY">void setGraph2DLabelY( int graphID, string label ) </a></dt>
+<dt><a href="#setGraph2DLabelY">void setGraph2DLabelY( int graphID, string label )</a></dt>
 <dd>Y軸のラベルを設定します。 </dd>
-<dt><a href="#setGraph2DTick">void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] ) </a></dt>
+<dt><a href="#setGraph2DTick">void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] )</a></dt>
 <dd>各軸の目盛りを設定します。 </dd>
-<dt><a href="#setGraph2DTickX">void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] ) </a></dt>
+<dt><a href="#setGraph2DTickX">void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )</a></dt>
 <dd>X軸の目盛りを設定します。 </dd>
-<dt><a href="#setGraph2DTickY">void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] ) </a></dt>
+<dt><a href="#setGraph2DTickY">void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )</a></dt>
 <dd>Y軸の目盛りを設定します。 </dd>
-<dt><a href="#setGraph2DOption">void setGraph2DOption( int graphID, string option, bool value ) </a></dt>
+<dt><a href="#setGraph2DOption">void setGraph2DOption( int graphID, string option, bool value )</a></dt>
 <dd>グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：    WITH_POINTS :      点プロット ,    WITH_LINES :      線プロット ,    WITH_DOTS :      ドットプロット ,    WITH_GRID_LINE :      グリッドライン描画 ,    LOG_X :      X対数軸表示 ,    LOG_Y :      Y対数軸表示 ,    REVERSE_X :      X軸反転表示 ,    REVERSE_Y :      Y軸反転表示 ,   </dd>
-<dt><a href="#setGraph2DMenu">void setGraph2DMenu( int graphID, string menu, string value ) </a></dt>
+<dt><a href="#setGraph2DMenu">void setGraph2DMenu( int graphID, string menu, string value )</a></dt>
 <dd>※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph2DLabel 関数やsetGraph2DLabelX/Y 関数などで代替可能です。そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。グラフのメニュー項目を設定します。項目名は処理系に依存します。 </dd>
-<dt><a href="#setGraph2DAnimation">void setGraph2DAnimation( int graphID, string mode, bool state ) </a></dt>
+<dt><a href="#setGraph2DAnimation">void setGraph2DAnimation( int graphID, string mode, bool state )</a></dt>
 <dd>グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：     TRACE :      点をアニメーションし、軌跡を残す ,    INDEX :      点をアニメーションする ,    INDEX-SERIES :      系列をアニメーションする ,   </dd>
-<dt><a href="#setGraph2DTitle">void setGraph2DTitle( int graphID, string title ) </a></dt>
+<dt><a href="#setGraph2DTitle">void setGraph2DTitle( int graphID, string title )</a></dt>
 <dd>グラフのタイトルを設定します。 </dd>
-<dt><a href="#setGraph2DLabel">void setGraph2DLabel( int graphID, string xLabel, string yLabel ) </a></dt>
+<dt><a href="#setGraph2DLabel">void setGraph2DLabel( int graphID, string xLabel, string yLabel )</a></dt>
 <dd>グラフの軸ラベルを設定します。 </dd>
-<dt><a href="#setGraph2DLegend">void setGraph2DLegend( int graphID, string legend[ ] ) </a></dt>
+<dt><a href="#setGraph2DLegend">void setGraph2DLegend( int graphID, string legend[ ] )</a></dt>
 <dd>グラフの凡例を設定します。 </dd>
-<dt><a href="#exportGraph2D">void exportGraph2D( int graphID, string filename, string format ) </a></dt>
+<dt><a href="#exportGraph2D">void exportGraph2D( int graphID, string filename, string format )</a></dt>
 <dd>グラフを画像に出力します。 </dd>
-<dt><a href="#exportGraph2D">void exportGraph2D( int graphID, string filename, string format, float quality ) </a></dt>
+<dt><a href="#exportGraph2D">void exportGraph2D( int graphID, string filename, string format, float quality )</a></dt>
 <dd>グラフを画像に出力します。 </dd>
-<dt><a href="#onGraph2DClose">void onGraph2DClose( int graphID ) </a></dt>
+<hr />
+<h2 id="event" style="page-break-before:always;" >Event Handlers</h2>
+<dt><a href="#onGraph2DClose">void onGraph2DClose( int graphID )</a></dt>
 <dd>グラフウィンドウが閉じられた際にコールされます。 </dd>
 </dl>
 <hr />
-<h2 id="struct" style="page-break-before:always;" >構造体 - Structs</h2>
-<p> - なし - None  -</p>
-<hr /><h2 id="variable">変数 - Variables</h2>
-<p> - なし - None  -</p>
+<h2 id="struct" style="page-break-before:always;" >Structs</h2>
+<p> - None -</p>
+<hr /><h2 id="variable">Variables</h2>
+<p> - None -</p>
 <hr />
-<h2 id="function" style="page-break-before:always;" >関数 - Functions</h2>
+<h2 id="function" style="page-break-before:always;" >Functions</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newGraph2D"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int newGraph2D() 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	newGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int newGraph2D()
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 
@@ -122,10 +124,10 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) 生成したグラフのID<br />
+   	 	(int type) 生成したグラフのID<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -133,23 +135,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int newGraph2D( int x, int y, int width, int height, string title ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	newGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int newGraph2D( int x, int y, int width, int height, string title )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	2次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。 
@@ -157,18 +159,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) x : グラフウィンドウ左上頂点のX座標 <br />(int型) y : グラフウィンドウ左上頂点のY座標 <br />(int型) width : グラフウィンドウの幅 <br />(int型) height : グラフウィンドウの高さ <br />(string型) title : グラフウィンドウタイトル 
+   	 	(int type) x : グラフウィンドウ左上頂点のX座標 <br />(int type) y : グラフウィンドウ左上頂点のY座標 <br />(int type) width : グラフウィンドウの幅 <br />(int type) height : グラフウィンドウの高さ <br />(string type) title : グラフウィンドウタイトル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) 生成したグラフのID<br />
+   	 	(int type) 生成したグラフのID<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -176,23 +178,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getGraph2D"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int getGraph2D() 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	getGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int getGraph2D()
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。 
@@ -200,10 +202,10 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) 取得または生成したグラフID<br />
+   	 	(int type) 取得または生成したグラフID<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -211,23 +213,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="deleteGraph2D"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void deleteGraph2D( int graphID ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	deleteGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void deleteGraph2D( int graphID )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフを破棄します。 
@@ -235,18 +237,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID 
+   	 	(int type) graphID : 対象グラフのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -254,23 +256,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="clearGraph2D"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void clearGraph2D( int graphID ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	clearGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void clearGraph2D( int graphID )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフの内容をクリアします。 
@@ -278,18 +280,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID 
+   	 	(int type) graphID : 対象グラフのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -297,23 +299,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getGraph2DGraphics"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	int getGraph2DGraphics( int graphID ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	getGraph2DGraphics
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int getGraph2DGraphics( int graphID )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。変換されたグラフィックスデータは、2D/3Dレンダラ―などで加工できます。 
@@ -321,18 +323,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID 
+   	 	(int type) graphID : 対象グラフのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) グラフィックスデータID<br />
+   	 	(int type) グラフィックスデータID<br />
    	 </td>
     </tr>
 </tbody></table>
@@ -340,23 +342,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DLocation"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DLocation( int graphID, int x, int y ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DLocation
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DLocation( int graphID, int x, int y )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフウィンドウの位置を設定します。 
@@ -364,18 +366,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(int型) x : グラフウィンドウ左上頂点のX座標 <br />(int型) y : グラフウィンドウ左上頂点のY座標 
+   	 	(int type) graphID : 対象グラフのID <br />(int type) x : グラフウィンドウ左上頂点のX座標 <br />(int type) y : グラフウィンドウ左上頂点のY座標 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -383,23 +385,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DSize"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DSize( int graphID, int width, int height ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DSize
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DSize( int graphID, int width, int height )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフウィンドウの大きさを設定します。 
@@ -407,18 +409,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(int型) width : グラフウィンドウの幅 <br />(int型) height : グラフウィンドウ高さ 
+   	 	(int type) graphID : 対象グラフのID <br />(int type) width : グラフウィンドウの幅 <br />(int type) height : グラフウィンドウ高さ 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -426,23 +428,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="hideGraph2D"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void hideGraph2D( int graphID ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	hideGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void hideGraph2D( int graphID )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフウィンドウを不可視化します。 
@@ -450,18 +452,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID 
+   	 	(int type) graphID : 対象グラフのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -469,23 +471,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="showGraph2D"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void showGraph2D( int graphID ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	showGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void showGraph2D( int graphID )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフウィンドウを可視化します。 
@@ -493,18 +495,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID 
+   	 	(int type) graphID : 対象グラフのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -512,23 +514,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DFile"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DFile( int graphID, string filePath ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DFile
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DFile( int graphID, string filePath )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイルを読み込み、グラフにプロットします。 
@@ -536,18 +538,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) filePath : プロットするファイルのファイル名またはパス 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) filePath : プロットするファイルのファイル名またはパス 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -555,23 +557,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DFile( int graphID, string file[ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DFile
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DFile( int graphID, string file[ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	複数のファイルを読み込み、グラフにプロットします。 
@@ -579,18 +581,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string[]型) file : プロットするファイルのファイル名またはパス 
+   	 	(int type) graphID : 対象グラフのID <br />(string[] type) file : プロットするファイルのファイル名またはパス 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -598,23 +600,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DData"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DData( int graphID, string data ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DData
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DData( int graphID, string data )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。 
@@ -622,18 +624,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) data : ファイルの内容と同じ書式で記載されたテキスト 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) data : ファイルの内容と同じ書式で記載されたテキスト 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -641,23 +643,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DData
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	座標値を格納する float 型配列を読み込み、グラフにプロットします。 
@@ -665,18 +667,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(float[]型) dataX : X座標を格納する配列（ [ 点インデックス ] ） <br />(float[]型) dataY : Y座標を格納する配列（ [ 点インデックス ] ） 
+   	 	(int type) graphID : 対象グラフのID <br />(float[] type) dataX : X座標を格納する配列（ [ 点インデックス ] ） <br />(float[] type) dataY : Y座標を格納する配列（ [ 点インデックス ] ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -684,23 +686,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DData
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	座標値を格納する float 型配列を読み込み、グラフにプロットします。 
@@ -708,18 +710,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(float[][]型) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） <br />(float[][]型) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） 
+   	 	(int type) graphID : 対象グラフのID <br />(float[][] type) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） <br />(float[][] type) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -727,23 +729,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="addGraph2DData"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	addGraph2DData
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 
@@ -751,18 +753,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(float[]型) dataX : X座標を格納する配列（ [ 点インデックス ] ） <br />(float[]型) dataY : Y座標を格納する配列（ [ 点インデックス ] ） 
+   	 	(int type) graphID : 対象グラフのID <br />(float[] type) dataX : X座標を格納する配列（ [ 点インデックス ] ） <br />(float[] type) dataY : Y座標を格納する配列（ [ 点インデックス ] ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -770,23 +772,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	addGraph2DData
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	座標値を格納する float 型配列を読み込み、グラフに追記プロットします。 
@@ -794,18 +796,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(float[][]型) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） <br />(float[][]型) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） 
+   	 	(int type) graphID : 対象グラフのID <br />(float[][] type) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） <br />(float[][] type) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -813,23 +815,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DConfigurationFile"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DConfigurationFile( int graphID, string file ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DConfigurationFile
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DConfigurationFile( int graphID, string file )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	設定ファイルを読み込み、グラフに自動で設定を行います。 
@@ -837,18 +839,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) file : 設定ファイルのファイル名またはパス 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) file : 設定ファイルのファイル名またはパス 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -856,23 +858,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DConfigurationCode"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DConfigurationCode( int graphID, string code ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DConfigurationCode
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DConfigurationCode( int graphID, string code )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。 
@@ -880,18 +882,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />line : 設定コードの内容 
+   	 	(int type) graphID : 対象グラフのID <br />line : 設定コードの内容 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -899,23 +901,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DRange"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DRange
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	プロット範囲を設定します。 
@@ -923,18 +925,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(double型) xMin : X軸の最小値 <br />(double型) xMax : X軸の最大値 <br />(double型) yMin : Y軸の最小値 <br />(double型) yMax : Y軸の最大値 
+   	 	(int type) graphID : 対象グラフのID <br />(double type) xMin : X軸の最小値 <br />(double type) xMax : X軸の最大値 <br />(double type) yMin : Y軸の最小値 <br />(double type) yMax : Y軸の最大値 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -942,23 +944,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DRangeX"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DRangeX( int graphID, double xMin, double xMax ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DRangeX
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DRangeX( int graphID, double xMin, double xMax )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	X軸のプロット範囲を設定します。 
@@ -966,18 +968,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(double型) xMin : X軸の最小値 <br />(double型) xMax : X軸の最大値 
+   	 	(int type) graphID : 対象グラフのID <br />(double type) xMin : X軸の最小値 <br />(double type) xMax : X軸の最大値 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -985,23 +987,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DRangeY"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DRangeY( int graphID, double yMin, double yMax ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DRangeY
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DRangeY( int graphID, double yMin, double yMax )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	Y軸のプロット範囲を設定します。 
@@ -1009,18 +1011,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(double型) yMin : Y軸の最小値 <br />(double型) yMax : Y軸の最大値 
+   	 	(int type) graphID : 対象グラフのID <br />(double type) yMin : Y軸の最小値 <br />(double type) yMax : Y軸の最大値 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1028,23 +1030,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DAutoRange"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DAutoRange( int graphID, bool autoX, bool autoY ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DAutoRange
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DAutoRange( int graphID, bool autoX, bool autoY )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	プロット範囲の自動調整機能を有効化または無効化します。 
@@ -1052,18 +1054,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(bool型) autoX : X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse <br />(bool型) autoY : Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse 
+   	 	(int type) graphID : 対象グラフのID <br />(bool type) autoX : X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse <br />(bool type) autoY : Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1071,23 +1073,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DLabel"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DLabel( int graphID, string xLabel, string yLabel ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DLabel
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DLabel( int graphID, string xLabel, string yLabel )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	各軸のラベルを設定します。 
@@ -1095,18 +1097,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) xLabel : X軸のラベル <br />(string型) yLabel : Y軸のラベル 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) xLabel : X軸のラベル <br />(string type) yLabel : Y軸のラベル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1114,23 +1116,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DLabelX"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DLabelX( int graphID, string label ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DLabelX
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DLabelX( int graphID, string label )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	X軸のラベルを設定します。 
@@ -1138,18 +1140,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) label : X軸のラベル 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) label : X軸のラベル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1157,23 +1159,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DLabelY"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DLabelY( int graphID, string label ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DLabelY
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DLabelY( int graphID, string label )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	Y軸のラベルを設定します。 
@@ -1181,18 +1183,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) label : Y軸のラベル 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) label : Y軸のラベル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1200,23 +1202,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DTick"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DTick
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	各軸の目盛りを設定します。 
@@ -1224,18 +1226,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(double[]型) xTickCoords : X軸の目盛り刻み位置の座標値 <br />(string[]型) xTickLabels : X軸の目盛りのラベル <br />(double[]型) yTickCoords : Y軸の目盛り刻み位置の座標値 <br />(string[]型) yTickLabels : Y軸の目盛りのラベル 
+   	 	(int type) graphID : 対象グラフのID <br />(double[] type) xTickCoords : X軸の目盛り刻み位置の座標値 <br />(string[] type) xTickLabels : X軸の目盛りのラベル <br />(double[] type) yTickCoords : Y軸の目盛り刻み位置の座標値 <br />(string[] type) yTickLabels : Y軸の目盛りのラベル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1243,23 +1245,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DTickX"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DTickX
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	X軸の目盛りを設定します。 
@@ -1267,18 +1269,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(double[]型) tickCoords : 目盛り刻み位置の座標値 <br />(string[]型) tickLabels : 目盛りのラベル 
+   	 	(int type) graphID : 対象グラフのID <br />(double[] type) tickCoords : 目盛り刻み位置の座標値 <br />(string[] type) tickLabels : 目盛りのラベル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1286,23 +1288,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DTickY"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DTickY
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	Y軸の目盛りを設定します。 
@@ -1310,18 +1312,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(double[]型) tickCoords : 目盛り刻み位置の座標値 <br />(string[]型) tickLabels : 目盛りのラベル 
+   	 	(int type) graphID : 対象グラフのID <br />(double[] type) tickCoords : 目盛り刻み位置の座標値 <br />(string[] type) tickLabels : 目盛りのラベル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1329,23 +1331,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DOption"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DOption( int graphID, string option, bool value ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DOption
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DOption( int graphID, string option, bool value )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：<dl>  <dt>WITH_POINTS</dt>    <dd>点プロット</dd>  <dt>WITH_LINES</dt>    <dd>線プロット</dd>  <dt>WITH_DOTS</dt>    <dd>ドットプロット</dd>  <dt>WITH_GRID_LINE</dt>    <dd>グリッドライン描画</dd>  <dt>LOG_X</dt>    <dd>X対数軸表示</dd>  <dt>LOG_Y</dt>    <dd>Y対数軸表示</dd>  <dt>REVERSE_X</dt>    <dd>X軸反転表示</dd>  <dt>REVERSE_Y</dt>    <dd>Y軸反転表示</dd></dl> 
@@ -1353,18 +1355,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) option : オプション項目名 <br />(bool型) value : オプションを有効にするならtrue、無効にするにはfalse 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) option : オプション項目名 <br />(bool type) value : オプションを有効にするならtrue、無効にするにはfalse 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1372,23 +1374,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DMenu"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DMenu( int graphID, string menu, string value ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DMenu
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DMenu( int graphID, string menu, string value )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph2DLabel 関数やsetGraph2DLabelX/Y 関数などで代替可能です。そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。<br /><br />グラフのメニュー項目を設定します。項目名は処理系に依存します。 
@@ -1396,18 +1398,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />option : メニュー項目名 <br />(string型) value : メニュー項目を有効にするならtrue、無効にするにはfalse 
+   	 	(int type) graphID : 対象グラフのID <br />option : メニュー項目名 <br />(string type) value : メニュー項目を有効にするならtrue、無効にするにはfalse 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1415,23 +1417,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DAnimation"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DAnimation( int graphID, string mode, bool state ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DAnimation
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DAnimation( int graphID, string mode, bool state )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです： <dl>  <dt>TRACE</dt>    <dd>点をアニメーションし、軌跡を残す</dd>  <dt>INDEX</dt>    <dd>点をアニメーションする</dd>  <dt>INDEX-SERIES</dt>    <dd>系列をアニメーションする</dd></dl> 
@@ -1439,18 +1441,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) mode : アニメーションモード <br />(bool型) state : アニメーションを有効化するならtrue、無効化するならfalse 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) mode : アニメーションモード <br />(bool type) state : アニメーションを有効化するならtrue、無効化するならfalse 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1458,23 +1460,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DTitle"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DTitle( int graphID, string title ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DTitle
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DTitle( int graphID, string title )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフのタイトルを設定します。 
@@ -1482,18 +1484,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) title : タイトル 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) title : タイトル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1501,23 +1503,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DLabel( int graphID, string xLabel, string yLabel ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DLabel
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DLabel( int graphID, string xLabel, string yLabel )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフの軸ラベルを設定します。 
@@ -1525,18 +1527,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) xLabel : X軸のラベル <br />(string型) yLabel : Y軸のラベル 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) xLabel : X軸のラベル <br />(string type) yLabel : Y軸のラベル 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1544,23 +1546,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setGraph2DLegend"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void setGraph2DLegend( int graphID, string legend[ ] ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	setGraph2DLegend
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setGraph2DLegend( int graphID, string legend[ ] )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフの凡例を設定します。 
@@ -1568,18 +1570,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string[]型) legend : 凡例を格納する配列（ [ 系列インデックス ] ） 
+   	 	(int type) graphID : 対象グラフのID <br />(string[] type) legend : 凡例を格納する配列（ [ 系列インデックス ] ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1587,23 +1589,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="exportGraph2D"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void exportGraph2D( int graphID, string filename, string format ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	exportGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void exportGraph2D( int graphID, string filename, string format )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフを画像に出力します。 
@@ -1611,18 +1613,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) filename : 出力ファイル名またはパス <br />形式（ : "PNG" または "JPEG" ） 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) filename : 出力ファイル名またはパス <br />形式（ : "PNG" または "JPEG" ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1630,23 +1632,23 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void exportGraph2D( int graphID, string filename, string format, float quality ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	exportGraph2D
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void exportGraph2D( int graphID, string filename, string format, float quality )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフを画像に出力します。 
@@ -1654,44 +1656,44 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : 対象グラフのID <br />(string型) filename : 出力ファイル名またはパス <br />形式（ : "PNG" または "JPEG" ） <br />(float型) quality : 品質（ 0.0 ~ 100.0 ） 
+   	 	(int type) graphID : 対象グラフのID <br />(string type) filename : 出力ファイル名またはパス <br />形式（ : "PNG" または "JPEG" ） <br />(float type) quality : 品質（ 0.0 ~ 100.0 ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
 
 <hr />
-<h2 id="event" style="page-break-before:always;" >イベントハンドラ - Event Handler</h2>
+<h2 id="event" style="page-break-before:always;" >Event Handlers</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onGraph2DClose"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	文法的定義<br /> - Signature
+   	 	Name
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	void onGraph2DClose( int graphID ) 
-   	 </td>
-    </tr>
-    <tr>
-   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	関数名<br /> - Name
-   	 </td>
-   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	onGraph2DClose
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	役割<br /> - Role
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void onGraph2DClose( int graphID )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	グラフウィンドウが閉じられた際にコールされます。 
@@ -1699,18 +1701,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	引数<br /> - Arguments
+   	 	Parameters
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) graphID : イベント発生元グラフのID 
+   	 	(int type) graphID : イベント発生元グラフのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	戻り値<br /> - Return
+   	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void型) 
+   	 	(void type) 
    	 </td>
     </tr>
 </tbody></table>
