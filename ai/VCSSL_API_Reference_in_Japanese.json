@@ -1,0 +1,437 @@
+{
+	"Color": {
+		"libraryName": "Color",
+		"libraryDescription": "<p>VCSSL Color ライブラリ は、色の扱いを補助するための標準ライブラリです。主に Graphics2D や Graphics3D ライブラリなどと組み合わせて、グラフィックス関連の処理に用います。</p><p>このライブラリでは、色を int[4] 配列として扱います。各要素は、[0] が赤色成分、[1] が緑色成分、[2] が青色成分、[3] がα値成分を格納します。<br />それぞれの色成分における値の範囲は 0 ～ 255 です。つまり int[4] 配列で 32bit のRGBAカラーを表現します。<br />このライブラリに合わせて、Graphics2D や Graphics3D ライブラリなどでも、int[4] 配列を 32bit RGBAカラーと見なして、色の設定・取得などを行えるようになっています。</p><p>使用例として、Graphics2D で描画色を青色に設定する例を挙げます。これはColorライブラリの機能を使用しなくても、以下のようにして可能です：<div class="code">setDrawColor( rendererID, 0, 0, 255, 255 );</div></p><p>しかし、Colorライブラリの機能を使用する事で、以下のように様々な形式で色設定ができるようになります：<div class="code">setDrawColor( rendererID, BLUE );  // 定数で設定<br />setDrawColor( rendererID, color(0, 0, 255) );  // 24bit RGBカラーで設定<br />setDrawColor( rendererID, color(0.0, 0.0, 1.0) ); // 0.0 ～ 1.0 の範囲のRGBカラーで設定<br />setDrawColor( rendererID, color( 0x0000ff ) ); // 16進数カラーコードで設定</div></p>",
+		"structs": {
+		},
+		"variables": {
+			"variable0": {
+				"name": "BLACK",
+				"declaration": "const int BLACK[ ]",
+				"description": "黒色の色成分を格納する配列です。"
+			},
+			"variable1": {
+				"name": "WHITE",
+				"declaration": "const int WHITE[ ]",
+				"description": "白色の色成分を格納する配列です。"
+			},
+			"variable2": {
+				"name": "RED",
+				"declaration": "const int RED[ ]",
+				"description": "赤色の色成分を格納する配列です。"
+			},
+			"variable3": {
+				"name": "GREEN",
+				"declaration": "const int GREEN[ ]",
+				"description": "緑色の色成分を格納する配列です。"
+			},
+			"variable4": {
+				"name": "BLUE",
+				"declaration": "const int BLUE[ ]",
+				"description": "青色の色成分を格納する配列です。"
+			},
+			"variable5": {
+				"name": "MAGENTA",
+				"declaration": "const int MAGENTA[ ]",
+				"description": "紫色（マゼンタ）の色成分を格納する配列です。"
+			},
+			"variable6": {
+				"name": "YELLOW",
+				"declaration": "const int YELLOW[ ]",
+				"description": "黄色の色成分を格納する配列です。"
+			},
+			"variable7": {
+				"name": "CYAN",
+				"declaration": "const int CYAN[ ]",
+				"description": "水色（シアン）の色成分を格納する配列です。"
+			}
+		},
+		"functions": {
+			"function0": {
+				"name": "color",
+				"declaration": "int[ ] color(int red, int green, int blue, int alpha)",
+				"description": "0 ～ 255 の整数RGBA値から、色成分を格納する配列を生成して返します。",
+				"parameters": "(int type) red : 赤色成分（0～255）。 \n(int type) green : 緑色成分（0～255）。 \n(int type) blue : 青色成分（0～255）。 \n(int type) alpha : 不透明度成分（0～255）。 ",
+				"returnValue": "(int[] type) 色成分を格納する配列。"
+			},
+			"function1": {
+				"name": "color",
+				"declaration": "int[ ] color(int red, int green, int blue)",
+				"description": "0 ～ 255 の整数RGB値から、色成分（不透明色）を格納する配列を生成して返します。",
+				"parameters": "(int type) red : 赤色成分（0～255）。 \n(int type) green : 緑色成分（0～255）。 \n(int type) blue : 青色成分（0～255）。 ",
+				"returnValue": "(int[] type) 色成分を格納する配列。"
+			},
+			"function2": {
+				"name": "color",
+				"declaration": "int[ ] color(float red, float green, float blue, float alpha)",
+				"description": "0.0 ～ 1.0 の小数RGBA値から、色成分を格納する配列を生成して返します。",
+				"parameters": "(float type) red : 赤色成分（0.0 ～ 1.0）。 \n(float type) green : 緑色成分（0.0 ～ 1.0）。 \n(float type) blue : 青色成分（0.0 ～ 1.0）。 \n(float type) alpha : 不透明度成分（0.0 ～ 1.0）。 ",
+				"returnValue": "(int[] type) 色成分を格納する配列。"
+			},
+			"function3": {
+				"name": "color",
+				"declaration": "int[ ] color(float red, float green, float blue)",
+				"description": "0.0 ～ 1.0 の小数RGB値から、色成分（不透明色）を格納する配列を生成して返します。",
+				"parameters": "(float type) red : 赤色成分（0.0 ～ 1.0）。 \n(float type) green : 緑色成分（0.0 ～ 1.0）。 \n(float type) blue : 青色成分（0.0 ～ 1.0）。 ",
+				"returnValue": "(int[] type) 色成分を格納する配列。"
+			},
+			"function4": {
+				"name": "color",
+				"declaration": "int[ ] color(int hexCode)",
+				"description": "16進数カラーコード値から、色成分（不透明色）を格納する配列を生成して返します。<br \/>例として、青色である 0000ff を変換するには：<br \/>int rgba[] = color(0x0000ff);<br \/>などとします。0x は整数を16進数表記したい場合に付加するプレフィックスです。",
+				"parameters": "red : 赤色成分（0.0 ～ 1.0）。 \ngreen : 緑色成分（0.0 ～ 1.0）。 \nblue : 青色成分（0.0 ～ 1.0）。 ",
+				"returnValue": "(int[] type) 色成分を格納する配列。"
+			},
+			"function5": {
+				"name": "getColorCode",
+				"declaration": "int getColorCode(int rgba[ ])",
+				"description": "色成分の配列を、カラーコード値に変換して返します。例として、紫色（マゼンタ）をカラーコードに変換するには：<br \/>int rgba[] = { 255, 0, 255, 255 };<br \/>int colorCode = getColorCode(rgba);<br \/>string hexCode = hex(colorCode);<br \/>などとします。変数 hexCode に得られる結果は 0xff00ff です。なお、緑色の場合は 0xff00、青色の場合は 0xff を得ます。より一般的なカラーコード形式に整形するには、先頭の 0x を除去し、6桁になるよう左からゼロ詰めなどを行ってください。そういった文字列処理には Text ライブラリを使用すると便利です。",
+				"parameters": "rgba[] : 色成分を格納する配列。[0] が赤色成分、[1] が緑色成分、[2] が青色成分、[3] がα値成分。色成分はそれぞれ 0 ～ 255 の範囲ですが、α値成分は必ず 255 （不透明）でなくてはいけません。 ",
+				"returnValue": "(int type) カラーコード値の整数。16進数の文字列に変換するには <a href=\"System.html#hex\">hex<\/a> 関数を使用します。"
+			}
+		}
+	},
+	"File": {
+		"libraryName": "File",
+		"libraryDescription": "<p>VCSSL File ライブラリ は、ファイルパスの取得や、ディレクトリ内のファイル名リスト取得など、ファイルに関する各種機能を提供する標準ライブラリです。<br />ただし、このライブラリではファイルI/Oは扱いません。ファイルI/Oについては、<a href="System.html">System</a> ライブラリや <a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。</p>",
+		"structs": {
+		},
+		"variables": {
+			"variable0": {
+				"name": "ABSOLUTE",
+				"declaration": "const int ABSOLUTE",
+				"description": "絶対パスを意味する設定値です。"
+			},
+			"variable1": {
+				"name": "RELATIVE",
+				"declaration": "const int RELATIVE",
+				"description": "相対パスを意味する設定値です。"
+			},
+			"variable2": {
+				"name": "PARENT",
+				"declaration": "const int PARENT",
+				"description": "親階層を意味する設定値です。"
+			},
+			"variable3": {
+				"name": "HOME",
+				"declaration": "const int HOME",
+				"description": "ユーザーのホームディレクトリを意味する設定値です。"
+			},
+			"variable4": {
+				"name": "ROOT",
+				"declaration": "const int ROOT",
+				"description": "ルートディレクトリを意味する設定値です。"
+			},
+			"variable5": {
+				"name": "TMP",
+				"declaration": "const int TMP",
+				"description": "コンピュータ側で用意されている一時ファイル用ディレクトリを意味する設定値です。"
+			},
+			"variable6": {
+				"name": "UNORDERED",
+				"declaration": "const int UNORDERED",
+				"description": "特に整列されていないファイル順序を意味する設定値です。"
+			},
+			"variable7": {
+				"name": "LEXICAL",
+				"declaration": "const int LEXICAL",
+				"description": "辞書順に整列されたファイル順序を意味する設定値です。"
+			}
+		},
+		"functions": {
+			"function0": {
+				"name": "isDirectory",
+				"declaration": "bool isDirectory( string pathOrName )",
+				"description": "ファイルがディレクトリであるかどうかを判定します。",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称またはパス。 ",
+				"returnValue": "(bool type) ディレクトリであれば true 、そうでなければ false。"
+			},
+			"function1": {
+				"name": "makeDirectory",
+				"declaration": "void makeDirectory( string pathOrName )",
+				"description": "ディレクトリを新規作成します。",
+				"parameters": "(string type) pathOrName : 作成するディレクトリの名称またはパス。 ",
+				"returnValue": "(void type) "
+			},
+			"function2": {
+				"name": "listDirectory",
+				"declaration": "string[ ] listDirectory( string pathOrName )",
+				"description": "指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の順序は特に整列されず、環境や処理系に依存します。",
+				"parameters": "(string type) pathOrName : 対象ディレクトリの名称またはパス。 ",
+				"returnValue": "(string[] type) ディレクトリ直下にあるファイル名の一覧。"
+			},
+			"function3": {
+				"name": "listDirectory",
+				"declaration": "string[ ] listDirectory( string pathOrName, bool sortByIgnoreCase, int sortOption )",
+				"description": "指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の整列オプションを指定できます。",
+				"parameters": "(string type) pathOrName : 対象ディレクトリの名称またはパス。 \n(bool type) sortByIgnoreCase : 整列時に大文字\/小文字を区別するかどうか。true なら無視されます。 \n(int type) sortOption : 整列オプション。<a href=\"#UNORDERED\">UNORDERED<\/a> または <a href=\"#LEXICAL\">LEXICAL<\/a> を指定します。 ",
+				"returnValue": "(string[] type) ディレクトリ直下にあるファイル名の一覧。"
+			},
+			"function4": {
+				"name": "makeFile",
+				"declaration": "void makeFile( string pathOrName )",
+				"description": "ファイルを新規作成します。",
+				"parameters": "(string type) pathOrName : 作成するファイルの名称またはパス。 ",
+				"returnValue": "(void type) "
+			},
+			"function5": {
+				"name": "getFileName",
+				"declaration": "string getFileName( string path )",
+				"description": "ファイルパスから、ファイル名の部分を取得します。",
+				"parameters": "(string type) path : 対象ファイルのパス。 ",
+				"returnValue": "(string type) ファイル名"
+			},
+			"function6": {
+				"name": "removeFile",
+				"declaration": "void removeFile( string pathOrName )",
+				"description": "ファイルを削除します。<br \/>対象がディレクトリの場合、中身が空でなければ削除できないため、先に中身を削除する必要があります。",
+				"parameters": "path : 対象ファイルの名称またはパス。 ",
+				"returnValue": "(void type) "
+			},
+			"function7": {
+				"name": "moveFile",
+				"declaration": "void moveFile( string pathOrName, string newName )",
+				"description": "ファイルの移動や、ファイル名の変更を行います。引数が、共にファイル名のみの場合や、共に同じディレクトリ内のファイルパスである場合には、処理内容はファイル名の変更になります。引数が、互いに異なるディレクトリ内のファイルパスである場合には、処理内容はファイルの移動になります。ファイルは移動されます。ドライブをまたぐ移動はできない場合があります。",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称またはパス。 \n(string type) newName : 変更後の名称またはパス。 ",
+				"returnValue": "(void type) "
+			},
+			"function8": {
+				"name": "renameFile",
+				"declaration": "void renameFile( string pathOrName, string newName )",
+				"description": "ファイル名を変更します。変更先にファイル名ではなくパスを指定した場合、ファイルは移動されます。ただし環境によっては、ドライブをまたぐ移動はできない場合があります。<br \/><div style=\"font-weight:bold;\">※ このAPIの使用は推奨されません。このAPIの動作は処理系やバージョンに依存します。VCSSL 3.3 以降では、代わりに同機能の <a href=\"#moveFile\">moveFile<\/a> を使用してください。やむを得ずこの API を使用する必要があり、依存性を回避したい場合には、変更後のファイルパス newPath を絶対パスで指定してください。相対パスやファイル名のみを指定した場合の挙動は、処理系やバージョンに依存します。現在の標準VCSSLランタイムでは、newPath にファイル名や相対パスを指定した場合、実行プログラムの場所を基準とするものと解釈されますが、VCSSL 3.2 以前の古いバージョンなどでは、処理系の場所を基準として解釈される場合があります。絶対パスを指定すればバージョンへの依存性を回避できます。 例えば、renameFile(\"Test1.txt\", \"Test2.txt\"); と記述した場合、現在の標準VCSSLランタイムでは、同じディレクトリ内で Test1.txt のファイルが Test2.txt に名称変更されます。しかし古いバージョンでは、\"Test2.txt\" は処理系からみた相対パスと解釈されるため、ファイルは処理系のディレクトリ（ VCSSL.jar のある場所 ）に移動されます。古いバージョンにおいても、同じディレクトリ内における名称変更を行いたい場合は、 renameFile(\"hoge1.txt\", getFilePath(\"hoge2.txt\", getFilePath(\".\")) ); などと記述します。<\/div>",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称またはパス。 \n(string type) newName : 変更後の名称またはパス。古いバージョンや処理系への依存性を回避するため、絶対パスでの指定が推奨されます。 ",
+				"returnValue": "(void type) "
+			},
+			"function9": {
+				"name": "copyFile",
+				"declaration": "void copyFile( string inputPath, string outputPath )",
+				"description": "ファイルをコピーします。",
+				"parameters": "pathOrName : コピー元ファイルの名称またはパス。 \nnewName : コピー先ファイルの名称またはパス。 ",
+				"returnValue": "(void type) "
+			},
+			"function10": {
+				"name": "getFilePath",
+				"declaration": "string getFilePath( string pathOrName )",
+				"description": "ファイル名または相対パスから、絶対パスを取得して返します。",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称または相対パス。 \nnewName : 対象ファイルの絶対パス。 ",
+				"returnValue": "(string type) "
+			},
+			"function11": {
+				"name": "getFilePath",
+				"declaration": "string getFilePath( string pathOrName, int type )",
+				"description": "ファイル名またはパスから、絶対パスまたは相対パス、もしくは親階層パスを取得して返します。",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称またはパス。 \n(int type) type : 取得するパスの種類。<a href=\"#ABSOLUTE\">ABSOLUTE<\/a> または <a href=\"#RELATIVE\">RELATIVE<\/a> もしくは <a href=\"#PARENT\">PARENT<\/a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。 ",
+				"returnValue": "(string type) 対象ファイルのパス。パスの種類は引数 type で指定します。"
+			},
+			"function12": {
+				"name": "getFilePath",
+				"declaration": "string getFilePath( string pathOrName, string directory )",
+				"description": "指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスに変換取得して返します。",
+				"parameters": "(string type) pathOrName : 基準ディレクトリから見た、対象ファイルの名称または相対パス。 \n(string type) directory : 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。 \nnewName : 対象ファイルの絶対パス。 ",
+				"returnValue": "(string type) "
+			},
+			"function13": {
+				"name": "getFilePath",
+				"declaration": "string getFilePath( string pathOrName, string directory, int type )",
+				"description": "指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスまたは（実行プログラム基準の）相対パス、もしくは（実行プログラム基準の）親階層パスに変換して返します。",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称またはパス。 \n(string type) directory : 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。 \n(int type) type : 取得するパスの種類。<a href=\"#ABSOLUTE\">ABSOLUTE<\/a> または <a href=\"#RELATIVE\">RELATIVE<\/a> もしくは <a href=\"#PARENT\">PARENT<\/a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。 ",
+				"returnValue": "(string type) 対象ファイルのパス。パスの種類は引数 type で指定します。"
+			},
+			"function14": {
+				"name": "getFilePath",
+				"declaration": "string[ ] getFilePath( int target )",
+				"description": "実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。",
+				"parameters": "(int type) target : 取得する特別な場所の種類。<a href=\"#HOME\">HOME<\/a> または <a href=\"#ROOT\">ROOT<\/a> または <a href=\"#TMP\">TMP<\/a> を指定します。 ",
+				"returnValue": "(string[] type) 特別な場所のパス。場所は引数 target で指定します。target に <a href=\"#ROOT\">ROOT<\/a> を取得した場合の挙動はオペレーティングシステムに依存します。単一のルートが存在しないオペレーティングシステムでは、恐らくドライブ名が配列で返されます。"
+			},
+			"function15": {
+				"name": "getMainDirectory",
+				"declaration": "string getMainDirectory()",
+				"description": "実行プログラムがあるディレクトリのパスを返します。<br \/>現在は <a href=\"#getFilePath\">getFilePath<\/a>(\".\") で取得できます。この関数は互換目的でサポートされています。",
+				"returnValue": "(string type) 実行プログラムがあるディレクトリのパス。"
+			},
+			"function16": {
+				"name": "getHomeDirectory",
+				"declaration": "string getHomeDirectory()",
+				"description": "ホームディレクトリのパスを返します。<br \/>現在は <a href=\"#getFilePath\">getFilePath<\/a>( <a href=\"#HOME\">HOME<\/a> ) で取得できます。この関数は互換目的でサポートされています。",
+				"returnValue": "(string type) ホームディレクトリのパス。"
+			},
+			"function17": {
+				"name": "getRootDirectory",
+				"declaration": "string[ ] getRootDirectory()",
+				"description": "ルートディレクトリのパスを返します。<br \/>現在は <a href=\"#getFilePath\">getFilePath<\/a>( <a href=\"#ROOT\">ROOT<\/a> ) で取得できます。この関数は互換目的でサポートされています。",
+				"returnValue": "(string[] type) ルートディレクトリのパス。"
+			},
+			"function18": {
+				"name": "getParentDirectory",
+				"declaration": "string getParentDirectory( string pathOrName )",
+				"description": "親階層のパスを返します。<br \/>現在は <a href=\"#getFilePath\">getFilePath<\/a>( pathOrName, <a href=\"#PARENT\">PARENT<\/a> ) で取得できます。この関数は互換目的でサポートされています。",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称またはパス。 ",
+				"returnValue": "(string type) 親階層のパス。"
+			},
+			"function19": {
+				"name": "getFileRelativePath",
+				"declaration": "string getFileRelativePath( string pathOrName, string directory )",
+				"description": "指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。<br \/>現在は <a href=\"#getFilePath\">getFilePath<\/a>( pathOrName, directory, <a href=\"#RELATIVE\">RELARIVE<\/a> ) で取得できます。この関数は互換目的でサポートされています。",
+				"parameters": "(string type) pathOrName : 対象ファイルの名称またはパス。 \n(string type) directory : 基準ディレクトリのパス。 ",
+				"returnValue": "(string type) 親階層のパス。"
+			},
+			"function20": {
+				"name": "getFileList",
+				"declaration": "string[ ] getFileList( string pathOrName )",
+				"description": "指定ディレクトリ直下のファイル名一覧を取得します。<br \/>現在は <a href=\"#getFilePath\">listFile<\/a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。<br \/>この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href=\"#getFilePath\">listFile<\/a>( pathOrName ) は整列オプションを指定できます。",
+				"parameters": "(string type) pathOrName : 対象ディレクトリの名称またはパス。 ",
+				"returnValue": "(string[] type) 指定ディレクトリ直下のファイル名一覧（順序は環境依存）"
+			}
+		}
+	},
+	"Graphics": {
+		"libraryName": "Graphics",
+		"libraryDescription": "<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。</p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br />その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。</p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br />いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br />つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。</p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br />例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class="code">int g1 = newGraphics("input.png");  // 画像ファイルからグラフィックスデータ g1 を生成<br />int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br />exportGraphics(g2, "output.png", "PNG");  // g2 を画像ファイルに出力<br />deleteGraphics(g1);  // g1 を破棄<br />deleteGraphics(g2);  // g2 を破棄</div></p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br />より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。</p>",
+		"structs": {
+		},
+		"variables": {
+		},
+		"functions": {
+			"function0": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics()",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function1": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics( string filePath )",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。",
+				"parameters": "(string type) filePath : 画像ファイルの名称またはパス。 ",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function2": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics( int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。",
+				"parameters": "red[][] : ピクセルの赤色成分（[Y][X]、0 ~ 255）。 \ngreen[][] : ピクセルの緑色成分（[Y][X]、0 ~ 255）。 \nblue[][] : ピクセルの青色成分（[Y][X]、0 ~ 255）。 \nalpha[][] : ピクセルのα値成分（[Y][X]、0 ~ 255）。 ",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function3": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics( int rgba[ ][ ][ ] )",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。",
+				"parameters": "rgba[][][] : ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 \/ 1=緑 \/ 2=青 \/ 3=α」、値の範囲は0 ~ 255）。 ",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function4": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha )",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。",
+				"parameters": "(int type) baseGraphics : 変換元のイメージを保持するグラフィックスデータのグラフィックスデータID。 \n(int type) fromRed : 変換対象の色の赤色成分（0 ~ 255）。 \n(int type) fromGreen : 変換対象の色の青色成分（0 ~ 255）。 \n(int type) fromBlue : 変換対象の色の緑色成分（0 ~ 255）。 \n(int type) fromAlpha : 変換対象の色のα値成分（0 ~ 255）。 \n(int type) toRed : 変換後の色の赤色成分（0 ~ 255）。 \n(int type) toGreen : 変換後の色の青色成分（0 ~ 255）。 \n(int type) toBlue : 変換後の色の緑色成分（0 ~ 255）。 \n(int type) toAlpha : 変換後の色のα値成分（0 ~ 255）。 ",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function5": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics( int baseGraphics, int fromColor[ ], int toColor[ ] )",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。",
+				"parameters": "(int type) baseGraphics : 変換元のイメージを保持するグラフィックスデータのID。 \n(int[] type) fromColor : 変換対象の色の成分を格納する配列。 \n(int[] type) toColor : 変換後の色の成分を格納する配列。 ",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function6": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics ( int baseGraphics, int width, int height, bool antialiasing )",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。",
+				"parameters": "(int type) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int type) width : 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小） \n(int type) height : 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小） \n(bool type) antialiasing : 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。 ",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function7": {
+				"name": "newGraphics",
+				"declaration": "int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight )",
+				"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。",
+				"parameters": "(int type) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int type) cropX : 元の画像から抜き出す領域の左上頂点X座標 \n(int type) cropY : 元の画像から抜き出す領域の左上頂点Y座標 \n(int type) cropWidth : 元の画像から抜き出す領域の幅 \n(int type) cropHeight : 元の画像から抜き出す領域の高さ ",
+				"returnValue": "(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
+			},
+			"function8": {
+				"name": "deleteGraphics",
+				"declaration": "void deleteGraphics( int id )",
+				"description": "グラフィックスデータを破棄します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+				"returnValue": "(void type) "
+			},
+			"function9": {
+				"name": "getGraphicsWidth",
+				"declaration": "int getGraphicsWidth( int id )",
+				"description": "グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 \n対象グラフィックスデータの幅（ピクセル数）。 : ",
+				"returnValue": "(int type) "
+			},
+			"function10": {
+				"name": "getGraphicsHeight",
+				"declaration": "int getGraphicsHeight( int id )",
+				"description": "グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 \n対象グラフィックスデータの高さ（ピクセル数）。 : ",
+				"returnValue": "(int type) "
+			},
+			"function11": {
+				"name": "exportGraphics",
+				"declaration": "void exportGraphics( int id, string name, string format )",
+				"description": "グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 \n(string type) name : 出力ファイル名。 \n(string type) format : 出力ファイルの形式。\"JPEG\" または \"PNG\"、もしくは \"BMP\" を指定します。 ",
+				"returnValue": "(void type) "
+			},
+			"function12": {
+				"name": "exportGraphics",
+				"declaration": "void exportGraphics( int id, string name, string format, double quality )",
+				"description": "グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 \n(string type) name : 出力ファイル名。 \n(string type) format : 出力ファイルの形式。\"JPEG\" または \"PNG\"、もしくは \"BMP\" を指定します。 \n(double type) quality : 画質（0.0 ~ 100.0）。JPEG の場合に有効です。大きいほど高画質です。 ",
+				"returnValue": "(void type) "
+			},
+			"function13": {
+				"name": "setGraphicsPixel",
+				"declaration": "void setGraphicsPixel( int id, int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )",
+				"description": "グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 \nred[][] : ピクセルの赤色成分（[Y][X]、0 ~ 255）。 \ngreen[][] : ピクセルの緑色成分（[Y][X]、0 ~ 255）。 \nblue[][] : ピクセルの青色成分（[Y][X]、0 ~ 255）。 \nalpha[][] : ピクセルのα値成分（[Y][X]、0 ~ 255）。 ",
+				"returnValue": "(void type) "
+			},
+			"function14": {
+				"name": "setGraphicsPixel",
+				"declaration": "void setGraphicsPixel( int id, int rgba[ ][ ][ ] )",
+				"description": "グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 \nrgba[][][] : ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 \/ 1=緑 \/ 2=青 \/ 3=α」、値の範囲は0 ~ 255）。 ",
+				"returnValue": "(void type) "
+			},
+			"function15": {
+				"name": "getGraphicsPixel",
+				"declaration": "int[ ][ ][ ] getGraphicsPixel( int id )",
+				"description": "イメージの全ピクセル色成分を格納する配列を返します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+				"returnValue": "(int[][][] type) ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 \/ 1=緑 \/ 2=青 \/ 3=α」、値の範囲は0 ~ 255）。"
+			},
+			"function16": {
+				"name": "getGraphicsPixelRed",
+				"declaration": "int[ ][ ] getGraphicsPixelRed( int id )",
+				"description": "イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+				"returnValue": "(int[][] type) ピクセルの赤色成分（[Y][X]、値の範囲は0 ~ 255）。"
+			},
+			"function17": {
+				"name": "getGraphicsPixelGreen",
+				"declaration": "int[ ][ ] getGraphicsPixelGreen( int id )",
+				"description": "イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+				"returnValue": "(int[][] type) ピクセルの緑色成分（[Y][X]、値の範囲は0 ~ 255）。"
+			},
+			"function18": {
+				"name": "getGraphicsPixelBlue",
+				"declaration": "int[ ][ ] getGraphicsPixelBlue( int id )",
+				"description": "イメージの全ピクセルについて、青色成分のみを格納する配列を返します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+				"returnValue": "(int[][] type) ピクセルの青色成分（[Y][X]、値の範囲は0 ~ 255）。"
+			},
+			"function19": {
+				"name": "getGraphicsPixelAlpha",
+				"declaration": "int[ ][ ] getGraphicsPixelAlpha( int id )",
+				"description": "イメージの全ピクセルについて、α値成分のみを格納する配列を返します。",
+				"parameters": "(int type) id : 対象グラフィックスデータのID。 ",
+				"returnValue": "(int[][] type) ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。"
+			}
+		}
+	}
+}
