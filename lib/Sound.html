@@ -8,39 +8,39 @@
 <h1>Sound</h1>
 <hr />
 <h2 id="abstract">Abstract</h2>
-<p>VCSSL Sound ライブラリ は、サウンドを扱う標準ライブラリです。</p><p>VCSSL におけるサウンド再生の基本的な流れは、以下の通りです。</p><p>まず、<a href="#newSound">newSound</a> 関数でファイルからサウンドデータを読み込みます。現在VCSSL で利用可能なサウンド形式としては、WAVE 形式（ 拡張子 .wav ）のみがサポートされています。</p><p>続いて、<a href="#setSoundGain">setSoundGain</a> 関数で音量を設定した後、<a href="#startSound">startSound</a> 関数で再生を開始します。サウンドの再生は、VCSSLプログラムの実行とは非同期で行われます。つまり、サウンドの再生終了を待つことなく、VCSSL の処理も引き続き実行されていきます。これは複数のサウンドを再生する場合も同様で、サウンドは互いの終了を待つ事なく、非同期に再生されます。</p><p>サウンドの再生が終了すると、<a href="#onSoundEnd">onSoundEnd</a> イベントハンドラがコールされます。サウンドをリピート再生したい場合は、ここで <a href="#setSoundFrame">setSoundFrame</a>関数にフレーム値 0 を指定してサウンドを巻き戻し、再び <a href="#startSound">startSound</a> 関数で再生します。</p> <hr />
+<p>VCSSL Sound ライブラリ は、サウンドを扱う標準ライブラリです。</p><p>VCSSL におけるサウンド再生の基本的な流れは、以下の通りです。</p><p>まず、<a href="#newSound">newSound</a> 関数でファイルからサウンドデータを読み込みます。現在VCSSL で利用可能なサウンド形式としては、WAVE 形式（ 拡張子 .wav ）のみがサポートされています。</p><p>続いて、<a href="#setSoundGain">setSoundGain</a> 関数で音量を設定した後、<a href="#startSound">startSound</a> 関数で再生を開始します。サウンドの再生は、VCSSLプログラムの実行とは非同期で行われます。つまり、サウンドの再生終了を待つことなく、VCSSL の処理も引き続き実行されていきます。これは複数のサウンドを再生する場合も同様で、サウンドは互いの終了を待つ事なく、非同期に再生されます。</p><p>サウンドの再生が終了すると、<a href="#onSoundEnd">onSoundEnd</a> イベントハンドラがコールされます。サウンドをリピート再生したい場合は、ここで <a href="#setSoundFrame">setSoundFrame</a>関数にフレーム値 0 を指定してサウンドを巻き戻し、再び <a href="#startSound">startSound</a> 関数で再生します。</p><hr />
 <h2 id="abstract" style="page-break-before:always;" >Index</h2>
 <dl>
 <dt><a href="#newSound">int newSound(string filePath)</a></dt>
-<dd>サウンドファイルを読み込んでサウンドデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。 </dd>
+<dd>サウンドファイルを読み込んでサウンドデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。</dd>
 <dt><a href="#deleteSound">void deleteSound(int soundID)</a></dt>
-<dd>サウンドデータを破棄します。 </dd>
+<dd>サウンドデータを破棄します。</dd>
 <dt><a href="#startSound">void startSound(int soundID)</a></dt>
-<dd>サウンドの再生を開始します。 </dd>
+<dd>サウンドの再生を開始します。</dd>
 <dt><a href="#stopSound">void stopSound(int soundID)</a></dt>
-<dd>サウンドの再生を一時停止します。 </dd>
+<dd>サウンドの再生を一時停止します。</dd>
 <dt><a href="#setSoundGain">void setSoundGain(int soundID, float gain)</a></dt>
-<dd>サウンドの音量ゲインを設定します。 </dd>
+<dd>サウンドの音量ゲインを設定します。</dd>
 <dt><a href="#setSoundFrame">void setSoundFrame(int soundID, int frame)</a></dt>
-<dd>サウンドの再生位置をフレーム単位で設定します。 </dd>
+<dd>サウンドの再生位置をフレーム単位で設定します。</dd>
 <dt><a href="#getSoundFrame">int getSoundFrame(int soundID)</a></dt>
-<dd>サウンドの再生位置をフレーム単位で取得します。 </dd>
+<dd>サウンドの再生位置をフレーム単位で取得します。</dd>
 <dt><a href="#getSoundFrameLength">int getSoundFrameLength(int soundID)</a></dt>
-<dd>サウンドの長さをフレーム数単位で取得します。 </dd>
+<dd>サウンドの長さをフレーム数単位で取得します。</dd>
 <dt><a href="#setSoundTime">void setSoundTime(int soundID, int milliSec)</a></dt>
-<dd>サウンドの再生位置を時間単位（ミリ秒）で設定します。 </dd>
+<dd>サウンドの再生位置を時間単位（ミリ秒）で設定します。</dd>
 <dt><a href="#getSoundTime">int getSoundTime(int soundID)</a></dt>
-<dd>サウンドの再生位置を時間単位（ミリ秒）で取得します。 </dd>
+<dd>サウンドの再生位置を時間単位（ミリ秒）で取得します。</dd>
 <dt><a href="#getSoundTimeLength">int getSoundTimeLength(int soundID)</a></dt>
-<dd>サウンドの長さを時間単位（ミリ秒）で取得します。 </dd>
+<dd>サウンドの長さを時間単位（ミリ秒）で取得します。</dd>
 <hr />
 <h2 id="event" style="page-break-before:always;" >Event Handlers</h2>
 <dt><a href="#onSoundStart">void onSoundStart( int soundID )</a></dt>
-<dd>サウンドの再生が開始した際にコールされます。 </dd>
+<dd>サウンドの再生が開始した際にコールされます。</dd>
 <dt><a href="#onSoundStop">void onSoundStop( int soundID )</a></dt>
-<dd>サウンドの再生が停止した際にコールされます。 </dd>
+<dd>サウンドの再生が停止した際にコールされます。</dd>
 <dt><a href="#onSoundEnd">void onSoundEnd( int soundID )</a></dt>
-<dd>サウンドの再生が終了した際にコールされます。 </dd>
+<dd>サウンドの再生が終了した際にコールされます。</dd>
 </dl>
 <hr />
 <h2 id="struct" style="page-break-before:always;" >Structs</h2>
@@ -71,7 +71,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドファイルを読み込んでサウンドデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。 
+   	 	サウンドファイルを読み込んでサウンドデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
    	 </td>
     </tr>
     <tr>
@@ -87,7 +87,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したサウンドデータに割り振られたサウンドデータID（識別番号）<br />
+   	 	(int type) 生成したサウンドデータに割り振られたサウンドデータID（識別番号）
    	 </td>
     </tr>
 </tbody></table>
@@ -114,7 +114,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドデータを破棄します。 
+   	 	サウンドデータを破棄します。
    	 </td>
     </tr>
     <tr>
@@ -157,7 +157,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生を開始します。 
+   	 	サウンドの再生を開始します。
    	 </td>
     </tr>
     <tr>
@@ -200,7 +200,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生を一時停止します。 
+   	 	サウンドの再生を一時停止します。
    	 </td>
     </tr>
     <tr>
@@ -243,7 +243,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの音量ゲインを設定します。 
+   	 	サウンドの音量ゲインを設定します。
    	 </td>
     </tr>
     <tr>
@@ -286,7 +286,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生位置をフレーム単位で設定します。 
+   	 	サウンドの再生位置をフレーム単位で設定します。
    	 </td>
     </tr>
     <tr>
@@ -329,7 +329,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生位置をフレーム単位で取得します。 
+   	 	サウンドの再生位置をフレーム単位で取得します。
    	 </td>
     </tr>
     <tr>
@@ -345,7 +345,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 現在の再生位置フレーム<br />
+   	 	(int type) 現在の再生位置フレーム
    	 </td>
     </tr>
 </tbody></table>
@@ -372,7 +372,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの長さをフレーム数単位で取得します。 
+   	 	サウンドの長さをフレーム数単位で取得します。
    	 </td>
     </tr>
     <tr>
@@ -388,7 +388,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 総フレーム数<br />
+   	 	(int type) 総フレーム数
    	 </td>
     </tr>
 </tbody></table>
@@ -415,7 +415,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生位置を時間単位（ミリ秒）で設定します。 
+   	 	サウンドの再生位置を時間単位（ミリ秒）で設定します。
    	 </td>
     </tr>
     <tr>
@@ -458,7 +458,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生位置を時間単位（ミリ秒）で取得します。 
+   	 	サウンドの再生位置を時間単位（ミリ秒）で取得します。
    	 </td>
     </tr>
     <tr>
@@ -474,7 +474,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 再生位置時間（ミリ秒）<br />
+   	 	(int type) 再生位置時間（ミリ秒）
    	 </td>
     </tr>
 </tbody></table>
@@ -501,7 +501,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの長さを時間単位（ミリ秒）で取得します。 
+   	 	サウンドの長さを時間単位（ミリ秒）で取得します。
    	 </td>
     </tr>
     <tr>
@@ -517,7 +517,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 総ミリ秒数<br />
+   	 	(int type) 総ミリ秒数
    	 </td>
     </tr>
 </tbody></table>
@@ -546,7 +546,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生が開始した際にコールされます。 
+   	 	サウンドの再生が開始した際にコールされます。
    	 </td>
     </tr>
     <tr>
@@ -589,7 +589,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生が停止した際にコールされます。 
+   	 	サウンドの再生が停止した際にコールされます。
    	 </td>
     </tr>
     <tr>
@@ -632,7 +632,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	サウンドの再生が終了した際にコールされます。 
+   	 	サウンドの再生が終了した際にコールされます。
    	 </td>
     </tr>
     <tr>

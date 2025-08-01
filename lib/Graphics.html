@@ -8,49 +8,49 @@
 <h1>Graphics</h1>
 <hr />
 <h2 id="abstract">Abstract</h2>
-<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。</p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br />その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。</p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br />いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br />つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。</p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br />例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class="code">int g1 = newGraphics("input.png");  // 画像ファイルからグラフィックスデータ g1 を生成<br />int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br />exportGraphics(g2, "output.png", "PNG");  // g2 を画像ファイルに出力<br />deleteGraphics(g1);  // g1 を破棄<br />deleteGraphics(g2);  // g2 を破棄</div></p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br />より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。</p> <hr />
+<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。</p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br />その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。</p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br />いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br />つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。</p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br />例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class="code">int g1 = newGraphics("input.png");  // 画像ファイルからグラフィックスデータ g1 を生成<br />int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br />exportGraphics(g2, "output.png", "PNG");  // g2 を画像ファイルに出力<br />deleteGraphics(g1);  // g1 を破棄<br />deleteGraphics(g2);  // g2 を破棄</div></p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br />より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。</p><hr />
 <h2 id="abstract" style="page-break-before:always;" >Index</h2>
 <dl>
 <dt><a href="#newGraphics">int newGraphics()</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。</dd>
 <dt><a href="#newGraphics">int newGraphics( string filePath )</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。</dd>
 <dt><a href="#newGraphics">int newGraphics( int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。</dd>
 <dt><a href="#newGraphics">int newGraphics( int rgba[ ][ ][ ] )</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。</dd>
 <dt><a href="#newGraphics">int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha )</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。</dd>
 <dt><a href="#newGraphics">int newGraphics( int baseGraphics, int fromColor[ ], int toColor[ ] )</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。</dd>
 <dt><a href="#newGraphics">int newGraphics ( int baseGraphics, int width, int height, bool antialiasing )</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。</dd>
 <dt><a href="#newGraphics">int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight )</a></dt>
-<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。 </dd>
+<dd>グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。</dd>
 <dt><a href="#deleteGraphics">void deleteGraphics( int id )</a></dt>
-<dd>グラフィックスデータを破棄します。 </dd>
+<dd>グラフィックスデータを破棄します。</dd>
 <dt><a href="#getGraphicsWidth">int getGraphicsWidth( int id )</a></dt>
-<dd>グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。 </dd>
+<dd>グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。</dd>
 <dt><a href="#getGraphicsHeight">int getGraphicsHeight( int id )</a></dt>
-<dd>グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。 </dd>
+<dd>グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。</dd>
 <dt><a href="#exportGraphics">void exportGraphics( int id, string name, string format )</a></dt>
-<dd>グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。 </dd>
+<dd>グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。</dd>
 <dt><a href="#exportGraphics">void exportGraphics( int id, string name, string format, double quality )</a></dt>
-<dd>グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。 </dd>
+<dd>グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。</dd>
 <dt><a href="#setGraphicsPixel">void setGraphicsPixel( int id, int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )</a></dt>
-<dd>グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。 </dd>
+<dd>グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。</dd>
 <dt><a href="#setGraphicsPixel">void setGraphicsPixel( int id, int rgba[ ][ ][ ] )</a></dt>
-<dd>グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。 </dd>
+<dd>グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。</dd>
 <dt><a href="#getGraphicsPixel">int[ ][ ][ ] getGraphicsPixel( int id )</a></dt>
-<dd>イメージの全ピクセル色成分を格納する配列を返します。 </dd>
+<dd>イメージの全ピクセル色成分を格納する配列を返します。</dd>
 <dt><a href="#getGraphicsPixelRed">int[ ][ ] getGraphicsPixelRed( int id )</a></dt>
-<dd>イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。 </dd>
+<dd>イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。</dd>
 <dt><a href="#getGraphicsPixelGreen">int[ ][ ] getGraphicsPixelGreen( int id )</a></dt>
-<dd>イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。 </dd>
+<dd>イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。</dd>
 <dt><a href="#getGraphicsPixelBlue">int[ ][ ] getGraphicsPixelBlue( int id )</a></dt>
-<dd>イメージの全ピクセルについて、青色成分のみを格納する配列を返します。 </dd>
+<dd>イメージの全ピクセルについて、青色成分のみを格納する配列を返します。</dd>
 <dt><a href="#getGraphicsPixelAlpha">int[ ][ ] getGraphicsPixelAlpha( int id )</a></dt>
-<dd>イメージの全ピクセルについて、α値成分のみを格納する配列を返します。 </dd>
+<dd>イメージの全ピクセルについて、α値成分のみを格納する配列を返します。</dd>
 </dl>
 <hr />
 <h2 id="struct" style="page-break-before:always;" >Structs</h2>
@@ -81,7 +81,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。
    	 </td>
     </tr>
     <tr>
@@ -89,7 +89,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -116,7 +116,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。
    	 </td>
     </tr>
     <tr>
@@ -132,7 +132,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -159,7 +159,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
    	 </td>
     </tr>
     <tr>
@@ -175,7 +175,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -202,7 +202,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
    	 </td>
     </tr>
     <tr>
@@ -218,7 +218,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -245,7 +245,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
    	 </td>
     </tr>
     <tr>
@@ -261,7 +261,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -288,7 +288,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
    	 </td>
     </tr>
     <tr>
@@ -304,7 +304,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -331,7 +331,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。
    	 </td>
     </tr>
     <tr>
@@ -347,7 +347,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -374,7 +374,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。 
+   	 	グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br />この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。
    	 </td>
     </tr>
     <tr>
@@ -390,7 +390,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。<br />
+   	 	(int type) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
    	 </td>
     </tr>
 </tbody></table>
@@ -417,7 +417,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータを破棄します。 
+   	 	グラフィックスデータを破棄します。
    	 </td>
     </tr>
     <tr>
@@ -460,7 +460,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。 
+   	 	グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。
    	 </td>
     </tr>
     <tr>
@@ -503,7 +503,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。 
+   	 	グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。
    	 </td>
     </tr>
     <tr>
@@ -546,7 +546,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。 
+   	 	グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
    	 </td>
     </tr>
     <tr>
@@ -589,7 +589,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。 
+   	 	グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
    	 </td>
     </tr>
     <tr>
@@ -632,7 +632,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。 
+   	 	グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
    	 </td>
     </tr>
     <tr>
@@ -675,7 +675,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。 
+   	 	グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
    	 </td>
     </tr>
     <tr>
@@ -718,7 +718,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	イメージの全ピクセル色成分を格納する配列を返します。 
+   	 	イメージの全ピクセル色成分を格納する配列を返します。
    	 </td>
     </tr>
     <tr>
@@ -734,7 +734,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[][][] type) ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。<br />
+   	 	(int[][][] type) ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
    	 </td>
     </tr>
 </tbody></table>
@@ -761,7 +761,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。 
+   	 	イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。
    	 </td>
     </tr>
     <tr>
@@ -777,7 +777,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[][] type) ピクセルの赤色成分（[Y][X]、値の範囲は0 ~ 255）。<br />
+   	 	(int[][] type) ピクセルの赤色成分（[Y][X]、値の範囲は0 ~ 255）。
    	 </td>
     </tr>
 </tbody></table>
@@ -804,7 +804,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。 
+   	 	イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。
    	 </td>
     </tr>
     <tr>
@@ -820,7 +820,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[][] type) ピクセルの緑色成分（[Y][X]、値の範囲は0 ~ 255）。<br />
+   	 	(int[][] type) ピクセルの緑色成分（[Y][X]、値の範囲は0 ~ 255）。
    	 </td>
     </tr>
 </tbody></table>
@@ -847,7 +847,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	イメージの全ピクセルについて、青色成分のみを格納する配列を返します。 
+   	 	イメージの全ピクセルについて、青色成分のみを格納する配列を返します。
    	 </td>
     </tr>
     <tr>
@@ -863,7 +863,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[][] type) ピクセルの青色成分（[Y][X]、値の範囲は0 ~ 255）。<br />
+   	 	(int[][] type) ピクセルの青色成分（[Y][X]、値の範囲は0 ~ 255）。
    	 </td>
     </tr>
 </tbody></table>
@@ -890,7 +890,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	イメージの全ピクセルについて、α値成分のみを格納する配列を返します。 
+   	 	イメージの全ピクセルについて、α値成分のみを格納する配列を返します。
    	 </td>
     </tr>
     <tr>
@@ -906,7 +906,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[][] type) ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。<br />
+   	 	(int[][] type) ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。
    	 </td>
     </tr>
 </tbody></table>

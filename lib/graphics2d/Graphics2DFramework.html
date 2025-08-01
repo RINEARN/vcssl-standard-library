@@ -8,113 +8,113 @@
 <h1>Graphics2DFramework</h1>
 <hr />
 <h2 id="abstract">Abstract</h2>
-<p>このライブラリ graphics2d.Graphics2DFramework は、2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p><p>VCSSLの標準ライブラリ「 Graphics2D 」や「 GUI 」だけを用いて、ゼロから2DCGプログラムを記述する場合、<br />ウィンドウ・レンダラー（描画エンジン）の生成や、アニメーションループ、基本的なイベントハンドラなど、いくつかの定型的な処理を、毎回記述しなければいけません。<br />そこで、この Graphics2DFramework では、上述のような定型処理を、雛形のようにあらかじめ用意する事によって、手軽な2DCG利用をサポートします。</p><p>・必要な処理の記述</p><p>Graphics2DFramework は、構造的には、単体で既に完成した2DCGプログラムです。実際、単体で実行する事が可能です。<br />ただし、単体では何の描画内容も無いため、ただ白い画面が表示されるだけです。</p><p>そこで実際には、自作モジュールから Graphics2DFramework を import し、3Dモデルの配置や移動など、必要な処理を記述します。<br />そういった処理は、いくつかの決まった名前の関数を定義し、そこに記述します。つまり、GUIなどのイベントハンドラと同じ仕組みです。<br />するとそれらのイベントハンドラ関数を、Graphics3DFramework が適切なタイミングで自動実行します。</p><p>Graphics2DFramework が自動実行するイベントハンドラ関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。<ul>  <li>void onStart( int renderer ) - 起動時に一度だけ実行されます。スプライトの生成・配置などの初期化処理は、ここに記述します。旧称 initialize も使用可能です。</li>  <li>void onExit( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。旧称 finalize も使用可能です。</li>  <li>void onPaint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、ここに記述します。旧称 paint も使用可能です。</li>  <li>void onUpdate( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。スプライトの移動などを行いたい場合などは、ここに記述します。旧称 update も使用可能です。</li>  <li>void onResize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。旧称 resize も使用可能です。</li></ul>上記関数のいずれも、引数 renderer には、2DCGレンダラーのID が渡されます。これは描画やスプライトの登録などに使用します。</p><p>・ウィンドウのカスタマイズ</p><p>Graphics2DFramework では、ウィンドウ内に余白領域を設定し、そこにボタンやテキストフィールドなどのGUI部品を配置する事ができます。<br />余白の設定は、<a href="#setMarginTop">setMarginTop</a> ( int margin ) 関数や <a href="#setMarginLeft">setMarginLeft</a> ( int margin ) 関数などで行います。<br />そして <a href="#getWindow">getWindow</a> ( ) 関数でウィンドウのIDを取得し、余白領域にGUI部品を自由に配置してください。</p><p>・フレームレート調整</p><p>加えて、Graphics2DFramework は、フレームレートの自動調整機構も備えています。<br />具体的には、Graphics2DFramework は、毎フレーム間の所要時間を計測し、常に設定された目標フレームレートに近づくよう、アニメーションループのウェイト ( 待機時間 ) を自動調整します。<br />目標フレームレートは <a href="#setFrameRate">setFrameRate</a> ( float rate ) で設定します。また、実測フレームレートは <a href="#getCurrentFrameRate">getCurrentFrameRate</a> ( ) で取得可能です。</p><p>・処理落ち</p><p>なお、実行環境の処理速度にも依存しますが、描画する画面サイズが大きかったり、描画内容が重かったりすると、<br />アニメーションの待機時間を最小にしても、実測フレームレートが目標フレームレートに達しなくなる現象 ―― 処理落ち ―― が生じます。</p><p>処理落ちが発生すると、画面の再描画処理が追いつかなくなり、画面がちらつく場合があります。<br />その場合は、目標フレームレートを実測フレームレートの限界よりも余裕のある値に設定する事で、画面のちらつきを抑える事ができます。<br />しかし、実測フレームレートは環境に大きく依存するため、代わりに <a href="#setAnimationWaitMin">setAnimationWaitMin</a> ( int wait ) 関数でアニメーションウェイトの下限値（ミリ秒単位）を大きめに設定する事でも、<br />画面のちらつきを抑える事ができます（ ただしこの場合、実測フレームレートの限界は低下します ）。</p> <hr />
+<p>このライブラリ graphics2d.Graphics2DFramework は、2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。</p><p>VCSSLの標準ライブラリ「 Graphics2D 」や「 GUI 」だけを用いて、ゼロから2DCGプログラムを記述する場合、<br />ウィンドウ・レンダラー（描画エンジン）の生成や、アニメーションループ、基本的なイベントハンドラなど、いくつかの定型的な処理を、毎回記述しなければいけません。<br />そこで、この Graphics2DFramework では、上述のような定型処理を、雛形のようにあらかじめ用意する事によって、手軽な2DCG利用をサポートします。</p><p>・必要な処理の記述</p><p>Graphics2DFramework は、構造的には、単体で既に完成した2DCGプログラムです。実際、単体で実行する事が可能です。<br />ただし、単体では何の描画内容も無いため、ただ白い画面が表示されるだけです。</p><p>そこで実際には、自作モジュールから Graphics2DFramework を import し、3Dモデルの配置や移動など、必要な処理を記述します。<br />そういった処理は、いくつかの決まった名前の関数を定義し、そこに記述します。つまり、GUIなどのイベントハンドラと同じ仕組みです。<br />するとそれらのイベントハンドラ関数を、Graphics3DFramework が適切なタイミングで自動実行します。</p><p>Graphics2DFramework が自動実行するイベントハンドラ関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。<ul>  <li>void onStart( int renderer ) - 起動時に一度だけ実行されます。スプライトの生成・配置などの初期化処理は、ここに記述します。旧称 initialize も使用可能です。</li>  <li>void onExit( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。旧称 finalize も使用可能です。</li>  <li>void onPaint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、ここに記述します。旧称 paint も使用可能です。</li>  <li>void onUpdate( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。スプライトの移動などを行いたい場合などは、ここに記述します。旧称 update も使用可能です。</li>  <li>void onResize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。旧称 resize も使用可能です。</li></ul>上記関数のいずれも、引数 renderer には、2DCGレンダラーのID が渡されます。これは描画やスプライトの登録などに使用します。</p><p>・ウィンドウのカスタマイズ</p><p>Graphics2DFramework では、ウィンドウ内に余白領域を設定し、そこにボタンやテキストフィールドなどのGUI部品を配置する事ができます。<br />余白の設定は、<a href="#setMarginTop">setMarginTop</a> ( int margin ) 関数や <a href="#setMarginLeft">setMarginLeft</a> ( int margin ) 関数などで行います。<br />そして <a href="#getWindow">getWindow</a> ( ) 関数でウィンドウのIDを取得し、余白領域にGUI部品を自由に配置してください。</p><p>・フレームレート調整</p><p>加えて、Graphics2DFramework は、フレームレートの自動調整機構も備えています。<br />具体的には、Graphics2DFramework は、毎フレーム間の所要時間を計測し、常に設定された目標フレームレートに近づくよう、アニメーションループのウェイト ( 待機時間 ) を自動調整します。<br />目標フレームレートは <a href="#setFrameRate">setFrameRate</a> ( float rate ) で設定します。また、実測フレームレートは <a href="#getCurrentFrameRate">getCurrentFrameRate</a> ( ) で取得可能です。</p><p>・処理落ち</p><p>なお、実行環境の処理速度にも依存しますが、描画する画面サイズが大きかったり、描画内容が重かったりすると、<br />アニメーションの待機時間を最小にしても、実測フレームレートが目標フレームレートに達しなくなる現象 ―― 処理落ち ―― が生じます。</p><p>処理落ちが発生すると、画面の再描画処理が追いつかなくなり、画面がちらつく場合があります。<br />その場合は、目標フレームレートを実測フレームレートの限界よりも余裕のある値に設定する事で、画面のちらつきを抑える事ができます。<br />しかし、実測フレームレートは環境に大きく依存するため、代わりに <a href="#setAnimationWaitMin">setAnimationWaitMin</a> ( int wait ) 関数でアニメーションウェイトの下限値（ミリ秒単位）を大きめに設定する事でも、<br />画面のちらつきを抑える事ができます（ ただしこの場合、実測フレームレートの限界は低下します ）。</p><hr />
 <h2 id="abstract" style="page-break-before:always;" >Index</h2>
 <dl>
 <dt><a href="#getGraphics">int getGraphics()</a></dt>
-<dd>2DCGのグラフィックスIDを返します。 </dd>
+<dd>2DCGのグラフィックスIDを返します。</dd>
 <dt><a href="#getRenderer">int getRenderer()</a></dt>
-<dd>2DCGのレンダラーIDを返します。 </dd>
+<dd>2DCGのレンダラーIDを返します。</dd>
 <dt><a href="#getImageLabel">int getImageLabel()</a></dt>
-<dd>描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。 </dd>
+<dd>描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。</dd>
 <dt><a href="#getGraphicsLabel">int getGraphicsLabel()</a></dt>
-<dd>画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。この関数は互換目的でサポートされています。 </dd>
+<dd>画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。この関数は互換目的でサポートされています。</dd>
 <dt><a href="#getWindow">int getWindow()</a></dt>
-<dd>ウィンドウのGUIコンポーネントIDを返します。 </dd>
+<dd>ウィンドウのGUIコンポーネントIDを返します。</dd>
 <dt><a href="#setAnimationState">void setAnimationState(bool enable)</a></dt>
-<dd>アニメーションモードの有効/無効を設定します。 </dd>
+<dd>アニメーションモードの有効/無効を設定します。</dd>
 <dt><a href="#getAnimationState">bool getAnimationState()</a></dt>
-<dd>アニメーションの有効/無効を取得します。 </dd>
+<dd>アニメーションの有効/無効を取得します。</dd>
 <dt><a href="#setFrameRate">void setFrameRate(float rate)</a></dt>
-<dd>アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。 </dd>
+<dd>アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。</dd>
 <dt><a href="#getFrameRate">float getFrameRate()</a></dt>
-<dd>アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。 </dd>
+<dd>アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。</dd>
 <dt><a href="#getCurrentFrameRate">float getCurrentFrameRate()</a></dt>
-<dd> アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。 </dd>
+<dd>アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。</dd>
 <dt><a href="#getLastFrameTime">int getLastFrameTime()</a></dt>
-<dd>アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。 </dd>
+<dd>アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。</dd>
 <dt><a href="#setPaintGraphics2DState">void setPaintGraphics2DState(bool b)</a></dt>
-<dd>画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。 </dd>
+<dd>画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。</dd>
 <dt><a href="#getPaintGraphics2DState">bool getPaintGraphics2DState()</a></dt>
-<dd>画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。 </dd>
+<dd>画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。</dd>
 <dt><a href="#setBackgroundColor">void setBackgroundColor(int r, int g, int b, int a)</a></dt>
-<dd>背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。 </dd>
+<dd>背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。</dd>
 <dt><a href="#setBackgroundColor">void setBackgroundColor(int color[ ])</a></dt>
-<dd>背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。 </dd>
+<dd>背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。</dd>
 <dt><a href="#getBackgroundColor">int[ ] getBackgroundColor()</a></dt>
-<dd>背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。 </dd>
+<dd>背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。</dd>
 <dt><a href="#setWindowTitle">void setWindowTitle(string title)</a></dt>
-<dd> ウィンドウタイトルを設定します。 </dd>
+<dd>ウィンドウタイトルを設定します。</dd>
 <dt><a href="#getWindowTitle">string getWindowTitle()</a></dt>
-<dd> ウィンドウタイトルを取得します。 </dd>
+<dd>ウィンドウタイトルを取得します。</dd>
 <dt><a href="#setWindowSize">void setWindowSize(int width, int height)</a></dt>
-<dd>ウィンドウサイズを設定します。 </dd>
+<dd>ウィンドウサイズを設定します。</dd>
 <dt><a href="#setWindowSize">void setWindowSize(int size[ ])</a></dt>
-<dd>ウィンドウサイズを設定します。 </dd>
+<dd>ウィンドウサイズを設定します。</dd>
 <dt><a href="#getWindowSize">int[ ] getWindowSize()</a></dt>
-<dd>ウィンドウサイズを取得します。 </dd>
+<dd>ウィンドウサイズを取得します。</dd>
 <dt><a href="#setWindowLocation">void setWindowLocation(int x, int y)</a></dt>
-<dd>ウィンドウの位置を設定します。 </dd>
+<dd>ウィンドウの位置を設定します。</dd>
 <dt><a href="#setWindowLocation">void setWindowLocation(int location[ ])</a></dt>
-<dd>ウィンドウの位置を設定します。 </dd>
+<dd>ウィンドウの位置を設定します。</dd>
 <dt><a href="#getWindowLocation">int[ ] getWindowLocation()</a></dt>
-<dd>ウィンドウの位置を取得します。 </dd>
+<dd>ウィンドウの位置を取得します。</dd>
 <dt><a href="#setMarginRight">void setMarginRight(int margin)</a></dt>
-<dd>ウィンドウ右側の余白を設定します。 </dd>
+<dd>ウィンドウ右側の余白を設定します。</dd>
 <dt><a href="#getMarginRight">int getMarginRight()</a></dt>
-<dd>ウィンドウ右側の余白を取得します。 </dd>
+<dd>ウィンドウ右側の余白を取得します。</dd>
 <dt><a href="#setMarginLeft">void setMarginLeft(int margin)</a></dt>
-<dd>ウィンドウ左側の余白を設定します。 </dd>
+<dd>ウィンドウ左側の余白を設定します。</dd>
 <dt><a href="#getMarginLeft">int getMarginLeft()</a></dt>
-<dd>ウィンドウ左側の余白を取得します。 </dd>
+<dd>ウィンドウ左側の余白を取得します。</dd>
 <dt><a href="#setMarginTop">void setMarginTop(int margin)</a></dt>
-<dd>ウィンドウ上側の余白を設定します。 </dd>
+<dd>ウィンドウ上側の余白を設定します。</dd>
 <dt><a href="#getMarginTop">int getMarginTop()</a></dt>
-<dd>ウィンドウ上側の余白を取得します。 </dd>
+<dd>ウィンドウ上側の余白を取得します。</dd>
 <dt><a href="#setMarginBottom">void setMarginBottom(int margin)</a></dt>
-<dd>ウィンドウ下側の余白を設定します。 </dd>
+<dd>ウィンドウ下側の余白を設定します。</dd>
 <dt><a href="#getMarginBottom">int getMarginBottom()</a></dt>
-<dd>ウィンドウ下側の余白を取得します。 </dd>
+<dd>ウィンドウ下側の余白を取得します。</dd>
 <dt><a href="#setAnimationWaitMin">void setAnimationWaitMin(int wait)</a></dt>
-<dd>アニメーションウェイト（メインループのウェイト）の下限値を設定します。 </dd>
+<dd>アニメーションウェイト（メインループのウェイト）の下限値を設定します。</dd>
 <dt><a href="#getAnimationWaitMin">int getAnimationWaitMin()</a></dt>
-<dd>アニメーションウェイト（メインループのウェイト）の下限値を設定します。 </dd>
+<dd>アニメーションウェイト（メインループのウェイト）の下限値を設定します。</dd>
 <dt><a href="#setAnimationWaitMax">void setAnimationWaitMax(int wait)</a></dt>
-<dd>アニメーションウェイト（メインループのウェイト）の上限値を設定します。 </dd>
+<dd>アニメーションウェイト（メインループのウェイト）の上限値を設定します。</dd>
 <dt><a href="#getAnimationWaitMax">int getAnimationWaitMax()</a></dt>
-<dd>アニメーションウェイト（メインループのウェイト）の上限値を設定します。 </dd>
+<dd>アニメーションウェイト（メインループのウェイト）の上限値を設定します。</dd>
 <dt><a href="#setMainLoopState">void setMainLoopState(bool state)</a></dt>
-<dd>メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。 </dd>
+<dd>メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。</dd>
 <dt><a href="#getMainLoopState">bool getMainLoopState()</a></dt>
-<dd>メインループの継続状態を取得します。 </dd>
+<dd>メインループの継続状態を取得します。</dd>
 <dt><a href="#getMainArgument">string[ ] getMainArgument()</a></dt>
 <dd>main関数の引数を取得します。</dd>
 <dt><a href="#export">void export( string filePath, string format, float quality )</a></dt>
-<dd>現在の描画ラベルの内容を、画像ファイルに出力します。ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、次回の画面更新タイミングに合わせて実行されます。 </dd>
+<dd>現在の描画ラベルの内容を、画像ファイルに出力します。ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、次回の画面更新タイミングに合わせて実行されます。</dd>
 <dt><a href="#main">void main( string args[ ] )</a></dt>
-<dd>main関数です。通常は自動で実行され、frameworkMain関数をコールします。ただし、メインプログラムでmain関数を定義する場合は、こちらは自動で実行されなくなるので、下記のframeworkMainを明示的に呼ぶ必要があります。 </dd>
+<dd>main関数です。通常は自動で実行され、frameworkMain関数をコールします。ただし、メインプログラムでmain関数を定義する場合は、こちらは自動で実行されなくなるので、下記のframeworkMainを明示的に呼ぶ必要があります。</dd>
 <dt><a href="#frameworkMain">void frameworkMain( string args[ ] )</a></dt>
-<dd>フレームワークのメイン処理です。通常はmain関数から自動で実行されます。ただし、メインプログラムでmain関数を定義する場合は、自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。 </dd>
+<dd>フレームワークのメイン処理です。通常はmain関数から自動で実行されます。ただし、メインプログラムでmain関数を定義する場合は、自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。</dd>
 <dt><a href="#onWindowResize">void onWindowResize( int id, int width, int height )</a></dt>
-<dd>ウィンドウがリサイズされた際にコールされるイベントハンドラです。 </dd>
+<dd>ウィンドウがリサイズされた際にコールされるイベントハンドラです。</dd>
 <dt><a href="#onWindowClose">void onWindowClose( int id )</a></dt>
-<dd>ウィンドウが閉じられた際にコールされるイベントハンドラです。 </dd>
+<dd>ウィンドウが閉じられた際にコールされるイベントハンドラです。</dd>
 <dt><a href="#paintWindow">void paintWindow()</a></dt>
-<dd>ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。 </dd>
+<dd>ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。</dd>
 <dt><a href="#render">void render()</a></dt>
-<dd>paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 </dd>
+<dd>paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。</dd>
 <hr />
 <h2 id="event" style="page-break-before:always;" >Event Handlers</h2>
 <dt><a href="#onStart">void onStart( int rendererID )</a></dt>
-<dd>起動時に一度だけコールされます。スプライトの生成・配置などの初期化処理は、ここに記述します。 </dd>
+<dd>起動時に一度だけコールされます。スプライトの生成・配置などの初期化処理は、ここに記述します。</dd>
 <dt><a href="#onExit">void onExit( int rendererID )</a></dt>
-<dd>終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。 </dd>
+<dd>終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。</dd>
 <dt><a href="#onPaint">void onPaint( int rendererID )</a></dt>
-<dd>画面更新タイミング（毎秒数十回）で毎回コールされます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、こに記述します。 </dd>
+<dd>画面更新タイミング（毎秒数十回）で毎回コールされます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、こに記述します。</dd>
 <dt><a href="#onUpdate">void onUpdate( int rendererID )</a></dt>
-<dd>画面更新タイミング（毎秒数十回）の間で毎回コールされます。スプライトの移動などを行いたい場合などは、ここに記述します。 </dd>
+<dd>画面更新タイミング（毎秒数十回）の間で毎回コールされます。スプライトの移動などを行いたい場合などは、ここに記述します。</dd>
 <dt><a href="#onResize">void onResize( int rendererID )</a></dt>
-<dd>ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。 </dd>
+<dd>ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。</dd>
 </dl>
 <hr />
 <h2 id="struct" style="page-break-before:always;" >Structs</h2>
@@ -145,7 +145,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	2DCGのグラフィックスIDを返します。 
+   	 	2DCGのグラフィックスIDを返します。
    	 </td>
     </tr>
     <tr>
@@ -153,7 +153,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 2DCGのグラフィックスID<br />
+   	 	(int type) 2DCGのグラフィックスID
    	 </td>
     </tr>
 </tbody></table>
@@ -180,7 +180,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	2DCGのレンダラーIDを返します。 
+   	 	2DCGのレンダラーIDを返します。
    	 </td>
     </tr>
     <tr>
@@ -188,7 +188,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 2DCGのレンダラーID<br />
+   	 	(int type) 2DCGのレンダラーID
    	 </td>
     </tr>
 </tbody></table>
@@ -215,7 +215,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。 
+   	 	描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。
    	 </td>
     </tr>
     <tr>
@@ -223,7 +223,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 画像ラベルのGUIコンポーネントID<br />
+   	 	(int type) 画像ラベルのGUIコンポーネントID
    	 </td>
     </tr>
 </tbody></table>
@@ -250,7 +250,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。この関数は互換目的でサポートされています。 
+   	 	画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。この関数は互換目的でサポートされています。
    	 </td>
     </tr>
     <tr>
@@ -258,7 +258,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 描画領域ラベルのGUIコンポーネントID<br />
+   	 	(int type) 描画領域ラベルのGUIコンポーネントID
    	 </td>
     </tr>
 </tbody></table>
@@ -285,7 +285,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウのGUIコンポーネントIDを返します。 
+   	 	ウィンドウのGUIコンポーネントIDを返します。
    	 </td>
     </tr>
     <tr>
@@ -293,7 +293,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) ウィンドウのGUIコンポーネントID<br />
+   	 	(int type) ウィンドウのGUIコンポーネントID
    	 </td>
     </tr>
 </tbody></table>
@@ -320,7 +320,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションモードの有効/無効を設定します。 
+   	 	アニメーションモードの有効/無効を設定します。
    	 </td>
     </tr>
     <tr>
@@ -363,7 +363,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションの有効/無効を取得します。 
+   	 	アニメーションの有効/無効を取得します。
    	 </td>
     </tr>
     <tr>
@@ -371,7 +371,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(bool type) アニメーションモード有効/無効(trueならば有効)<br />
+   	 	(bool type) アニメーションモード有効/無効(trueならば有効)
    	 </td>
     </tr>
 </tbody></table>
@@ -398,7 +398,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。 
+   	 	アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。
    	 </td>
     </tr>
     <tr>
@@ -441,7 +441,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。 
+   	 	アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。
    	 </td>
     </tr>
     <tr>
@@ -449,7 +449,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float type) 画面更新頻度(設定値)<br />
+   	 	(float type) 画面更新頻度(設定値)
    	 </td>
     </tr>
 </tbody></table>
@@ -476,7 +476,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。 
+   	 	アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。
    	 </td>
     </tr>
     <tr>
@@ -484,7 +484,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(float type) 画面更新頻度(実測値)<br />
+   	 	(float type) 画面更新頻度(実測値)
    	 </td>
     </tr>
 </tbody></table>
@@ -511,7 +511,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。 
+   	 	アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。
    	 </td>
     </tr>
     <tr>
@@ -519,7 +519,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 最終画面更新時刻(通常はミリ秒単位)<br />
+   	 	(int type) 最終画面更新時刻(通常はミリ秒単位)
    	 </td>
     </tr>
 </tbody></table>
@@ -546,7 +546,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。 
+   	 	画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。
    	 </td>
     </tr>
     <tr>
@@ -589,7 +589,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。 
+   	 	画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。
    	 </td>
     </tr>
     <tr>
@@ -597,7 +597,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(bool type) 取得した状態<br />
+   	 	(bool type) 取得した状態
    	 </td>
     </tr>
 </tbody></table>
@@ -624,7 +624,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。 
+   	 	背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。
    	 </td>
     </tr>
     <tr>
@@ -667,7 +667,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。 
+   	 	背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。
    	 </td>
     </tr>
     <tr>
@@ -710,7 +710,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。 
+   	 	背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。
    	 </td>
     </tr>
     <tr>
@@ -718,7 +718,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[] type) 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255)<br />
+   	 	(int[] type) 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255)
    	 </td>
     </tr>
 </tbody></table>
@@ -745,7 +745,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 ウィンドウタイトルを設定します。 
+   	 	ウィンドウタイトルを設定します。
    	 </td>
     </tr>
     <tr>
@@ -780,7 +780,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	 ウィンドウタイトルを取得します。 
+   	 	ウィンドウタイトルを取得します。
    	 </td>
     </tr>
     <tr>
@@ -815,7 +815,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウサイズを設定します。 
+   	 	ウィンドウサイズを設定します。
    	 </td>
     </tr>
     <tr>
@@ -858,7 +858,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウサイズを設定します。 
+   	 	ウィンドウサイズを設定します。
    	 </td>
     </tr>
     <tr>
@@ -901,7 +901,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウサイズを取得します。 
+   	 	ウィンドウサイズを取得します。
    	 </td>
     </tr>
     <tr>
@@ -909,7 +909,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[] type) ウィンドウサイズ（[0]=幅、[1]=高さ）<br />
+   	 	(int[] type) ウィンドウサイズ（[0]=幅、[1]=高さ）
    	 </td>
     </tr>
 </tbody></table>
@@ -936,7 +936,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウの位置を設定します。 
+   	 	ウィンドウの位置を設定します。
    	 </td>
     </tr>
     <tr>
@@ -979,7 +979,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウの位置を設定します。 
+   	 	ウィンドウの位置を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1022,7 +1022,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウの位置を取得します。 
+   	 	ウィンドウの位置を取得します。
    	 </td>
     </tr>
     <tr>
@@ -1030,7 +1030,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int[] type) ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）<br />
+   	 	(int[] type) ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）
    	 </td>
     </tr>
 </tbody></table>
@@ -1057,7 +1057,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ右側の余白を設定します。 
+   	 	ウィンドウ右側の余白を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1100,7 +1100,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ右側の余白を取得します。 
+   	 	ウィンドウ右側の余白を取得します。
    	 </td>
     </tr>
     <tr>
@@ -1108,7 +1108,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 余白（ピクセル）<br />
+   	 	(int type) 余白（ピクセル）
    	 </td>
     </tr>
 </tbody></table>
@@ -1135,7 +1135,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ左側の余白を設定します。 
+   	 	ウィンドウ左側の余白を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1178,7 +1178,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ左側の余白を取得します。 
+   	 	ウィンドウ左側の余白を取得します。
    	 </td>
     </tr>
     <tr>
@@ -1186,7 +1186,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 余白（ピクセル）<br />
+   	 	(int type) 余白（ピクセル）
    	 </td>
     </tr>
 </tbody></table>
@@ -1213,7 +1213,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ上側の余白を設定します。 
+   	 	ウィンドウ上側の余白を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1256,7 +1256,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ上側の余白を取得します。 
+   	 	ウィンドウ上側の余白を取得します。
    	 </td>
     </tr>
     <tr>
@@ -1264,7 +1264,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 余白（ピクセル）<br />
+   	 	(int type) 余白（ピクセル）
    	 </td>
     </tr>
 </tbody></table>
@@ -1291,7 +1291,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ下側の余白を設定します。 
+   	 	ウィンドウ下側の余白を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1334,7 +1334,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウ下側の余白を取得します。 
+   	 	ウィンドウ下側の余白を取得します。
    	 </td>
     </tr>
     <tr>
@@ -1342,7 +1342,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 余白（ピクセル）<br />
+   	 	(int type) 余白（ピクセル）
    	 </td>
     </tr>
 </tbody></table>
@@ -1369,7 +1369,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションウェイト（メインループのウェイト）の下限値を設定します。 
+   	 	アニメーションウェイト（メインループのウェイト）の下限値を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1404,7 +1404,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションウェイト（メインループのウェイト）の下限値を設定します。 
+   	 	アニメーションウェイト（メインループのウェイト）の下限値を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1439,7 +1439,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションウェイト（メインループのウェイト）の上限値を設定します。 
+   	 	アニメーションウェイト（メインループのウェイト）の上限値を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1474,7 +1474,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	アニメーションウェイト（メインループのウェイト）の上限値を設定します。 
+   	 	アニメーションウェイト（メインループのウェイト）の上限値を設定します。
    	 </td>
     </tr>
     <tr>
@@ -1509,7 +1509,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。 
+   	 	メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。
    	 </td>
     </tr>
     <tr>
@@ -1552,7 +1552,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	メインループの継続状態を取得します。 
+   	 	メインループの継続状態を取得します。
    	 </td>
     </tr>
     <tr>
@@ -1560,7 +1560,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(bool type) メインループの継続状態<br />
+   	 	(bool type) メインループの継続状態
    	 </td>
     </tr>
 </tbody></table>
@@ -1595,7 +1595,7 @@
    	 	Return
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string[] type) main関数の引数<br />
+   	 	(string[] type) main関数の引数
    	 </td>
     </tr>
 </tbody></table>
@@ -1622,7 +1622,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	現在の描画ラベルの内容を、画像ファイルに出力します。ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、次回の画面更新タイミングに合わせて実行されます。 
+   	 	現在の描画ラベルの内容を、画像ファイルに出力します。ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、次回の画面更新タイミングに合わせて実行されます。
    	 </td>
     </tr>
     <tr>
@@ -1665,7 +1665,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	main関数です。通常は自動で実行され、frameworkMain関数をコールします。ただし、メインプログラムでmain関数を定義する場合は、こちらは自動で実行されなくなるので、下記のframeworkMainを明示的に呼ぶ必要があります。 
+   	 	main関数です。通常は自動で実行され、frameworkMain関数をコールします。ただし、メインプログラムでmain関数を定義する場合は、こちらは自動で実行されなくなるので、下記のframeworkMainを明示的に呼ぶ必要があります。
    	 </td>
     </tr>
     <tr>
@@ -1708,7 +1708,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	フレームワークのメイン処理です。通常はmain関数から自動で実行されます。ただし、メインプログラムでmain関数を定義する場合は、自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。 
+   	 	フレームワークのメイン処理です。通常はmain関数から自動で実行されます。ただし、メインプログラムでmain関数を定義する場合は、自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。
    	 </td>
     </tr>
     <tr>
@@ -1751,7 +1751,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウがリサイズされた際にコールされるイベントハンドラです。 
+   	 	ウィンドウがリサイズされた際にコールされるイベントハンドラです。
    	 </td>
     </tr>
     <tr>
@@ -1794,7 +1794,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウが閉じられた際にコールされるイベントハンドラです。 
+   	 	ウィンドウが閉じられた際にコールされるイベントハンドラです。
    	 </td>
     </tr>
     <tr>
@@ -1837,7 +1837,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。 
+   	 	ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。
    	 </td>
     </tr>
     <tr>
@@ -1872,7 +1872,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。 
+   	 	paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。
    	 </td>
     </tr>
     <tr>
@@ -1909,7 +1909,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	起動時に一度だけコールされます。スプライトの生成・配置などの初期化処理は、ここに記述します。 
+   	 	起動時に一度だけコールされます。スプライトの生成・配置などの初期化処理は、ここに記述します。
    	 </td>
     </tr>
     <tr>
@@ -1952,7 +1952,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。 
+   	 	終了時に一度だけコールされます。終了時に行いたい処理があれば、ここに記述します。
    	 </td>
     </tr>
     <tr>
@@ -1995,7 +1995,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	画面更新タイミング（毎秒数十回）で毎回コールされます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、こに記述します。 
+   	 	画面更新タイミング（毎秒数十回）で毎回コールされます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、こに記述します。
    	 </td>
     </tr>
     <tr>
@@ -2038,7 +2038,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	画面更新タイミング（毎秒数十回）の間で毎回コールされます。スプライトの移動などを行いたい場合などは、ここに記述します。 
+   	 	画面更新タイミング（毎秒数十回）の間で毎回コールされます。スプライトの移動などを行いたい場合などは、ここに記述します。
    	 </td>
     </tr>
     <tr>
@@ -2081,7 +2081,7 @@
    	 	Description
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。 
+   	 	ウィンドウサイズが変更された場合にコールされます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。
    	 </td>
     </tr>
     <tr>
