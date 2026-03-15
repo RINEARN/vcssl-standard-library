@@ -7,9 +7,9 @@
 <body>
 <h1>Thread</h1>
 <hr />
-<h2 id="abstract">Abstract</h2>
+<h2 id="abstract">概要</h2>
 <p>VCSSL Thread ライブラリ は、マルチスレッドを扱うための標準ライブラリです。<\/p><div style=\"border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;\"><div style=\"font-weight:bold;\">- 注意 -<\/div><div style=\"padding:10px;\">現行版の RINEARN VCSSL Runtime では、VCSSL Thread APIをサポートしていますが、マルチスレッド処理への対応が十分ではありません。 これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。 これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。 RINEARN VCSSL Runtime で VCSSL Thread API の使用を検討する場合は、この事情を踏まえた上で判断してください。現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。 <\/div><div style=\"font-weight:bold;\">・同一の配列変数へ、複数スレッドから同時アクセスした場合における、インデックスの不整合<\/div><div style=\"padding:10px;\">現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。 <\/div><div style=\"font-weight:bold;\">・パフォーマンスのボトルネック<\/div><div style=\"padding:10px;\">現在のVCSSLエンジンには、マルチスレッド処理ではボトルネックとなる箇所を複数含んでいます。このため、並列性の高い処理を複数スレッドで分担しても、パフォーマンスの大幅な向上は見込めません。 つまり、RINEARN VCSSL Runtime における Thread API は、あくまで複数の処理の流れを作る目的には有効ですが、演算パフォーマンスを引き出すような目的にはあまり意味がありません。 <\/div><div style=\"font-weight:bold;\">・同一の関数への、非常に頻繁な複数スレッド同時アクセスに伴う、エンジンの緊急停止<\/div><div style=\"padding:10px;\">原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。 しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。 ※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。<\/div>以上のような不都合が生じる可能性があるため、現状の RINEARN VCSSL Runtime では、VCSSL Thread APIを厳密性の要求される処理（科学技術計算や数値計算など）に使用する事は推奨されません。<\/div><hr />
-<h2 id="abstract" style="page-break-before:always;" >Index</h2>
+<h2 id="abstract" style="page-break-before:always;" >目次</h2>
 <dl>
 <dt><a href="#newThread">int newThread()</a></dt>
 <dd>スレッドを生成し、それに固有の識別番号である「スレッドID」を割り振って返します。</dd>
@@ -26,23 +26,23 @@
 <dt><a href="#waitForThread">void waitForThread( int threadID )</a></dt>
 <dd>スレッドの実行が終了するまで、呼び出し元の処理を待機します。現在は、より新しい <a href="#awaitThread">awaitThread</a> が利用可能です。この関数は互換目的でサポートされています。</dd>
 <hr />
-<h2 id="event" style="page-break-before:always;" >Event Handlers</h2>
+<h2 id="event" style="page-break-before:always;" >イベントハンドラ</h2>
 <dt><a href="#onThreadStart">void onThreadStart( int threadID )</a></dt>
 <dd>スレッドが生成され、実行が開始した時にコールされます。この関数は、生成されたスレッドの処理として実行されます。ここに、スレッドに行わせたい処理を実装します。</dd>
 <dt><a href="#onThreadEnd">void onThreadEnd( int threadID )</a></dt>
 <dd>スレッドの処理が終了した時にコールされます。</dd>
 </dl>
 <hr />
-<h2 id="struct" style="page-break-before:always;" >Structs</h2>
-<p> - None -</p>
-<hr /><h2 id="variable">Variables</h2>
-<p> - None -</p>
+<h2 id="struct" style="page-break-before:always;" >構造体</h2>
+<p> - なし -</p>
+<hr /><h2 id="variable">変数</h2>
+<p> - なし -</p>
 <hr />
-<h2 id="function" style="page-break-before:always;" >Functions</h2>
+<h2 id="function" style="page-break-before:always;" >関数</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="newThread"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	newThread
@@ -50,7 +50,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	int newThread()
@@ -58,7 +58,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドを生成し、それに固有の識別番号である「スレッドID」を割り振って返します。
@@ -66,10 +66,10 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) 生成したスレッドに割り振られたスレッドID（識別番号）
+   	 	(int型) 生成したスレッドに割り振られたスレッドID（識別番号）
    	 </td>
     </tr>
 </tbody></table>
@@ -77,7 +77,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="deleteThread"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	deleteThread
@@ -85,7 +85,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void deleteThread( int threadID )
@@ -93,7 +93,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドを破棄します。
@@ -101,18 +101,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : 対象スレッドのID 
+   	 	(int型) threadID : 対象スレッドのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -120,7 +120,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="startThread"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	startThread
@@ -128,7 +128,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void startThread( int threadID )
@@ -136,7 +136,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドの実行を開始します。
@@ -144,18 +144,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : 対象スレッドのID 
+   	 	(int型) threadID : 対象スレッドのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -163,7 +163,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="awaitThread"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	awaitThread
@@ -171,7 +171,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void awaitThread( int threadID )
@@ -179,7 +179,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドの実行が終了するまで、呼び出し元の処理を待機します。
@@ -187,18 +187,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : 対象スレッドのID 
+   	 	(int型) threadID : 対象スレッドのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -206,7 +206,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="sleepThread"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	sleepThread
@@ -214,7 +214,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void sleepThread( int threadID, int time )
@@ -222,7 +222,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドの実行を一時停止します。
@@ -230,18 +230,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : 対象スレッドのID <br />(int type) time : 待機する時間のミリ秒数 
+   	 	(int型) threadID : 対象スレッドのID <br />(int型) time : 待機する時間のミリ秒数 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -249,7 +249,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	sleepThread
@@ -257,7 +257,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void sleepThread( int threadID, int milliSeconds, nanoSeconds )
@@ -265,7 +265,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドの実行を一時停止します。
@@ -273,18 +273,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : 対象スレッドのID <br />(int type) milliSeconds : 待機する時間のミリ秒数 <br />( type) nanoSeconds : 待機する時間のナノ秒数 
+   	 	(int型) threadID : 対象スレッドのID <br />(int型) milliSeconds : 待機する時間のミリ秒数 <br />(型) nanoSeconds : 待機する時間のナノ秒数 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -292,7 +292,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="waitForThread"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	waitForThread
@@ -300,7 +300,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void waitForThread( int threadID )
@@ -308,7 +308,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドの実行が終了するまで、呼び出し元の処理を待機します。現在は、より新しい <a href="#awaitThread">awaitThread</a> が利用可能です。この関数は互換目的でサポートされています。
@@ -316,28 +316,28 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : 対象スレッドのID 
+   	 	(int型) threadID : 対象スレッドのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
 
 <hr />
-<h2 id="event" style="page-break-before:always;" >Event Handlers</h2>
+<h2 id="event" style="page-break-before:always;" >イベントハンドラ</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onThreadStart"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	onThreadStart
@@ -345,7 +345,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void onThreadStart( int threadID )
@@ -353,7 +353,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドが生成され、実行が開始した時にコールされます。この関数は、生成されたスレッドの処理として実行されます。ここに、スレッドに行わせたい処理を実装します。
@@ -361,18 +361,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : イベント発生元スレッドのID 
+   	 	(int型) threadID : イベント発生元スレッドのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -380,7 +380,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onThreadEnd"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	onThreadEnd
@@ -388,7 +388,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void onThreadEnd( int threadID )
@@ -396,7 +396,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	スレッドの処理が終了した時にコールされます。
@@ -404,18 +404,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) threadID : イベント発生元スレッドのID 
+   	 	(int型) threadID : イベント発生元スレッドのID 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>

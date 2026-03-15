@@ -7,9 +7,9 @@
 <body>
 <h1>TextFile</h1>
 <hr />
-<h2 id="abstract">Abstract</h2>
+<h2 id="abstract">概要</h2>
 <p>このライブラリ file.TextFile は、汎用的なテキストファイル入出力の機能を提供します。<br \/>特に、CSV形式やTSV形式のファイル入出力をサポートします。<\/p><p>そもそもVCSSLでは、最初期のバージョンから、CSV形式やTSV形式を含む、基礎的なテキストファイル入出力機能が標準でサポートされています。<br \/>しかし、初期のVCSSLが専ら数値計算を目的とした言語であった事から、これらの機能も数値データファイルの入出力を前提とした仕様となっており、汎用的な用途においては不便な点もあります。<br \/>例えば、VCSSLの標準機能である System.open(string filePath, string mode) 関数でCSV形式やTSV形式のファイルを開く事ができますが、これは数値データファイルの操作を想定して設計された機能であるため、非常に単純な動作を行います。特別な記号のエスケープや、値を必要に応じてダブルクォーテーションで囲むなどの処理は行われません。<br \/>（ その代わり、数値データファイルの入出力では高速に動作します。 ）<\/p><p>そこで、このモジュールでは、数値データファイルのみならず、より汎用的なテキストファイル入出力機能を提供する事を目的としています。<br \/>例えば書き込みにおいては、値がカンマ(CSV時)やタブ(TSV時)などの区切り文字を含む場合、値全体がダブルクォーテーションで囲まれます。値が改行を含む場合も同様です。<br \/>読み込み時においても、ダブルクォーテーションで囲まれた部分は、まとめて一つの値として読み込まれ、その中に区切り文字や改行を含んでいても問題ありません。<\/p><p>また、書き込む値がダブルクォーテーションを含む場合は、連続したダブルクォーテーションにエスケープされます。<br \/>読み込み時においても、連続したダブルクォーテーションはエスケープされているものとして扱われます。<\/p><p>なお、このモジュールでは、一般的なCSV形式やTSV形式だけでなく、区切り文字（デリミタ）や引用符（エンクロージャ）の記号を明示的に指定する事も可能です。<\/p><hr />
-<h2 id="abstract" style="page-break-before:always;" >Index</h2>
+<h2 id="abstract" style="page-break-before:always;" >目次</h2>
 <dl>
 <dt><a href="#TextFile">struct TextFile</a></dt>
 <dd>テキストファイル構造体です。ファイルIDなどのシステムリソースや、区切り文字情報などを保持します。</dd>
@@ -79,11 +79,11 @@
 <dd>テキストファイルの有効行数をカウントします。引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。この関数が返す有効行数を超えてreadln関数をコールする事はできません。</dd>
 </dl>
 <hr />
-<h2 id="struct" style="page-break-before:always;" >Structs</h2>
+<h2 id="struct" style="page-break-before:always;" >構造体</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="TextFile"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	構造体名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	TextFile
@@ -91,7 +91,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	struct TextFile
@@ -99,7 +99,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイル構造体です。ファイルIDなどのシステムリソースや、区切り文字情報などを保持します。
@@ -107,11 +107,11 @@
     </tr>
 </tbody></table>
 
-<hr /><h2 id="variable">Variables</h2>
+<hr /><h2 id="variable">変数</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="READ"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	READ
@@ -119,7 +119,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string READ
@@ -127,7 +127,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	汎用テキストファイルの「読み込み」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。引用符の挙動は <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a> が適用されます。
@@ -138,7 +138,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WRITE"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	WRITE
@@ -146,7 +146,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string WRITE
@@ -154,7 +154,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	汎用テキストファイルの「書き込み」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。引用符の挙動は <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a> が適用されます。
@@ -165,7 +165,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="APPEND"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	APPEND
@@ -173,7 +173,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string APPEND
@@ -181,7 +181,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	汎用テキストファイルの「追記」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。引用符の挙動は <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a> が適用されます。
@@ -192,7 +192,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="READ_TSV"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	READ_TSV
@@ -200,7 +200,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string READ_TSV
@@ -208,7 +208,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	TSV形式ファイルの「読み込み」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
@@ -219,7 +219,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WRITE_TSV"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	WRITE_TSV
@@ -227,7 +227,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string WRITE_TSV
@@ -235,7 +235,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	TSV形式ファイルの「書き込み」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
@@ -246,7 +246,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="APPEND_TSV"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	APPEND_TSV
@@ -254,7 +254,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string APPEND_TSV
@@ -262,7 +262,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	TSV形式ファイルの「追記」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
@@ -273,7 +273,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="READ_CSV"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	READ_CSV
@@ -281,7 +281,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string READ_CSV
@@ -289,7 +289,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	CSV形式ファイルの「読み込み」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
@@ -300,7 +300,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WRITE_CSV"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	WRITE_CSV
@@ -308,7 +308,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string WRITE_CSV
@@ -316,7 +316,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	CSV形式ファイルの「書き込み」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
@@ -327,7 +327,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="APPEND_CSV"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	APPEND_CSV
@@ -335,7 +335,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const string APPEND_CSV
@@ -343,7 +343,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	CSV形式ファイルの「追記」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a> が適用されます。
@@ -354,7 +354,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ENCLOSED_ALL"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	ENCLOSED_ALL
@@ -362,7 +362,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const int ENCLOSED_ALL
@@ -370,7 +370,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	全ての値を引用符記号（エンクロージャ）で囲むオプションです。
@@ -381,7 +381,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ENCLOSED_IF_NECESSARY"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	ENCLOSED_IF_NECESSARY
@@ -389,7 +389,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const int ENCLOSED_IF_NECESSARY
@@ -397,7 +397,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	必要な値のみ引用符記号（エンクロージャ）で囲むオプションです。CSV/TSV形式ファイルのデフォルト設定値です。
@@ -408,7 +408,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ENCLOSED_NONE"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	変数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	ENCLOSED_NONE
@@ -416,7 +416,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	const int ENCLOSED_NONE
@@ -424,7 +424,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	どの値も引用符記号（エンクロージャ）で囲まないオプションです。汎用テキストファイルのデフォルト設定値です。
@@ -433,11 +433,11 @@
 </tbody></table>
 
 <hr />
-<h2 id="function" style="page-break-before:always;" >Functions</h2>
+<h2 id="function" style="page-break-before:always;" >関数</h2>
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="openTextFile"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	openTextFile
@@ -445,7 +445,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	TextFile openTextFile(string filePath, string mode)
@@ -453,7 +453,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイル名とモードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。<dl>  <dt><a href="#WRITE">WRITE</a></dt>  <dd>特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。</dd>  <dt><a href="#APPEND">APPEND</a></dt>  <dd>特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。</dd>  <dt><a href="#READ">READ</a></dt>  <dd>特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。</dd>  <dt><a href="#WRITE_CSV">WRITE_CSV</a></dt>  <dd>CSV（カンマ区切り）ファイル用に設定された書き込みモードです。</dd>  <dt><a href="#APPEND_CSV">APPEND_CSV</a></dt>  <dd>CSV（カンマ区切り）ファイル用に設定された追記モードです。</dd>  <dt><a href="#READ_CSV">READ_CSV</a></dt>  <dd>CSV（カンマ区切り）ファイル用に設定された読み込みモードです。</dd>  <dt><a href="#WRITE_TSV">WRITE_TSV</a></dt>  <dd>TSV（タブ区切り）ファイル用に設定された書き込みモードです。</dd>  <dt><a href="#APPEND_TSV">APPEND_TSV</a></dt>  <dd>TSV（タブ区切り）ファイル用に設定された追記モードです。</dd>  <dt><a href="#READ_TSV">READ_TSV</a></dt>  <dd>TSV（タブ区切り）ファイル用に設定された読み込みモードです。</dd></dl>
@@ -461,18 +461,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string type) filePath : ファイル名 <br />(string type) mode : モード 
+   	 	(string型) filePath : ファイル名 <br />(string型) mode : モード 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) 開いたファイルのテキストファイル構造体
+   	 	(TextFile型) 開いたファイルのテキストファイル構造体
    	 </td>
     </tr>
 </tbody></table>
@@ -480,7 +480,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	openTextFile
@@ -488,7 +488,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	TextFile openTextFile(string filePath, string mode, string textEncoding)
@@ -496,7 +496,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイル名、モード、文字コードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。<dl>  <dt><a href="#WRITE">WRITE</a></dt>  <dd>特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。</dd>  <dt><a href="#APPEND">APPEND</a></dt>  <dd>特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。</dd>  <dt><a href="#READ">READ</a></dt>  <dd>特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。</dd>  <dt><a href="#WRITE_CSV">WRITE_CSV</a></dt>  <dd>CSV（カンマ区切り）ファイル用に設定された書き込みモードです。</dd>  <dt><a href="#APPEND_CSV">APPEND_CSV</a></dt>  <dd>CSV（カンマ区切り）ファイル用に設定された追記モードです。</dd>  <dt><a href="#READ_CSV">READ_CSV</a></dt>  <dd>CSV（カンマ区切り）ファイル用に設定された読み込みモードです。</dd>  <dt><a href="#WRITE_TSV">WRITE_TSV</a></dt>  <dd>TSV（タブ区切り）ファイル用に設定された書き込みモードです。</dd>  <dt><a href="#APPEND_TSV">APPEND_TSV</a></dt>  <dd>TSV（タブ区切り）ファイル用に設定された追記モードです。</dd>  <dt><a href="#READ_TSV">READ_TSV</a></dt>  <dd>TSV（タブ区切り）ファイル用に設定された読み込みモードです。</dd></dl>また、文字コードは下記の文字列リテラルから選択ます。<dl>  <dt>&quotShift_JIS&quot</dt>  <dd>Shift_JIS です。ハイフン（ - ）では無くアンダーバー（ _ ）である事に注意して下さい。</dd>  <dt>&quotUTF-8&quot</dt>  <dd>UTF-8 です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。</dd>  <dt>&quotEUC-JP&quot</dt>  <dd>EUC-JP です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。</dd></dl>
@@ -504,18 +504,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string type) filePath : ファイル名 <br />(string type) mode : モード <br />encoding : 文字コード 
+   	 	(string型) filePath : ファイル名 <br />(string型) mode : モード <br />encoding : 文字コード 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) 開いたファイルのテキストファイル構造体
+   	 	(TextFile型) 開いたファイルのテキストファイル構造体
    	 </td>
     </tr>
 </tbody></table>
@@ -523,7 +523,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="close"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	close
@@ -531,7 +531,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void close(TextFile &amp;textFile)
@@ -539,7 +539,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルへのアクセスを閉じます。特に書き込みアクセス後には、バッファされている内容を最後まで書き込み切るためにも、必ず呼び出す必要があります。
@@ -547,18 +547,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -566,7 +566,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getEndOfLineCode"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	getEndOfLineCode
@@ -574,7 +574,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	string getEndOfLineCode(TextFile &amp;textFile)
@@ -582,7 +582,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, CR, LF の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, CR, LF の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href="#setEndOfLineCode">setEndOfLineCode</a> 関数で改行コードを明示指定した後は、その指定値が返されます。
@@ -590,18 +590,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string type) 改行コード
+   	 	(string型) 改行コード
    	 </td>
     </tr>
 </tbody></table>
@@ -609,7 +609,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setEndOfLineCode"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	setEndOfLineCode
@@ -617,7 +617,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void setEndOfLineCode(TextFile &amp;textFile, string endOfLineCode)
@@ -625,7 +625,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイル入出力に使用する改行コードを指定します。改行コードの指定には、System ライブラリに定義されている、以下の定数を使用する事が推奨されます。<dl>  <dt>LF</dt>  <dd>文字コードで 0x0A, 一般的なエスケープシーケンスで \n に対応する改行コードです。</dd>  <dt>CR</dt>  <dd>文字コードで 0x0D, 一般的なエスケープシーケンスで \r に対応する改行コードです。</dd>  <dt>CR+LF</dt>  <dd>文字コードで 0x0D 0x0A, 一般的なエスケープシーケンスで \r\n に対応する改行コードです。（これは1つの定数では無く、CRとLFを加算した式です。）</dd>  <dt>EOL</dt>  <dd>実行環境におけるデフォルトの文字コードを表します。通常は CR, LF, CR+LF のいずれかが使用されます。</dd></dl>
@@ -633,18 +633,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 <br />(string type) endOfLineCode : 改行コード 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 <br />(string型) endOfLineCode : 改行コード 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -652,7 +652,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setCommentLineCode"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	setCommentLineCode
@@ -660,7 +660,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void setCommentLineCode(TextFile &amp;textFile, string commentLineCode)
@@ -668,7 +668,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	コメント行を表す行頭文字列を指定します。ここで指定した文字列で始まる行は、読み込み時に無視されます。また、<a href="#commentln">commentln</a> 関数でコメント行を出力する際に、ここで指定した文字列が使用されます。なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。<br />この項目は、デフォルトでは何も設定されていないため、コメント行を考慮する際は必ず設定する必要があります。一般的によく用いられる行頭文字列は、以下のようなものがあります。<dl>  <dt>"#" (ナンバー記号)</dt>  <dd>CSV/TSVファイルや、スクリプトなどによく用いられます。</dd>  <dt>":" （コロン）</dt>  <dd>一部の設定ファイルやスクリプトなどで用いられます。</dd>  <dt>";" （セミコロン）</dt>  <dd>一部の設定ファイルやスクリプトなどで用いられます。</dd>  <dt>"//" （ダブルスラッシュ）</dt>  <dd>一部のプログラミング言語で用いられます。</dd></dl>
@@ -676,18 +676,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 <br />endOfLineCode : コメント行を表す行頭文字列 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 <br />endOfLineCode : コメント行を表す行頭文字列 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -695,7 +695,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getCommentLineCode"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	getCommentLineCode
@@ -703,7 +703,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	string getCommentLineCode(TextFile &amp;textFile)
@@ -711,7 +711,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	コメント行を表す行頭文字列を返します。
@@ -719,18 +719,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string type) コメント行を表す行頭文字列
+   	 	(string型) コメント行を表す行頭文字列
    	 </td>
     </tr>
 </tbody></table>
@@ -738,7 +738,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="isReadable"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	isReadable
@@ -746,7 +746,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	bool isReadable(TextFile &amp;textFile)
@@ -754,7 +754,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイルが読み込み可能な状態であるか確認します。
@@ -762,18 +762,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(bool type) 読み込み可能なモードであればtrue
+   	 	(bool型) 読み込み可能なモードであればtrue
    	 </td>
     </tr>
 </tbody></table>
@@ -781,7 +781,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="isWritable"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	isWritable
@@ -789,7 +789,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	bool isWritable(TextFile &amp;textFile)
@@ -797,7 +797,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイルが読み込み可能な状態であるか確認します。
@@ -805,18 +805,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(bool type) 読み込み可能なモードであればtrue
+   	 	(bool型) 読み込み可能なモードであればtrue
    	 </td>
     </tr>
 </tbody></table>
@@ -824,7 +824,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setDelimiter"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	setDelimiter
@@ -832,7 +832,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void setDelimiter(TextFile &amp;textFile, string delimiter)
@@ -840,7 +840,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	値の区切り文字（デリミタ）を設定します。区切り文字を設定すると、 <a href="#read">read</a> 関数や<a href="#readln">readln</a> 関数が、値を区切って配列として返すようになります。一般的によく用いられる区切り文字は、以下のようなものがあります。また、<a href="#write">write</a> 関数や<a href="#writeln">writeln</a>が、書き込み時に値を区切り文字で区切るようになります。<dl>  <dt>"," (カンマ記号)</dt>  <dd>CSVファイルに用いられます。</dd>  <dt>"	" (タブ記号)</dt>  <dd>TSVファイルに用いられます。</dd>  <dt>"&nbsp" (半角スペース記号)</dt>  <dd>SSVファイルに用いられます。</dd>  <dt>";" (セミコロン記号)</dt>  <dd>一部の設定ファイルに用いられます。</dd></dl>なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。
@@ -848,18 +848,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 <br />(string type) delimiter : 値の区切り文字（デリミタ） 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 <br />(string型) delimiter : 値の区切り文字（デリミタ） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -867,7 +867,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setEnclosure"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	setEnclosure
@@ -875,7 +875,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void setEnclosure(TextFile &amp;textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption)
@@ -883,7 +883,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	値を囲む引用符記号（エンクロージャ）を設定します。引用符記号を設定すると、<a href="#write">write</a> 関数や<a href="#writeln">writeln</a>が、書き込み時に値を引用符記号で囲むようになります。また、<a href="#read">read</a> 関数や<a href="#readln">readln</a> 関数が、読み込み時に引用符記号を解釈するようになります。<br />引用符記号は、enclosure に指定します。引数一般によく用いられる引用符記号は、以下のようなものがあります。<dl>  <dt>&quot\&quot&quot （ダブルクォーテーション）</dt>  <dd>「 &quot 」記号です。CSV/TSV形式ファイルでよく用いられます。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。</dd>  <dt>&quot'&quot （シングルクォーテーション）</dt>  <dd>一部のファイルで使用されます。</dd></dl>なお、値が必ず引用符記号で囲まれるべきか、必要な場合のみ囲まれるべきかは、引数のオプション enclosingOption で指定します。このオプションの指定値は以下の定数から選択します。<dl>  <dt><a href="#ENCLOSED_ALL">ENCLOSED_ALL</a></dt>  <dd>値が必ず引用符で囲まれる形式です。</dd>  <dt><a href="#ENCLOSED_ALL">ENCLOSED_IF_NECESSARY</a></dt>  <dd>必要な場合のみ、値が引用符記号で囲まれる形式です。必要な場合とは、書き込み/読み込み内容が、   「 区切り文字（デリミタ）、引用符記号、コメント行頭記号、改行 」のいずれかを含む場合です。</dd>  <dt><a href="#ENCLOSED_ALL">ENCLOSED_NONE</a></dt>  <dd>いかなる場合においても、値が引用符で囲まれない形式です。</dd></dl>もしも、引用符記号で囲む値が、さらに引用符記号を含んでいる場合、それは別の記号でエスケープされる必要があります。これは引数 enclosureEscapeCharacter で指定します。一般的によく用いられるエスケープ記号は、以下のようなものがあります。<dl>  <dt>&quot\&quot&quot （ダブルクォーテーション）</dt>  <dd>「 &quot 」記号です。CSV/TSV形式ファイルで、    引用符記号がダブルクォーテーションの場合、よく用いられます。    エスケープ結果は連続したダブルクォーテーションとなります。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。</dd>  <dt>&quot\\&quot （バックスラッシュ）</dt>    <dd>「 \ 」記号です。プログラミング言語などでよく使用されます。    VCSSLでは、バックスラッシュは特別な意味を持つため、    このように &quot\\&quot というようなリテラルで指定します。</dd></dl>なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。
@@ -891,18 +891,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string type) enclosure : 値を囲む引用符文字（エンクロージャ） <br />(string type) enclosureEscapeCharacter : 値に引用符文字（エンクロージャ）が含まれる場合にエスケープする文字 <br />(int type) enclosingOption : 囲み方のオプション 
+   	 	(string型) enclosure : 値を囲む引用符文字（エンクロージャ） <br />(string型) enclosureEscapeCharacter : 値に引用符文字（エンクロージャ）が含まれる場合にエスケープする文字 <br />(int型) enclosingOption : 囲み方のオプション 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -910,7 +910,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="write"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	write
@@ -918,7 +918,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void write(TextFile &amp;textFile, ... string value[ ])
@@ -926,7 +926,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルに文字列を書き込みます。複数の内容を指定した場合、区切り文字（デリミタ）が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。<br />なお、最後の書き込み内容の末尾に、区切り文字は付加されません。従って、連続的に呼び出して書き込みを行う場合、必要に応じて<a href="#delimit">delimit</a> 関数で区切り文字を挟む必要があります。
@@ -934,18 +934,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 <br />(...string[] type) value : 書き込む文字列（可変長引数のため複数指定可能） 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 <br />(...string[]型) value : 書き込む文字列（可変長引数のため複数指定可能） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -953,7 +953,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="writeln"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	writeln
@@ -961,7 +961,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void writeln(TextFile &amp;textFile, ... string value[ ])
@@ -969,7 +969,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルに文字列を書き込み、改行します。複数の内容を指定した場合、区切り文字が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。
@@ -977,18 +977,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 <br />(...string[] type) value : 書き込む文字列（可変長引数のため複数指定可能） 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 <br />(...string[]型) value : 書き込む文字列（可変長引数のため複数指定可能） 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -996,7 +996,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="delimit"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	delimit
@@ -1004,7 +1004,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void delimit(TextFile &amp;textFile)
@@ -1012,7 +1012,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルに区切り文字を書き込みます。
@@ -1020,18 +1020,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1039,7 +1039,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="commentln"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	commentln
@@ -1047,7 +1047,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	void commentln(TextFile &amp;textFile, string comment)
@@ -1055,7 +1055,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルにコメント行を書き込みます。この関数をコールするよりも前に、<a href="#setCommentLineCode">setCommentLineCode</a> 関数で、コメント行の行頭文字列を設定する必要があります。
@@ -1063,18 +1063,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 <br />(string type) comment : コメント 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 <br />(string型) comment : コメント 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(void type) 
+   	 	(void型) 
    	 </td>
     </tr>
 </tbody></table>
@@ -1082,7 +1082,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="readln"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	readln
@@ -1090,7 +1090,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	string[ ] readln(TextFile &amp;textFile)
@@ -1098,7 +1098,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルから、一行分の内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。
@@ -1106,18 +1106,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string[] type) 読み込んだ内容
+   	 	(string[]型) 読み込んだ内容
    	 </td>
     </tr>
 </tbody></table>
@@ -1125,7 +1125,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="read"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	read
@@ -1133,7 +1133,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	string[ ] read(TextFile &amp;textFile)
@@ -1141,7 +1141,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルから、全ての内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字または改行で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href="#setEnclosure">setEnclosure</a> で行います。
@@ -1149,18 +1149,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string[] type) 読み込んだ内容
+   	 	(string[]型) 読み込んだ内容
    	 </td>
     </tr>
 </tbody></table>
@@ -1168,7 +1168,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="loadln"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	loadln
@@ -1176,7 +1176,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	string loadln(TextFile &amp;textFile)
@@ -1184,7 +1184,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイルから一行を読み込み、そのまま返します。ただし、引用符記号が設定されていて、引用符記号で囲まれた内部に改行がある場合、それは行末とは見なされません。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。また、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。
@@ -1192,18 +1192,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string type) 読み込んだ行の内容
+   	 	(string型) 読み込んだ行の内容
    	 </td>
     </tr>
 </tbody></table>
@@ -1211,7 +1211,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="load"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	load
@@ -1219,7 +1219,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	string load(TextFile &amp;textFile)
@@ -1227,7 +1227,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	ファイルから全行を読み込み、そのまま返します。ただし、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。なお、ファイル内に複数の改行コードが混在している場合は統一されます。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。
@@ -1235,18 +1235,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(string type) 読み込んだ行の内容
+   	 	(string型) 読み込んだ行の内容
    	 </td>
     </tr>
 </tbody></table>
@@ -1254,7 +1254,7 @@
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="countln"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Name
+   	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
    	 	countln
@@ -1262,7 +1262,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Declaration
+   	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	int countln(TextFile &amp;textFile)
@@ -1270,7 +1270,7 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Description
+   	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
    	 	テキストファイルの有効行数をカウントします。引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。つまり、CSV/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。readln関数でCSV/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。この関数が返す有効行数を超えてreadln関数をコールする事はできません。
@@ -1278,18 +1278,18 @@
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Parameters
+   	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(TextFile type) textFile : 対象のテキストファイル構造体 
+   	 	(TextFile型) textFile : 対象のテキストファイル構造体 
    	 </td>
     </tr>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
-   	 	Return
+   	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int type) テキストファイルの有効行数
+   	 	(int型) テキストファイルの有効行数
    	 </td>
     </tr>
 </tbody></table>
