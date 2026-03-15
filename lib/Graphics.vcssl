@@ -18,6 +18,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。
  * </p>
@@ -34,6 +35,10 @@ coding UTF-8;
  * いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。
  * <br />
  * つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。
+ * </p>
+ *
+ * <p>
+ （※ 「 グラフィックスデータ 」は、英語版での呼称は「グラフィックスリソース」で、そちらの方が本来の意味にマッチします。しかし日本語版のドキュメントでは、語感の易しさを最優先して、リソースではなくデータと呼んでいます。どちらで呼んでも間違いではありません。）
  * </p>
  * 
  * <p>
@@ -58,28 +63,98 @@ coding UTF-8;
  * <br />
  * より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。
  * </p>
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL Graphics library is one of the standard libraries for handling graphics in VCSSL.
+ * </p>
  * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * <p>
+ * In VCSSL, there are three standard libraries related to drawing: Graphics, Graphics2D, and Graphics3D.
+ * <br />
+ * Among them, the Graphics library provides management functions for drawing resources, while the Graphics2D and Graphics3D libraries provide the actual drawing functions.
+ * </p>
+ * 
+ * <p>
+ * To perform drawing, resources such as images, buffers, and streams are required.
+ * <br />
+ * In some, and probably many, languages, these are often treated as separate objects. In VCSSL, however, they are handled collectively as "graphics resources."
+ * <br />
+ * In other words, in VCSSL, both a buffer for rendering real-time 3DCG animation and a fixed image loaded from an image file are treated uniformly as "graphics resources."
+ * </p>
+ * 
+ * <p>
+ * The Graphics library provides management functions for these graphics resources, such as creation, disposal, input/output, and basic processing.
+ * <br />
+ * For example, to read the image file "input.png", make its black parts transparent, and export it as "output.png", write the following:
+ * <div class="code">
+ * int g1 = newGraphics("input.png");  // Creates graphics resource g1 from an image file
+ * <br />
+ * int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  // Creates graphics resource g2 in which black in g1 is made transparent
+ * <br />
+ * exportGraphics(g2, "output.png", "PNG");  // Exports g2 to an image file
+ * <br />
+ * deleteGraphics(g1);  // Disposes g1
+ * <br />
+ * deleteGraphics(g2);  // Disposes g2
+ * </div>
+ * </p>
+ *
+ * <p>
+ * Functions are also provided for directly manipulating raster data (pixel arrays) to perform basic processing and drawing.
+ * <br />
+ * For more advanced drawing, use the Graphics2D and Graphics3D libraries together with this library.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
-/** エラーメッセージ、ファイルが見つからなかった場合。 */
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、ファイルが見つからなかった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when a file is not found.
+ */
 private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
 
-/** エラーメッセージ、ファイルパスが空文字だった場合。 */
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、ファイルパスが空文字だった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when the file path is an empty string.
+ */
 private const string ERROR_EMPTY_FILE_PATH = "ファイルのパスに、空の文字列が指定されました。";
 
-/** エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 */
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when the target file is a directory.
+ */
 private const string ERROR_FILE_IS_DIRECTORY = "このファイルはディレクトリであり、読み込みや書き込みは行えません： ";
 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルが普通に読み書き可能なものか確認します。
  * ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。
  * 
- * @param filePath ファイル名またはパス
+ * @param filePath ファイル名またはパス。
+ *
+ * !--- locale=En-US ---
+ * Checks whether the file path can normally be used for reading and writing.
+ * However, because a non-existent file may be created newly, existence is not checked here.
+ * 
+ * @param filePath The file name or path.
  */
 private void checkFilePath(string filePath) {
 	if (filePath == "") {
@@ -93,11 +168,19 @@ private void checkFilePath(string filePath) {
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、サイズが0ピクセルのイメージを保持します。
  *
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function holds an image of size 0 pixels.
+ *
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics(){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
@@ -105,12 +188,21 @@ int newGraphics(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、画像ファイルから読み込んだイメージがあらかじめ描き込まれています。
  *
  * @param filePath 画像ファイルの名称またはパス。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function is pre-filled with an image loaded from an image file.
+ *
+ * @param filePath The name or path of the image file.
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics( string filePath ){
   checkFilePath(filePath);
@@ -125,6 +217,7 @@ int newGraphics( string filePath ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
@@ -134,6 +227,17 @@ int newGraphics( string filePath ){
  * @param blue[][] ピクセルの青色成分（[Y][X]、0 ~ 255）。
  * @param alpha[][] ピクセルのα値成分（[Y][X]、0 ~ 255）。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function is pre-filled with an image loaded from pixel arrays.
+ *
+ * @param red[][] The red component of pixels ([Y][X], 0 to 255).
+ * @param green[][] The green component of pixels ([Y][X], 0 to 255).
+ * @param blue[][] The blue component of pixels ([Y][X], 0 to 255).
+ * @param alpha[][] The alpha component of pixels ([Y][X], 0 to 255).
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics( int red[][], int green[][], int blue[][], int alpha[][] ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
@@ -147,12 +251,21 @@ int newGraphics( int red[][], int green[][], int blue[][], int alpha[][] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、ピクセル配列から読み込んだイメージがあらかじめ描き込まれています。
  *
  * @param rgba[][][] ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function is pre-filled with an image loaded from a pixel array.
+ *
+ * @param rgba[][][] The pixel color components ([Y][X][color-component index], where the color-component index is 0=red, 1=green, 2=blue, and 3=alpha, with each value ranging from 0 to 255).
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics( int rgba[][][] ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphics();
@@ -166,6 +279,7 @@ int newGraphics( int rgba[][][] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
@@ -180,6 +294,22 @@ int newGraphics( int rgba[][][] ){
  * @param toBlue 変換後の色の緑色成分（0 ~ 255）。
  * @param toAlpha 変換後の色のα値成分（0 ~ 255）。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function is pre-filled with an image in which a specific color in another graphics resource has been converted to another color.
+ *
+ * @param baseGraphics The graphics resource ID of the source graphics resource holding the image to be converted.
+ * @param fromRed The red component of the source color to convert (0 to 255).
+ * @param fromGreen The green component of the source color to convert (0 to 255).
+ * @param fromBlue The blue component of the source color to convert (0 to 255).
+ * @param fromAlpha The alpha component of the source color to convert (0 to 255).
+ * @param toRed The red component of the destination color (0 to 255).
+ * @param toGreen The green component of the destination color (0 to 255).
+ * @param toBlue The blue component of the destination color (0 to 255).
+ * @param toAlpha The alpha component of the destination color (0 to 255).
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha ){
 
@@ -213,14 +343,25 @@ int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、別のグラフィックスデータの特定色を、別の色に変換したイメージがあらかじめ描き込まれています。
-
+ *
  * @param baseGraphics 変換元のイメージを保持するグラフィックスデータのID。
  * @param fromColor 変換対象の色の成分を格納する配列。
  * @param toColor 変換後の色の成分を格納する配列。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function is pre-filled with an image in which a specific color in another graphics resource has been converted to another color.
+ *
+ * @param baseGraphics The graphics resource ID of the source graphics resource holding the image to be converted.
+ * @param fromColor The array storing the components of the source color to convert.
+ * @param toColor The array storing the components of the destination color.
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics( int baseGraphics, int fromColor[], int toColor[] ){
 	int newID = newGraphics( baseGraphics, fromColor[0], fromColor[1], fromColor[2], fromColor[3], toColor[0], toColor[1], toColor[2], toColor[3] );
@@ -229,15 +370,27 @@ int newGraphics( int baseGraphics, int fromColor[], int toColor[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。
  * 
  * @param baseGraphics 元のイメージを保持するグラフィックスデータのID。
- * @param width 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小）
- * @param height 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小）
+ * @param width 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小）。
+ * @param height 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小）。
  * @param antialiasing 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function is pre-filled with a resized version of another graphics resource.
+ * 
+ * @param baseGraphics The graphics resource ID of the source graphics resource holding the original image.
+ * @param width The width of the graphics resource to create. The original image is resized to this width.
+ * @param height The height of the graphics resource to create. The original image is resized to this height.
+ * @param antialiasing Whether to smooth the resized result. If true is specified, the result becomes smoother, but processing time increases.
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics ( int baseGraphics, int width, int height, bool antialiasing ) {
   int resizedID = -1;
@@ -251,16 +404,29 @@ int newGraphics ( int baseGraphics, int width, int height, bool antialiasing ) {
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  * <br />
  * この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。
  * 
  * @param baseGraphics 元のイメージを保持するグラフィックスデータのID。
- * @param cropX 元の画像から抜き出す領域の左上頂点X座標
- * @param cropY 元の画像から抜き出す領域の左上頂点Y座標
- * @param cropWidth 元の画像から抜き出す領域の幅
- * @param cropHeight 元の画像から抜き出す領域の高さ
+ * @param cropX 元の画像から抜き出す領域の左上頂点X座標。
+ * @param cropY 元の画像から抜き出す領域の左上頂点Y座標。
+ * @param cropWidth 元の画像から抜き出す領域の幅。
+ * @param cropHeight 元の画像から抜き出す領域の高さ。
  * @return 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics resource and returns its unique identifier, called the graphics resource ID.
+ * <br />
+ * The graphics resource created by this function is pre-filled with a cropped portion of another graphics resource.
+ * 
+ * @param baseGraphics The graphics resource ID of the source graphics resource holding the original image.
+ * @param cropX The X coordinate of the upper-left corner of the area to crop from the original image.
+ * @param cropY The Y coordinate of the upper-left corner of the area to crop from the original image.
+ * @param cropWidth The width of the area to crop from the original image.
+ * @param cropHeight The height of the area to crop from the original image.
+ * @return The graphics resource ID assigned to the created graphics resource.
  */
 int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight ) {
   int newID = newGraphics();
@@ -275,9 +441,15 @@ int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cro
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータを破棄します。
  *
  * @param id 対象グラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Disposes a graphics resource.
+ *
+ * @param id The ID of the target graphics resource.
  */
 void deleteGraphics( int id ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( id );
@@ -285,10 +457,17 @@ void deleteGraphics( int id ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。
  *
  * @param id 対象グラフィックスデータのID。
- * @param 対象グラフィックスデータの幅（ピクセル数）。
+ * @return 対象グラフィックスデータの幅（ピクセル数）。
+ *
+ * !--- locale=En-US ---
+ * Returns the width, in pixels, of the image held by the graphics resource.
+ *
+ * @param id The ID of the target graphics resource.
+ * @return The width, in pixels, of the target graphics resource.
  */
 int getGraphicsWidth( int id ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -296,10 +475,17 @@ int getGraphicsWidth( int id ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。
  *
  * @param id 対象グラフィックスデータのID。
- * @param 対象グラフィックスデータの高さ（ピクセル数）。
+ * @return 対象グラフィックスデータの高さ（ピクセル数）。
+ *
+ * !--- locale=En-US ---
+ * Returns the height, in pixels, of the image held by the graphics resource.
+ *
+ * @param id The ID of the target graphics resource.
+ * @return The height, in pixels, of the target graphics resource.
  */
 int getGraphicsHeight( int id ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsHeight( id );
@@ -307,11 +493,19 @@ int getGraphicsHeight( int id ){
 
 
 /**
- * グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
+ * !--- locale=Ja-JP ---
+ * グラフィックスデータが保持するイメージを、画像ファイルとして出力します。
  *
  * @param id 対象グラフィックスデータのID。
  * @param name 出力ファイル名。
  * @param format 出力ファイルの形式。"JPEG" または "PNG"、もしくは "BMP" を指定します。
+ *
+ * !--- locale=En-US ---
+ * Outputs the image held by the graphics resource as an image file.
+ *
+ * @param id The ID of the target graphics resource.
+ * @param name The output file name.
+ * @param format The format of the output file. Specify "JPEG", "PNG", or "BMP".
  */
 void exportGraphics( int id, string name, string format ){
   checkFilePath(name);
@@ -320,12 +514,21 @@ void exportGraphics( int id, string name, string format ){
 
 
 /**
- * グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
+ * !--- locale=Ja-JP ---
+ * グラフィックスデータが保持するイメージを、画像ファイルとして出力します。
  *
  * @param id 対象グラフィックスデータのID。
  * @param name 出力ファイル名。
  * @param format 出力ファイルの形式。"JPEG" または "PNG"、もしくは "BMP" を指定します。
  * @param quality 画質（0.0  ~  100.0）。JPEG の場合に有効です。大きいほど高画質です。
+ *
+ * !--- locale=En-US ---
+ * Outputs the image held by the graphics resource as an image file.
+ *
+ * @param id The ID of the target graphics resource.
+ * @param name The output file name.
+ * @param format The format of the output file. Specify "JPEG", "PNG", or "BMP".
+ * @param quality The image quality (0.0 to 100.0). This is effective for JPEG. A larger value means higher quality.
  */
 void exportGraphics( int id, string name, string format, double quality ){
   checkFilePath(name);
@@ -334,6 +537,7 @@ void exportGraphics( int id, string name, string format, double quality ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
  *
  * @param id 対象グラフィックスデータのID。
@@ -341,6 +545,15 @@ void exportGraphics( int id, string name, string format, double quality ){
  * @param green[][] ピクセルの緑色成分（[Y][X]、0 ~ 255）。
  * @param blue[][] ピクセルの青色成分（[Y][X]、0 ~ 255）。
  * @param alpha[][] ピクセルのα値成分（[Y][X]、0 ~ 255）。
+ *
+ * !--- locale=En-US ---
+ * Replaces the image held by the graphics resource with the specified pixel arrays.
+ *
+ * @param id The ID of the target graphics resource.
+ * @param red[][] The red component of pixels ([Y][X], 0 to 255).
+ * @param green[][] The green component of pixels ([Y][X], 0 to 255).
+ * @param blue[][] The blue component of pixels ([Y][X], 0 to 255).
+ * @param alpha[][] The alpha component of pixels ([Y][X], 0 to 255).
  */
 void setGraphicsPixel( int id, int red[][], int green[][], int blue[][], int alpha[][] ){
   int width = length(red, 1);
@@ -351,10 +564,17 @@ void setGraphicsPixel( int id, int red[][], int green[][], int blue[][], int alp
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。
  *
  * @param id 対象グラフィックスデータのID。
  * @param rgba[][][] ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
+ *
+ * !--- locale=En-US ---
+ * Replaces the image held by the graphics resource with the specified pixel array.
+ *
+ * @param id The ID of the target graphics resource.
+ * @param rgba[][][] The pixel color components ([Y][X][color-component index], where the color-component index is 0=red, 1=green, 2=blue, and 3=alpha, with each value ranging from 0 to 255).
  */
 void setGraphicsPixel( int id, int rgba[][][] ){
   int height = length( rgba, 0 );
@@ -365,10 +585,17 @@ void setGraphicsPixel( int id, int rgba[][][] ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * イメージの全ピクセル色成分を格納する配列を返します。
  * 
  * @param id 対象グラフィックスデータのID。
  * @return ピクセルの色成分（[Y][X][色成分インデックス]、色成分インデックスは「0=赤 / 1=緑 / 2=青 / 3=α」、値の範囲は0 ~ 255）。
+ *
+ * !--- locale=En-US ---
+ * Returns an array storing all pixel color components of the image.
+ * 
+ * @param id The ID of the target graphics resource.
+ * @return The pixel color components ([Y][X][color-component index], where the color-component index is 0=red, 1=green, 2=blue, and 3=alpha, with each value ranging from 0 to 255).
  */
 int[][][] getGraphicsPixel( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -384,10 +611,17 @@ int[][][] getGraphicsPixel( int id ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * イメージの全ピクセルについて、赤色成分のみを格納する配列を返します。
  * 
  * @param id 対象グラフィックスデータのID。
  * @return ピクセルの赤色成分（[Y][X]、値の範囲は0 ~ 255）。
+ *
+ * !--- locale=En-US ---
+ * Returns an array storing only the red component for all pixels of the image.
+ * 
+ * @param id The ID of the target graphics resource.
+ * @return The red component of pixels ([Y][X], with values ranging from 0 to 255).
  */
 int[][] getGraphicsPixelRed( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -403,10 +637,17 @@ int[][] getGraphicsPixelRed( int id ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * イメージの全ピクセルについて、緑色成分のみを格納する配列を返します。
  * 
  * @param id 対象グラフィックスデータのID。
  * @return ピクセルの緑色成分（[Y][X]、値の範囲は0 ~ 255）。
+ *
+ * !--- locale=En-US ---
+ * Returns an array storing only the green component for all pixels of the image.
+ * 
+ * @param id The ID of the target graphics resource.
+ * @return The green component of pixels ([Y][X], with values ranging from 0 to 255).
  */
 int[][] getGraphicsPixelGreen( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -422,10 +663,17 @@ int[][] getGraphicsPixelGreen( int id ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * イメージの全ピクセルについて、青色成分のみを格納する配列を返します。
  * 
  * @param id 対象グラフィックスデータのID。
  * @return ピクセルの青色成分（[Y][X]、値の範囲は0 ~ 255）。
+ *
+ * !--- locale=En-US ---
+ * Returns an array storing only the blue component for all pixels of the image.
+ * 
+ * @param id The ID of the target graphics resource.
+ * @return The blue component of pixels ([Y][X], with values ranging from 0 to 255).
  */
 int[][] getGraphicsPixelBlue( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -441,10 +689,17 @@ int[][] getGraphicsPixelBlue( int id ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * イメージの全ピクセルについて、α値成分のみを格納する配列を返します。
  * 
  * @param id 対象グラフィックスデータのID。
  * @return ピクセルのα値成分（[Y][X]、値の範囲は0 ~ 255）。
+ *
+ * !--- locale=En-US ---
+ * Returns an array storing only the alpha component for all pixels of the image.
+ * 
+ * @param id The ID of the target graphics resource.
+ * @return The alpha component of pixels ([Y][X], with values ranging from 0 to 255).
  */
 int[][] getGraphicsPixelAlpha( int id ){
   int width = SYSTEM_PROCESS_DRIVER_GRAPHICS_getGraphicsWidth( id );
@@ -457,8 +712,6 @@ int[][] getGraphicsPixelAlpha( int id ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphics( tmpGraphicsID );
   return pixel;
 }
-
-
 
 
 
