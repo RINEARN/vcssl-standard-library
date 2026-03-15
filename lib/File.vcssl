@@ -20,13 +20,24 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * VCSSL File ライブラリ は、ファイルパスの取得や、ディレクトリ内のファイル名リスト取得など、ファイルに関する各種機能を提供する標準ライブラリです。
  * <br />
  * ただし、このライブラリではファイルI/Oは扱いません。ファイルI/Oについては、<a href="System.html">System</a> ライブラリや <a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL File library is a standard library that provides various file-related functions, such as obtaining file paths and getting lists of file names in directories.
+ * <br />
+ * However, this library does not handle file I/O. For file I/O, use the <a href="System.html">System</a> library or the <a href="file/TextFile.html">file.TextFile</a> library.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -34,47 +45,115 @@ coding UTF-8;
 
 
 
-/** 絶対パスを意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 絶対パスを意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing an absolute path.
+ */
 public const int ABSOLUTE = 2;
 
-/** 相対パスを意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 相対パスを意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing a relative path.
+ */
 public const int RELATIVE = 1;
 
-/** 親階層を意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 親階層を意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing a parent directory.
+ */
 public const int PARENT = 3;
 
-/** ユーザーのホームディレクトリを意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ユーザーのホームディレクトリを意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing the user's home directory.
+ */
 public const int HOME = 4;
 
-/** ルートディレクトリを意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ルートディレクトリを意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing the root directory.
+ */
 public const int ROOT = 5;
 
 public const int RUNTIME_HOME = 6;
 
-/** コンピュータ側で用意されている一時ファイル用ディレクトリを意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * コンピュータ側で用意されている一時ファイル用ディレクトリを意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing the temporary-file directory provided by the computer.
+ */
 public const int TMP = 7;
 
 
-/** 特に整列されていないファイル順序を意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 特に整列されていないファイル順序を意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing an unordered file order.
+ */
 public const int UNORDERED = 20;
 
-/** 辞書順に整列されたファイル順序を意味する設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 辞書順に整列されたファイル順序を意味する設定値です。
+ *
+ * !--- locale=En-US ---
+ * The option value representing a lexically sorted file order.
+ */
 public const int LEXICAL = 21;
 
 
-/** エラーメッセージ、ファイルが見つからなかった場合。 */
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、ファイルが見つからなかった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when a file is not found.
+ */
 private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
 
-/** 警告メッセージ、ファイルが見つからなかった場合。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 警告メッセージ、ファイルが見つからなかった場合。
+ *
+ * !--- locale=En-US ---
+ * The warning message used when a file is not found.
+ */
 private const string WARNING_FILE_NOT_FOUND = "このプログラムは、存在しないファイルに対して操作を行おうとしています。この操作は実行できません。" + EOL + "ただし、過去のプログラムに対して互換性を維持するため、この操作をスキップし、処理を続行する事ができます。" + EOL + "処理を続行しますか ? (「いいえ」を選択するとエラーを出力して停止)";
 
 private bool skipFileNotFound = false;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルが存在しなかった場合、警告を表示し、続行するかどうかをユーザーに尋ねます。
  * 
- * @return 続行する場合は true、停止する場合は false
+ * @param pathOrName 対象ファイルの名称またはパス。
+ * @return 続行する場合は true、停止する場合は false。
+ *
+ * !--- locale=En-US ---
+ * If the file does not exist, shows a warning and asks the user whether to continue.
+ * 
+ * @param pathOrName The name or path of the target file.
+ * @return Returns true if processing should continue, or false if it should stop.
  */
 private bool warnFileNotFound(string pathOrName) {
   if ((bool)(___exists(pathOrName)[0])) {
@@ -93,10 +172,17 @@ private bool warnFileNotFound(string pathOrName) {
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルがディレクトリであるかどうかを判定します。
  *
  * @param pathOrName 対象ファイルの名称またはパス。
  * @return ディレクトリであれば true 、そうでなければ false。
+ *
+ * !--- locale=En-US ---
+ * Determines whether the specified file is a directory.
+ *
+ * @param pathOrName The name or path of the target file.
+ * @return Returns true if it is a directory, otherwise false.
  */
 bool isDirectory( string pathOrName ){
   return System.isdir( pathOrName );
@@ -104,9 +190,15 @@ bool isDirectory( string pathOrName ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ディレクトリを新規作成します。
  *
  * @param pathOrName 作成するディレクトリの名称またはパス。
+ *
+ * !--- locale=En-US ---
+ * Creates a new directory.
+ *
+ * @param pathOrName The name or path of the directory to create.
  */
 void makeDirectory( string pathOrName ){
   System.mkdir( pathOrName );
@@ -114,10 +206,17 @@ void makeDirectory( string pathOrName ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の順序は特に整列されず、環境や処理系に依存します。
  *
  * @param pathOrName 対象ディレクトリの名称またはパス。
  * @return ディレクトリ直下にあるファイル名の一覧。
+ *
+ * !--- locale=En-US ---
+ * Returns the list of file names directly under the specified directory. The order of file names is not specifically sorted and depends on the environment and implementation.
+ *
+ * @param pathOrName The name or path of the target directory.
+ * @return The list of file names directly under the directory.
  */
 string[] listDirectory( string pathOrName ){
   warnFileNotFound(pathOrName);
@@ -126,12 +225,21 @@ string[] listDirectory( string pathOrName ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定ディレクトリ直下にあるファイル名の一覧を返します。ファイル名の整列オプションを指定できます。
  *
  * @param pathOrName 対象ディレクトリの名称またはパス。
  * @param sortByIgnoreCase 整列時に大文字/小文字を区別するかどうか。true なら無視されます。
  * @param sortOption 整列オプション。<a href="#UNORDERED">UNORDERED</a> または <a href="#LEXICAL">LEXICAL</a> を指定します。
  * @return ディレクトリ直下にあるファイル名の一覧。
+ *
+ * !--- locale=En-US ---
+ * Returns the list of file names directly under the specified directory. A sorting option for file names can be specified.
+ *
+ * @param pathOrName The name or path of the target directory.
+ * @param sortByIgnoreCase Whether case should be distinguished when sorting. If true, case differences are ignored.
+ * @param sortOption The sorting option. Specify <a href="#UNORDERED">UNORDERED</a> or <a href="#LEXICAL">LEXICAL</a>.
+ * @return The list of file names directly under the directory.
  */
 string[] listDirectory( string pathOrName, bool sortByIgnoreCase, int sortOption ){
   warnFileNotFound(pathOrName);
@@ -140,9 +248,15 @@ string[] listDirectory( string pathOrName, bool sortByIgnoreCase, int sortOption
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルを新規作成します。
  *
  * @param pathOrName 作成するファイルの名称またはパス。
+ *
+ * !--- locale=En-US ---
+ * Creates a new file.
+ *
+ * @param pathOrName The name or path of the file to create.
  */
 void makeFile( string pathOrName ){
   SYSTEM_PROCESS_DRIVER_FILE_makeFile( pathOrName );
@@ -150,10 +264,17 @@ void makeFile( string pathOrName ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルパスから、ファイル名の部分を取得します。
  *
  * @param path 対象ファイルのパス。
- * @return ファイル名
+ * @return ファイル名。
+ *
+ * !--- locale=En-US ---
+ * Gets the file-name part from a file path.
+ *
+ * @param path The path of the target file.
+ * @return The file name.
  */
 string getFileName( string path ){
   return SYSTEM_PROCESS_DRIVER_FILE_getFileName( path );
@@ -161,10 +282,19 @@ string getFileName( string path ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルを削除します。
- * <br />対象がディレクトリの場合、中身が空でなければ削除できないため、先に中身を削除する必要があります。
+ * <br />
+ * 対象がディレクトリの場合、中身が空でなければ削除できないため、先に中身を削除する必要があります。
  *
- * @param path 対象ファイルの名称またはパス。
+ * @param pathOrName 対象ファイルの名称またはパス。
+ *
+ * !--- locale=En-US ---
+ * Deletes a file.
+ * <br />
+ * If the target is a directory, it cannot be deleted unless it is empty, so its contents must be removed first.
+ *
+ * @param pathOrName The name or path of the target file.
  */
 void removeFile( string pathOrName ){
   warnFileNotFound(pathOrName);
@@ -173,13 +303,25 @@ void removeFile( string pathOrName ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルの移動や、ファイル名の変更を行います。
+ * <br />
  * 引数が、共にファイル名のみの場合や、共に同じディレクトリ内のファイルパスである場合には、
  * 処理内容はファイル名の変更になります。引数が、互いに異なるディレクトリ内のファイルパスである場合には、処理内容はファイルの移動になります。
- * ファイルは移動されます。ドライブをまたぐ移動はできない場合があります。
+ * ドライブをまたぐ移動はできない場合があります。
  *
  * @param pathOrName 対象ファイルの名称またはパス。
  * @param newName 変更後の名称またはパス。
+ *
+ * !--- locale=En-US ---
+ * Moves a file or changes its file name.
+ * <br />
+ * If both arguments are only file names, or if both are file paths in the same directory, the operation becomes a file rename.
+ * If the arguments are file paths in different directories, the operation becomes a file move.
+ * Moving across drives may not be supported depending on the environment.
+ *
+ * @param pathOrName The name or path of the target file.
+ * @param newName The new name or destination path.
  */
 void moveFile( string pathOrName, string newName ){
   warnFileNotFound(pathOrName);
@@ -187,7 +329,10 @@ void moveFile( string pathOrName, string newName ){
 }
 
 /**
- * ファイル名を変更します。変更先にファイル名ではなくパスを指定した場合、
+ * !--- locale=Ja-JP ---
+ * ファイル名を変更します。
+ * <br />
+ * 変更先にファイル名ではなくパスを指定した場合、
  * ファイルは移動されます。ただし環境によっては、ドライブをまたぐ移動はできない場合があります。
  * <br />
  * <div style="font-weight:bold;">
@@ -200,6 +345,23 @@ void moveFile( string pathOrName, string newName ){
  *
  * @param pathOrName 対象ファイルの名称またはパス。
  * @param newName 変更後の名称またはパス。古いバージョンや処理系への依存性を回避するため、絶対パスでの指定が推奨されます。
+ *
+ * !--- locale=En-US ---
+ * Renames a file.
+ * <br />
+ * If a path is specified instead of just a file name as the destination,
+ * the file is moved. However, moving across drives may not be supported depending on the environment.
+ * <br />
+ * <div style="font-weight:bold;">
+ * Note: The use of this API is not recommended. Its behavior depends on the implementation and version. In VCSSL 3.3 and later, use <a href="#moveFile">moveFile</a> instead.
+ * If you must use this API and want to avoid such dependencies, specify the destination file path newPath as an absolute path. The behavior when specifying only a relative path or file name depends on the implementation and version.
+ * In the current standard VCSSL runtime, if a file name or relative path is specified for newPath, it is interpreted relative to the location of the executed program. However, in older versions such as VCSSL 3.2 and earlier, it may instead be interpreted relative to the implementation location.
+ * By specifying an absolute path, you can avoid version-dependent behavior.
+ * For example, if you write renameFile("Test1.txt", "Test2.txt");, the current standard VCSSL runtime renames Test1.txt to Test2.txt in the same directory. However, in older versions, "Test2.txt" may be interpreted as a path relative to the implementation, so the file may be moved to the implementation directory where VCSSL.jar exists. Even in older versions, if you want to rename a file within the same directory, write something like renameFile("hoge1.txt", getFilePath("hoge2.txt", getFilePath(".")) );.
+ * </div>
+ *
+ * @param pathOrName The name or path of the target file.
+ * @param newName The new name or destination path. To avoid dependency on older versions or implementations, specifying an absolute path is recommended.
  */
 void renameFile( string pathOrName, string newName ){
   warnFileNotFound(pathOrName);
@@ -208,10 +370,17 @@ void renameFile( string pathOrName, string newName ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルをコピーします。
  *
- * @param pathOrName コピー元ファイルの名称またはパス。
- * @param newName コピー先ファイルの名称またはパス。
+ * @param inputPath コピー元ファイルの名称またはパス。
+ * @param outputPath コピー先ファイルの名称またはパス。
+ *
+ * !--- locale=En-US ---
+ * Copies a file.
+ *
+ * @param inputPath The name or path of the source file.
+ * @param outputPath The name or path of the destination file.
  */
 void copyFile( string inputPath, string outputPath ){
   warnFileNotFound(inputPath);
@@ -220,10 +389,17 @@ void copyFile( string inputPath, string outputPath ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイル名または相対パスから、絶対パスを取得して返します。
  *
  * @param pathOrName 対象ファイルの名称または相対パス。
- * @param newName 対象ファイルの絶対パス。
+ * @return 対象ファイルの絶対パス。
+ *
+ * !--- locale=En-US ---
+ * Gets and returns the absolute path from a file name or relative path.
+ *
+ * @param pathOrName The file name or relative path of the target file.
+ * @return The absolute path of the target file.
  */
 string getFilePath( string pathOrName ){
   return SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName );
@@ -231,11 +407,19 @@ string getFilePath( string pathOrName ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイル名またはパスから、絶対パスまたは相対パス、もしくは親階層パスを取得して返します。
  *
  * @param pathOrName 対象ファイルの名称またはパス。
  * @param type 取得するパスの種類。<a href="#ABSOLUTE">ABSOLUTE</a> または <a href="#RELATIVE">RELATIVE</a> もしくは <a href="#PARENT">PARENT</a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。
  * @return 対象ファイルのパス。パスの種類は引数 type で指定します。
+ *
+ * !--- locale=En-US ---
+ * Gets and returns an absolute path, relative path, or parent-directory path from a file name or path.
+ *
+ * @param pathOrName The name or path of the target file.
+ * @param type The type of path to obtain. Specify <a href="#ABSOLUTE">ABSOLUTE</a>, <a href="#RELATIVE">RELATIVE</a>, or <a href="#PARENT">PARENT</a>, which represent absolute path, relative path, and parent-directory path respectively.
+ * @return The path of the target file. The kind of path is specified by the argument type.
  */
 string getFilePath( string pathOrName, int type ){
   if(type == RELATIVE){
@@ -258,11 +442,19 @@ string getFilePath( string pathOrName, int type ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスに変換取得して返します。
  *
  * @param pathOrName 基準ディレクトリから見た、対象ファイルの名称または相対パス。
  * @param directory 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。
- * @param newName 対象ファイルの絶対パス。
+ * @return 対象ファイルの絶対パス。
+ *
+ * !--- locale=En-US ---
+ * Converts and returns a file name or relative path, interpreted from the specified base directory, as an absolute path.
+ *
+ * @param pathOrName The name or relative path of the target file as seen from the base directory.
+ * @param directory The base directory of the relative path. Specify it as a name or relative path based on the executed program, or as an absolute path.
+ * @return The absolute path of the target file.
  */
  string getFilePath( string pathOrName, string directory ){
   return SYSTEM_PROCESS_DRIVER_FILE_getFileAbsolutePath( pathOrName, directory );
@@ -270,12 +462,21 @@ string getFilePath( string pathOrName, int type ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスまたは（実行プログラム基準の）相対パス、もしくは（実行プログラム基準の）親階層パスに変換して返します。
  *
  * @param pathOrName 対象ファイルの名称またはパス。
  * @param directory 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。
  * @param type 取得するパスの種類。<a href="#ABSOLUTE">ABSOLUTE</a> または <a href="#RELATIVE">RELATIVE</a> もしくは <a href="#PARENT">PARENT</a> を指定します。それぞれ絶対パス、相対パス、親階層パスを意味します。
  * @return 対象ファイルのパス。パスの種類は引数 type で指定します。
+ *
+ * !--- locale=En-US ---
+ * Converts a file name or relative path interpreted from the specified base directory into an absolute path, a relative path based on the executed program, or a parent-directory path based on the executed program.
+ *
+ * @param pathOrName The name or path of the target file.
+ * @param directory The base directory of the relative path. Specify it as a name or relative path based on the executed program, or as an absolute path.
+ * @param type The type of path to obtain. Specify <a href="#ABSOLUTE">ABSOLUTE</a>, <a href="#RELATIVE">RELATIVE</a>, or <a href="#PARENT">PARENT</a>, which represent absolute path, relative path, and parent-directory path respectively.
+ * @return The path of the target file. The kind of path is specified by the argument type.
  */
 string getFilePath( string pathOrName, string directory, int type ){
   if(type == RELATIVE){
@@ -299,11 +500,17 @@ string getFilePath( string pathOrName, string directory, int type ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。
  *
- * @param target 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> または <a href="#TMP">TMP</a> を指定します。
- それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。
+ * @param target 取得する特別な場所の種類。<a href="#HOME">HOME</a> または <a href="#ROOT">ROOT</a> または <a href="#TMP">TMP</a> を指定します。それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。
  * @return 特別な場所のパス。場所は引数 target で指定します。target に <a href="#ROOT">ROOT</a> を取得した場合の挙動はオペレーティングシステムに依存します。単一のルートが存在しないオペレーティングシステムでは、恐らくドライブ名が配列で返されます。
+ *
+ * !--- locale=En-US ---
+ * Gets the paths of special locations in the runtime environment or operating system.
+ *
+ * @param target The kind of special location to obtain. Specify <a href="#HOME">HOME</a>, <a href="#ROOT">ROOT</a>, or <a href="#TMP">TMP</a>. They mean the user's home directory, the root directory, and the temporary-file directory provided by the computer, respectively.
+ * @return The path of the special location. The location is specified by the argument target. The behavior when obtaining <a href="#ROOT">ROOT</a> depends on the operating system. On operating systems without a single root, an array of drive names will probably be returned.
  */
 string[] getFilePath( int target ){
 	string path[1];
@@ -341,11 +548,19 @@ string getCurrentDirectory(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 実行プログラムがあるディレクトリのパスを返します。
  * <br />
  * 現在は <a href="#getFilePath">getFilePath</a>(".") で取得できます。この関数は互換目的でサポートされています。
  *
  * @return 実行プログラムがあるディレクトリのパス。
+ *
+ * !--- locale=En-US ---
+ * Returns the path of the directory containing the executed program.
+ * <br />
+ * It can now be obtained by <a href="#getFilePath">getFilePath</a>("."). This function is supported for compatibility.
+ *
+ * @return The path of the directory containing the executed program.
  */
 string getMainDirectory(){
   return SYSTEM_PROCESS_DRIVER_FILE_getMainDirectory();
@@ -353,11 +568,19 @@ string getMainDirectory(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ホームディレクトリのパスを返します。
  * <br />
  * 現在は <a href="#getFilePath">getFilePath</a>( <a href="#HOME">HOME</a> ) で取得できます。この関数は互換目的でサポートされています。
  *
  * @return ホームディレクトリのパス。
+ *
+ * !--- locale=En-US ---
+ * Returns the path of the home directory.
+ * <br />
+ * It can now be obtained by <a href="#getFilePath">getFilePath</a>( <a href="#HOME">HOME</a> ). This function is supported for compatibility.
+ *
+ * @return The path of the home directory.
  */
 string getHomeDirectory(){
   return SYSTEM_PROCESS_DRIVER_FILE_getHomeDirectory();
@@ -365,11 +588,19 @@ string getHomeDirectory(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ルートディレクトリのパスを返します。
  * <br />
  * 現在は <a href="#getFilePath">getFilePath</a>( <a href="#ROOT">ROOT</a> ) で取得できます。この関数は互換目的でサポートされています。
  *
  * @return ルートディレクトリのパス。
+ *
+ * !--- locale=En-US ---
+ * Returns the path of the root directory.
+ * <br />
+ * It can now be obtained by <a href="#getFilePath">getFilePath</a>( <a href="#ROOT">ROOT</a> ). This function is supported for compatibility.
+ *
+ * @return The path of the root directory.
  */
 string[] getRootDirectory(){
   return SYSTEM_PROCESS_DRIVER_FILE_getRootDirectory();
@@ -387,12 +618,21 @@ string[] getLibraryDirectory(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 親階層のパスを返します。
  * <br />
  * 現在は <a href="#getFilePath">getFilePath</a>( pathOrName, <a href="#PARENT">PARENT</a> ) で取得できます。この関数は互換目的でサポートされています。
  *
  * @param pathOrName 対象ファイルの名称またはパス。
  * @return 親階層のパス。
+ *
+ * !--- locale=En-US ---
+ * Returns the path of the parent directory.
+ * <br />
+ * It can now be obtained by <a href="#getFilePath">getFilePath</a>( pathOrName, <a href="#PARENT">PARENT</a> ). This function is supported for compatibility.
+ *
+ * @param pathOrName The name or path of the target file.
+ * @return The path of the parent directory.
  */
 string getParentDirectory( string pathOrName ){
   return SYSTEM_PROCESS_DRIVER_FILE_getParentDirectory( pathOrName );
@@ -403,13 +643,23 @@ string getFileRelativePath( string pathOrName ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。
  * <br />
- * 現在は <a href="#getFilePath">getFilePath</a>( pathOrName, directory, <a href="#RELATIVE">RELARIVE</a> ) で取得できます。この関数は互換目的でサポートされています。
+ * 現在は <a href="#getFilePath">getFilePath</a>( pathOrName, directory, <a href="#RELATIVE">RELATIVE</a> ) で取得できます。この関数は互換目的でサポートされています。
  *
  * @param pathOrName 対象ファイルの名称またはパス。
  * @param directory 基準ディレクトリのパス。
- * @return 親階層のパス。
+ * @return 相対パス。
+ *
+ * !--- locale=En-US ---
+ * Converts and returns a relative path based on the specified directory into a relative path based on the executed program.
+ * <br />
+ * It can now be obtained by <a href="#getFilePath">getFilePath</a>( pathOrName, directory, <a href="#RELATIVE">RELATIVE</a> ). This function is supported for compatibility.
+ *
+ * @param pathOrName The name or path of the target file.
+ * @param directory The path of the base directory.
+ * @return The relative path.
  */
 string getFileRelativePath( string pathOrName, string directory ){
   return SYSTEM_PROCESS_DRIVER_FILE_getFileRelativePath( pathOrName, directory );
@@ -421,18 +671,27 @@ string getFileRelativePath( string pathOrName, string directory ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定ディレクトリ直下のファイル名一覧を取得します。
  * <br />
- * 現在は <a href="#getFilePath">listFile</a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。
+ * 現在は <a href="#listDirectory">listDirectory</a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。
  * <br />
- * この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href="#getFilePath">listFile</a>( pathOrName ) は整列オプションを指定できます。
+ * この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href="#listDirectory">listDirectory</a>( pathOrName ) は整列オプションを指定できます。
  *
  * @param pathOrName 対象ディレクトリの名称またはパス。
- * @return 指定ディレクトリ直下のファイル名一覧（順序は環境依存）
+ * @return 指定ディレクトリ直下のファイル名一覧（順序は環境依存）。
+ *
+ * !--- locale=En-US ---
+ * Gets the list of file names directly under the specified directory.
+ * <br />
+ * It can now be obtained by <a href="#listDirectory">listDirectory</a>( pathOrName ). This function is supported for compatibility.
+ * <br />
+ * In this function, the ordering of file names depends on the environment and operating system. Processing that assumes a specific order is not recommended. The newer <a href="#listDirectory">listDirectory</a>( pathOrName ) can accept sorting options.
+ *
+ * @param pathOrName The name or path of the target directory.
+ * @return The list of file names directly under the specified directory (the order depends on the environment).
  */
 string[] getFileList( string pathOrName ){
   return SYSTEM_PROCESS_DRIVER_FILE_getFileList( pathOrName );
 }
-
-
 
