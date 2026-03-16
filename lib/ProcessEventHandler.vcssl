@@ -2,22 +2,35 @@ coding UTF-8;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスが生成された際にコールされます。
  * 
  * @param processID イベント発生元のプロセスID
+ *
+ * !--- locale=En-US ---
+ * Called when a process is created.
+ * 
+ * @param processID The process ID where the event occurred.
  */
 void onProcessStart(int processID) {
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスが終了した際にコールされます。
  * 
  * @param processID イベント発生元のプロセスID
+ *
+ * !--- locale=En-US ---
+ * Called when a process ends.
+ * 
+ * @param processID The process ID where the event occurred.
  */
 void onProcessEnd(int processID) {
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスが標準出力を行った際にコールされます。
  * ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。
  * バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。
@@ -28,11 +41,24 @@ void onProcessEnd(int processID) {
  * 
  * @param processID イベント発生元のプロセスID
  * @param processID 標準出力内容
+ *
+ * !--- locale=En-US ---
+ * Called when a process writes to standard output.
+ * However, because the output content is buffered, this handler is not called at the exact moment when output is produced, and there is a time lag.
+ * The timing at which the buffer is flushed strictly depends on the implementation, but it is probably normally line by line.
+ * In that case, the output content is also passed to this event handler line by line
+ * (however, for very long lines that exceed the buffer capacity of the implementation, the content of one line may be split and passed in multiple calls).
+ * To forcibly flush the buffer at any timing without waiting for a newline, use the <a href="#flushProcessOutput">flushProcessOutput</a> function.
+ * If the output content becomes garbled, set the character encoding appropriate for the process with <a href="#setProcessOutputEncoding">setProcessOutputEncoding</a>.
+ * 
+ * @param processID The process ID where the event occurred.
+ * @param processID The standard output content.
  */
 void onProcessOutput(int processID, string output) {
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスが標準エラー出力を行った際にコールされます。
  * ただし出力内容はバッファされるため、実際に出力が行われた瞬間にコールされるわけではなく、タイムラグが存在します。
  * バッファがフラッシュされるタイミングは、厳密には処理系依存ですが、恐らく通常は行単位です。
@@ -43,9 +69,20 @@ void onProcessOutput(int processID, string output) {
  * 
  * @param processID イベント発生元のプロセスID
  * @param processID 標準エラー出力内容
+ *
+ * !--- locale=En-US ---
+ * Called when a process writes to standard error output.
+ * However, because the output content is buffered, this handler is not called at the exact moment when output is produced, and there is a time lag.
+ * The timing at which the buffer is flushed strictly depends on the implementation, but it is probably normally line by line.
+ * In that case, the output content is also passed to this event handler line by line
+ * (however, for very long lines that exceed the buffer capacity of the implementation, the content of one line may be split and passed in multiple calls).
+ * To forcibly flush the buffer at any timing without waiting for a newline, use the <a href="#flushProcessError">flushProcessError</a> function.
+ * If the output content becomes garbled, set the character encoding appropriate for the process with <a href="#setProcessErrorEncoding">setProcessErrorEncoding</a>.
+ * 
+ * @param processID The process ID where the event occurred.
+ * @param processID The standard error output content.
  */
 void onProcessError(int processID, string output) {
 }
-
 
 
