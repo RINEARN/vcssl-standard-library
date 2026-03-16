@@ -5,6 +5,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ data.DataWrapper は、
  * 任意型の変数値を構造体でラッピングする機能を提供します。
@@ -37,7 +38,7 @@ coding UTF-8;
  * DataWrapper 構造体に変換する事ができます。
  * また、unwrap関数で、元のデータを取り出す事もできます。
  * </p>
- * 
+ *
  * <p>
  * なお、DataWrapperは、実際に
  * data.<a href="WrappedList.html">WrappedList</a>,
@@ -48,14 +49,63 @@ coding UTF-8;
  * これらのライブラリでは、DataWrapperによって、
  * 要素数の異なる配列に対応したコレクション機能を実現しています。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The data.DataWrapper library provides functionality for wrapping values of arbitrary types in a struct.
+ * It is mainly used for wrapping array data.
+ * </p>
+ *
+ * <p>
+ * In VCSSL, jagged arrays are not allowed,
+ * so the number of elements in an array must be uniform within each dimension.
+ * <br />
+ * For example, multiple one-dimensional arrays with different numbers of elements
+ * cannot be combined into a two-dimensional array.
+ * </p>
+ *
+ * <p>
+ * By wrapping array data in a struct,
+ * this restriction can be avoided.
+ * <br />
+ * In the above example, by creating a struct that wraps each one-dimensional array
+ * and then creating an array of those structs,
+ * a structure like a two-dimensional jagged array can be realized.
+ * </p>
+ *
+ * <p>
+ * For such wrapping purposes, this module provides
+ * the generic struct <a href="#DataWrapper">DataWrapper</a>.
+ * <br />
+ * The wrap function wraps data of an arbitrary type
+ * and converts it to a DataWrapper struct.
+ * The unwrap function can also be used to extract the original data.
+ * </p>
+ *
+ * <p>
+ * DataWrapper is actually used in the implementations of
+ * data.<a href="WrappedList.html">WrappedList</a>,
+ * <a href="WrappedStack.html">WrappedStack</a>, and
+ * <a href="WrappedQueue.html">WrappedQueue</a>.
+ * <br />
+ * In those libraries, DataWrapper is used to realize collection functionality
+ * that supports arrays having different numbers of elements.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 任意型のデータをラッピングする構造体です。
+ *
+ * !--- locale=En-US ---
+ * A struct for wrapping data of an arbitrary type.
  */
 public struct DataWrapper<Type>{
 	protected Type data;
@@ -63,10 +113,19 @@ public struct DataWrapper<Type>{
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 任意型のデータをラッピングします。
  *
  * @param arg ラッピングするデータ
  * @return 入力値のラッパー
+ *
+ * !--- locale=En-US ---
+ *
+ * Wraps data of an arbitrary type.
+ *
+ * @param arg The data to be wrapped.
+ * @return A wrapper of the input value.
  */
 public DataWrapper<Type> wrap<Type>(Type arg){
 	DataWrapper<Type> wrapper;
@@ -76,14 +135,22 @@ public DataWrapper<Type> wrap<Type>(Type arg){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ラッピングしているデータを取り出します。
  *
  * @param wrapper データを取り出すラッパー
  * @return ラッパーが保持している値
+ *
+ * !--- locale=En-US ---
+ *
+ * Extracts the wrapped data.
+ *
+ * @param wrapper The wrapper from which the data is to be extracted.
+ * @return The value held by the wrapper.
  */
 public Type unwrap<Type>(DataWrapper<Type> wrapper){
 	Type v = wrapper.data;
 	return v;
 }
-
 
