@@ -402,8 +402,8 @@ macro drawLine( int rendererID, int vertex_x1, int vertex_y1, int vertex_x2, int
  * Draws an ellipse.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge of the bounding rectangle.
- * @param vertex_y The Y coordinate of the left-top edge of the bounding rectangle.
+ * @param vertex_x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param vertex_y The Y coordinate of the top-left corner of the bounding rectangle.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the ellipse.
@@ -427,8 +427,8 @@ macro drawEllipse( int rendererID, int vertex_x, int vertex_y, int width, int he
  * Draws a rectangle.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge.
- * @param vertex_y The Y coordinate of the left-top edge.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the rectangle.
@@ -584,8 +584,8 @@ macro drawText( int rendererID, int vertex_x, int vertex_y, int width, int heigh
  * Draws an image. The drawing result of another 2D or 3D renderer can also be composited and drawn as an image.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge.
- * @param vertex_y The Y coordinate of the left-top edge.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  * @param graphicsID The ID of the graphics resource storing the image.
  */
 macro drawImage( int rendererID, int vertex_x, int vertex_y, int graphicsID ){
@@ -607,8 +607,8 @@ macro drawImage( int rendererID, int vertex_x, int vertex_y, int graphicsID ){
  * Draws an image after resizing it. The drawing result of another 2D or 3D renderer can also be composited and drawn as an image.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge.
- * @param vertex_y The Y coordinate of the left-top edge.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  * @param width The width.
  * @param height The height.
  * @param graphicsID The ID of the graphics resource storing the image.
@@ -645,12 +645,12 @@ macro drawImage( int rendererID, int vertex_x, int vertex_y, int width, int heig
  * If you need the behavior of VCSSL 3.4.8 or earlier, replace calls to this function with calls to drawGraphics instead.
  * 
  * @param rendererID The renderer ID.
- * @param x The X coordinate of the left-top edge of the drawing position.
- * @param y The Y coordinate of the left-top edge of the drawing position.
+ * @param x The X coordinate of the top-left corner of the drawing position.
+ * @param y The Y coordinate of the top-left corner of the drawing position.
  * @param width The drawing width.
  * @param height The drawing height.
- * @param cropX The X coordinate of the left-top edge of the source region.
- * @param cropY The Y coordinate of the left-top edge of the source region.
+ * @param cropX The X coordinate of the top-left corner of the source region.
+ * @param cropY The Y coordinate of the top-left corner of the source region.
  * @param cropWidth The width of the source region.
  * @param cropHeight The height of the source region.
  * @param graphicsID The ID of the graphics resource storing the image.
@@ -726,8 +726,8 @@ macro setPixel( int rendererID, int rgba[][][] ){
  * Draws the contents of pixel color-component arrays on top of the current drawing contents.
  * 
  * @param rendererID The renderer ID.
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param red The array storing the red components ([Y][X], values from 0 to 255).
  * @param green The array storing the green components ([Y][X], values from 0 to 255).
  * @param blue The array storing the blue components ([Y][X], values from 0 to 255).
@@ -761,8 +761,8 @@ void drawPixel( int rendererID, int x, int y, int red[][], int green[][], int bl
  * Draws the contents of a pixel color-component array on top of the current drawing contents.
  * 
  * @param rendererID The renderer ID.
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param rgba The array storing the color components ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
  */
 void drawPixel( int rendererID, int x, int y, int rgba[][][] ){
@@ -797,8 +797,8 @@ void drawPixel( int rendererID, int x, int y, int rgba[][][] ){
  * Resizes the contents of pixel color-component arrays and draws them on top of the current drawing contents.
  * 
  * @param rendererID The renderer ID.
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width.
  * @param height The height.
  * @param red The array storing the red components ([Y][X], values from 0 to 255).
@@ -836,8 +836,8 @@ void drawPixel( int rendererID, int x, int y, int width, int height, int red[][]
  * Resizes the contents of a pixel color-component array and draws them on top of the current drawing contents.
  * 
  * @param rendererID The renderer ID.
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width.
  * @param height The height.
  * @param rgba The array storing the color components ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
@@ -878,12 +878,12 @@ void drawPixel( int rendererID, int x, int y, int width, int height, int rgba[][
  * Extracts a specified region from pixel color-component arrays and draws it on top of the current drawing contents.
  * 
  * @param rendererID The renderer ID.
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width.
  * @param height The height.
- * @param baseX The X coordinate of the left-top edge of the source region.
- * @param baseY The Y coordinate of the left-top edge of the source region.
+ * @param baseX The X coordinate of the top-left corner of the source region.
+ * @param baseY The Y coordinate of the top-left corner of the source region.
  * @param baseWidth The width of the source region.
  * @param baseHeight The height of the source region.
  * @param red The array storing the red components ([Y][X], values from 0 to 255).
@@ -925,12 +925,12 @@ void drawPixel( int rendererID, int x, int y, int width, int height, int baseX, 
  * Extracts a specified region from a pixel color-component array and draws it on top of the current drawing contents.
  * 
  * @param rendererID The renderer ID.
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width.
  * @param height The height.
- * @param baseX The X coordinate of the left-top edge of the source region.
- * @param baseY The Y coordinate of the left-top edge of the source region.
+ * @param baseX The X coordinate of the top-left corner of the source region.
+ * @param baseY The Y coordinate of the top-left corner of the source region.
  * @param baseWidth The width of the source region.
  * @param baseHeight The height of the source region.
  * @param rgba The array storing the color components ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
@@ -1085,8 +1085,8 @@ int[][] getPixelAlpha( int rendererID ){
  * !--- locale=En-US ---
  * Creates a point sprite and returns its unique identifier, called the sprite ID.
  * 
- * @param x The X coordinate of the left-top edge of the bounding rectangle.
- * @param y The Y coordinate of the left-top edge of the bounding rectangle.
+ * @param x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param y The Y coordinate of the top-left corner of the bounding rectangle.
  * @param radius The radius.
  * @param fill Whether to fill the sprite.
  * @return The sprite ID.
@@ -1148,8 +1148,8 @@ int newLineSprite( int x1, int y1, int x2, int y2 ){
  * !--- locale=En-US ---
  * Creates an ellipse sprite and returns its unique identifier, called the sprite ID.
  * 
- * @param x The X coordinate of the left-top edge of the bounding rectangle.
- * @param y The Y coordinate of the left-top edge of the bounding rectangle.
+ * @param x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param y The Y coordinate of the top-left corner of the bounding rectangle.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the sprite.
@@ -1177,8 +1177,8 @@ int newEllipseSprite( int x, int y, int width, int height, bool fill ){
  * !--- locale=En-US ---
  * Creates a rectangle sprite and returns its unique identifier, called the sprite ID.
  * 
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the sprite.
@@ -1251,8 +1251,8 @@ int newPolygonSprite( int x[], int y[], bool fill ){
  * !--- locale=En-US ---
  * Creates an image sprite and returns its unique identifier, called the sprite ID.
  * 
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param graphicsID The ID of the graphics resource storing the image.
@@ -1380,8 +1380,8 @@ macro setSpriteDepth( int spriteID, double vertex_z ){
  * Sets the position of a sprite.
  * 
  * @param spriteID The ID of the target sprite.
- * @param vertex_x The X coordinate of the left-top edge.
- * @param vertex_y The Y coordinate of the left-top edge.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  */
 macro setSpriteLocation( int spriteID, int vertex_x, int vertex_y ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( spriteID, vertex_x, vertex_y );
@@ -1652,8 +1652,8 @@ void setSpriteFontItalic( int spriteID, bool isItalic ){
  * This function is supported for compatibility.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge of the bounding rectangle.
- * @param vertex_y The Y coordinate of the left-top edge of the bounding rectangle.
+ * @param vertex_x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param vertex_y The Y coordinate of the top-left corner of the bounding rectangle.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the ellipse.
@@ -1681,8 +1681,8 @@ macro drawOval( int rendererID, int vertex_x, int vertex_y, int width, int heigh
  * This function is supported for compatibility.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge.
- * @param vertex_y The Y coordinate of the left-top edge.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the rectangle.
@@ -1711,8 +1711,8 @@ macro drawRect( int rendererID, int vertex_x, int vertex_y, int width, int heigh
  * This function is supported for compatibility.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge.
- * @param vertex_y The Y coordinate of the left-top edge.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  * @param graphicsID The graphics resource ID.
  */
 macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int graphicsID ){
@@ -1738,8 +1738,8 @@ macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int graphicsID )
  * This function is supported for compatibility.
  * 
  * @param rendererID The renderer ID.
- * @param vertex_x The X coordinate of the left-top edge.
- * @param vertex_y The Y coordinate of the left-top edge.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  * @param width The width.
  * @param height The height.
  * @param graphicsID The graphics resource ID.
@@ -1781,12 +1781,12 @@ macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int width, int h
  * Therefore, use this function when compatibility with older programs is important, and use <a href="#drawImage">drawImage</a> in new programs.
  * 
  * @param rendererID The renderer ID.
- * @param fromLeftTopX The X coordinate of the left-top edge of the cropped area in the source image.
- * @param fromLeftTopY The Y coordinate of the left-top edge of the cropped area in the source image.
+ * @param fromLeftTopX The X coordinate of the top-left corner of the cropped area in the source image.
+ * @param fromLeftTopY The Y coordinate of the top-left corner of the cropped area in the source image.
  * @param fromRightBottomX The X coordinate of the lower-right corner of the cropped area in the source image.
  * @param fromRightBottomY The Y coordinate of the lower-right corner of the cropped area in the source image.
- * @param toLeftTopX The X coordinate of the left-top edge of the drawing position.
- * @param toLeftTopY The Y coordinate of the left-top edge of the drawing position.
+ * @param toLeftTopX The X coordinate of the top-left corner of the drawing position.
+ * @param toLeftTopY The Y coordinate of the top-left corner of the drawing position.
  * @param toRightBottomX The X coordinate of the lower-right corner of the drawing position.
  * @param toRightBottomY The Y coordinate of the lower-right corner of the drawing position.
  * @param graphicsID The graphics resource ID storing the source image.
@@ -1818,8 +1818,8 @@ void drawGraphics( int rendererID, int fromLeftTopX, int fromLeftTopY, int fromR
  * The newer <a href="#newEllipseSprite">newEllipseSprite</a> function has been supported since VCSSL 3.3.24.
  * This function is supported for compatibility.
  * 
- * @param x The X coordinate of the left-top edge of the bounding rectangle.
- * @param y The Y coordinate of the left-top edge of the bounding rectangle.
+ * @param x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param y The Y coordinate of the top-left corner of the bounding rectangle.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the sprite.
@@ -1851,8 +1851,8 @@ int newOvalSprite( int x, int y, int width, int height, bool fill ){
  * The newer <a href="#newRectangleSprite">newRectangleSprite</a> function has been supported since VCSSL 3.3.24.
  * This function is supported for compatibility.
  * 
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param fill Whether to fill the sprite.
@@ -1886,8 +1886,8 @@ int newRectSprite( int x, int y, int width, int height, bool fill ){
  * The newer <a href="#newImageSprite">newImageSprite</a> function has been supported since VCSSL 3.3.24.
  * This function is supported for compatibility.
  * 
- * @param x The X coordinate of the left-top edge.
- * @param y The Y coordinate of the left-top edge.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  * @param width The width of the bounding rectangle.
  * @param height The height of the bounding rectangle.
  * @param graphicsID The graphics resource ID.
