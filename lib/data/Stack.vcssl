@@ -5,6 +5,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ data.Stack は、
  * スタック型のデータ構造を提供します。	
@@ -24,14 +25,39 @@ coding UTF-8;
  * data.<a href="WrappedStack.html">WrappedStack</a> 
  * を使用して下さい。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The data.Stack library provides a stack-type data structure.
+ * </p>
+ *
+ * <p>
+ * This module provides the generic struct <a href="#Stack">Stack</a>,
+ * which stores stack data,
+ * and generic functions such as <a href="#push">push</a> and <a href="#pop">pop</a>
+ * for adding and removing data from it.
+ * </p>
+ *
+ * <p>
+ * Note that arrays cannot be handled as elements in data.Stack.
+ * If you want to use arrays as elements, use
+ * data.<a href="WrappedStack.html">WrappedStack</a>.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スタック構造体です。スタックのデータを保持します。
+ *
+ * !--- locale=En-US ---
+ * The stack struct. It stores stack data.
  */
 public struct Stack<Type>{
 	protected int size = 0;
@@ -40,9 +66,17 @@ public struct Stack<Type>{
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 要素を全て削除します。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Removes all elements.
+ *
+ * @param stack The target stack struct.
  */
 public void clear<Type>( Stack<Type> &stack ){
 	alloc[0] stack.data;
@@ -52,9 +86,17 @@ public void clear<Type>( Stack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 使用中のサイズを返します。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the size currently in use.
+ *
+ * @param stack The target stack struct.
  */
 public int size<Type>( Stack<Type> &stack ){
 	return stack.size;
@@ -62,10 +104,19 @@ public int size<Type>( Stack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックに要素を追加します。
  *
  * @param stack 対象のスタック構造体
  * @param value 追加する要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Adds an element to the stack.
+ *
+ * @param stack The target stack struct.
+ * @param value The element to be added.
  */
 public void push<Type>( Stack<Type> &stack, Type value ){
 	setProperLength<Type>(stack);
@@ -74,11 +125,21 @@ public void push<Type>( Stack<Type> &stack, Type value ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックから要素を取り出します。
  * 取り出した要素は、スタックから削除されます。
  *
  * @param stack 対象のスタック構造体
  * @return 取り出した要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Removes and returns an element from the stack.
+ * The extracted element is deleted from the stack.
+ *
+ * @param stack The target stack struct.
+ * @return The extracted element.
  */
 public Type pop<Type>( Stack<Type> &stack ){
 	setProperLength<Type>(stack);
@@ -88,10 +149,19 @@ public Type pop<Type>( Stack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックから要素を削除せずに取り出します。
  *
  * @param stack 対象のスタック構造体
  * @return 取り出した要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns an element from the stack without removing it.
+ *
+ * @param stack The target stack struct.
+ * @return The extracted element.
  */
 public Type peek<Type>( Stack<Type> &stack ){
 	checksize( stack.size-1 );
@@ -100,10 +170,19 @@ public Type peek<Type>( Stack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックが指定された要素を含んでいるか判定します。
  *
  * @param stack 対象のスタック構造体
  * @param element 含まれるか判定したい要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Determines whether the stack contains the specified element.
+ *
+ * @param stack The target stack struct.
+ * @param element The element whose presence is to be checked.
  */
 public bool contains<Type>( Stack<Type> &stack, Type element ){
 	int n = stack.size;
@@ -117,9 +196,17 @@ public bool contains<Type>( Stack<Type> &stack, Type element ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックが保持する全要素の順序を反転させます。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Reverses the order of all elements held by the stack.
+ *
+ * @param stack The target stack struct.
  */
 public void reverse<Type>( Stack<Type> &stack ){
 	int n = stack.size;
@@ -133,12 +220,22 @@ public void reverse<Type>( Stack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックが保持する全要素を、1次元の配列に変換して返します。
  * なお、順序は pop や peek で
  * 最初に得られる要素が [ 0 ] になります。
  *
  * @param stack 対象のスタック構造体
  * @return スタックの全要素をまとめた1次元配列
+ *
+ * !--- locale=En-US ---
+ *
+ * Converts all elements held by the stack into a one-dimensional array and returns it.
+ * The order is such that the element obtained first by pop or peek becomes [0].
+ *
+ * @param stack The target stack struct.
+ * @return A one-dimensional array containing all elements of the stack.
  */
 public Type[] toArray<Type>( Stack<Type> &stack ){
 	Type array[] = stack.data;
@@ -153,9 +250,17 @@ public Type[] toArray<Type>( Stack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 使用中のサイズに適切な配列バッファ長を設定します。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Sets an appropriate array buffer length according to the size currently in use.
+ *
+ * @param stack The target stack struct.
  */
 private void setProperLength<Type>( Stack<Type> &stack ){
 	int zero = 0;
@@ -168,23 +273,40 @@ private void setProperLength<Type>( Stack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックポインタの値が適正かどうかを確認し、不正ならエラーを出力します。
  *
  * @param size スタックポインタの値
+ *
+ * !--- locale=En-US ---
+ *
+ * Checks whether the value of the stack pointer is valid, and outputs an error if it is invalid.
+ *
+ * @param size The value of the stack pointer.
  */
 private int checksize(int size){
 	if(size < 0){
-		error("スタックポインタが負の値にアクセスしました。");
+		error("The stack pointer is negative. スタックポインタが負の値にアクセスしました。");
 	}
 }
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 現在のスタックバッファ長と、スタックポインタの値から、
  * 最適なスタックバッファ長を返します。
  *
  * @param length 現在のスタックバッファ長
  * @param size 現在のスタックポインタの値
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the optimal stack buffer length from the current stack buffer length and the value of the stack pointer.
+ *
+ * @param length The current stack buffer length.
+ * @param size The current value of the stack pointer.
  */
 private int getProperLength(int length, int size){
 	if( length == 0 ){
@@ -197,4 +319,3 @@ private int getProperLength(int length, int size){
 		return length;
 	}
 }
-
