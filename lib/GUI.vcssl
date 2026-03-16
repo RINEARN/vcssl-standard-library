@@ -21,34 +21,35 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
- * VCSSL GUI ライブラリ は、VCSSLでグラフィカル・ユーザー・インターフェイスを扱うための標準ライブラリです。
+ * VCSSL GUI ライブラリは、VCSSLでグラフィカル・ユーザー・インターフェイスを扱うための標準ライブラリです。
  * </p>
  * 
  * <p>
  * GUIライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。
- * 具体的な使用方法については、「 VCSSL公式開発ガイド 」をご参照ください。
+ * 具体的な使用方法については、「 VCSSL GUI開発ガイド 」をご参照ください。
  * </p>
  * 
  * <div style="border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;">
  * <div style="font-weight:bold;">- 注意 -</div>
  * <div style="padding:10px;">
  * GUIを用いたプログラムでは、イベントハンドラの使用が必須となります。VCSSLでは、イベントハンドラの処理は独立スレッドで実行されます。
- * 現行版の RINEARN VCSSL Runtime では、マルチスレッド処理への対応が十分ではありません。 これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。 
- * これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。 RINEARN VCSSL Runtime でイベントハンドラに処理を記述するには、この事情を把握した上で行って下さい。
- * 現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。 
+ * 現行版の RINEARN VCSSL Runtime では、マルチスレッド処理への対応が十分ではありません。これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。
+ * これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。RINEARN VCSSL Runtime でイベントハンドラに処理を記述するには、この事情を把握した上で行って下さい。
+ * 現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。
  * </div>
  * 
  * <div style="font-weight:bold;">・同一の配列変数へ、複数スレッドから同時アクセスした場合における、インデックスの不整合</div>
  * 
  * <div style="padding:10px;">
- * 現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。 
+ * 現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。
  * </div>
  * 
  * <div style="font-weight:bold;">・同一の関数への、非常に頻繁な複数スレッド同時アクセスに伴う、エンジンの緊急停止</div>
  * 
  * <div style="padding:10px;">
- * 原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。 しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。 ※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。
+ * 原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。
  * </div>
  * 以上のような不都合が生じる可能性があるため、現状の RINEARN VCSSL Runtime においてイベントハンドラ内の処理を記述する際は、上記の点を認識した上で、以下のようなガイドラインに基づいた設計を行って下さい。
  * <br />
@@ -57,7 +58,55 @@ coding UTF-8;
  * <div style="font-weight:bold;">・メインスレッドで頻繁にアクセスしている配列変数に、イベントハンドラや別スレッドからアクセスしない</div>
  * </div>
  * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * <div style="padding:10px;">
+ * ただし、「メインスレッド（起動時に自動実行される処理のスレッド）はGUIの画面構築程度の短い処理で完了し、以降はもっぱらユーザーの操作に応じて、GUIのイベントハンドラからの処理ばかりが発生する」といった場合においては、上記はあまり気にする必要はありません。
+ * </div>
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL GUI library is the standard library for handling graphical user interfaces in VCSSL.
+ * </p>
+ * 
+ * <p>
+ * Because the GUI library is relatively large, it is difficult to use it only by referring to the function specifications described here.
+ * For concrete usage examples, see the Official VCSSL GUI Development Guide.
+ * </p>
+ * 
+ * <div style="border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;">
+ * <div style="font-weight:bold;">- Note -</div>
+ * <div style="padding:10px;">
+ * In programs using a GUI, event handlers are essential. In VCSSL, event handlers are executed in independent threads.
+ * The current version of RINEARN VCSSL Runtime does not yet provide sufficient support for multithreaded processing. This is because the current basic design of the VCSSL engine still partially follows the design of early VCSSL engines, which were developed assuming only single-threaded execution.
+ * As a result, depending on the processing performed, several issues including logical inconsistencies may occur. When writing event-handler processing in RINEARN VCSSL Runtime, do so with this situation in mind.
+ * At present, the following kinds of issues may occur.
+ * </div>
+ * 
+ * <div style="font-weight:bold;">- Inconsistent indexes when the same array variable is accessed simultaneously from multiple threads</div>
+ * 
+ * <div style="padding:10px;">
+ * In the current VCSSL engine, some modules that access array-variable values still retain designs intended only for single-threaded execution. Because of this, if the same array variable is accessed simultaneously, incorrect index values may be referenced.
+ * </div>
+ * 
+ * <div style="font-weight:bold;">- Emergency shutdown of the engine caused by extremely frequent simultaneous multithreaded access to the same function</div>
+ * 
+ * <div style="padding:10px;">
+ * In principle, the same function can be executed by multiple threads. In that case, arguments and local variables are secured separately for each thread so that they are not mixed up between threads. However, if simultaneous access is concentrated within too short an interval, this processing may fail to keep up, and the engine may perform an emergency shutdown to prevent inconsistencies. Overlap in function execution time is not the issue. The problem is when the moments of calling the function, that is, passing arguments, overlap.
+ * </div>
+ * Because issues such as the above may occur, when writing processing inside event handlers in the current RINEARN VCSSL Runtime, design it with the above points in mind and follow guidelines such as the following.
+ * <br />
+ * <div style="font-weight:bold;">- In event handlers, keep processing lightweight, such as storing event information in global variables, and perform the actual processing in the main thread whenever possible</div>
+ * <br />
+ * <div style="font-weight:bold;">- Do not access array variables that are frequently accessed in the main thread from event handlers or other threads</div>
+ * </div>
+ * 
+ * <div style="padding:10px;">
+ * However, if the main thread, that is, the thread executing the automatically started processing at launch, finishes after only short tasks such as constructing the GUI screen, and thereafter almost all processing occurs only from GUI event handlers in response to user operations, then the above points do not need to be considered very much.
+ * </div>
+ * 
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -65,369 +114,1071 @@ coding UTF-8;
 
 
 
-/** マウスの左ボタンを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * マウスの左ボタンを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the left mouse button.
+ */
 public const int MOUSE_LEFT = 10001;
 
-/** マウスの中央ボタンを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * マウスの中央ボタンを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the middle mouse button.
+ */
 public const int MOUSE_MIDDLE = 10002;
 
-/** マウスの右ボタンを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * マウスの右ボタンを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the right mouse button.
+ */
 public const int MOUSE_RIGHT = 10003;
 
-/** マウスのシングルクリックを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * マウスのシングルクリックを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing a single mouse click.
+ */
 public const int MOUSE_SINGLE = 1;
 
-/** マウスのダブルクリックを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * マウスのダブルクリックを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing a double mouse click.
+ */
 public const int MOUSE_DOUBLE = 2;
 
 
 
-/** スペースキーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * スペースキーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Space key.
+ */
 public const int KEY_SPACE = 10001;
 
-/** エンターキーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * エンターキーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Enter key.
+ */
 public const int KEY_ENTER = 10002;
 
-/** シフトキーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * シフトキーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Shift key.
+ */
 public const int KEY_SHIFT = 10003;
 
-/** Alt キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Alt キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Alt key.
+ */
 public const int KEY_ALT = 10004;
 
-/** @ キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * @ キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the @ key.
+ */
 public const int KEY_AT = 10005;
 
-/** Tab キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Tab キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Tab key.
+ */
 public const int KEY_TAB = 10006;
 
-/** Ctrl キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Ctrl キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Ctrl key.
+ */
 public const int KEY_CONTROL = 10007;
 
-/** Backspace キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Backspace キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Backspace key.
+ */
 public const int KEY_BACK_SPACE = 10008;
 
 
 
-/** A キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * A キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the A key.
+ */
 public const int KEY_A = 11001;
 
-/** B キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * B キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the B key.
+ */
 public const int KEY_B = 11002;
 
-/** C キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * C キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the C key.
+ */
 public const int KEY_C = 11003;
 
-/** D キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * D キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the D key.
+ */
 public const int KEY_D = 11004;
 
-/** E キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * E キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the E key.
+ */
 public const int KEY_E = 11005;
 
-/** F キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F key.
+ */
 public const int KEY_F = 11006;
 
-/** G キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * G キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the G key.
+ */
 public const int KEY_G = 11007;
 
-/** H キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * H キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the H key.
+ */
 public const int KEY_H = 11008;
 
-/** I キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * I キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the I key.
+ */
 public const int KEY_I = 11009;
 
-/** J キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * J キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the J key.
+ */
 public const int KEY_J = 11010;
 
-/** K キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * K キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the K key.
+ */
 public const int KEY_K = 11011;
 
-/** L キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * L キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the L key.
+ */
 public const int KEY_L = 11012;
 
-/** M キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * M キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the M key.
+ */
 public const int KEY_M = 11013;
 
-/** N キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * N キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the N key.
+ */
 public const int KEY_N = 11014;
 
-/** O キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * O キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the O key.
+ */
 public const int KEY_O = 11015;
 
-/** P キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * P キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the P key.
+ */
 public const int KEY_P = 11016;
 
-/** Q キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Q キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Q key.
+ */
 public const int KEY_Q = 11017;
 
-/** R キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * R キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the R key.
+ */
 public const int KEY_R = 11018;
 
-/** S キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * S キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the S key.
+ */
 public const int KEY_S = 11019;
 
-/** T キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * T キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the T key.
+ */
 public const int KEY_T = 11020;
 
-/** U キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * U キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the U key.
+ */
 public const int KEY_U = 11021;
 
-/** V キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * V キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the V key.
+ */
 public const int KEY_V = 11022;
 
-/** W キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * W キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the W key.
+ */
 public const int KEY_W = 11023;
 
-/** X キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * X キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the X key.
+ */
 public const int KEY_X = 11024;
 
-/** Y キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Y キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Y key.
+ */
 public const int KEY_Y = 11025;
 
-/** Z キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Z キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Z key.
+ */
 public const int KEY_Z = 11026;
 
 
 
-/** 0 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 0 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 0 key.
+ */
 public const int KEY_0 = 12000;
 
-/** 1 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 1 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 1 key.
+ */
 public const int KEY_1 = 12001;
 
-/** 2 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 2 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 2 key.
+ */
 public const int KEY_2 = 12002;
 
-/** 3 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 3 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 3 key.
+ */
 public const int KEY_3 = 12003;
 
-/** 4 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 4 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 4 key.
+ */
 public const int KEY_4 = 12004;
 
-/** 5 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 5 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 5 key.
+ */
 public const int KEY_5 = 12005;
 
-/** 6 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 6 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 6 key.
+ */
 public const int KEY_6 = 12006;
 
-/** 7 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 7 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 7 key.
+ */
 public const int KEY_7 = 12007;
 
-/** 8 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 8 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 8 key.
+ */
 public const int KEY_8 = 12008;
 
-/** 9 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 9 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 9 key.
+ */
 public const int KEY_9 = 12009;
 
 
-/** 0 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 0 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 0 key.
+ */
 public const int KEY_NUMPAD0 = 12100;
 
-/** 1 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 1 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 1 key.
+ */
 public const int KEY_NUMPAD1 = 12101;
 
-/** 2 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 2 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 2 key.
+ */
 public const int KEY_NUMPAD2 = 12102;
 
-/** 3 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 3 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 3 key.
+ */
 public const int KEY_NUMPAD3 = 12103;
 
-/** 4 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 4 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 4 key.
+ */
 public const int KEY_NUMPAD4 = 12104;
 
-/** 5 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 5 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 5 key.
+ */
 public const int KEY_NUMPAD5 = 12105;
 
-/** 6 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 6 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 6 key.
+ */
 public const int KEY_NUMPAD6 = 12106;
 
-/** 7 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 7 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 7 key.
+ */
 public const int KEY_NUMPAD7 = 12107;
 
-/** 8 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 8 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 8 key.
+ */
 public const int KEY_NUMPAD8 = 12108;
 
-/** 9 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 9 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the 9 key.
+ */
 public const int KEY_NUMPAD9 = 12109;
 
 
 
-/** 上 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 上 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Up key.
+ */
 public const int KEY_UP = 13001;
 
-/** 下 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 下 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Down key.
+ */
 public const int KEY_DOWN = 13002;
 
-/** 右 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 右 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Right key.
+ */
 public const int KEY_RIGHT = 13003;
 
-/** 左 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 左 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Left key.
+ */
 public const int KEY_LEFT = 13004;
 
 
 
-/** Insert キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Insert キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Insert key.
+ */
 public const int KEY_INSERT = 14001;
 
-/** Home キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Home キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Home key.
+ */
 public const int KEY_HOME = 14002;
 
-/** Delete キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Delete キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Delete key.
+ */
 public const int KEY_DELETE = 14003;
 
-/** End キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * End キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the End key.
+ */
 public const int KEY_END = 14004;
 
-/** Page Up キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Page Up キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Page Up key.
+ */
 public const int KEY_PAGE_UP = 14005;
 
-/** Page Down キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Page Down キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Page Down key.
+ */
 public const int KEY_PAGE_DOWN = 14006;
 
-/** Caps Lock キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * Caps Lock キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the Caps Lock key.
+ */
 public const int KEY_CAPS_LOCK = 14007;
 
-/** バックスラッシュ キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * バックスラッシュ キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the backslash key.
+ */
 public const int KEY_BACK_SLASH = 15001;
 
-/** / キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * / キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the slash key.
+ */
 public const int KEY_SLASH = 15002;
 
-/** - キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * - キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the minus key.
+ */
 public const int KEY_MINUS = 15003;
 
-/** + キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * + キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the plus key.
+ */
 public const int KEY_PLUS = 15004;
 
-/** # キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * # キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the # key.
+ */
 public const int KEY_NUMBER = 15005;
 
-/** ; キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ; キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the semicolon key.
+ */
 public const int KEY_SEMICOLON = 15006;
 
-/** : キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * : キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the colon key.
+ */
 public const int KEY_COLON = 15007;
 
-/** , キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * , キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the comma key.
+ */
 public const int KEY_COMMA = 15008;
 
-/** . キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * . キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the period key.
+ */
 public const int KEY_PERIOD = 15009;
 
-/** _ キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * _ キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the _ key.
+ */
 public const int KEY_UNDERSCORE = 15010;
 
-/** ! キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ! キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the exclamation mark key.
+ */
 public const int KEY_EXCLAMATION = 15011;
 
-/** = キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * = キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the equals key.
+ */
 public const int KEY_EQUALS = 15012;
 
-/** $ キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * $ キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the dollar sign key.
+ */
 public const int KEY_DOLLAR = 15013;
 
-/** ^ キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ^ キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the circumflex key.
+ */
 public const int KEY_CIRCUMFLEX = 15014;
 
-/** [ キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * [ キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the left square bracket key.
+ */
 public const int KEY_LEFT_SQUARE_BRACKET = 15015;
 
-/** ] キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ] キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the right square bracket key.
+ */
 public const int KEY_RIGHT_SQUARE_BRACKET = 15016;
 
-/** ( キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ( キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the left parenthesis key.
+ */
 public const int KEY_LEFT_PARENTHESIS = 15018;
 
-/** ) キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ) キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the right parenthesis key.
+ */
 public const int KEY_RIGHT_PARENTHESIS = 15017;
 
-/** | キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * | キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the vertical bar key.
+ */
 public const int KEY_SEPARATOR = 15021;
 
-/** 加算キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 加算キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the add key.
+ */
 public const int KEY_ADD = 15022;
 
-/** 減算キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 減算キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the subtract key.
+ */
 public const int KEY_SUBTRACT = 15023;
 
-/** 除算キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 除算キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the divide key.
+ */
 public const int KEY_DIVIDE = 15024;
 
-/** 乗算キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 乗算キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the multiply key.
+ */
 public const int KEY_MULTIPLY = 15025;
 
 
 
-/** F1 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F1 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F1 key.
+ */
 public const int KEY_F1 = 16001;
 
-/** F2 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F2 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F2 key.
+ */
 public const int KEY_F2 = 16002;
 
-/** F3 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F3 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F3 key.
+ */
 public const int KEY_F3 = 16003;
 
-/** F4 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F4 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F4 key.
+ */
 public const int KEY_F4 = 16004;
 
-/** F5 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F5 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F5 key.
+ */
 public const int KEY_F5 = 16005;
 
-/** F6 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F6 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F6 key.
+ */
 public const int KEY_F6 = 16006;
 
-/** F7 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F7 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F7 key.
+ */
 public const int KEY_F7 = 16007;
 
-/** F8 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F8 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F8 key.
+ */
 public const int KEY_F8 = 16008;
 
-/** F9 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F9 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F9 key.
+ */
 public const int KEY_F9 = 16009;
 
-/** F10 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F10 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F10 key.
+ */
 public const int KEY_F10 = 16010;
 
-/** F11 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F11 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F11 key.
+ */
 public const int KEY_F11 = 16011;
 
-/** F12 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F12 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F12 key.
+ */
 public const int KEY_F12 = 16012;
 
-/** F13 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F13 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F13 key.
+ */
 public const int KEY_F13 = 16013;
 
-/** F14 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F14 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F14 key.
+ */
 public const int KEY_F14 = 16014;
 
-/** F15 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F15 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F15 key.
+ */
 public const int KEY_F15 = 16015;
 
-/** F16 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F16 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F16 key.
+ */
 public const int KEY_F16 = 16016;
 
-/** F17 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F17 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F17 key.
+ */
 public const int KEY_F17 = 16017;
 
-/** F18 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F18 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F18 key.
+ */
 public const int KEY_F18 = 16018;
 
-/** F19 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F19 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F19 key.
+ */
 public const int KEY_F19 = 16019;
 
-/** F20 キーを表す定数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * F20 キーを表す定数です。
+ *
+ * !--- locale=En-US ---
+ * The constant representing the F20 key.
+ */
 public const int KEY_F20 = 16020;
 
 
-/** GUIコンポーネントの内側を指定するための定数です。<a href="#getComponentSize">getComponentSize</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * GUIコンポーネントの内側を指定するための定数です。<a href="#getComponentSize">getComponentSize</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The constant used to specify the inner area of a GUI component. It is used in the <a href="#getComponentSize">getComponentSize</a> function.
+ */
 public const int INNER = 1;
 
-/** GUIコンポーネントの外側を指定するための定数です。<a href="#getComponentSize">getComponentSize</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * GUIコンポーネントの外側を指定するための定数です。<a href="#getComponentSize">getComponentSize</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The constant used to specify the outer area of a GUI component. It is used in the <a href="#getComponentSize">getComponentSize</a> function.
+ */
 public const int OUTER = 2;
 
-/** リストアップされている項目全てを指定するための定数です。<a href="#setComponentStringArray">setComponentStringArray</a> 関数や <a href="#getComponentStringArray">getComponentStringArray</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * リストアップされている項目全てを指定するための定数です。<a href="#setComponentStringArray">setComponentStringArray</a> 関数や <a href="#getComponentStringArray">getComponentStringArray</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The constant used to specify all listed items. It is used in the <a href="#setComponentStringArray">setComponentStringArray</a> and <a href="#getComponentStringArray">getComponentStringArray</a> functions.
+ */
 public const int LISTED = 3;
 
-/** 選択されている項目全てを指定するための定数です。<a href="#setComponentStringArray">setComponentStringArray</a> 関数や <a href="#getComponentStringArray">getComponentStringArray</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 選択されている項目全てを指定するための定数です。<a href="#setComponentStringArray">setComponentStringArray</a> 関数や <a href="#getComponentStringArray">getComponentStringArray</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The constant used to specify all selected items. It is used in the <a href="#setComponentStringArray">setComponentStringArray</a> and <a href="#getComponentStringArray">getComponentStringArray</a> functions.
+ */
 public const int SELECTED = 4;
 
 
@@ -442,29 +1193,49 @@ public const int VALUE_SELECTED = 4;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントを、別のGUIコンポーネント上に配置します。
  * 
  * @param componentID 配置するGUIコンポーネントのID
  * @param parentComponentID 配置先GUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Mounts a GUI component onto another GUI component.
+ * 
+ * @param componentID The ID of the GUI component to be mounted.
+ * @param parentComponentID The ID of the destination GUI component.
  */
 void mountComponent( int componentID, int parentComponentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_addComponent( componentID, parentComponentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントを配置解除します。
  * 
  * @param componentID 配置解除するGUIコンポーネントのID
  * @param parentComponentID 現在の配置先GUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Demounts a GUI component.
+ * 
+ * @param componentID The ID of the GUI component to be demounted.
+ * @param parentComponentID The ID of the current parent GUI component.
  */
 void demountComponent( int componentID, int parentComponentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_removeComponent( componentID, parentComponentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントを破棄します。
  * 
  * @param componentID 破棄するGUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Disposes a GUI component.
+ * 
+ * @param componentID The ID of the GUI component to be disposed.
  */
 void deleteComponent( int componentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeComponent( componentID );
@@ -472,6 +1243,7 @@ void deleteComponent( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -480,12 +1252,23 @@ void deleteComponent( int componentID ){
  * @param height 高さ
  * @param title ウィンドウタイトル
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a window, assigns a unique identifier (GUI component ID), and returns it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param title The window title.
+ * @return The GUI component ID.
  */
 int newWindow( int x, int y, int w, int h, string title ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createWindow( x, y, w, h, title );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ボタンを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -494,12 +1277,23 @@ int newWindow( int x, int y, int w, int h, string title ){
  * @param height 高さ
  * @param text ボタンに表示するテキスト
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a button, assigns a unique identifier (GUI component ID), and returns it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param text The text displayed on the button.
+ * @return The GUI component ID.
  */
 int newButton( int x, int y, int w, int h, string text ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createButton( x, y, w, h, text );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストフィールド（ 1行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -508,12 +1302,23 @@ int newButton( int x, int y, int w, int h, string text ){
  * @param height 高さ
  * @param text 初期値として表示するテキスト
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a text field, which is a component for entering a single line of text, assigns a unique identifier (GUI component ID), and returns it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param text The text displayed as the initial value.
+ * @return The GUI component ID.
  */
 int newTextField( int x, int y, int w, int h, string text ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextField( x, y, w, h, text );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストエリア（ 複数行のテキストを入力するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -522,6 +1327,16 @@ int newTextField( int x, int y, int w, int h, string text ){
  * @param height 高さ
  * @param text 初期値として表示するテキスト
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a text area, which is a component for entering multiple lines of text, assigns a unique identifier (GUI component ID), and returns it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param text The text displayed as the initial value.
+ * @return The GUI component ID.
  */
 int newTextArea( int x, int y, int w, int h, string text ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextArea( x, y, w, h, text );
@@ -535,6 +1350,7 @@ int newSystemTextArea( int x, int y, int w, int h, string text ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストラベル（ 1行のテキストを表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -543,12 +1359,23 @@ int newSystemTextArea( int x, int y, int w, int h, string text ){
  * @param height 高さ
  * @param text 表示するテキスト
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a text label, which is a component for displaying a single line of text, assigns a unique identifier (GUI component ID), and returns it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param text The text to be displayed.
+ * @return The GUI component ID.
  */
 int newTextLabel( int x, int y, int w, int h, string text ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextLabel( x, y, w, h, text );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像ラベルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -557,12 +1384,23 @@ int newTextLabel( int x, int y, int w, int h, string text ){
  * @param height 高さ
  * @param graphicsID 画像を格納するグラフィックスリソースのID
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates an image label, assigns a unique identifier (GUI component ID), and returns it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param graphicsID The ID of the graphics resource storing the image.
+ * @return The GUI component ID.
  */
 int newImageLabel( int x, int y, int w, int h, int graphicsID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLabel( x, y, w, h, graphicsID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * チェックボックスを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -572,12 +1410,24 @@ int newImageLabel( int x, int y, int w, int h, int graphicsID ){
  * @param text 表示するテキスト
  * @param b 初期値
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a check box, assigns a unique identifier (GUI component ID), and returns it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param text The text to be displayed.
+ * @param b The initial value.
+ * @return The GUI component ID.
  */
 int newCheckBox( int x, int y, int w, int h, string text, boolean b ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createCheckBox( x, y, w, h, text, b );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * セレクトフィールド（ 選択肢から1つの項目を選択可能な、1行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -586,6 +1436,16 @@ int newCheckBox( int x, int y, int w, int h, string text, boolean b ){
  * @param height 高さ
  * @param str 選択肢
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a select field, which is a single-line component allowing one item to be selected from choices, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param str The choices.
+ * @return The GUI component ID.
  */
 int newSelectField( int x, int y, int w, int h, string str[ ] ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createSelectField( x, y, w, h );
@@ -598,6 +1458,7 @@ int newSelectField( int x, int y, int w, int h, string str[ ] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * セレクトエリア（ 選択肢から複数項目を選択可能な、複数行のコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -606,6 +1467,16 @@ int newSelectField( int x, int y, int w, int h, string str[ ] ){
  * @param height 高さ
  * @param str 選択肢
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a select area, which is a multi-line component allowing multiple items to be selected from choices, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param str The choices.
+ * @return The GUI component ID.
  */
 int newSelectArea( int x, int y, int w, int h, string str[ ] ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createSelectArea( x, y, w, h );
@@ -620,6 +1491,7 @@ int newSelectArea( int x, int y, int w, int h, string str[ ] ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 0.0 ～ 1.0 の範囲でfloat 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -628,12 +1500,23 @@ int newSelectArea( int x, int y, int w, int h, string str[ ] ){
  * @param height 高さ
  * @param value 初期値
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a vertical slider for operating a float value in the range from 0.0 to 1.0, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param value The initial value.
+ * @return The GUI component ID.
  */
 int newVerticalSlider( int x, int y, int w, int h, float value ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createVerticalSlider( x, y, w, h, value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * float 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -644,12 +1527,25 @@ int newVerticalSlider( int x, int y, int w, int h, float value ){
  * @param min 最小値
  * @param max 最大値
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a vertical slider for operating a float value, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param value The initial value.
+ * @param min The minimum value.
+ * @param max The maximum value.
+ * @return The GUI component ID.
  */
 int newVerticalSlider( int x, int y, int w, int h, float value, float min, float max ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createVerticalSlider_FVALUE_FMAX_FMIN( x, y, w, h, value, min, max );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * int 値を操作する垂直スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -660,6 +1556,18 @@ int newVerticalSlider( int x, int y, int w, int h, float value, float min, float
  * @param min 最小値
  * @param max 最大値
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a vertical slider for operating an int value, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param value The initial value.
+ * @param min The minimum value.
+ * @param max The maximum value.
+ * @return The GUI component ID.
  */
 int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createVerticalSlider_IVALUE_IMAX_IMIN( x, y, w, h, value, min, max );
@@ -667,6 +1575,7 @@ int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max )
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 0.0 ～ 1.0 の範囲でfloat 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -675,12 +1584,23 @@ int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max )
  * @param height 高さ
  * @param value 初期値
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a horizontal slider for operating a float value in the range from 0.0 to 1.0, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param value The initial value.
+ * @return The GUI component ID.
  */
 int newHorizontalSlider( int x, int y, int w, int h, float value ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createHorizontalSlider( x, y, w, h, value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * float 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -691,12 +1611,25 @@ int newHorizontalSlider( int x, int y, int w, int h, float value ){
  * @param min 最小値
  * @param max 最大値
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a horizontal slider for operating a float value, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param value The initial value.
+ * @param min The minimum value.
+ * @param max The maximum value.
+ * @return The GUI component ID.
  */
 int newHorizontalSlider( int x, int y, int w, int h, float value, float min, float max ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createHorizontalSlider_FVALUE_FMAX_FMIN( x, y, w, h, value, min, max );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * int 値を操作する水平スライダーを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -707,6 +1640,18 @@ int newHorizontalSlider( int x, int y, int w, int h, float value, float min, flo
  * @param min 最小値
  * @param max 最大値
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a horizontal slider for operating an int value, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param value The initial value.
+ * @param min The minimum value.
+ * @param max The maximum value.
+ * @return The GUI component ID.
  */
 int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createHorizontalSlider_IVALUE_IMAX_IMIN( x, y, w, h, value, min, max );
@@ -714,6 +1659,7 @@ int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 任意座標レイアウト用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -722,6 +1668,16 @@ int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max
  * @param height 高さ
  * @param title パネルタイトル
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a panel for free-position layout, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param title The panel title.
+ * @return The GUI component ID.
  */
 int newPanel( int x, int y, int w, int h, string title ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPanel( x, y, w, h );
@@ -730,6 +1686,7 @@ int newPanel( int x, int y, int w, int h, string title ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グリッド配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -738,6 +1695,16 @@ int newPanel( int x, int y, int w, int h, string title ){
  * @param height 高さ
  * @param title パネルタイトル
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a panel for grid layout, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param title The panel title.
+ * @return The GUI component ID.
  */
 int newGridPanel( int x, int y, int w, int h, string title, int rows, int columns ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGridPanel( x, y, w, h, rows, columns );
@@ -746,6 +1713,7 @@ int newGridPanel( int x, int y, int w, int h, string title, int rows, int column
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * フロー配置用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * 
  * @param x 左上頂点のX座標
@@ -754,6 +1722,16 @@ int newGridPanel( int x, int y, int w, int h, string title, int rows, int column
  * @param height 高さ
  * @param title パネルタイトル
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a panel for flow layout, and returns its unique identifier (GUI component ID).
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param title The panel title.
+ * @return The GUI component ID.
  */
 int newFlowPanel( int x, int y, int w, int h, string title ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createFlowPanel( x, y, w, h );
@@ -783,6 +1761,7 @@ int newLevelPanel( int x, int y, int w, int h, string title ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * タブ表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。
  * 
  * @param x 左上頂点のX座標
@@ -791,6 +1770,16 @@ int newLevelPanel( int x, int y, int w, int h, string title ){
  * @param height 高さ
  * @param title パネルタイトル
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a panel for tab display, and returns its unique identifier (GUI component ID). Use this panel by placing another panel on it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param title The panel title.
+ * @return The GUI component ID.
  */
 int newTabPanel( int x, int y, int w, int h, string title ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTabPanel( x, y, w, h );
@@ -799,6 +1788,7 @@ int newTabPanel( int x, int y, int w, int h, string title ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スクロール表示用のパネルを生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。このパネルの上に、別のパネルを配置して使用します。
  * 
  * @param x 左上頂点のX座標
@@ -807,6 +1797,16 @@ int newTabPanel( int x, int y, int w, int h, string title ){
  * @param height 高さ
  * @param title パネルタイトル
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a panel for scroll display, and returns its unique identifier (GUI component ID). Use this panel by placing another panel on it.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param title The panel title.
+ * @return The GUI component ID.
  */
 int newScrollPanel( int x, int y, int w, int h, string title ){
   int id = SYSTEM_PROCESS_DRIVER_GRAPHICS_createScrollPanel( x, y, w, h );
@@ -816,32 +1816,55 @@ int newScrollPanel( int x, int y, int w, int h, string title ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントを再描画します。
  * 再描画は、表示内容のテキストやグラフィックスデータが変化した際に必要です。
  * 及び自身に配置されている子コンポーネントの表示内容が変化した際にも必要となります。
  * 
  * @param componentID 対象GUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Repaints a GUI component.
+ * Repainting is necessary when the displayed text or graphics resource has changed.
+ * It is also necessary when the displayed content of child components mounted on the component has changed.
+ * 
+ * @param componentID The ID of the target GUI component.
  */
 macro paintComponent( int componentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_repaintComponent( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの位置を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param x 左上頂点のX座標
  * @param y 左上頂点のY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the location of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
  */
 void setComponentLocation( int componentID, int x, int y ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVertex( componentID, x, y );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの位置を取得します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return 左上頂点座標（ [0] が X, [1] が Y ）
+ *
+ * !--- locale=En-US ---
+ * Gets the location of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The top-left corner coordinates, where [0] is X and [1] is Y.
  */
 int[] getComponentLocation( int componentID ){
   int size[ 2 ];
@@ -851,21 +1874,36 @@ int[] getComponentLocation( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの大きさを設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param width 幅
  * @param height 高さ
+ *
+ * !--- locale=En-US ---
+ * Sets the size of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param width The width.
+ * @param height The height.
  */
 void setComponentSize( int componentID, int width, int height ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentSize( componentID, width, height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの大きさを取得します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return 大きさ（ [0] が 幅, [1] が 高さ ）
+ *
+ * !--- locale=En-US ---
+ * Gets the size of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The size, where [0] is the width and [1] is the height.
  */
 int[] getComponentSize( int componentID ){
   int size[ 2 ];
@@ -874,11 +1912,19 @@ int[] getComponentSize( int componentID ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの特定部分の大きさを取得します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param option 部分指定オプション（ <a href="#OUTER">OUTER</a>、 <a href="#INNER">INNER</a> ）
  * @return 大きさ（ [0] が 幅, [1] が 高さ ）
+ *
+ * !--- locale=En-US ---
+ * Gets the size of a specific part of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param option The part selection option (<a href="#OUTER">OUTER</a> or <a href="#INNER">INNER</a>).
+ * @return The size, where [0] is the width and [1] is the height.
  */
 int[] getComponentSize( int componentID, int option ){
   int size[ 2 ];
@@ -895,6 +1941,7 @@ int[] getComponentSize( int componentID, int option ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの色を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
@@ -906,108 +1953,192 @@ int[] getComponentSize( int componentID, int option ){
  * @param bg 前景色の緑色成分（ 0 - 255 ）
  * @param bb 前景色の青色成分（ 0 - 255 ）
  * @param ba 前景色のα値成分（ 0 - 255 ）
+ *
+ * !--- locale=En-US ---
+ * Sets the colors of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param fr The red component of the foreground color (0 to 255).
+ * @param fg The green component of the foreground color (0 to 255).
+ * @param fb The blue component of the foreground color (0 to 255).
+ * @param fa The alpha component of the foreground color (0 to 255).
+ * @param br The red component of the background color (0 to 255).
+ * @param bg The green component of the background color (0 to 255).
+ * @param bb The blue component of the background color (0 to 255).
+ * @param ba The alpha component of the background color (0 to 255).
  */
 void setComponentColor( int componentID, int fr, int fg, int fb, int fa, int br, int bg, int bb, int ba ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentColor( componentID, fr, fg, fb, fa, br, bg, bb, ba );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの色を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param fgRGBA 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
  * @param bgRGBA 前景色の色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ *
+ * !--- locale=En-US ---
+ * Sets the colors of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param fgRGBA The array storing the foreground color components, where [0] is red, [1] is green, [2] is blue, and [3] is alpha, each in the range from 0 to 255.
+ * @param bgRGBA The array storing the background color components, where [0] is red, [1] is green, [2] is blue, and [3] is alpha, each in the range from 0 to 255.
  */
 void setComponentColor( int componentID, int fgRGBA[], int bgRGBA[]  ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentColor( componentID, fgRGBA[0], fgRGBA[1], fgRGBA[2], fgRGBA[3], bgRGBA[0], bgRGBA[1], bgRGBA[2], bgRGBA[3] );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの色を返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return (int[][])色色成分を格納する配列（ [0][0]が前景の赤、[0][1]が前景の緑、[0][2]が前景の青、[0][3]が前景のα、[1][0]が背景の赤、[1][1]が背景の緑、[1][2]が背景の青、[1][3]が背景のαで、各色 0 - 255 ）
+ *
+ * !--- locale=En-US ---
+ * Returns the colors of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return An int[][] array storing the color components, where [0][0] is the foreground red, [0][1] is the foreground green, [0][2] is the foreground blue, [0][3] is the foreground alpha, [1][0] is the background red, [1][1] is the background green, [1][2] is the background blue, and [1][3] is the background alpha, each in the range from 0 to 255.
  */
 macro getComponentColor( int componentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentColor( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのテキスト情報を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param text テキスト情報
+ *
+ * !--- locale=En-US ---
+ * Sets the text of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param text The text.
  */
 void setComponentText( int componentID, string text ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( componentID, text );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのテキスト情報を取得します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return text テキスト情報
+ *
+ * !--- locale=En-US ---
+ * Gets the text of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The text.
  */
 string getComponentText( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentText( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのテキスト情報を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param text テキスト情報
  * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
+ *
+ * !--- locale=En-US ---
+ * Sets the text data of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param text The text data.
+ * @param option The option (<a href="#LISTED">LISTED</a> or <a href="#SELECTED">SELECTED</a>).
  */
 void setComponentText( int componentID, string text[], int option ){
 	setComponentStringArray(componentID, text, option);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのテキスト情報を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
  * @return テキスト情報
+ *
+ * !--- locale=En-US ---
+ * Gets the text data of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param option The option (<a href="#LISTED">LISTED</a> or <a href="#SELECTED">SELECTED</a>).
+ * @return The text data.
  */
 string[] getComponentText( int componentID, int option ){
 	return getComponentStringArray(componentID, option);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの画像を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param graphicsID 画像を格納するグラフィックスデータのID
+ *
+ * !--- locale=En-US ---
+ * Sets the image of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param graphicsID The ID of the graphics resource storing the image.
  */
 void setComponentImage( int componentID, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentGraphics( componentID, graphicsID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントの画像を格納する、グラフィックスデータのIDを返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return graphicsID 画像を格納するグラフィックスデータのID
+ *
+ * !--- locale=En-US ---
+ * Returns the ID of the graphics resource storing the image of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The ID of the graphics resource storing the image.
  */
-int getComponentGraphics( int componentID ){
+int getComponentImage( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentGraphics( componentID );
 }
 
 
 /**
- * GUIコンポーネントの非表示にします。
+ * !--- locale=Ja-JP ---
+ * GUIコンポーネントを非表示にします。
  * 
  * @param componentID 対象GUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Shows a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
  */
 void showComponent( int componentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVisible( componentID, true );
 }
 
 /**
- * GUIコンポーネントの表示します。
+ * !--- locale=Ja-JP ---
+ * GUIコンポーネントを表示します。
  * 
  * @param componentID 対象GUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Hides a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
  */
 void hideComponent( int componentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVisible( componentID, false );
@@ -1015,40 +2146,68 @@ void hideComponent( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのフォントを設定します
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param name フォント名（処理系依存、環境依存）
+ *
+ * !--- locale=En-US ---
+ * Sets the font of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param name The font name, depending on the implementation and environment.
  */
 void setComponentFont( int componentID, string name ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontName( componentID, name );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのフォントサイズを設定します
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param size フォントサイズ
+ *
+ * !--- locale=En-US ---
+ * Sets the font size of a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param size The font size.
  */
 void setComponentFontSize( int componentID, int size ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontSize( componentID, size );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのフォントを太字に設定または解除します。イタリック体と併用はできません。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param isBold 太字設定
+ *
+ * !--- locale=En-US ---
+ * Enables or disables bold style for the font of a GUI component. It cannot be used together with italic style.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param isBold Whether to enable bold style.
  */
 void setComponentFontBold( int componentID, bool isBold ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontBold( componentID, isBold );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのフォントをイタリック体に設定または解除します。太字と併用はできません。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param isItalic イタリック体設定
+ *
+ * !--- locale=En-US ---
+ * Enables or disables italic style for the font of a GUI component. It cannot be used together with bold style.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param isItalic Whether to enable italic style.
  */
 void setComponentFontItalic( int componentID, bool isItalic ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFontItalic( componentID, isItalic );
@@ -1060,20 +2219,34 @@ void setComponentFontItalic( int componentID, bool isItalic ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する float 型の値を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param value 保持値
+ *
+ * !--- locale=En-US ---
+ * Sets the float value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param value The value to hold.
  */
 void setComponentFloat( int componentID, float value ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFloatValue( componentID, value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する float 型の値を返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return 保持値
+ *
+ * !--- locale=En-US ---
+ * Returns the float value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The held value.
  */
 float getComponentFloat( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentFloatValue( componentID );
@@ -1081,20 +2254,34 @@ float getComponentFloat( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する int 型の値を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param value 保持値
+ *
+ * !--- locale=En-US ---
+ * Sets the int value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param value The value to hold.
  */
 void setComponentInt( int componentID, int value ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentIntegerValue( componentID, value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する int  型の値を返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return 保持値
+ *
+ * !--- locale=En-US ---
+ * Returns the int value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The held value.
  */
 int getComponentInt( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentIntegerValue( componentID );
@@ -1102,20 +2289,34 @@ int getComponentInt( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する bool 型の値を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param value 保持値
+ *
+ * !--- locale=En-US ---
+ * Sets the bool value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param value The value to hold.
  */
 void setComponentBool( int componentID, bool state ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentState( componentID, state );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する bool  型の値を返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return 保持値
+ *
+ * !--- locale=En-US ---
+ * Returns the bool value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The held value.
  */
 bool getComponentBool( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentState( componentID );
@@ -1123,20 +2324,34 @@ bool getComponentBool( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する string  型の値を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param value 保持値
+ *
+ * !--- locale=En-US ---
+ * Sets the string value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param value The value to hold.
  */
 void setComponentString( int componentID, string text ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( componentID, text );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する string  型の値を返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return 保持値
+ *
+ * !--- locale=En-US ---
+ * Returns the string value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The held value.
  */
 string getComponentString( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentText( componentID );
@@ -1157,11 +2372,19 @@ string getComponentString( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する string  型配列の値を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param value 保持値
  * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
+ *
+ * !--- locale=En-US ---
+ * Sets the string array value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param value The value to hold.
+ * @param option The option (<a href="#LISTED">LISTED</a> or <a href="#SELECTED">SELECTED</a>).
  */
 void setComponentStringArray( int componentID, string text[], int option ){
   int n = length( text );
@@ -1179,11 +2402,19 @@ void setComponentStringArray( int componentID, string text[], int option ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する string 型配列の値を返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param option オプション（ <a href="#LISTED">LISTED</a>、 <a href="#SELECTED">SELECTED</a> ）
  * @return 保持値
+ *
+ * !--- locale=En-US ---
+ * Returns the string array value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param option The option (<a href="#LISTED">LISTED</a> or <a href="#SELECTED">SELECTED</a>).
+ * @return The held value.
  */
 string[] getComponentStringArray( int componentID, int option ){
   if(option == SELECTED){
@@ -1198,10 +2429,17 @@ string[] getComponentStringArray( int componentID, int option ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する int  型配列の値を設定します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param value 保持値
+ *
+ * !--- locale=En-US ---
+ * Sets the int array value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param value The value to hold.
  */
 void setComponentIntArray( int componentID, int value[] ){
   int n = length( value, 0 );
@@ -1214,10 +2452,17 @@ void setComponentIntArray( int componentID, int value[] ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントが保持する int 型配列の値を返します。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return 保持値
+ *
+ * !--- locale=En-US ---
+ * Returns the int array value held by a GUI component.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The held value.
  */
 int[] getComponentIntArray( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentIntArrayValue( componentID );
@@ -1240,26 +2485,41 @@ int[] getComponentIntArray( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントを、別のGUIコンポーネント上に配置します。VCSSL 3 以降では、より新しい <a href="#mountComponent">mountComponent</a> 関数がサポートされています。この関数は互換目的でサポートされています。
  * 
  * @param componentID 配置するGUIコンポーネントのID
  * @param componentID 配置先GUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Mounts a GUI component on another GUI component. Since VCSSL 3, the newer <a href="#mountComponent">mountComponent</a> function has been supported. This function is supported for compatibility.
+ * 
+ * @param componentID The ID of the GUI component to mount.
+ * @param componentID The ID of the destination GUI component.
  */
 void addComponent( int componentID, int parentComponentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_addComponent( componentID, parentComponentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントを配置解除します。VCSSL 3 以降では、より新しい <a href="#demountComponent">demountComponent</a> 関数がサポートされています。この関数は互換目的でサポートされています。
  * 
  * @param componentID 配置解除するGUIコンポーネントのID
  * @param componentID 現在の配置先GUIコンポーネントのID
+ *
+ * !--- locale=En-US ---
+ * Demounts a GUI component. Since VCSSL 3, the newer <a href="#demountComponent">demountComponent</a> function has been supported. This function is supported for compatibility.
+ * 
+ * @param componentID The ID of the GUI component to demount.
+ * @param componentID The ID of the current parent GUI component.
  */
 void removeComponent( int componentID, int parentComponentID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_removeComponent( componentID, parentComponentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスラベル（ 描画内容や画像を表示するコンポーネント ）を生成し、固有の識別番号（GUIコンポーネントID）を割り振って返します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#newImageLabel">newImageLabel</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
@@ -1270,30 +2530,60 @@ void removeComponent( int componentID, int parentComponentID ){
  * @param height 高さ
  * @param graphicsID 表示内容のグラフィックスID
  * @return GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Creates a graphics label, which is a component displaying drawn content or an image, and returns its unique identifier (GUI component ID).
+ * Since VCSSL 3.3.24, the newer <a href="#newImageLabel">newImageLabel</a> function has been supported.
+ * This function is supported for compatibility.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param graphicsID The graphics resource ID of the displayed content.
+ * @return The GUI component ID.
  */
 int newGraphicsLabel( int x, int y, int w, int h, int graphicsID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLabel( x, y, w, h, graphicsID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのグラフィックスデータIDを設定します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#setComponentImage">setComponentImage</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @param graphicsID グラフィックスデータID
+ *
+ * !--- locale=En-US ---
+ * Sets the graphics resource ID of a GUI component.
+ * Since VCSSL 3.3.24, the newer <a href="#setComponentImage">setComponentImage</a> function has been supported.
+ * This function is supported for compatibility.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @param graphicsID The graphics resource ID.
  */
 void setComponentGraphics( int componentID, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentGraphics( componentID, graphicsID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネントのグラフィックスデータIDを返します。
- * VCSSL 3.3.24 以降では、より新しい <a href="#getComponentGraphics">getComponentGraphics</a> 関数がサポートされています。
+ * VCSSL 3.3.24 以降では、より新しい <a href="#getComponentGraphics">getComponentImage</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
  * @param componentID 対象GUIコンポーネントのID
  * @return graphicsID グラフィックスデータID
+ *
+ * !--- locale=En-US ---
+ * Returns the graphics resource ID of a GUI component.
+ * Since VCSSL 3.3.24, the newer <a href="#getComponentGraphics">getComponentImage</a> function has been supported.
+ * This function is supported for compatibility.
+ * 
+ * @param componentID The ID of the target GUI component.
+ * @return The graphics resource ID.
  */
 int getComponentGraphics( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentGraphics( componentID );
@@ -1301,14 +2591,22 @@ int getComponentGraphics( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setComponentVisible( int componentID, bool b ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentVisible( componentID, b );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 bool getComponentVisible( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentVisible( componentID );
@@ -1320,7 +2618,11 @@ bool getComponentVisible( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int[] getComponentInnerSize( int componentID ){
   int size[2];
@@ -1329,7 +2631,11 @@ int[] getComponentInnerSize( int componentID ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int[] getComponentInner( int componentID ){
   int size[2];
@@ -1341,91 +2647,133 @@ int[] getComponentInner( int componentID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setComponentValue( int componentID, float value ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFloatValue( componentID, value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 float getComponentValue( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentFloatValue( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setComponentState( int componentID, bool state ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentState( componentID, state );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 bool getComponentState( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentState( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setComponentValueFloat( int componentID, float value ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentFloatValue( componentID, value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 float getComponentValueFloat( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentFloatValue( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setComponentValueInt( int componentID, int value ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentIntegerValue( componentID, value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int getComponentValueInt( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentIntegerValue( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setComponentValueBool( int componentID, bool state ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentState( componentID, state );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 bool getComponentValueBool( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentState( componentID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setComponentValueString( int componentID, string text ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setComponentText( componentID, text );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 string getComponentValueString( int componentID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getComponentText( componentID );
 }
-
-
-
-
-
-
