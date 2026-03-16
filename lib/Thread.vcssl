@@ -152,7 +152,6 @@ void startThread( int threadID ){
 }
 
 
-
 /**
  * !--- locale=Ja-JP ---
  *
@@ -166,23 +165,12 @@ void startThread( int threadID ){
  *
  * @param threadID The ID of the target thread.
  */
-void awaitThread( int threadID ){
-  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, -1 );
+void waitForThread( int threadID ){
+  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID );
 }
-
-
-/*
- * 試験実装、正式サポートではありません。
- */
-void awaitThread( int threadID, int timeOut ){
+void waitForThread( int threadID, int timeOut ){
   SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, timeOut );
 }
-
-
-
-
-
-
 
 
 /**
@@ -228,11 +216,12 @@ void sleepThread( int threadID, int milliSeconds, nanoSeconds ){
 
 
 
+
 /**
  * !--- locale=Ja-JP ---
  *
  * スレッドの実行が終了するまで、呼び出し元の処理を待機します。
- * 現在は、より新しい <a href="#awaitThread">awaitThread</a> が利用可能です。
+ * 現在は、同機能の <a href="#waitForThread">waitForThread</a> の方が推奨されています。
  * この関数は互換目的でサポートされています。
  *
  * @param threadID 対象スレッドのID
@@ -240,16 +229,19 @@ void sleepThread( int threadID, int milliSeconds, nanoSeconds ){
  * !--- locale=En-US ---
  *
  * Waits until execution of the thread has finished.
- * The newer <a href="#awaitThread">awaitThread</a> is currently available.
+ * Currently, the equivalent <a href="#waitForThread">waitForThread</a> is recommended instead.
  * This function is supported for compatibility.
  *
  * @param threadID The ID of the target thread.
  */
-void waitForThread( int threadID ){
-  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID );
+void awaitThread( int threadID ){
+  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, -1 );
 }
-void waitForThread( int threadID, int timeOut ){
+
+
+/*
+ * 試験実装、正式サポートではありません。
+ */
+void awaitThread( int threadID, int timeOut ){
   SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, timeOut );
 }
-
-
