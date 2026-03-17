@@ -1,0 +1,93 @@
+{
+	"libraryName": "Time",
+	"libraryDescription": "<p>The VCSSL Time library is a standard library providing functions such as time measurement and current time retrieval.<\/p><p>The function for obtaining elapsed time is provided by the <a href=\"#time\">time<\/a>() function. This function returns the elapsed time since the start of program execution.<br \/>(In some languages, such functions return the elapsed time since 00:00 on January 1, 1970, but that is not the case in VCSSL.)<\/p><p>The precision, or unit, of the time returned by the time function is milliseconds in the standard implementation.However, functions are also provided for converting the return value of the time function into various time units,for cases where you want to avoid hard-coded values such as \" \/1000 \" when converting units,or when you want to consider portability to special implementations with different units, though none currently exist.<br \/>Specifically, the <a href=\"#millisecond\">millisecond<\/a> function converts to milliseconds, the <a href=\"#second\">second<\/a> function to seconds, the <a href=\"#minute\">minute<\/a> function to minutes, the <a href=\"#hour\">hour<\/a> function to hours, and the <a href=\"#day\">day<\/a> function to days.<br \/>For example, to perform some processing and measure the elapsed time for it, do as follows:<div class=\"code\">int t1 = time(); \/\/ Measure the start time<br \/><br \/>[ Perform some time-consuming processing here ]<br \/><br \/>int t2 = time(); \/\/ Measure the end time<br \/>int sec = second( t2 - t1 ); \/\/ Obtain the elapsed time (time difference) in seconds<br \/>print( \"Elapsed time [ s ] = \" + sec ); \/\/ Output<br \/><\/div><\/p><p>Also, if the <a href=\"#second\">second<\/a>, <a href=\"#minute\">minute<\/a>, and <a href=\"#hour\">hour<\/a> functions are called without arguments, they return the current clock time.<br \/>Similarly, if the <a href=\"#day\">day<\/a>, <a href=\"#month\">month<\/a>, and <a href=\"#year\">year<\/a> functions are called without arguments, they return the current calendar date.<br \/>For example, to display the current date and time, do as follows:<div class=\"code\">print( year() + \"\/\" + month() + \"\/\" + day() + \" \" + hour() + \":\" + minute() + \":\" + second() );<\/div><\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "time",
+			"declaration": "int time()",
+			"description": "Returns the elapsed time since the start of program execution in milliseconds.<br \/><span style=\"font-weight: bold;\">Because this function is used frequently, it has also been supported in the System library since VCSSL 3.4.22.Therefore, this function can now be used without importing the Time library.<\/span><br \/>(This is because all functions belonging to the System library can be used without import.)",
+			"returnValue": "(int type) The elapsed time since the start of program execution, in milliseconds."
+		},
+		"function1": {
+			"name": "millisecond",
+			"declaration": "int millisecond( int t )",
+			"description": "Converts a value returned by the <a href=\"#time\">time<\/a> function and so on into milliseconds, that is, returns it as is.",
+			"parameters": "(int type) t : The time to be converted, such as a return value of the <a href=\"#time\">time<\/a> function or a sum or difference of such values. ",
+			"returnValue": "(int type) The value converted to milliseconds."
+		},
+		"function2": {
+			"name": "second",
+			"declaration": "int second( int t )",
+			"description": "Converts a value returned by the <a href=\"#time\">time<\/a> function and so on into seconds. Any remainder less than one second is discarded.",
+			"parameters": "(int type) t : The time to be converted, such as a return value of the <a href=\"#time\">time<\/a> function or a sum or difference of such values. ",
+			"returnValue": "(int type) The value converted to seconds."
+		},
+		"function3": {
+			"name": "minute",
+			"declaration": "int minute( int t )",
+			"description": "Converts a value returned by the <a href=\"#time\">time<\/a> function and so on into minutes. Any remainder less than one minute is discarded.",
+			"parameters": "(int type) t : The time to be converted, such as a return value of the <a href=\"#time\">time<\/a> function or a sum or difference of such values. ",
+			"returnValue": "(int type) The value converted to minutes."
+		},
+		"function4": {
+			"name": "hour",
+			"declaration": "int hour( int t )",
+			"description": "Converts a value returned by the <a href=\"#time\">time<\/a> function and so on into hours. Any remainder less than one hour is discarded.",
+			"parameters": "(int type) t : The time to be converted, such as a return value of the <a href=\"#time\">time<\/a> function or a sum or difference of such values. ",
+			"returnValue": "(int type) The value converted to hours."
+		},
+		"function5": {
+			"name": "day",
+			"declaration": "int day( int t )",
+			"description": "Converts a value returned by the <a href=\"#time\">time<\/a> function and so on into days. Any remainder less than one day is discarded.Note that astronomical and physical effects such as fluctuations in the Earth's rotation speed and leap seconds are not taken into account. Conversion is performed simply by treating 86400000 milliseconds as one day.",
+			"parameters": "(int type) t : The time to be converted, such as a return value of the <a href=\"#time\">time<\/a> function or a sum or difference of such values. ",
+			"returnValue": "(int type) The value converted to days."
+		},
+		"function6": {
+			"name": "year",
+			"declaration": "int year()",
+			"description": "Returns the current year in the Gregorian calendar.",
+			"returnValue": "(int type) The current year."
+		},
+		"function7": {
+			"name": "month",
+			"declaration": "int month()",
+			"description": "Returns the current month in the Gregorian calendar.<br \/>The range is 1 to 12. Note that it is not 0 to 11.",
+			"returnValue": "(int type) The current month."
+		},
+		"function8": {
+			"name": "day",
+			"declaration": "int day()",
+			"description": "Returns the current day in the Gregorian calendar.",
+			"returnValue": "(int type) The current day."
+		},
+		"function9": {
+			"name": "hour",
+			"declaration": "int hour()",
+			"description": "Returns the current hour of the day.",
+			"returnValue": "(int type) The current hour."
+		},
+		"function10": {
+			"name": "minute",
+			"declaration": "int minute()",
+			"description": "Returns the current minute of the time.",
+			"returnValue": "(int type) The current minute."
+		},
+		"function11": {
+			"name": "second",
+			"declaration": "int second()",
+			"description": "Returns the current second of the time.",
+			"returnValue": "(int type) The current second."
+		},
+		"function12": {
+			"name": "date",
+			"declaration": "string date()",
+			"description": "Returns a text representing the current date and time in the Gregorian calendar.<br \/>The format is currently unspecified in the specification and depends on the implementation. If you need a guaranteed format, construct it yourself by using functions such as <a href=\"#year\">year<\/a> and <a href=\"#hour\">hour<\/a>.",
+			"returnValue": "(string type) A text representing the date and time."
+		}
+	}
+}

@@ -1,0 +1,1550 @@
+{
+	"libraryName": "System",
+	"libraryDescription": "<p>The VCSSL System library is a standard library providing fundamental functions that are essential for general use.<\/p><p>The System library is automatically loaded by the implementation before the target VCSSL program itself is loaded.For this reason, the System library can exceptionally be used without import.<p><\/p>The reason why this exceptional treatment is applied is thatthe functions provided by the System library are used far more frequently than those of the other standard libraries.The System library does not collect functions for a specific field in the way other standard libraries do.Instead, it collects functions that are expected to be used particularly frequently in general usage regardless of field.Probably, the functions provided by the System library are essential in almost all VCSSL programs.Conversely, VCSSL is designed so that even only the functions provided by the System library, that is, without explicitly importing other standard libraries,can cover a certain practical range as a simple scripting language.<p><p>Specific examples of functions in the System library include basic operations and conversions for variables and arrays,input and output with the user, file input and output, simple interaction with the file system,and execution of operating-system commands.Some of these also have more advanced and complex counterparts provided by standard libraries specialized for each field.The design concept of standard libraries in VCSSL assumes that, for simple uses, the functions of the System library are used by default,and when those are insufficient, specialized libraries are imported and used as needed.<\/p><p>In the System library, the naming rules of identifiers are also somewhat different from those of the other standard libraries, as an exception prioritizing convenience in simple use cases.In principle, identifiers in VCSSL standard libraries are named in lower camel case without abbreviating English words.However, in the System library, many abbreviated identifier names are adopted, shortening English words to reduce typing and supplementing meaning with prefixes or suffixes when necessary.<\/p>",
+	"structs": {
+	},
+	"variables": {
+		"variable0": {
+			"name": "VER",
+			"declaration": "const string VER",
+			"description": "Represents the VCSSL version code supported by the implementation."
+		},
+		"variable1": {
+			"name": "REV",
+			"declaration": "const string REV",
+			"description": "Represents the development revision code of the implementation."
+		},
+		"variable2": {
+			"name": "I",
+			"declaration": "const complex I",
+			"description": "The imaginary unit of the complex type."
+		},
+		"variable3": {
+			"name": "VCI",
+			"declaration": "const varcomplex VCI",
+			"description": "The imaginary unit of the varcomplex type."
+		},
+		"variable4": {
+			"name": "INF",
+			"declaration": "const float INF",
+			"description": "The Inf, that is, infinity, value of the float type."
+		},
+		"variable5": {
+			"name": "NAN",
+			"declaration": "const float NAN",
+			"description": "The NaN, that is, not-a-number, value of the float type. Note that NaN is not equal to any value. In other words, comparisons such as value == NAN cannot be used to determine whether a variable value is NaN. To test for NaN, use the <a href=\"#nan\">nan<\/a> function."
+		},
+		"variable6": {
+			"name": "FLOAT_MAX",
+			"declaration": "const float FLOAT_MAX",
+			"description": "The maximum value of the float type."
+		},
+		"variable7": {
+			"name": "FLOAT_MIN_ABS_NORMAL",
+			"declaration": "const float FLOAT_MIN_ABS_NORMAL",
+			"description": "The smallest non-zero positive value representable by the float type within the range of normalized numbers."
+		},
+		"variable8": {
+			"name": "FLOAT_MIN_ABS_DENORMAL",
+			"declaration": "const float FLOAT_MIN_ABS_DENORMAL",
+			"description": "The smallest non-zero positive value representable by the float type including the range of denormalized numbers."
+		},
+		"variable9": {
+			"name": "FLOAT_MIN",
+			"declaration": "const float FLOAT_MIN",
+			"description": "Equivalent to <a href=\"#FLOAT_MIN_ABS_DENORMAL\">FLOAT_MIN_ABS_DENORMAL<\/a>.Because this shorter name is somewhat ambiguous in meaning and specification, use of the more explicit names<a href=\"#FLOAT_MIN_ABS_DENORMAL\">FLOAT_MIN_ABS_DENORMAL<\/a> or<a href=\"#FLOAT_MIN_ABS_NORMAL\">FLOAT_MIN_ABS_NORMAL<\/a> is generally recommended."
+		},
+		"variable10": {
+			"name": "INT_MAX",
+			"declaration": "const int INT_MAX",
+			"description": "The maximum value of the int type."
+		},
+		"variable11": {
+			"name": "INT_MIN",
+			"declaration": "const int INT_MIN",
+			"description": "The minimum value of the int type."
+		},
+		"variable12": {
+			"name": "EOL",
+			"declaration": "const string EOL",
+			"description": "The environment-dependent newline code. It stores the value appropriate for the current environment, such as CR, LF, or CR+LF."
+		},
+		"variable13": {
+			"name": "CR",
+			"declaration": "const string CR",
+			"description": "The newline code CR, that is, 0x0D."
+		},
+		"variable14": {
+			"name": "LF",
+			"declaration": "const string LF",
+			"description": "The newline code LF, that is, 0x0A."
+		},
+		"variable15": {
+			"name": "OS",
+			"declaration": "const string OS",
+			"description": "A string for roughly distinguishing the type or generation of the operating system in the execution environment, usually the OS name. Note that numbers representing generations in product branding are often included in this OS name rather than treated as version numbers."
+		},
+		"variable16": {
+			"name": "OSVER",
+			"declaration": "const string OSVER",
+			"description": "A string useful as a reference when distinguishing the generation of the operating system in the execution environment, specifically information such as the OS development or internal version. Note that it may differ from the version used in product information for general users."
+		},
+		"variable17": {
+			"name": "READ",
+			"declaration": "const string READ",
+			"description": "The file input\/output mode for reading. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable18": {
+			"name": "WRITE",
+			"declaration": "const string WRITE",
+			"description": "The file input\/output mode for writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable19": {
+			"name": "APPEND",
+			"declaration": "const string APPEND",
+			"description": "The file input\/output mode for append writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable20": {
+			"name": "READ_TSV",
+			"declaration": "const string READ_TSV",
+			"description": "The file input\/output mode for TSV reading. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable21": {
+			"name": "WRITE_TSV",
+			"declaration": "const string WRITE_TSV",
+			"description": "The file input\/output mode for TSV writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable22": {
+			"name": "APPEND_TSV",
+			"declaration": "const string APPEND_TSV",
+			"description": "The file input\/output mode for TSV append writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable23": {
+			"name": "READ_CSV",
+			"declaration": "const string READ_CSV",
+			"description": "The file input\/output mode for CSV reading. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable24": {
+			"name": "WRITE_CSV",
+			"declaration": "const string WRITE_CSV",
+			"description": "The file input\/output mode for CSV writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable25": {
+			"name": "APPEND_CSV",
+			"declaration": "const string APPEND_CSV",
+			"description": "The file input\/output mode for CSV append writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable26": {
+			"name": "READ_BINARY",
+			"declaration": "const string READ_BINARY",
+			"description": "The file input\/output mode for binary reading. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable27": {
+			"name": "WRITE_BINARY",
+			"declaration": "const string WRITE_BINARY",
+			"description": "The file input\/output mode for binary writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable28": {
+			"name": "APPEND_BINARY",
+			"declaration": "const string APPEND_BINARY",
+			"description": "The file input\/output mode for binary append writing. It is used by the <a href=\"#open\">open<\/a> function."
+		},
+		"variable29": {
+			"name": "STDIN",
+			"declaration": "const string STDIN",
+			"description": "A special file path for using file input\/output functions with standard input."
+		},
+		"variable30": {
+			"name": "STDOUT",
+			"declaration": "const string STDOUT",
+			"description": "A special file path for using file input\/output functions with standard output."
+		},
+		"variable31": {
+			"name": "STDERR",
+			"declaration": "const string STDERR",
+			"description": "A special file path for using file input\/output functions with standard error output."
+		},
+		"variable32": {
+			"name": "UP",
+			"declaration": "const int UP",
+			"description": "A rounding mode that performs upward rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href=\"#round\">round<\/a> function."
+		},
+		"variable33": {
+			"name": "UP_SIGNIF",
+			"declaration": "const int UP_SIGNIF",
+			"description": "A rounding mode that performs upward rounding by specifying the number of digits in the significant part. It is used by the <a href=\"#round\">round<\/a> function. This mode had been introduced experimentally as \"UP\" before VCSSL 3.3."
+		},
+		"variable34": {
+			"name": "DOWN",
+			"declaration": "const int DOWN",
+			"description": "A rounding mode that performs downward rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href=\"#round\">round<\/a> function."
+		},
+		"variable35": {
+			"name": "DOWN_SIGNIF",
+			"declaration": "const int DOWN_SIGNIF",
+			"description": "A rounding mode that performs downward rounding by specifying the number of digits in the significant part. It is used by the <a href=\"#round\">round<\/a> function. This mode had been introduced experimentally as \"DOWN\" before VCSSL 3.3."
+		},
+		"variable36": {
+			"name": "HALF_UP",
+			"declaration": "const int HALF_UP",
+			"description": "A rounding mode that performs half-up rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href=\"#round\">round<\/a> function."
+		},
+		"variable37": {
+			"name": "HALF_UP_SIGNIF",
+			"declaration": "const int HALF_UP_SIGNIF",
+			"description": "A rounding mode that performs half-up rounding by specifying the number of digits in the significant part. It is used by the <a href=\"#round\">round<\/a> function. This mode had been introduced experimentally as \"HALF_UP\" before VCSSL 3.3."
+		},
+		"variable38": {
+			"name": "HALF_DOWN",
+			"declaration": "const int HALF_DOWN",
+			"description": "A rounding mode that performs half-down rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href=\"#round\">round<\/a> function."
+		},
+		"variable39": {
+			"name": "HALF_DOWN_SIGNIF",
+			"declaration": "const int HALF_DOWN_SIGNIF",
+			"description": "A rounding mode that performs half-down rounding by specifying the number of digits in the significant part. It is used by the <a href=\"#round\">round<\/a> function. This mode had been introduced experimentally as \"HALF_DOWN\" before VCSSL 3.3."
+		},
+		"variable40": {
+			"name": "HALF_TO_EVEN",
+			"declaration": "const int HALF_TO_EVEN",
+			"description": "A rounding mode that performs half-to-even rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href=\"#round\">round<\/a> function."
+		},
+		"variable41": {
+			"name": "HALF_TO_EVEN_SIGNIF",
+			"declaration": "const int HALF_TO_EVEN_SIGNIF",
+			"description": "A rounding mode that performs half-to-even rounding by specifying the number of digits in the significant part. It is used by the <a href=\"#round\">round<\/a> function. This mode had been introduced experimentally as \"HALF_EVEN\" before VCSSL 3.3."
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "print",
+			"declaration": "macro print(...)",
+			"description": "Outputs strings to the console. The arguments may be of any type and are automatically converted to strings.If multiple arguments are specified, how they are formatted in the output depends on the implementation.Normally, they will probably be output separated by spaces.",
+			"parameters": "( type) ... : The contents to be output, as variable-length arguments of arbitrary types. "
+		},
+		"function1": {
+			"name": "println",
+			"declaration": "macro println(...)",
+			"description": "Outputs strings to the console and then outputs a newline. The arguments may be of any type and are automatically converted to strings.If multiple arguments are specified, how they are formatted in the output depends on the implementation.Normally, they will probably be output separated by spaces.",
+			"parameters": "( type) ... : The contents to be output, as variable-length arguments of arbitrary types. "
+		},
+		"function2": {
+			"name": "output",
+			"declaration": "macro output(...)",
+			"description": "Outputs strings to the area for displaying the processing result of the program.The arguments may be of any type and are automatically converted to strings.If multiple arguments are specified, how they are formatted in the output depends on the implementation.Normally, they will probably be output separated by spaces.",
+			"parameters": "( type) ... : The contents to be output, as variable-length arguments of arbitrary types. "
+		},
+		"function3": {
+			"name": "input",
+			"declaration": "macro input(...)",
+			"description": "Accepts an arbitrary string input from the user.The arguments may be of any type and are automatically converted to strings and displayed as the message of the input field.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.Note that the last argument is used as the default value of the input field.",
+			"parameters": "( type) ... : The message of the input field as variable-length arguments of arbitrary types. The last argument is the default value. ",
+			"returnValue": "The input value entered by the user."
+		},
+		"function4": {
+			"name": "select",
+			"declaration": "macro select(...)",
+			"description": "Presents choices to the user and obtains the selected item.The arguments may be of any type and are automatically converted to strings and displayed as the choices.",
+			"parameters": "( type) ... : The choices as variable-length arguments of arbitrary types. ",
+			"returnValue": "The selected value."
+		},
+		"function5": {
+			"name": "alert",
+			"declaration": "macro alert(...)",
+			"description": "Outputs a message to an alert window and waits until the user acknowledges it.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.For output of messages without a warning intention, the <a href=\"#popup\">popup<\/a> function with nearly the same function is available since VCSSL 3.4.From now on, alert is recommended for messages intended as warnings.",
+			"parameters": "( type) ... : The contents of the message as variable-length arguments of arbitrary types. "
+		},
+		"function6": {
+			"name": "popup",
+			"declaration": "macro popup(...)",
+			"description": "Outputs a message to a popup window and waits until the user acknowledges it.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.At present, this function behaves exactly the same as <a href=\"#alert\">alert<\/a>, but it was newly supported since VCSSL 3.4 for outputting messages without a warning intention.By distinguishing it from alert, it becomes clear in code whether the displayed message is intended as a warning or as a normal message.In the future, the display icon on the window and so on may become different from alert.",
+			"parameters": "( type) ... : The contents of the message as variable-length arguments of arbitrary types. "
+		},
+		"function7": {
+			"name": "pop",
+			"declaration": "macro pop(...)",
+			"description": "Equivalent to the popup function.This function had the same name as the pop function of the data.Stack library,so the popup function with the same behavior was added later for cases where it is desirable to make it easier to see in code which one is being called.Note that the pop function of the Stack library has type parameters, and in current VCSSL those type parameters cannot be omitted,so there is at least currently no possibility of a signature conflict with this function.This function is supported for compatibility and can continue to be used,but to avoid confusion as much as possible, it is recommended to prefer popup unless there is a special reason not to."
+		},
+		"function8": {
+			"name": "confirm",
+			"declaration": "macro confirm(...)",
+			"description": "Outputs a message and presents the user with the two choices of acceptance or rejection.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.",
+			"parameters": "( type) ... : The contents of the message as variable-length arguments of arbitrary types. ",
+			"returnValue": "Returns true if the user accepts, or false if the user rejects."
+		},
+		"function9": {
+			"name": "choose",
+			"declaration": "string[ ] choose()",
+			"description": "Presents the user with a file selection dialog and waits until a file is selected.",
+			"returnValue": "(string[] type) The path of the selected file."
+		},
+		"function10": {
+			"name": "choose",
+			"declaration": "string[ ] choose(string message)",
+			"description": "Presents the user with a file selection dialog and waits until a file is selected.",
+			"parameters": "(string type) message : The message of the file selection dialog. ",
+			"returnValue": "(string[] type) The path of the selected file."
+		},
+		"function11": {
+			"name": "choose",
+			"declaration": "string[ ] choose(string message, string directory)",
+			"description": "Presents the user with a file selection dialog and waits until a file is selected.",
+			"parameters": "(string type) message : The message of the file selection dialog. \n(string type) directory : The displayed directory when the file selection dialog is opened. ",
+			"returnValue": "(string[] type) The path of the selected file."
+		},
+		"function12": {
+			"name": "beep",
+			"declaration": "void beep()",
+			"description": "Sounds a beep. However, whether it can actually be sounded depends on the environment.In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "beep",
+			"declaration": "void beep(int repeat)",
+			"description": "Sounds a beep. However, whether it can actually be sounded depends on the environment.In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.",
+			"parameters": "(int type) repeat : The number of times to sound it. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "beep",
+			"declaration": "void beep(int repeat, int wait)",
+			"description": "Sounds a beep. However, whether it can actually be sounded depends on the environment.In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.",
+			"parameters": "(int type) repeat : The number of times to sound it. \n(int type) wait : The interval between beeps in milliseconds. ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "clear",
+			"declaration": "void clear()",
+			"description": "Clears the contents of the console. However, the behavior of this function depends on the implementation.For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.However, in an implementation based only on standard input and output without a console window, it will probably do nothing.",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "hide",
+			"declaration": "void hide()",
+			"description": "Hides the console. However, the behavior of this function depends on the implementation.For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.However, in an implementation based only on standard input and output without a console window, it will probably do nothing.",
+			"returnValue": "(void type) "
+		},
+		"function17": {
+			"name": "show",
+			"declaration": "void show()",
+			"description": "Shows the console if it has been hidden. However, the behavior of this function depends on the implementation.For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.However, in an implementation based only on standard input and output without a console window, it will probably do nothing.",
+			"returnValue": "(void type) "
+		},
+		"function18": {
+			"name": "time",
+			"declaration": "int time()",
+			"description": "Returns the elapsed time since the start of program execution, in milliseconds.",
+			"returnValue": "(int type) The elapsed time since the start of program execution, in milliseconds."
+		},
+		"function19": {
+			"name": "sleep",
+			"declaration": "macro sleep(int milliSecond)",
+			"description": "Suspends execution of the program temporarily.",
+			"parameters": "(int type) milliSecond : The time to suspend, in milliseconds. "
+		},
+		"function20": {
+			"name": "exit",
+			"declaration": "void exit()",
+			"description": "Ends execution of the program.Note that this function requests termination of the program to the implementation, and it does not necessarily guarantee that execution will end immediately.The ideal timing for calling this function is when the implementation is in an idle state, such as at the final line of the program after leaving all loops and branches.If this function is called while the implementation is performing high-speed processing, it can become close to a forced termination.Details depend on the implementation and its optimization policy, but when this function is called, the implementation may be in the middle of a sequence of operations that cannot be interrupted immediately.In that case, a time lag may occur and execution may continue for a short while even after the call.",
+			"returnValue": "(void type) "
+		},
+		"function21": {
+			"name": "exit",
+			"declaration": "void exit(int code)",
+			"description": "Ends execution of the program with a specified exit status code.Note that this function requests termination of the program to the implementation, and it does not necessarily guarantee that execution will end immediately.The ideal timing for calling this function is when the implementation is in an idle state, such as at the final line of the program after leaving all loops and branches.If this function is called while the implementation is performing high-speed processing, it can become close to a forced termination.Details depend on the implementation and its optimization policy, but when this function is called, the implementation may be in the middle of a sequence of operations that cannot be interrupted immediately.In that case, a time lag may occur and execution may continue for a short while even after the call.",
+			"parameters": "(int type) code : The exit status code. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "reset",
+			"declaration": "void reset(string programName, string args[ ])",
+			"description": "Resets the implementation and executes another program.",
+			"parameters": "(string type) programName : The program name or path. \n(string[] type) args : The arguments passed to the main function. ",
+			"returnValue": "(void type) "
+		},
+		"function23": {
+			"name": "error",
+			"declaration": "macro error(...)",
+			"description": "Outputs an error message.After outputting the error message, whether program execution ends or continues depends on the implementation.If you want to ensure termination, call <a href=\"#exit\">exit<\/a> afterward.",
+			"parameters": "( type) ... : The error message as variable-length arguments of arbitrary types. "
+		},
+		"function24": {
+			"name": "assert",
+			"declaration": "macro assert(bool expectedCondition)",
+			"description": "Evaluates the value of an expression, does nothing if it is true, and outputs an error message if it is false.Program execution will probably be terminated. This function is used for testing.",
+			"parameters": "expression : The expression to be evaluated. "
+		},
+		"function25": {
+			"name": "exec",
+			"declaration": "macro exec(...)",
+			"description": "Executes an operating-system command or an external program asynchronously in another process.Execution of the calling program does not wait for completion of the process. It continues in parallel with the created process.If you want to wait for execution to finish or control standard input and output, use the <a href=\"Process.html\">Process<\/a> library.",
+			"parameters": "The : absolute path of the command or external program as a string, followed by argument 1, argument 2, and so on as arbitrary types. ",
+			"returnValue": "The identifier of the created process, that is, the process ID."
+		},
+		"function26": {
+			"name": "system",
+			"declaration": "macro system(...)",
+			"description": "Executes an operating-system command or an external program synchronously.Execution of the calling program waits until the process completes.",
+			"parameters": "The : absolute path of the command or external program as a string, followed by argument 1, argument 2, and so on as arbitrary types. ",
+			"returnValue": "The exit status code of the executed command or external program."
+		},
+		"function27": {
+			"name": "alloc",
+			"declaration": "macro alloc(...)",
+			"description": "Changes the number of elements of an array.Elements at the same indices keep the same values before and after the change.",
+			"parameters": "The : array as an arbitrary type, followed by the number of elements of the leftmost dimension, the next dimension, and so on up to the rightmost dimension. "
+		},
+		"function28": {
+			"name": "free",
+			"declaration": "macro free(...)",
+			"description": "Sets the number of elements of all dimensions of an array to 0.",
+			"parameters": "The : array as an arbitrary type. "
+		},
+		"function29": {
+			"name": "exists",
+			"declaration": "bool exists(string filePath)",
+			"description": "Checks whether a file exists.",
+			"parameters": "(string type) filePath : The file name or path. ",
+			"returnValue": "(bool type) Returns true if the file exists, or false otherwise."
+		},
+		"function30": {
+			"name": "mkdir",
+			"declaration": "void mkdir(string directoryPath)",
+			"description": "Creates a new directory, that is, a folder. If the directory already exists, nothing is done.",
+			"parameters": "(string type) directoryPath : The directory name or path. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "isdir",
+			"declaration": "bool isdir(string filePath)",
+			"description": "Checks whether a file is a directory.",
+			"parameters": "(string type) filePath : The file name or path of the file to be checked. ",
+			"returnValue": "(bool type) Returns true if it is a directory, or false otherwise."
+		},
+		"function32": {
+			"name": "listdir",
+			"declaration": "string[ ] listdir(string directoryPath)",
+			"description": "Returns the list of file names in a directory.",
+			"parameters": "(string type) directoryPath : The directory name or path. ",
+			"returnValue": "(string[] type) The list of file names in the directory."
+		},
+		"function33": {
+			"name": "rank",
+			"declaration": "macro rank(...)",
+			"description": "Returns the number of dimensions of an array.For example, for an array a[11][28][32], rank(a) is 3.",
+			"parameters": "( type) ... : The array whose number of dimensions is to be obtained, as variable-length arguments of arbitrary types. ",
+			"returnValue": "The number of dimensions of the array."
+		},
+		"function34": {
+			"name": "length",
+			"declaration": "macro length(...)",
+			"description": "Returns the number of elements of an array. The second argument specifies the dimension whose element count is to be obtained, as an index counted from the left as 0, 1, 2, and so on.For example, for an array a[11][28][32], length(a, 0) is 11, length(a, 1) is 28, and length(a, 2) is 32.",
+			"parameters": "( type) ... : The array whose element count is to be obtained and the dimension index, as variable-length arguments. ",
+			"returnValue": "The number of elements of the array."
+		},
+		"function35": {
+			"name": "nan",
+			"declaration": "bool nan( float value )",
+			"description": "Determines whether a float variable or value is NaN, that is, not a number.",
+			"parameters": "(float type) value : The variable or value to be checked. ",
+			"returnValue": "(bool type) Returns true if it is NaN, or false otherwise."
+		},
+		"function36": {
+			"name": "inf",
+			"declaration": "bool inf( float value )",
+			"description": "Determines whether a float variable or value is Inf, that is, infinity.",
+			"parameters": "(float type) value : The variable or value to be checked. ",
+			"returnValue": "(bool type) Returns true if it is Inf, or false otherwise."
+		},
+		"function37": {
+			"name": "bin",
+			"declaration": "string bin( int number )",
+			"description": "Returns a string representing an int variable or value in binary. The prefix 0b is added at the beginning.",
+			"parameters": "(int type) number : The variable or value to be represented in binary. ",
+			"returnValue": "(string type) The string representing it in binary."
+		},
+		"function38": {
+			"name": "oct",
+			"declaration": "string oct( int number )",
+			"description": "Returns a string representing an int variable or value in octal. The prefix 0 is added at the beginning.",
+			"parameters": "(int type) number : The variable or value to be represented in octal. ",
+			"returnValue": "(string type) The string representing it in octal."
+		},
+		"function39": {
+			"name": "hex",
+			"declaration": "string hex( int number )",
+			"description": "Returns a string representing an int variable or value in hexadecimal. The prefix 0x is added at the beginning.",
+			"parameters": "(int type) number : The variable or value to be represented in hexadecimal. ",
+			"returnValue": "(string type) The string representing it in hexadecimal."
+		},
+		"function40": {
+			"name": "digit",
+			"declaration": "macro digit(arg)",
+			"description": "Specifies the number of operation digits for the varfloat type or the varcomplex type.",
+			"parameters": "( type) arg : The number of digits. "
+		},
+		"function41": {
+			"name": "digit",
+			"declaration": "macro digit()",
+			"description": "Gets the number of operation digits for the varfloat type or the varcomplex type.",
+			"returnValue": "The number of digits."
+		},
+		"function42": {
+			"name": "round",
+			"declaration": "float round(float value, int digit, int mode)",
+			"description": "Rounds a float value to the specified number of digits in the specified mode.Note that float values are stored internally as binary floating-point data, while rounding is performed on a decimal basis, so care is required regarding binary-decimal conversion errors.In general, conversions between binary and decimal floating-point numbers may not fit into a finite number of digits, and small errors may occur.Therefore, the internal data of a float value may differ slightly from the value you imagine in decimal notation.Accordingly, if the target value is very close to the rounding boundary, the result may appear strange at first glance, although it is internally correct.Also, the relationship between the result of this function and the result obtained when converting a float value to a string or displaying it with the <a href=\"#print\">print<\/a> function may sometimes seem strange,but this is because implicit rounding is also performed internally in the latter case. If you want to apply additional rounding to that displayed result, convert the argument value to string before passing it.",
+			"parameters": "(float type) value : The value to be rounded. \n(int type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(float type) The rounded value."
+		},
+		"function43": {
+			"name": "round",
+			"declaration": "string round(string value, int digit, int mode)",
+			"description": "Interprets the contents of a string value as a number, and rounds it to the specified number of digits in the specified mode.This function is used when you want to apply additional rounding based on the same content that is obtained when a float value is converted to a string or displayed by the <a href=\"#print\">print<\/a> function,where implicit rounding is performed internally. Compared with rounding a float value directly, the effect of binary-decimal conversion errors may differ slightly.For details, refer to the description for the case where the argument value is of float type.",
+			"parameters": "(string type) value : The value to be rounded. \n(int type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(string type) The rounded value."
+		},
+		"function44": {
+			"name": "round",
+			"declaration": "complex round(complex value, int digit, int mode)",
+			"description": "Rounds a complex value to the specified number of digits in the specified mode.Note that the real and imaginary parts of a complex value are stored internally as binary floating-point data, while rounding is performed on a decimal basis, so care is required regarding binary-decimal conversion errors.For details, refer to the description for the case where the argument value is of float type.",
+			"parameters": "(complex type) value : The value to be rounded. \n(int type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(complex type) The rounded value."
+		},
+		"function45": {
+			"name": "round",
+			"declaration": "varfloat round(varfloat value, varint digit, int mode)",
+			"description": "Rounds a varfloat value to the specified number of digits in the specified mode.",
+			"parameters": "(varfloat type) value : The value to be rounded. \n(varint type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(varfloat type) The rounded value."
+		},
+		"function46": {
+			"name": "round",
+			"declaration": "varcomplex round(varcomplex value, varint digit, int mode)",
+			"description": "Rounds a varcomplex value to the specified number of digits in the specified mode.",
+			"parameters": "(varcomplex type) value : The value to be rounded. \n(varint type) digit : The number of digits after rounding. ",
+			"returnValue": "(varcomplex type) The rounded value."
+		},
+		"function47": {
+			"name": "round",
+			"declaration": "void round(int mode)",
+			"description": "Specifies the default rounding mode for calculations on varfloat and varcomplex values.Note that rounding control for varfloat and varcomplex values, and the implementation of this function, are currently introduced on an experimental basis.At present, it is not always guaranteed that rounding control will be performed exactly as specified for all operations.Be sure to verify the behavior in advance before using it.Rounding control for varfloat and varcomplex values, and the implementation of this round function, are planned to be officially introduced in VCSSL 4 or later after this trial period.",
+			"parameters": "(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a> ). ",
+			"returnValue": "(void type) "
+		},
+		"function48": {
+			"name": "re",
+			"declaration": "float re( complex value )",
+			"description": "Returns the real part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose real part is to be obtained. ",
+			"returnValue": "(float type) The real part."
+		},
+		"function49": {
+			"name": "im",
+			"declaration": "float im( complex value )",
+			"description": "Returns the imaginary part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose imaginary part is to be obtained. ",
+			"returnValue": "(float type) The imaginary part."
+		},
+		"function50": {
+			"name": "re",
+			"declaration": "void re( complex value, float realValue )",
+			"description": "Sets the real part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose real part is to be set. \n(float type) realValue : The value of the real part. ",
+			"returnValue": "(void type) "
+		},
+		"function51": {
+			"name": "im",
+			"declaration": "void im( complex value, float imagValue )",
+			"description": "Sets the imaginary part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose imaginary part is to be set. \n(float type) imagValue : The value of the imaginary part. ",
+			"returnValue": "(void type) "
+		},
+		"function52": {
+			"name": "re",
+			"declaration": "varfloat re( varcomplex value )",
+			"description": "Returns the real part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose real part is to be obtained. ",
+			"returnValue": "(varfloat type) The real part."
+		},
+		"function53": {
+			"name": "im",
+			"declaration": "varfloat im( varcomplex value )",
+			"description": "Returns the imaginary part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose imaginary part is to be obtained. ",
+			"returnValue": "(varfloat type) The imaginary part."
+		},
+		"function54": {
+			"name": "re",
+			"declaration": "void re( varcomplex value, varfloat realValue )",
+			"description": "Sets the real part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose real part is to be set. \n(varfloat type) realValue : The value of the real part. ",
+			"returnValue": "(void type) "
+		},
+		"function55": {
+			"name": "im",
+			"declaration": "void im( varcomplex value, varfloat imagValue )",
+			"description": "Sets the imaginary part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose imaginary part is to be set. \n(varfloat type) imagValue : The value of the imaginary part. ",
+			"returnValue": "(void type) "
+		},
+		"function56": {
+			"name": "save",
+			"declaration": "macro save(string filePath, content)",
+			"description": "A simple file output function. Saves the contents held by a string variable to a file.",
+			"parameters": "(string type) filePath : The file name or path. \n( type) content : The content to be saved to the file. "
+		},
+		"function57": {
+			"name": "save",
+			"declaration": "void save(string filePath)",
+			"description": "A simple file output function. Saves the contents currently displayed on the console to a file. However, the behavior of this function depends on the implementation.For example, if the console contents are displayed in a window provided by the implementation, you will probably get the expected result.However, in a standard-input\/output-based implementation that has no console window, this function will probably do nothing.",
+			"parameters": "(string type) filePath : The file name or path. ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "load",
+			"declaration": "string load(string filePath)",
+			"description": "A simple file input function. Reads the entire contents of a file and returns them as a string. The file is closed automatically after reading.",
+			"parameters": "(string type) filePath : The file name or path. ",
+			"returnValue": "(string type) The loaded contents."
+		},
+		"function59": {
+			"name": "load",
+			"declaration": "string load()",
+			"description": "A simple file input function. Obtains the contents currently displayed on the console and returns them as a string. However, the behavior of this function depends on the implementation.For example, if the console contents are displayed in a window provided by the implementation, you will probably get the expected result.However, in a standard-input\/output-based implementation that has no console window, this function will probably obtain nothing.",
+			"returnValue": "(string type) The contents obtained from the console."
+		},
+		"function60": {
+			"name": "open",
+			"declaration": "int open(string filePath, string mode)",
+			"description": "Opens a file, assigns and returns a unique identifier for it, called a file ID.Normally, specify a file name or path for the argument filePath,but you can also specify <a href=\"#STDIN\">STDIN<\/a>, <a href=\"#STDOUT\">STDOUT<\/a>, or <a href=\"#STDERR\">STDERR<\/a> to read from or write to the standard input\/output streams instead.",
+			"parameters": "(string type) filePath : The file name or path. \n(string type) mode : The file I\/O mode ( \"r\" or <a href=\"#READ\">READ<\/a>, \"w\" or <a href=\"#WRITE\">WRITE<\/a>, \"a\" or <a href=\"#APPEND\">APPEND<\/a>, \"rtsv\" or <a href=\"#READ\">READ_TSV<\/a>, \"wtsv\" or <a href=\"#WRITE\">WRITE_TSV<\/a>, \"atsv\" or <a href=\"#APPEND\">APPEND_TSV<\/a>, \"rcsv\" or <a href=\"#READ\">READ_CSV<\/a>, \"wcsv\" or <a href=\"#WRITE\">WRITE_CSV<\/a>, \"acsv\" or <a href=\"#APPEND\">APPEND_CSV<\/a>, \"rb\" or <a href=\"#READ\">READ_BINARY<\/a>, \"wb\" or <a href=\"#WRITE\">WRITE_BINARY<\/a>, \"ab\" or <a href=\"#APPEND\">APPEND_BINARY<\/a> ). ",
+			"returnValue": "(int type) The file ID."
+		},
+		"function61": {
+			"name": "open",
+			"declaration": "int open(string filePath, string mode, string textEncoding)",
+			"description": "Opens a file, assigns and returns a unique identifier for it, called a file ID.Normally, specify a file name or path for the argument filePath,but you can also specify <a href=\"#STDIN\">STDIN<\/a>, <a href=\"#STDOUT\">STDOUT<\/a>, or <a href=\"#STDERR\">STDERR<\/a> to read from or write to the standard input\/output streams instead.",
+			"parameters": "(string type) filePath : The file name or path. \n(string type) mode : The file I\/O mode ( \"r\" or <a href=\"#READ\">READ<\/a>, \"w\" or <a href=\"#WRITE\">WRITE<\/a>, \"a\" or <a href=\"#APPEND\">APPEND<\/a>, \"rtsv\" or <a href=\"#READ\">READ_TSV<\/a>, \"wtsv\" or <a href=\"#WRITE\">WRITE_TSV<\/a>, \"atsv\" or <a href=\"#APPEND\">APPEND_TSV<\/a>, \"rcsv\" or <a href=\"#READ\">READ_CSV<\/a>, \"wcsv\" or <a href=\"#WRITE\">WRITE_CSV<\/a>, \"acsv\" or <a href=\"#APPEND\">APPEND_CSV<\/a>, \"rb\" or <a href=\"#READ\">READ_BINARY<\/a>, \"wb\" or <a href=\"#WRITE\">WRITE_BINARY<\/a>, \"ab\" or <a href=\"#APPEND\">APPEND_BINARY<\/a> ). \n(string type) textEncoding : The text encoding ( \"Shift_JIS\", \"UTF-8\", or \"EUC-JP\" ). ",
+			"returnValue": "(int type) The file ID."
+		},
+		"function62": {
+			"name": "openw",
+			"declaration": "macro openw(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"wtsv\" ). This function is supported for compatibility."
+		},
+		"function63": {
+			"name": "opencsvw",
+			"declaration": "macro opencsvw(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"wcsv\" ). This function is supported for compatibility."
+		},
+		"function64": {
+			"name": "openr",
+			"declaration": "macro openr(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"rtsv\" ). This function is supported for compatibility."
+		},
+		"function65": {
+			"name": "opencsvr",
+			"declaration": "macro opencsvr(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"rcsv\" ). This function is supported for compatibility."
+		},
+		"function66": {
+			"name": "close",
+			"declaration": "void close(int fileID)",
+			"description": "Closes a file. All buffered output is flushed at that time.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(void type) "
+		},
+		"function67": {
+			"name": "flush",
+			"declaration": "void flush(int fileID)",
+			"description": "Flushes buffered output for a file.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(void type) "
+		},
+		"function68": {
+			"name": "write",
+			"declaration": "macro write(int fileID, ...)",
+			"description": "Writes content to a file. The content may be of any type, and it is converted to a string when written.If multiple pieces of content are specified, how they are written depends on the file I\/O mode.<dl> <dt>In \"w\" or <a href=\"#WRITE\">WRITE<\/a> mode<\/dt>  <dd>The written contents are concatenated as they are.<\/dd> <dt>In \"wtsv\" or <a href=\"#WRITE_TSV\">WRITE_TSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with tab separators.<\/dd> <dt>In \"wcsv\" or <a href=\"#WRITE_CSV\">WRITE_CSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with comma separators.<\/dd><\/dl>Note that this function inserted a line break in VCSSL 2.1 and earlier, but does not insert one in VCSSL 2.2 and later. The behavior with a line break is provided by the <a href=\"#writeln\">writeln<\/a> function.",
+			"parameters": "(int type) fileID : The file ID. \n( type) ... : The content to be written (any type, variable-length arguments). "
+		},
+		"function69": {
+			"name": "writeln",
+			"declaration": "macro writeln(int fileID, ...)",
+			"description": "Writes content to a file and then inserts a line break. The content may be of any type, and it is converted to a string when written.If multiple pieces of content are specified, how they are written depends on the file I\/O mode.<dl> <dt>In \"w\" or <a href=\"#WRITE\">WRITE<\/a> mode<\/dt>  <dd>The written contents are concatenated as they are.<\/dd> <dt>In \"wtsv\" or <a href=\"#WRITE_TSV\">WRITE_TSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with tab separators.<\/dd> <dt>In \"wcsv\" or <a href=\"#WRITE_CSV\">WRITE_CSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with comma separators.<\/dd><\/dl>The line break code is automatically chosen appropriately for the execution environment.If you want to use a specific line break code such as <a href=\"#LF\">LF<\/a> or <a href=\"#CR\">CR<\/a>,use the <a href=\"#write\">write<\/a> function instead of this function,and write the content with <a href=\"#LF\">LF<\/a> or <a href=\"#CR\">CR<\/a> appended to it.",
+			"parameters": "(int type) fileID : The file ID. \n( type) ... : The content to be written (any type, variable-length arguments). "
+		},
+		"function70": {
+			"name": "read",
+			"declaration": "string[ ] read(int fileID)",
+			"description": "Reads the entire contents of a file.The return value is a string array, and how the read contents are stored in it depends on the file I\/O mode.<dl> <dt>In \"r\" or <a href=\"#READ\">READ<\/a> mode<\/dt>  <dd>The entire contents of the file are returned as a string array with one element.<\/dd> <dt>In \"rtsv\" or <a href=\"#READ_TSV\">READ_TSV<\/a> mode<\/dt>  <dd>The contents of the file are returned in a string array separated by whitespace and line breaks. Tab characters and half-width spaces are treated as the same.<\/dd> <dt>In \"rcsv\" or <a href=\"#READ_CSV\">READ_CSV<\/a> mode<\/dt>  <dd>The contents of the file are returned in a string array separated by commas and line breaks.<\/dd><\/dl>In CSV and TSV reading, enclosures and delimiters are not interpreted, and the contents are simply split at the positions where separator characters exist. Also, in TSV, tab characters and half-width spaces are not distinguished.If you want to control this behavior more strictly, use the <a href=\"file\/TextFile.html\">file.TextFile<\/a> library.Note that this function read data line by line in VCSSL 2.1 and earlier, but was changed in VCSSL 2.2 and later to read the entire contents. The old line-by-line behavior is provided by the <a href=\"#readln\">readln<\/a> function.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string[] type) The loaded contents as a string array."
+		},
+		"function71": {
+			"name": "readln",
+			"declaration": "string[ ] readln(int fileID)",
+			"description": "Reads one line of content from a file.The return value is a string array, and how the read contents are stored in it depends on the file I\/O mode.<dl> <dt>In \"r\" or <a href=\"#READ\">READ<\/a> mode<\/dt>  <dd>The line contents are returned as a string array with one element.<\/dd> <dt>In \"rtsv\" or <a href=\"#READ_TSV\">READ_TSV<\/a> mode<\/dt>  <dd>The line contents are returned in a string array separated by whitespace. Tab characters and half-width spaces are treated as the same.<\/dd> <dt>In \"rcsv\" or <a href=\"#READ_CSV\">READ_CSV<\/a> mode<\/dt>  <dd>The line contents are returned in a string array separated by commas.<\/dd><\/dl>In CSV and TSV reading, enclosures and delimiters are not interpreted, and the contents are simply split at the positions where separator characters exist. Also, in TSV, tab characters and half-width spaces are not distinguished.If you want to control this behavior more strictly, use the <a href=\"file\/TextFile.html\">file.TextFile<\/a> library.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string[] type) The loaded contents as a string array."
+		},
+		"function72": {
+			"name": "load",
+			"declaration": "string load(int fileID)",
+			"description": "Reads the entire contents of a file and returns them as a string.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string type) The loaded contents."
+		},
+		"function73": {
+			"name": "loadln",
+			"declaration": "string loadln(int fileID)",
+			"description": "Reads an entire line from a file and returns it as a string.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string type) The loaded contents."
+		},
+		"function74": {
+			"name": "countln",
+			"declaration": "int countln(int fileID)",
+			"description": "Counts the number of lines in a file.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(int type) The number of lines in the file."
+		},
+		"function75": {
+			"name": "eval",
+			"declaration": "macro eval(string expression)",
+			"description": "Evaluates a string as an expression. Variables and functions can also be accessed within lexical scope, and assignments can be performed as well.The value of the expression is returned after being converted to a string array (if the value of the expression is non-array, the returned array has one element).A string array is the type with the greatest conversion flexibility, and can be assigned to arrays and non-arrays of any primitive type (assignment to a non-array is possible only when the number of elements is one).On the other hand, if you want to evaluate expressions repeatedly at high speed, especially when the return value is of int or float type, type conversion through strings can become a bottleneck.In such cases, you can avoid that bottleneck by assigning the result to a variable within the evaluated expression and discarding the return value instead of using it.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression."
+		},
+		"function76": {
+			"name": "eval",
+			"declaration": "macro eval(string expression, literalType)",
+			"description": "Evaluates a string as an expression. Unlike the eval function with one argument, this version lets you specify how numeric literals without explicit suffixes are interpreted.For example, the expression &quot;1 \/ 2&quot; is normally treated as division between int values, so the result is 0. If you want it to be treated as division between float values and obtain 0.5, specify a float value such as 0.0 as the second argument.Note that only the type of the second argument is meaningful, and its value is ignored (however, since some meaning may be added to it in the future, it is recommended to specify 0 or 0.0 unless you have a particular reason not to).",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as a string array."
+		},
+		"function77": {
+			"name": "feval",
+			"declaration": "macro feval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array float.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as float."
+		},
+		"function78": {
+			"name": "feval",
+			"declaration": "macro feval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array float.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as float."
+		},
+		"function79": {
+			"name": "ieval",
+			"declaration": "macro ieval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array int.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as int."
+		},
+		"function80": {
+			"name": "ieval",
+			"declaration": "macro ieval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array int.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as int."
+		},
+		"function81": {
+			"name": "ceval",
+			"declaration": "macro ceval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array complex.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as complex."
+		},
+		"function82": {
+			"name": "ceval",
+			"declaration": "macro ceval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array complex.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as complex."
+		},
+		"function83": {
+			"name": "beval",
+			"declaration": "macro beval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array bool.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as bool."
+		},
+		"function84": {
+			"name": "beval",
+			"declaration": "macro beval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array bool.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as bool."
+		},
+		"function85": {
+			"name": "seval",
+			"declaration": "macro seval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array string.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as string."
+		},
+		"function86": {
+			"name": "seval",
+			"declaration": "macro seval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array string.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as string."
+		},
+		"function87": {
+			"name": "vfeval",
+			"declaration": "macro vfeval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varfloat.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as varfloat."
+		},
+		"function88": {
+			"name": "vfeval",
+			"declaration": "macro vfeval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varfloat.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as varfloat."
+		},
+		"function89": {
+			"name": "vieval",
+			"declaration": "macro vieval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varint.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as varint."
+		},
+		"function90": {
+			"name": "vieval",
+			"declaration": "macro vieval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varint.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as varint."
+		},
+		"function91": {
+			"name": "vceval",
+			"declaration": "macro vceval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varcomplex.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as varcomplex."
+		},
+		"function92": {
+			"name": "vceval",
+			"declaration": "macro vceval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varcomplex.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as varcomplex."
+		},
+		"function93": {
+			"name": "evaluable",
+			"declaration": "macro evaluable(string expression)",
+			"description": "Determines whether the contents of an expression are syntactically correct.If the eval function fails in parsing, processing speed decreases, so if you want to evaluate an expression repeatedly at high speed, it is recommended to check its validity in advance with this function.",
+			"parameters": "(string type) expression : The expression to be checked. ",
+			"returnValue": "Returns true if the expression is syntactically correct, or false otherwise."
+		},
+		"function94": {
+			"name": "evaluable",
+			"declaration": "macro evaluable(string expression, literalType)",
+			"description": "Determines whether the contents of an expression are syntactically correct.If the eval function fails in parsing, processing speed decreases, so if you want to evaluate an expression repeatedly at high speed, it is recommended to check its validity in advance with this function.",
+			"parameters": "(string type) expression : The expression to be checked. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "Returns true if the expression is syntactically correct, or false otherwise."
+		},
+		"function95": {
+			"name": "evaltr",
+			"declaration": "macro evaltr(string expression)",
+			"description": "Evaluates a string as an expression, and returns internal processing information of the implementation. The contents are completely implementation-dependent.Note that the expressions that can be used are subject to implementation-dependent restrictions, and the returned contents do not necessarily correspond exactly to those of normal expression evaluation.In addition, this function generally cannot be used with expressions that have side effects. This function is mainly intended for development and debugging.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "Internal processing information of the implementation as a string array."
+		},
+		"function96": {
+			"name": "evaltr",
+			"declaration": "macro evaltr(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns internal processing information of the implementation. The contents are completely implementation-dependent.Note that the expressions that can be used are subject to implementation-dependent restrictions, and the returned contents do not necessarily correspond exactly to those of normal expression evaluation.In addition, this function generally cannot be used with expressions that have side effects. This function is mainly intended for development and debugging.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "Internal processing information of the implementation as a string array."
+		},
+		"function97": {
+			"name": "override",
+			"declaration": "macro override(string functionName, string argumentType[ ], string functionCode)",
+			"description": "Changes the implementation of a function at runtime.Since the eval function cannot declare local variables or execute multiple statements, use this function when you want to perform such processing by dynamic evaluation.Note that this function can only change the implementation of an existing function, and cannot declare a new function.",
+			"parameters": "(string type) functionName : The function name. \n(string[] type) argumentType : An array describing the argument types as strings (for example, storing \"int\" or \"float\"). \n(string type) functionCode : The description of the function body as program code. "
+		},
+		"function98": {
+			"name": "lf",
+			"declaration": "string lf()",
+			"description": "Returns the environment-dependent line break code. In VCSSL 3 and later, the constant <a href=\"#EOL\">EOL<\/a> can be used directly as the line break code.This function wastes the overhead of a function call. In new programs, using the constant <a href=\"#EOL\">EOL<\/a> is recommended.This function is supported for compatibility.",
+			"returnValue": "(string type) The environment-dependent line break code."
+		},
+		"function99": {
+			"name": "linefeed",
+			"declaration": "string linefeed()",
+			"description": "Returns the environment-dependent line break code. In VCSSL 3 and later, the constant <a href=\"#EOL\">EOL<\/a> can be used directly as the line break code.This function wastes the overhead of a function call. In new programs, using the constant <a href=\"#EOL\">EOL<\/a> is recommended.This function is supported for compatibility.",
+			"returnValue": "(string type) The environment-dependent line break code."
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "print",
+			"declaration": "macro print(...)",
+			"description": "Outputs strings to the console. The arguments may be of any type and are automatically converted to strings.If multiple arguments are specified, how they are formatted in the output depends on the implementation.Normally, they will probably be output separated by spaces.",
+			"parameters": "( type) ... : The contents to be output, as variable-length arguments of arbitrary types. "
+		},
+		"function1": {
+			"name": "println",
+			"declaration": "macro println(...)",
+			"description": "Outputs strings to the console and then outputs a newline. The arguments may be of any type and are automatically converted to strings.If multiple arguments are specified, how they are formatted in the output depends on the implementation.Normally, they will probably be output separated by spaces.",
+			"parameters": "( type) ... : The contents to be output, as variable-length arguments of arbitrary types. "
+		},
+		"function2": {
+			"name": "output",
+			"declaration": "macro output(...)",
+			"description": "Outputs strings to the area for displaying the processing result of the program.The arguments may be of any type and are automatically converted to strings.If multiple arguments are specified, how they are formatted in the output depends on the implementation.Normally, they will probably be output separated by spaces.",
+			"parameters": "( type) ... : The contents to be output, as variable-length arguments of arbitrary types. "
+		},
+		"function3": {
+			"name": "input",
+			"declaration": "macro input(...)",
+			"description": "Accepts an arbitrary string input from the user.The arguments may be of any type and are automatically converted to strings and displayed as the message of the input field.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.Note that the last argument is used as the default value of the input field.",
+			"parameters": "( type) ... : The message of the input field as variable-length arguments of arbitrary types. The last argument is the default value. ",
+			"returnValue": "The input value entered by the user."
+		},
+		"function4": {
+			"name": "select",
+			"declaration": "macro select(...)",
+			"description": "Presents choices to the user and obtains the selected item.The arguments may be of any type and are automatically converted to strings and displayed as the choices.",
+			"parameters": "( type) ... : The choices as variable-length arguments of arbitrary types. ",
+			"returnValue": "The selected value."
+		},
+		"function5": {
+			"name": "alert",
+			"declaration": "macro alert(...)",
+			"description": "Outputs a message to an alert window and waits until the user acknowledges it.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.For output of messages without a warning intention, the <a href=\"#popup\">popup<\/a> function with nearly the same function is available since VCSSL 3.4.From now on, alert is recommended for messages intended as warnings.",
+			"parameters": "( type) ... : The contents of the message as variable-length arguments of arbitrary types. "
+		},
+		"function6": {
+			"name": "popup",
+			"declaration": "macro popup(...)",
+			"description": "Outputs a message to a popup window and waits until the user acknowledges it.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.At present, this function behaves exactly the same as <a href=\"#alert\">alert<\/a>, but it was newly supported since VCSSL 3.4 for outputting messages without a warning intention.By distinguishing it from alert, it becomes clear in code whether the displayed message is intended as a warning or as a normal message.In the future, the display icon on the window and so on may become different from alert.",
+			"parameters": "( type) ... : The contents of the message as variable-length arguments of arbitrary types. "
+		},
+		"function7": {
+			"name": "pop",
+			"declaration": "macro pop(...)",
+			"description": "Equivalent to the popup function.This function had the same name as the pop function of the data.Stack library,so the popup function with the same behavior was added later for cases where it is desirable to make it easier to see in code which one is being called.Note that the pop function of the Stack library has type parameters, and in current VCSSL those type parameters cannot be omitted,so there is at least currently no possibility of a signature conflict with this function.This function is supported for compatibility and can continue to be used,but to avoid confusion as much as possible, it is recommended to prefer popup unless there is a special reason not to."
+		},
+		"function8": {
+			"name": "confirm",
+			"declaration": "macro confirm(...)",
+			"description": "Outputs a message and presents the user with the two choices of acceptance or rejection.If multiple arguments are specified, how they are displayed depends on the implementation.Normally, they will probably be displayed separated by newlines.",
+			"parameters": "( type) ... : The contents of the message as variable-length arguments of arbitrary types. ",
+			"returnValue": "Returns true if the user accepts, or false if the user rejects."
+		},
+		"function9": {
+			"name": "choose",
+			"declaration": "string[ ] choose()",
+			"description": "Presents the user with a file selection dialog and waits until a file is selected.",
+			"returnValue": "(string[] type) The path of the selected file."
+		},
+		"function10": {
+			"name": "choose",
+			"declaration": "string[ ] choose(string message)",
+			"description": "Presents the user with a file selection dialog and waits until a file is selected.",
+			"parameters": "(string type) message : The message of the file selection dialog. ",
+			"returnValue": "(string[] type) The path of the selected file."
+		},
+		"function11": {
+			"name": "choose",
+			"declaration": "string[ ] choose(string message, string directory)",
+			"description": "Presents the user with a file selection dialog and waits until a file is selected.",
+			"parameters": "(string type) message : The message of the file selection dialog. \n(string type) directory : The displayed directory when the file selection dialog is opened. ",
+			"returnValue": "(string[] type) The path of the selected file."
+		},
+		"function12": {
+			"name": "beep",
+			"declaration": "void beep()",
+			"description": "Sounds a beep. However, whether it can actually be sounded depends on the environment.In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "beep",
+			"declaration": "void beep(int repeat)",
+			"description": "Sounds a beep. However, whether it can actually be sounded depends on the environment.In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.",
+			"parameters": "(int type) repeat : The number of times to sound it. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "beep",
+			"declaration": "void beep(int repeat, int wait)",
+			"description": "Sounds a beep. However, whether it can actually be sounded depends on the environment.In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.",
+			"parameters": "(int type) repeat : The number of times to sound it. \n(int type) wait : The interval between beeps in milliseconds. ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "clear",
+			"declaration": "void clear()",
+			"description": "Clears the contents of the console. However, the behavior of this function depends on the implementation.For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.However, in an implementation based only on standard input and output without a console window, it will probably do nothing.",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "hide",
+			"declaration": "void hide()",
+			"description": "Hides the console. However, the behavior of this function depends on the implementation.For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.However, in an implementation based only on standard input and output without a console window, it will probably do nothing.",
+			"returnValue": "(void type) "
+		},
+		"function17": {
+			"name": "show",
+			"declaration": "void show()",
+			"description": "Shows the console if it has been hidden. However, the behavior of this function depends on the implementation.For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.However, in an implementation based only on standard input and output without a console window, it will probably do nothing.",
+			"returnValue": "(void type) "
+		},
+		"function18": {
+			"name": "time",
+			"declaration": "int time()",
+			"description": "Returns the elapsed time since the start of program execution, in milliseconds.",
+			"returnValue": "(int type) The elapsed time since the start of program execution, in milliseconds."
+		},
+		"function19": {
+			"name": "sleep",
+			"declaration": "macro sleep(int milliSecond)",
+			"description": "Suspends execution of the program temporarily.",
+			"parameters": "(int type) milliSecond : The time to suspend, in milliseconds. "
+		},
+		"function20": {
+			"name": "exit",
+			"declaration": "void exit()",
+			"description": "Ends execution of the program.Note that this function requests termination of the program to the implementation, and it does not necessarily guarantee that execution will end immediately.The ideal timing for calling this function is when the implementation is in an idle state, such as at the final line of the program after leaving all loops and branches.If this function is called while the implementation is performing high-speed processing, it can become close to a forced termination.Details depend on the implementation and its optimization policy, but when this function is called, the implementation may be in the middle of a sequence of operations that cannot be interrupted immediately.In that case, a time lag may occur and execution may continue for a short while even after the call.",
+			"returnValue": "(void type) "
+		},
+		"function21": {
+			"name": "exit",
+			"declaration": "void exit(int code)",
+			"description": "Ends execution of the program with a specified exit status code.Note that this function requests termination of the program to the implementation, and it does not necessarily guarantee that execution will end immediately.The ideal timing for calling this function is when the implementation is in an idle state, such as at the final line of the program after leaving all loops and branches.If this function is called while the implementation is performing high-speed processing, it can become close to a forced termination.Details depend on the implementation and its optimization policy, but when this function is called, the implementation may be in the middle of a sequence of operations that cannot be interrupted immediately.In that case, a time lag may occur and execution may continue for a short while even after the call.",
+			"parameters": "(int type) code : The exit status code. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "reset",
+			"declaration": "void reset(string programName, string args[ ])",
+			"description": "Resets the implementation and executes another program.",
+			"parameters": "(string type) programName : The program name or path. \n(string[] type) args : The arguments passed to the main function. ",
+			"returnValue": "(void type) "
+		},
+		"function23": {
+			"name": "error",
+			"declaration": "macro error(...)",
+			"description": "Outputs an error message.After outputting the error message, whether program execution ends or continues depends on the implementation.If you want to ensure termination, call <a href=\"#exit\">exit<\/a> afterward.",
+			"parameters": "( type) ... : The error message as variable-length arguments of arbitrary types. "
+		},
+		"function24": {
+			"name": "assert",
+			"declaration": "macro assert(bool expectedCondition)",
+			"description": "Evaluates the value of an expression, does nothing if it is true, and outputs an error message if it is false.Program execution will probably be terminated. This function is used for testing.",
+			"parameters": "expression : The expression to be evaluated. "
+		},
+		"function25": {
+			"name": "exec",
+			"declaration": "macro exec(...)",
+			"description": "Executes an operating-system command or an external program asynchronously in another process.Execution of the calling program does not wait for completion of the process. It continues in parallel with the created process.If you want to wait for execution to finish or control standard input and output, use the <a href=\"Process.html\">Process<\/a> library.",
+			"parameters": "The : absolute path of the command or external program as a string, followed by argument 1, argument 2, and so on as arbitrary types. ",
+			"returnValue": "The identifier of the created process, that is, the process ID."
+		},
+		"function26": {
+			"name": "system",
+			"declaration": "macro system(...)",
+			"description": "Executes an operating-system command or an external program synchronously.Execution of the calling program waits until the process completes.",
+			"parameters": "The : absolute path of the command or external program as a string, followed by argument 1, argument 2, and so on as arbitrary types. ",
+			"returnValue": "The exit status code of the executed command or external program."
+		},
+		"function27": {
+			"name": "alloc",
+			"declaration": "macro alloc(...)",
+			"description": "Changes the number of elements of an array.Elements at the same indices keep the same values before and after the change.",
+			"parameters": "The : array as an arbitrary type, followed by the number of elements of the leftmost dimension, the next dimension, and so on up to the rightmost dimension. "
+		},
+		"function28": {
+			"name": "free",
+			"declaration": "macro free(...)",
+			"description": "Sets the number of elements of all dimensions of an array to 0.",
+			"parameters": "The : array as an arbitrary type. "
+		},
+		"function29": {
+			"name": "exists",
+			"declaration": "bool exists(string filePath)",
+			"description": "Checks whether a file exists.",
+			"parameters": "(string type) filePath : The file name or path. ",
+			"returnValue": "(bool type) Returns true if the file exists, or false otherwise."
+		},
+		"function30": {
+			"name": "mkdir",
+			"declaration": "void mkdir(string directoryPath)",
+			"description": "Creates a new directory, that is, a folder. If the directory already exists, nothing is done.",
+			"parameters": "(string type) directoryPath : The directory name or path. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "isdir",
+			"declaration": "bool isdir(string filePath)",
+			"description": "Checks whether a file is a directory.",
+			"parameters": "(string type) filePath : The file name or path of the file to be checked. ",
+			"returnValue": "(bool type) Returns true if it is a directory, or false otherwise."
+		},
+		"function32": {
+			"name": "listdir",
+			"declaration": "string[ ] listdir(string directoryPath)",
+			"description": "Returns the list of file names in a directory.",
+			"parameters": "(string type) directoryPath : The directory name or path. ",
+			"returnValue": "(string[] type) The list of file names in the directory."
+		},
+		"function33": {
+			"name": "rank",
+			"declaration": "macro rank(...)",
+			"description": "Returns the number of dimensions of an array.For example, for an array a[11][28][32], rank(a) is 3.",
+			"parameters": "( type) ... : The array whose number of dimensions is to be obtained, as variable-length arguments of arbitrary types. ",
+			"returnValue": "The number of dimensions of the array."
+		},
+		"function34": {
+			"name": "length",
+			"declaration": "macro length(...)",
+			"description": "Returns the number of elements of an array. The second argument specifies the dimension whose element count is to be obtained, as an index counted from the left as 0, 1, 2, and so on.For example, for an array a[11][28][32], length(a, 0) is 11, length(a, 1) is 28, and length(a, 2) is 32.",
+			"parameters": "( type) ... : The array whose element count is to be obtained and the dimension index, as variable-length arguments. ",
+			"returnValue": "The number of elements of the array."
+		},
+		"function35": {
+			"name": "nan",
+			"declaration": "bool nan( float value )",
+			"description": "Determines whether a float variable or value is NaN, that is, not a number.",
+			"parameters": "(float type) value : The variable or value to be checked. ",
+			"returnValue": "(bool type) Returns true if it is NaN, or false otherwise."
+		},
+		"function36": {
+			"name": "inf",
+			"declaration": "bool inf( float value )",
+			"description": "Determines whether a float variable or value is Inf, that is, infinity.",
+			"parameters": "(float type) value : The variable or value to be checked. ",
+			"returnValue": "(bool type) Returns true if it is Inf, or false otherwise."
+		},
+		"function37": {
+			"name": "bin",
+			"declaration": "string bin( int number )",
+			"description": "Returns a string representing an int variable or value in binary. The prefix 0b is added at the beginning.",
+			"parameters": "(int type) number : The variable or value to be represented in binary. ",
+			"returnValue": "(string type) The string representing it in binary."
+		},
+		"function38": {
+			"name": "oct",
+			"declaration": "string oct( int number )",
+			"description": "Returns a string representing an int variable or value in octal. The prefix 0 is added at the beginning.",
+			"parameters": "(int type) number : The variable or value to be represented in octal. ",
+			"returnValue": "(string type) The string representing it in octal."
+		},
+		"function39": {
+			"name": "hex",
+			"declaration": "string hex( int number )",
+			"description": "Returns a string representing an int variable or value in hexadecimal. The prefix 0x is added at the beginning.",
+			"parameters": "(int type) number : The variable or value to be represented in hexadecimal. ",
+			"returnValue": "(string type) The string representing it in hexadecimal."
+		},
+		"function40": {
+			"name": "digit",
+			"declaration": "macro digit(arg)",
+			"description": "Specifies the number of operation digits for the varfloat type or the varcomplex type.",
+			"parameters": "( type) arg : The number of digits. "
+		},
+		"function41": {
+			"name": "digit",
+			"declaration": "macro digit()",
+			"description": "Gets the number of operation digits for the varfloat type or the varcomplex type.",
+			"returnValue": "The number of digits."
+		},
+		"function42": {
+			"name": "round",
+			"declaration": "float round(float value, int digit, int mode)",
+			"description": "Rounds a float value to the specified number of digits in the specified mode.Note that float values are stored internally as binary floating-point data, while rounding is performed on a decimal basis, so care is required regarding binary-decimal conversion errors.In general, conversions between binary and decimal floating-point numbers may not fit into a finite number of digits, and small errors may occur.Therefore, the internal data of a float value may differ slightly from the value you imagine in decimal notation.Accordingly, if the target value is very close to the rounding boundary, the result may appear strange at first glance, although it is internally correct.Also, the relationship between the result of this function and the result obtained when converting a float value to a string or displaying it with the <a href=\"#print\">print<\/a> function may sometimes seem strange,but this is because implicit rounding is also performed internally in the latter case. If you want to apply additional rounding to that displayed result, convert the argument value to string before passing it.",
+			"parameters": "(float type) value : The value to be rounded. \n(int type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(float type) The rounded value."
+		},
+		"function43": {
+			"name": "round",
+			"declaration": "string round(string value, int digit, int mode)",
+			"description": "Interprets the contents of a string value as a number, and rounds it to the specified number of digits in the specified mode.This function is used when you want to apply additional rounding based on the same content that is obtained when a float value is converted to a string or displayed by the <a href=\"#print\">print<\/a> function,where implicit rounding is performed internally. Compared with rounding a float value directly, the effect of binary-decimal conversion errors may differ slightly.For details, refer to the description for the case where the argument value is of float type.",
+			"parameters": "(string type) value : The value to be rounded. \n(int type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(string type) The rounded value."
+		},
+		"function44": {
+			"name": "round",
+			"declaration": "complex round(complex value, int digit, int mode)",
+			"description": "Rounds a complex value to the specified number of digits in the specified mode.Note that the real and imaginary parts of a complex value are stored internally as binary floating-point data, while rounding is performed on a decimal basis, so care is required regarding binary-decimal conversion errors.For details, refer to the description for the case where the argument value is of float type.",
+			"parameters": "(complex type) value : The value to be rounded. \n(int type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(complex type) The rounded value."
+		},
+		"function45": {
+			"name": "round",
+			"declaration": "varfloat round(varfloat value, varint digit, int mode)",
+			"description": "Rounds a varfloat value to the specified number of digits in the specified mode.",
+			"parameters": "(varfloat type) value : The value to be rounded. \n(varint type) digit : The number of digits after rounding. \n(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a>, <a href=\"#UP\">UP<\/a>, <a href=\"#DOWN\">DOWN<\/a>, <a href=\"#HALF_UP\">HALF_UP<\/a>, <a href=\"#HALF_DOWN\">HALF_DOWN<\/a>, <a href=\"#HALF_TO_EVEN\">HALF_TO_EVEN<\/a> ). ",
+			"returnValue": "(varfloat type) The rounded value."
+		},
+		"function46": {
+			"name": "round",
+			"declaration": "varcomplex round(varcomplex value, varint digit, int mode)",
+			"description": "Rounds a varcomplex value to the specified number of digits in the specified mode.",
+			"parameters": "(varcomplex type) value : The value to be rounded. \n(varint type) digit : The number of digits after rounding. ",
+			"returnValue": "(varcomplex type) The rounded value."
+		},
+		"function47": {
+			"name": "round",
+			"declaration": "void round(int mode)",
+			"description": "Specifies the default rounding mode for calculations on varfloat and varcomplex values.Note that rounding control for varfloat and varcomplex values, and the implementation of this function, are currently introduced on an experimental basis.At present, it is not always guaranteed that rounding control will be performed exactly as specified for all operations.Be sure to verify the behavior in advance before using it.Rounding control for varfloat and varcomplex values, and the implementation of this round function, are planned to be officially introduced in VCSSL 4 or later after this trial period.",
+			"parameters": "(int type) mode : The rounding mode ( <a href=\"#UP_SIGNIF\">UP_SIGNIF<\/a>, <a href=\"#DOWN_SIGNIF\">DOWN_SIGNIF<\/a>, <a href=\"#HALF_UP_SIGNIF\">HALF_UP_SIGNIF<\/a>, <a href=\"#HALF_DOWN_SIGNIF\">HALF_DOWN_SIGNIF<\/a>, <a href=\"#HALF_TO_EVEN_SIGNIF\">HALF_TO_EVEN_SIGNIF<\/a> ). ",
+			"returnValue": "(void type) "
+		},
+		"function48": {
+			"name": "re",
+			"declaration": "float re( complex value )",
+			"description": "Returns the real part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose real part is to be obtained. ",
+			"returnValue": "(float type) The real part."
+		},
+		"function49": {
+			"name": "im",
+			"declaration": "float im( complex value )",
+			"description": "Returns the imaginary part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose imaginary part is to be obtained. ",
+			"returnValue": "(float type) The imaginary part."
+		},
+		"function50": {
+			"name": "re",
+			"declaration": "void re( complex value, float realValue )",
+			"description": "Sets the real part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose real part is to be set. \n(float type) realValue : The value of the real part. ",
+			"returnValue": "(void type) "
+		},
+		"function51": {
+			"name": "im",
+			"declaration": "void im( complex value, float imagValue )",
+			"description": "Sets the imaginary part of a complex value.",
+			"parameters": "(complex type) value : The variable or value whose imaginary part is to be set. \n(float type) imagValue : The value of the imaginary part. ",
+			"returnValue": "(void type) "
+		},
+		"function52": {
+			"name": "re",
+			"declaration": "varfloat re( varcomplex value )",
+			"description": "Returns the real part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose real part is to be obtained. ",
+			"returnValue": "(varfloat type) The real part."
+		},
+		"function53": {
+			"name": "im",
+			"declaration": "varfloat im( varcomplex value )",
+			"description": "Returns the imaginary part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose imaginary part is to be obtained. ",
+			"returnValue": "(varfloat type) The imaginary part."
+		},
+		"function54": {
+			"name": "re",
+			"declaration": "void re( varcomplex value, varfloat realValue )",
+			"description": "Sets the real part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose real part is to be set. \n(varfloat type) realValue : The value of the real part. ",
+			"returnValue": "(void type) "
+		},
+		"function55": {
+			"name": "im",
+			"declaration": "void im( varcomplex value, varfloat imagValue )",
+			"description": "Sets the imaginary part of a varcomplex value.",
+			"parameters": "(varcomplex type) value : The variable or value whose imaginary part is to be set. \n(varfloat type) imagValue : The value of the imaginary part. ",
+			"returnValue": "(void type) "
+		},
+		"function56": {
+			"name": "save",
+			"declaration": "macro save(string filePath, content)",
+			"description": "A simple file output function. Saves the contents held by a string variable to a file.",
+			"parameters": "(string type) filePath : The file name or path. \n( type) content : The content to be saved to the file. "
+		},
+		"function57": {
+			"name": "save",
+			"declaration": "void save(string filePath)",
+			"description": "A simple file output function. Saves the contents currently displayed on the console to a file. However, the behavior of this function depends on the implementation.For example, if the console contents are displayed in a window provided by the implementation, you will probably get the expected result.However, in a standard-input\/output-based implementation that has no console window, this function will probably do nothing.",
+			"parameters": "(string type) filePath : The file name or path. ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "load",
+			"declaration": "string load(string filePath)",
+			"description": "A simple file input function. Reads the entire contents of a file and returns them as a string. The file is closed automatically after reading.",
+			"parameters": "(string type) filePath : The file name or path. ",
+			"returnValue": "(string type) The loaded contents."
+		},
+		"function59": {
+			"name": "load",
+			"declaration": "string load()",
+			"description": "A simple file input function. Obtains the contents currently displayed on the console and returns them as a string. However, the behavior of this function depends on the implementation.For example, if the console contents are displayed in a window provided by the implementation, you will probably get the expected result.However, in a standard-input\/output-based implementation that has no console window, this function will probably obtain nothing.",
+			"returnValue": "(string type) The contents obtained from the console."
+		},
+		"function60": {
+			"name": "open",
+			"declaration": "int open(string filePath, string mode)",
+			"description": "Opens a file, assigns and returns a unique identifier for it, called a file ID.Normally, specify a file name or path for the argument filePath,but you can also specify <a href=\"#STDIN\">STDIN<\/a>, <a href=\"#STDOUT\">STDOUT<\/a>, or <a href=\"#STDERR\">STDERR<\/a> to read from or write to the standard input\/output streams instead.",
+			"parameters": "(string type) filePath : The file name or path. \n(string type) mode : The file I\/O mode ( \"r\" or <a href=\"#READ\">READ<\/a>, \"w\" or <a href=\"#WRITE\">WRITE<\/a>, \"a\" or <a href=\"#APPEND\">APPEND<\/a>, \"rtsv\" or <a href=\"#READ\">READ_TSV<\/a>, \"wtsv\" or <a href=\"#WRITE\">WRITE_TSV<\/a>, \"atsv\" or <a href=\"#APPEND\">APPEND_TSV<\/a>, \"rcsv\" or <a href=\"#READ\">READ_CSV<\/a>, \"wcsv\" or <a href=\"#WRITE\">WRITE_CSV<\/a>, \"acsv\" or <a href=\"#APPEND\">APPEND_CSV<\/a>, \"rb\" or <a href=\"#READ\">READ_BINARY<\/a>, \"wb\" or <a href=\"#WRITE\">WRITE_BINARY<\/a>, \"ab\" or <a href=\"#APPEND\">APPEND_BINARY<\/a> ). ",
+			"returnValue": "(int type) The file ID."
+		},
+		"function61": {
+			"name": "open",
+			"declaration": "int open(string filePath, string mode, string textEncoding)",
+			"description": "Opens a file, assigns and returns a unique identifier for it, called a file ID.Normally, specify a file name or path for the argument filePath,but you can also specify <a href=\"#STDIN\">STDIN<\/a>, <a href=\"#STDOUT\">STDOUT<\/a>, or <a href=\"#STDERR\">STDERR<\/a> to read from or write to the standard input\/output streams instead.",
+			"parameters": "(string type) filePath : The file name or path. \n(string type) mode : The file I\/O mode ( \"r\" or <a href=\"#READ\">READ<\/a>, \"w\" or <a href=\"#WRITE\">WRITE<\/a>, \"a\" or <a href=\"#APPEND\">APPEND<\/a>, \"rtsv\" or <a href=\"#READ\">READ_TSV<\/a>, \"wtsv\" or <a href=\"#WRITE\">WRITE_TSV<\/a>, \"atsv\" or <a href=\"#APPEND\">APPEND_TSV<\/a>, \"rcsv\" or <a href=\"#READ\">READ_CSV<\/a>, \"wcsv\" or <a href=\"#WRITE\">WRITE_CSV<\/a>, \"acsv\" or <a href=\"#APPEND\">APPEND_CSV<\/a>, \"rb\" or <a href=\"#READ\">READ_BINARY<\/a>, \"wb\" or <a href=\"#WRITE\">WRITE_BINARY<\/a>, \"ab\" or <a href=\"#APPEND\">APPEND_BINARY<\/a> ). \n(string type) textEncoding : The text encoding ( \"Shift_JIS\", \"UTF-8\", or \"EUC-JP\" ). ",
+			"returnValue": "(int type) The file ID."
+		},
+		"function62": {
+			"name": "openw",
+			"declaration": "macro openw(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"wtsv\" ). This function is supported for compatibility."
+		},
+		"function63": {
+			"name": "opencsvw",
+			"declaration": "macro opencsvw(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"wcsv\" ). This function is supported for compatibility."
+		},
+		"function64": {
+			"name": "openr",
+			"declaration": "macro openr(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"rtsv\" ). This function is supported for compatibility."
+		},
+		"function65": {
+			"name": "opencsvr",
+			"declaration": "macro opencsvr(...)",
+			"description": "This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href=\"#open\">open<\/a>( filePath, \"rcsv\" ). This function is supported for compatibility."
+		},
+		"function66": {
+			"name": "close",
+			"declaration": "void close(int fileID)",
+			"description": "Closes a file. All buffered output is flushed at that time.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(void type) "
+		},
+		"function67": {
+			"name": "flush",
+			"declaration": "void flush(int fileID)",
+			"description": "Flushes buffered output for a file.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(void type) "
+		},
+		"function68": {
+			"name": "write",
+			"declaration": "macro write(int fileID, ...)",
+			"description": "Writes content to a file. The content may be of any type, and it is converted to a string when written.If multiple pieces of content are specified, how they are written depends on the file I\/O mode.<dl> <dt>In \"w\" or <a href=\"#WRITE\">WRITE<\/a> mode<\/dt>  <dd>The written contents are concatenated as they are.<\/dd> <dt>In \"wtsv\" or <a href=\"#WRITE_TSV\">WRITE_TSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with tab separators.<\/dd> <dt>In \"wcsv\" or <a href=\"#WRITE_CSV\">WRITE_CSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with comma separators.<\/dd><\/dl>Note that this function inserted a line break in VCSSL 2.1 and earlier, but does not insert one in VCSSL 2.2 and later. The behavior with a line break is provided by the <a href=\"#writeln\">writeln<\/a> function.",
+			"parameters": "(int type) fileID : The file ID. \n( type) ... : The content to be written (any type, variable-length arguments). "
+		},
+		"function69": {
+			"name": "writeln",
+			"declaration": "macro writeln(int fileID, ...)",
+			"description": "Writes content to a file and then inserts a line break. The content may be of any type, and it is converted to a string when written.If multiple pieces of content are specified, how they are written depends on the file I\/O mode.<dl> <dt>In \"w\" or <a href=\"#WRITE\">WRITE<\/a> mode<\/dt>  <dd>The written contents are concatenated as they are.<\/dd> <dt>In \"wtsv\" or <a href=\"#WRITE_TSV\">WRITE_TSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with tab separators.<\/dd> <dt>In \"wcsv\" or <a href=\"#WRITE_CSV\">WRITE_CSV<\/a> mode<\/dt>  <dd>The written contents are concatenated with comma separators.<\/dd><\/dl>The line break code is automatically chosen appropriately for the execution environment.If you want to use a specific line break code such as <a href=\"#LF\">LF<\/a> or <a href=\"#CR\">CR<\/a>,use the <a href=\"#write\">write<\/a> function instead of this function,and write the content with <a href=\"#LF\">LF<\/a> or <a href=\"#CR\">CR<\/a> appended to it.",
+			"parameters": "(int type) fileID : The file ID. \n( type) ... : The content to be written (any type, variable-length arguments). "
+		},
+		"function70": {
+			"name": "read",
+			"declaration": "string[ ] read(int fileID)",
+			"description": "Reads the entire contents of a file.The return value is a string array, and how the read contents are stored in it depends on the file I\/O mode.<dl> <dt>In \"r\" or <a href=\"#READ\">READ<\/a> mode<\/dt>  <dd>The entire contents of the file are returned as a string array with one element.<\/dd> <dt>In \"rtsv\" or <a href=\"#READ_TSV\">READ_TSV<\/a> mode<\/dt>  <dd>The contents of the file are returned in a string array separated by whitespace and line breaks. Tab characters and half-width spaces are treated as the same.<\/dd> <dt>In \"rcsv\" or <a href=\"#READ_CSV\">READ_CSV<\/a> mode<\/dt>  <dd>The contents of the file are returned in a string array separated by commas and line breaks.<\/dd><\/dl>In CSV and TSV reading, enclosures and delimiters are not interpreted, and the contents are simply split at the positions where separator characters exist. Also, in TSV, tab characters and half-width spaces are not distinguished.If you want to control this behavior more strictly, use the <a href=\"file\/TextFile.html\">file.TextFile<\/a> library.Note that this function read data line by line in VCSSL 2.1 and earlier, but was changed in VCSSL 2.2 and later to read the entire contents. The old line-by-line behavior is provided by the <a href=\"#readln\">readln<\/a> function.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string[] type) The loaded contents as a string array."
+		},
+		"function71": {
+			"name": "readln",
+			"declaration": "string[ ] readln(int fileID)",
+			"description": "Reads one line of content from a file.The return value is a string array, and how the read contents are stored in it depends on the file I\/O mode.<dl> <dt>In \"r\" or <a href=\"#READ\">READ<\/a> mode<\/dt>  <dd>The line contents are returned as a string array with one element.<\/dd> <dt>In \"rtsv\" or <a href=\"#READ_TSV\">READ_TSV<\/a> mode<\/dt>  <dd>The line contents are returned in a string array separated by whitespace. Tab characters and half-width spaces are treated as the same.<\/dd> <dt>In \"rcsv\" or <a href=\"#READ_CSV\">READ_CSV<\/a> mode<\/dt>  <dd>The line contents are returned in a string array separated by commas.<\/dd><\/dl>In CSV and TSV reading, enclosures and delimiters are not interpreted, and the contents are simply split at the positions where separator characters exist. Also, in TSV, tab characters and half-width spaces are not distinguished.If you want to control this behavior more strictly, use the <a href=\"file\/TextFile.html\">file.TextFile<\/a> library.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string[] type) The loaded contents as a string array."
+		},
+		"function72": {
+			"name": "load",
+			"declaration": "string load(int fileID)",
+			"description": "Reads the entire contents of a file and returns them as a string.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string type) The loaded contents."
+		},
+		"function73": {
+			"name": "loadln",
+			"declaration": "string loadln(int fileID)",
+			"description": "Reads an entire line from a file and returns it as a string.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(string type) The loaded contents."
+		},
+		"function74": {
+			"name": "countln",
+			"declaration": "int countln(int fileID)",
+			"description": "Counts the number of lines in a file.",
+			"parameters": "(int type) fileID : The file ID. ",
+			"returnValue": "(int type) The number of lines in the file."
+		},
+		"function75": {
+			"name": "eval",
+			"declaration": "macro eval(string expression)",
+			"description": "Evaluates a string as an expression. Variables and functions can also be accessed within lexical scope, and assignments can be performed as well.The value of the expression is returned after being converted to a string array (if the value of the expression is non-array, the returned array has one element).A string array is the type with the greatest conversion flexibility, and can be assigned to arrays and non-arrays of any primitive type (assignment to a non-array is possible only when the number of elements is one).On the other hand, if you want to evaluate expressions repeatedly at high speed, especially when the return value is of int or float type, type conversion through strings can become a bottleneck.In such cases, you can avoid that bottleneck by assigning the result to a variable within the evaluated expression and discarding the return value instead of using it.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression."
+		},
+		"function76": {
+			"name": "eval",
+			"declaration": "macro eval(string expression, literalType)",
+			"description": "Evaluates a string as an expression. Unlike the eval function with one argument, this version lets you specify how numeric literals without explicit suffixes are interpreted.For example, the expression &quot;1 \/ 2&quot; is normally treated as division between int values, so the result is 0. If you want it to be treated as division between float values and obtain 0.5, specify a float value such as 0.0 as the second argument.Note that only the type of the second argument is meaningful, and its value is ignored (however, since some meaning may be added to it in the future, it is recommended to specify 0 or 0.0 unless you have a particular reason not to).",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as a string array."
+		},
+		"function77": {
+			"name": "feval",
+			"declaration": "macro feval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array float.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as float."
+		},
+		"function78": {
+			"name": "feval",
+			"declaration": "macro feval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array float.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as float."
+		},
+		"function79": {
+			"name": "ieval",
+			"declaration": "macro ieval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array int.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as int."
+		},
+		"function80": {
+			"name": "ieval",
+			"declaration": "macro ieval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array int.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as int."
+		},
+		"function81": {
+			"name": "ceval",
+			"declaration": "macro ceval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array complex.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as complex."
+		},
+		"function82": {
+			"name": "ceval",
+			"declaration": "macro ceval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array complex.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as complex."
+		},
+		"function83": {
+			"name": "beval",
+			"declaration": "macro beval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array bool.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as bool."
+		},
+		"function84": {
+			"name": "beval",
+			"declaration": "macro beval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array bool.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as bool."
+		},
+		"function85": {
+			"name": "seval",
+			"declaration": "macro seval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array string.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as string."
+		},
+		"function86": {
+			"name": "seval",
+			"declaration": "macro seval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array string.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as string."
+		},
+		"function87": {
+			"name": "vfeval",
+			"declaration": "macro vfeval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varfloat.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as varfloat."
+		},
+		"function88": {
+			"name": "vfeval",
+			"declaration": "macro vfeval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varfloat.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as varfloat."
+		},
+		"function89": {
+			"name": "vieval",
+			"declaration": "macro vieval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varint.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as varint."
+		},
+		"function90": {
+			"name": "vieval",
+			"declaration": "macro vieval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varint.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as varint."
+		},
+		"function91": {
+			"name": "vceval",
+			"declaration": "macro vceval(string expression)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varcomplex.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "The value of the expression as varcomplex."
+		},
+		"function92": {
+			"name": "vceval",
+			"declaration": "macro vceval(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns the value as a non-array varcomplex.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "The value of the expression as varcomplex."
+		},
+		"function93": {
+			"name": "evaluable",
+			"declaration": "macro evaluable(string expression)",
+			"description": "Determines whether the contents of an expression are syntactically correct.If the eval function fails in parsing, processing speed decreases, so if you want to evaluate an expression repeatedly at high speed, it is recommended to check its validity in advance with this function.",
+			"parameters": "(string type) expression : The expression to be checked. ",
+			"returnValue": "Returns true if the expression is syntactically correct, or false otherwise."
+		},
+		"function94": {
+			"name": "evaluable",
+			"declaration": "macro evaluable(string expression, literalType)",
+			"description": "Determines whether the contents of an expression are syntactically correct.If the eval function fails in parsing, processing speed decreases, so if you want to evaluate an expression repeatedly at high speed, it is recommended to check its validity in advance with this function.",
+			"parameters": "(string type) expression : The expression to be checked. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "Returns true if the expression is syntactically correct, or false otherwise."
+		},
+		"function95": {
+			"name": "evaltr",
+			"declaration": "macro evaltr(string expression)",
+			"description": "Evaluates a string as an expression, and returns internal processing information of the implementation. The contents are completely implementation-dependent.Note that the expressions that can be used are subject to implementation-dependent restrictions, and the returned contents do not necessarily correspond exactly to those of normal expression evaluation.In addition, this function generally cannot be used with expressions that have side effects. This function is mainly intended for development and debugging.",
+			"parameters": "(string type) expression : The expression to be evaluated. ",
+			"returnValue": "Internal processing information of the implementation as a string array."
+		},
+		"function96": {
+			"name": "evaltr",
+			"declaration": "macro evaltr(string expression, literalType)",
+			"description": "Evaluates a string as an expression, and returns internal processing information of the implementation. The contents are completely implementation-dependent.Note that the expressions that can be used are subject to implementation-dependent restrictions, and the returned contents do not necessarily correspond exactly to those of normal expression evaluation.In addition, this function generally cannot be used with expressions that have side effects. This function is mainly intended for development and debugging.",
+			"parameters": "(string type) expression : The expression to be evaluated. \n( type) literalType : The type to be assigned to numeric literals without suffixes (specified by a variable of that type). ",
+			"returnValue": "Internal processing information of the implementation as a string array."
+		},
+		"function97": {
+			"name": "override",
+			"declaration": "macro override(string functionName, string argumentType[ ], string functionCode)",
+			"description": "Changes the implementation of a function at runtime.Since the eval function cannot declare local variables or execute multiple statements, use this function when you want to perform such processing by dynamic evaluation.Note that this function can only change the implementation of an existing function, and cannot declare a new function.",
+			"parameters": "(string type) functionName : The function name. \n(string[] type) argumentType : An array describing the argument types as strings (for example, storing \"int\" or \"float\"). \n(string type) functionCode : The description of the function body as program code. "
+		},
+		"function98": {
+			"name": "lf",
+			"declaration": "string lf()",
+			"description": "Returns the environment-dependent line break code. In VCSSL 3 and later, the constant <a href=\"#EOL\">EOL<\/a> can be used directly as the line break code.This function wastes the overhead of a function call. In new programs, using the constant <a href=\"#EOL\">EOL<\/a> is recommended.This function is supported for compatibility.",
+			"returnValue": "(string type) The environment-dependent line break code."
+		},
+		"function99": {
+			"name": "linefeed",
+			"declaration": "string linefeed()",
+			"description": "Returns the environment-dependent line break code. In VCSSL 3 and later, the constant <a href=\"#EOL\">EOL<\/a> can be used directly as the line break code.This function wastes the overhead of a function call. In new programs, using the constant <a href=\"#EOL\">EOL<\/a> is recommended.This function is supported for compatibility.",
+			"returnValue": "(string type) The environment-dependent line break code."
+		}
+	}
+}

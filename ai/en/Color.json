@@ -1,0 +1,92 @@
+{
+	"libraryName": "Color",
+	"libraryDescription": "<p>The VCSSL Color library is a standard library for supporting color handling.It is mainly used for graphics-related processing together with libraries such as Graphics2D and Graphics3D.<\/p><p>In this library, a color is represented as an int[4] array. The elements store the red component at [0], green at [1], blue at [2], and alpha at [3].<br \/>The range of each component is from 0 to 255. In other words, an int[4] array represents a 32-bit RGBA color.<br \/>Consistently with this library, Graphics2D and Graphics3D also treat int[4] arrays as 32-bit RGBA colors, so they can be used for setting and obtaining colors.<\/p><p>As an example, the drawing color in Graphics2D can be set to blue as follows even without using the Color library:<div class=\"code\">setDrawColor( rendererID, 0, 0, 255, 255 );<\/div><\/p><p>However, by using the Color library, colors can be specified in various forms as shown below:<div class=\"code\">setDrawColor( rendererID, BLUE );  \/\/ Set by constant<br \/>setDrawColor( rendererID, color(0, 0, 255) );  \/\/ Set by 24-bit RGB color<br \/>setDrawColor( rendererID, color(0.0, 0.0, 1.0) ); \/\/ Set by RGB values in the range from 0.0 to 1.0<br \/>setDrawColor( rendererID, color( 0x0000ff ) ); \/\/ Set by hexadecimal color code<\/div><\/p>",
+	"structs": {
+	},
+	"variables": {
+		"variable0": {
+			"name": "BLACK",
+			"declaration": "const int BLACK[ ]",
+			"description": "The array storing the color components of black."
+		},
+		"variable1": {
+			"name": "WHITE",
+			"declaration": "const int WHITE[ ]",
+			"description": "The array storing the color components of white."
+		},
+		"variable2": {
+			"name": "RED",
+			"declaration": "const int RED[ ]",
+			"description": "The array storing the color components of red."
+		},
+		"variable3": {
+			"name": "GREEN",
+			"declaration": "const int GREEN[ ]",
+			"description": "The array storing the color components of green."
+		},
+		"variable4": {
+			"name": "BLUE",
+			"declaration": "const int BLUE[ ]",
+			"description": "The array storing the color components of blue."
+		},
+		"variable5": {
+			"name": "MAGENTA",
+			"declaration": "const int MAGENTA[ ]",
+			"description": "The array storing the color components of purple (magenta)."
+		},
+		"variable6": {
+			"name": "YELLOW",
+			"declaration": "const int YELLOW[ ]",
+			"description": "The array storing the color components of yellow."
+		},
+		"variable7": {
+			"name": "CYAN",
+			"declaration": "const int CYAN[ ]",
+			"description": "The array storing the color components of light blue (cyan)."
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "color",
+			"declaration": "int[ ] color(int red, int green, int blue, int alpha)",
+			"description": "Creates and returns an array storing color components from integer RGBA values in the range from 0 to 255.",
+			"parameters": "(int type) red : The red component (0 to 255). \n(int type) green : The green component (0 to 255). \n(int type) blue : The blue component (0 to 255). \n(int type) alpha : The alpha component (0 to 255). ",
+			"returnValue": "(int[] type) The array storing the color components."
+		},
+		"function1": {
+			"name": "color",
+			"declaration": "int[ ] color(int red, int green, int blue)",
+			"description": "Creates and returns an array storing color components for an opaque color from integer RGB values in the range from 0 to 255.",
+			"parameters": "(int type) red : The red component (0 to 255). \n(int type) green : The green component (0 to 255). \n(int type) blue : The blue component (0 to 255). ",
+			"returnValue": "(int[] type) The array storing the color components."
+		},
+		"function2": {
+			"name": "color",
+			"declaration": "int[ ] color(float red, float green, float blue, float alpha)",
+			"description": "Creates and returns an array storing color components from floating-point RGBA values in the range from 0.0 to 1.0.",
+			"parameters": "(float type) red : The red component (0.0 to 1.0). \n(float type) green : The green component (0.0 to 1.0). \n(float type) blue : The blue component (0.0 to 1.0). \n(float type) alpha : The alpha component (0.0 to 1.0). ",
+			"returnValue": "(int[] type) The array storing the color components."
+		},
+		"function3": {
+			"name": "color",
+			"declaration": "int[ ] color(float red, float green, float blue)",
+			"description": "Creates and returns an array storing color components for an opaque color from floating-point RGB values in the range from 0.0 to 1.0.",
+			"parameters": "(float type) red : The red component (0.0 to 1.0). \n(float type) green : The green component (0.0 to 1.0). \n(float type) blue : The blue component (0.0 to 1.0). ",
+			"returnValue": "(int[] type) The array storing the color components."
+		},
+		"function4": {
+			"name": "color",
+			"declaration": "int[ ] color(int hexCode)",
+			"description": "Creates and returns an array storing color components for an opaque color from a hexadecimal color code.<br \/>For example, to convert the blue color code 0000ff:<br \/>int rgba[] = color(0x0000ff);<br \/>Here, 0x is the prefix used to write an integer literal in hexadecimal notation.",
+			"parameters": "(int type) hexCode : The hexadecimal color code. ",
+			"returnValue": "(int[] type) The array storing the color components."
+		},
+		"function5": {
+			"name": "getColorCode",
+			"declaration": "int getColorCode(int rgba[ ])",
+			"description": "Converts an array of color components into a color code and returns it.For example, to convert purple (magenta) into a color code:<br \/>int rgba[] = { 255, 0, 255, 255 };<br \/>int colorCode = getColorCode(rgba);<br \/>string hexCode = hex(colorCode);<br \/>The result stored in the variable hexCode is 0xff00ff. For green, the result is 0xff00, and for blue, it is 0xff. To format it into a more common color-code style, remove the leading 0x and pad it with zeros on the left so that it has six digits. The Text library is useful for such string processing.",
+			"parameters": "rgba[] : The array storing the color components. [0] is the red component, [1] is the green component, [2] is the blue component, and [3] is the alpha component. Each color component must be in the range from 0 to 255, and the alpha component must always be 255 (opaque). ",
+			"returnValue": "(int type) The integer color-code value. To convert it into a hexadecimal string, use the <a href=\"System.html#hex\">hex<\/a> function."
+		}
+	}
+}

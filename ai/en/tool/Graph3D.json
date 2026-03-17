@@ -1,0 +1,652 @@
+{
+	"libraryName": "Graph3D",
+	"libraryDescription": "<p>The tool.Graph3D API library, hereafter the Graph3D library, is a library for controlling 3D graph software.<\/p><p>The Graph3D library is an extension library and is not included in the standard libraries defined by the VCSSL language specification. Therefore, support for the Graph3D library implementation is not guaranteed in every VCSSL implementation.<\/p><p>The specification of the Graph3D library is defined assuming control of widely used general-purpose 3D graph software from VCSSL, and it is not intended for a specific 3D graph application. In an implementation of the Graph3D library, what kind of 3D graph software is adopted as the control target depends on the implementation, the vendor of the implementation, its version, or plugins that provide communication functions with graph software. Because of these circumstances, the functions provided by the Graph3D library should not be expected to behave in exactly the same way across different implementations.<\/p><p>Even in the same implementation, because the Graph3D library is not a standard library, its implementation is not guaranteed to behave permanently in the same way. Keep in mind that the implementation of the Graph3D library is only an extension feature supported independently by the implementation. For example, if the graph software receives a major update, the behavior of the Graph3D library may also change slightly as a result.<\/p><p>In the RINEARN VCSSL Runtime and VCSSL-supported software equipped with it, such as Rinearn Processor,the Graph3D library is supported, and its implementation adopts the graph software RINRARN Graph 3D for scientific and technical fields.Since the RINRARN Graph 3D program itself, RinearnGraph3D.jar, is bundled in the distribution package of the VCSSL Runtime,nothing needs to be prepared separately.<\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "newGraph3D",
+			"declaration": "int newGraph3D()",
+			"description": "Creates a 3D graph with the default size, assigns its unique identifier, the graph ID, and returns it.",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function1": {
+			"name": "newGraph3D",
+			"declaration": "int newGraph3D( int x, int y, int width, int height, string title )",
+			"description": "Creates a 3D graph with the specified size, assigns its unique identifier, the graph ID, and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. \n(string type) title : The title of the graph window. ",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function2": {
+			"name": "getGraph3D",
+			"declaration": "int getGraph3D()",
+			"description": "If there is a special graph started and allocated by the implementation, gets its graph ID. Otherwise, creates a new one.",
+			"returnValue": "(int type) The obtained or created graph ID."
+		},
+		"function3": {
+			"name": "deleteGraph3D",
+			"declaration": "void deleteGraph3D( int graphID )",
+			"description": "Destroys the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "clearGraph3D",
+			"declaration": "void clearGraph3D( int graphID )",
+			"description": "Clears the contents of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "getGraph3DGraphics",
+			"declaration": "int getGraph3DGraphics( int graphID )",
+			"description": "Converts the drawing contents held by the graph into graphics resource compatible with the Graphics library.The converted graphics resource can be processed with a 2D or 3D renderer and so on.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(int type) The graphics resource ID."
+		},
+		"function6": {
+			"name": "setGraph3DLocation",
+			"declaration": "void setGraph3DLocation( int graphID, int x, int y )",
+			"description": "Sets the location of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function7": {
+			"name": "setGraph3DSize",
+			"declaration": "void setGraph3DSize( int graphID, int width, int height )",
+			"description": "Sets the size of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function8": {
+			"name": "hideGraph3D",
+			"declaration": "void hideGraph3D( int graphID )",
+			"description": "Hides the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "showGraph3D",
+			"declaration": "void showGraph3D( int graphID )",
+			"description": "Shows the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string filePath )",
+			"description": "Loads a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filePath : The file name or path of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function11": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string filePath, string mode )",
+			"description": "Loads a file in the specified mode and plots it on the graph.<br \/>Specify the mode as one of the following string values.<dl><dt>AUTO<\/dt><dd>A mode that automatically determines the format from the contents of the file<\/dd><dt>MATRIX_CSV<\/dt><dd>A mode that loads the file as a comma-separated matrix format<\/dd><dt>MATRIX_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated matrix format<\/dd><dt>3COL_CSV or 3COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated three-column format<\/dd><dt>3COL_STSV or 3COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated three-column format<\/dd><dt>4COL_CSV or 4COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated four-column format<\/dd><dt>4COL_STSV or 4COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated four-column format<\/dd><\/dl>Note that, regarding delimiters, the file may still be loaded even if the specified mode and the actual file contents do not match, for example, a CSV file in an STSV mode or vice versa.However, that behavior depends on the correction mechanism on the graph-software side, and there is no guarantee that it will still work in future versions. Therefore, specify the mode correctly whenever possible.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filePath : The file name or path of the file to plot. \n(string type) mode : The mode of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string file[ ] )",
+			"description": "Loads multiple files and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) file : The file name or path of each file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string file[ ], string mode[ ] )",
+			"description": "Loads multiple files in the specified modes and plots them on the graph.<br \/>Specify each mode as one of the following string values.<dl><dt>AUTO<\/dt><dd>A mode that automatically determines the format from the contents of the file<\/dd><dt>MATRIX_CSV<\/dt><dd>A mode that loads the file as a comma-separated matrix format<\/dd><dt>MATRIX_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated matrix format<\/dd><dt>3COL_CSV or 3COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated three-column format<\/dd><dt>3COL_STSV or 3COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated three-column format<\/dd><dt>4COL_CSV or 4COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated four-column format<\/dd><dt>4COL_STSV or 4COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated four-column format<\/dd><\/dl>Note that, regarding delimiters, the file may still be loaded even if the specified mode and the actual file contents do not match, for example, a CSV file in an STSV mode or vice versa.However, that behavior depends on the correction mechanism on the graph-software side, and there is no guarantee that it will still work in future versions. Therefore, specify the mode correctly whenever possible.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) file : The array storing the file names or paths of the files to plot. \n(string[] type) mode : The array storing the modes of the files to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, string data )",
+			"description": "Loads text written in the same format as the contents of a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) data : The text written in the same format as the contents of a file. ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. \n(float[] type) dataZ : The array storing the Z coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataZ : The array storing the Z coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function17": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][][] type) dataX : The array storing the X coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataY : The array storing the Y coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataZ : The array storing the Z coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function18": {
+			"name": "addGraph3DData",
+			"declaration": "void addGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. \n(float[] type) dataZ : The array storing the Z coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function19": {
+			"name": "addGraph3DData",
+			"declaration": "void addGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataZ : The array storing the Z coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function20": {
+			"name": "addGraph3DData",
+			"declaration": "void addGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][][] type) dataX : The array storing the X coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataY : The array storing the Y coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataZ : The array storing the Z coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function21": {
+			"name": "setGraph3DConfigurationFile",
+			"declaration": "void setGraph3DConfigurationFile( int graphID, string file )",
+			"description": "Loads a configuration file and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) file : The file name or path of the configuration file. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "setGraph3DConfigurationCode",
+			"declaration": "void setGraph3DConfigurationCode( int graphID, string code )",
+			"description": "Loads code written in the same format as a configuration file, configuration code, and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \nline : The contents of the configuration code. ",
+			"returnValue": "(void type) "
+		},
+		"function23": {
+			"name": "setGraph3DRange",
+			"declaration": "void setGraph3DRange( int graphID, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax )",
+			"description": "Sets the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. \n(double type) zMin : The minimum value of the Z axis. \n(double type) zMax : The maximum value of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function24": {
+			"name": "setGraph3DRangeX",
+			"declaration": "void setGraph3DRangeX( int graphID, double xMin, double xMax )",
+			"description": "Sets the plot range of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "setGraph3DRangeY",
+			"declaration": "void setGraph3DRangeY( int graphID, double yMin, double yMax )",
+			"description": "Sets the plot range of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function26": {
+			"name": "setGraph3DRangeZ",
+			"declaration": "void setGraph3DRangeZ( int graphID, double zMin, double zMax )",
+			"description": "Sets the plot range of the Z axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) zMin : The minimum value of the Z axis. \n(double type) zMax : The maximum value of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "setGraph3DAutoRange",
+			"declaration": "void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ )",
+			"description": "Enables or disables the automatic adjustment feature for the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(bool type) autoX : True to enable automatic adjustment in the X-axis direction, or false to disable it. \n(bool type) autoY : True to enable automatic adjustment in the Y-axis direction, or false to disable it. \n(bool type) autoZ : True to enable automatic adjustment in the Z-axis direction, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function28": {
+			"name": "setGraph3DLabel",
+			"declaration": "void setGraph3DLabel( int graphID, string xLabel, string yLabel, string zLabel )",
+			"description": "Sets the labels of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) xLabel : The label of the X axis. \n(string type) yLabel : The label of the Y axis. \n(string type) zLabel : The label of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function29": {
+			"name": "setGraph3DLabelX",
+			"declaration": "void setGraph3DLabelX( int graphID, string label )",
+			"description": "Sets the label of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setGraph3DLabelY",
+			"declaration": "void setGraph3DLabelY( int graphID, string label )",
+			"description": "Sets the label of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "setGraph3DLabelZ",
+			"declaration": "void setGraph3DLabelZ( int graphID, string label )",
+			"description": "Sets the label of the Z axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function32": {
+			"name": "setGraph3DTick",
+			"declaration": "void setGraph3DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ], double zTickCoords[ ], string zTickLabels[ ], double colorBarTickCoords[ ], string colorBarTickLabels[ ] )",
+			"description": "Sets the tick marks of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) xTickCoords : The coordinate values of the tick positions on the X axis. \n(string[] type) xTickLabels : The labels of the tick marks on the X axis. \n(double[] type) yTickCoords : The coordinate values of the tick positions on the Y axis. \n(string[] type) yTickLabels : The labels of the tick marks on the Y axis. \n(double[] type) zTickCoords : The coordinate values of the tick positions on the Z axis. \n(string[] type) zTickLabels : The labels of the tick marks on the Z axis. \n(double[] type) colorBarTickCoords : The coordinate values of the tick positions on the color bar. \n(string[] type) colorBarTickLabels : The labels of the tick marks on the color bar. ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "setGraph3DTickX",
+			"declaration": "void setGraph3DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function34": {
+			"name": "setGraph3DTickY",
+			"declaration": "void setGraph3DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "setGraph3DTickZ",
+			"declaration": "void setGraph3DTickZ( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the Z axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function36": {
+			"name": "setGraph3DTickColorBar",
+			"declaration": "void setGraph3DTickColorBar( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the color-bar axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "setGraph3DCameraAngle",
+			"declaration": "void setGraph3DCameraAngle( int graphID, float horizontalAngle, float verticalAngle, string mode )",
+			"description": "Sets the camera angle.Specify the vector from the origin of the graph to the camera position, the camera-direction vector, by using the horizontal angle and the vertical angle based on the zenith axis described below for the horizontalAngle and verticalAngle arguments.The vertical angle specifies the angle between the camera-direction vector and the zenith axis.The horizontal angle specifies the direction of the projection of the camera-direction vector onto the plane perpendicular to the zenith axis.Here, the zenith axis can be selected from the X, Y, or Z axis by specifying one of the following values in the mode argument:<dl><dt>ZENITH_X<\/dt><dd>An angle-specification mode in which the X axis is treated as the zenith axis<\/dd><dt>ZENITH_Y<\/dt><dd>An angle-specification mode in which the Y axis is treated as the zenith axis<\/dd><dt>ZENITH_Z<\/dt><dd>An angle-specification mode in which the Z axis is treated as the zenith axis<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float type) horizontalAngle : The horizontal angle. \n(float type) verticalAngle : The vertical angle. \n(string type) mode : The angle-specification mode. See the list above for the available values. ",
+			"returnValue": "(void type) "
+		},
+		"function38": {
+			"name": "setGraph3DCameraMagnification",
+			"declaration": "void setGraph3DCameraMagnification( int graphID, float magnification )",
+			"description": "Sets the camera magnification.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float type) magnification : The camera magnification. ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "setGraph3DCameraDistance",
+			"declaration": "void setGraph3DCameraDistance( int graphID, float distance )",
+			"description": "Sets the camera distance.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float type) distance : The camera distance. ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "setGraph3DCameraPerspective",
+			"declaration": "void setGraph3DCameraPerspective( int graphID, bool perspective )",
+			"description": "Sets whether the camera perspective is enabled.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(bool type) perspective : True to enable perspective, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function41": {
+			"name": "setGraph3DOption",
+			"declaration": "void setGraph3DOption( int graphID, string option, bool value )",
+			"description": "Sets an option item of the graph. The item names depend on the implementation. Representative option item names are as follows:<dl><dt>WITH_POINTS<\/dt><dd>Point plot<\/dd><dt>WITH_LINES<\/dt><dd>Line plot<\/dd><dt>WITH_MESHES<\/dt><dd>Mesh plot<\/dd><dt>WITH_SURFACES<\/dt><dd>Surface plot<\/dd><dt>WITH_MEMBRANES<\/dt><dd>Surface plot (Same as WITH_SURFACES)<\/dd><dt>FLAT<\/dt><dd>Flattening<\/dd><dt>FRAME<\/dt><dd>Frame drawing<\/dd><dt>SCALE<\/dt><dd>Scale drawing<\/dd><dt>GRID_LINE<\/dt><dd>Grid-line drawing<\/dd><dt>GRADATION<\/dt><dd>Gradient coloring by Z values<\/dd><dt>ALPHA<\/dt><dd>Translucent drawing<\/dd><dt>LOG_X<\/dt><dd>Display the X axis in logarithmic scale<\/dd><dt>LOG_Y<\/dt><dd>Display the Y axis in logarithmic scale<\/dd><dt>LOG_Z<\/dt><dd>Display the Z axis in logarithmic scale<\/dd><dt>REVERSE_X<\/dt><dd>Reverse the X axis<\/dd><dt>REVERSE_Y<\/dt><dd>Reverse the Y axis<\/dd><dt>REVERSE_Z<\/dt><dd>Reverse the Z axis<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) option : The name of the option item. \n(bool type) value : True to enable the option, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "setGraph3DMenu",
+			"declaration": "void setGraph3DMenu( int graphID, string option, string value )",
+			"description": "This function is effectively used only for label settings, and it can now be replaced by functions such as setGraph3DLabel and setGraph3DLabelX, Y, or Z.Because that is more readable, it is recommended to use that form from now on unless there is a specific reason not to.<br \/><br \/>Sets a menu item of the graph. The item names depend on the implementation. Representative menu item names are as follows:<dl><dt>SET_LABEL_X<\/dt><dd>The X-axis label<\/dd><dt>SET_LABEL_Y<\/dt><dd>The Y-axis label<\/dd><dt>SET_LABEL_Z<\/dt><dd>The Z-axis label<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) option : The name of the menu item. \n(string type) value : The value to set for the menu item. ",
+			"returnValue": "(void type) "
+		},
+		"function43": {
+			"name": "setGraph3DAnimation",
+			"declaration": "void setGraph3DAnimation( int graphID, string option, bool state )",
+			"description": "Enables or disables graph animation. The available animation modes depend on the implementation. Representative animation modes are as follows:<dl><dt>TRACE<\/dt><dd>Animate points while leaving trajectories<\/dd><dt>INDEX<\/dt><dd>Animate points<\/dd><dt>INDEX-SERIES<\/dt><dd>Animate series<\/dd><dt>INDEX-X<\/dt><dd>Animate lines in the X direction of mesh data<\/dd><dt>INDEX-Y<\/dt><dd>Animate lines in the Y direction of mesh data<\/dd><dt>RANGE-X<\/dt><dd>Slide the plot range in the X direction<\/dd><dt>RANGE-Y<\/dt><dd>Slide the plot range in the Y direction<\/dd><dt>RANGE-Z<\/dt><dd>Slide the plot range in the Z direction<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \nmode : The animation mode. \n(bool type) state : True to enable animation, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "exportGraph3D",
+			"declaration": "void exportGraph3D( int graphID, string filename, string format )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". ",
+			"returnValue": "(void type) "
+		},
+		"function45": {
+			"name": "exportGraph3D",
+			"declaration": "void exportGraph3D( int graphID, string filename, string format, float quality )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". \n(float type) quality : The quality, from 0.0 to 100.0. ",
+			"returnValue": "(void type) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "newGraph3D",
+			"declaration": "int newGraph3D()",
+			"description": "Creates a 3D graph with the default size, assigns its unique identifier, the graph ID, and returns it.",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function1": {
+			"name": "newGraph3D",
+			"declaration": "int newGraph3D( int x, int y, int width, int height, string title )",
+			"description": "Creates a 3D graph with the specified size, assigns its unique identifier, the graph ID, and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. \n(string type) title : The title of the graph window. ",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function2": {
+			"name": "getGraph3D",
+			"declaration": "int getGraph3D()",
+			"description": "If there is a special graph started and allocated by the implementation, gets its graph ID. Otherwise, creates a new one.",
+			"returnValue": "(int type) The obtained or created graph ID."
+		},
+		"function3": {
+			"name": "deleteGraph3D",
+			"declaration": "void deleteGraph3D( int graphID )",
+			"description": "Destroys the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "clearGraph3D",
+			"declaration": "void clearGraph3D( int graphID )",
+			"description": "Clears the contents of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "getGraph3DGraphics",
+			"declaration": "int getGraph3DGraphics( int graphID )",
+			"description": "Converts the drawing contents held by the graph into graphics resource compatible with the Graphics library.The converted graphics resource can be processed with a 2D or 3D renderer and so on.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(int type) The graphics resource ID."
+		},
+		"function6": {
+			"name": "setGraph3DLocation",
+			"declaration": "void setGraph3DLocation( int graphID, int x, int y )",
+			"description": "Sets the location of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function7": {
+			"name": "setGraph3DSize",
+			"declaration": "void setGraph3DSize( int graphID, int width, int height )",
+			"description": "Sets the size of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function8": {
+			"name": "hideGraph3D",
+			"declaration": "void hideGraph3D( int graphID )",
+			"description": "Hides the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "showGraph3D",
+			"declaration": "void showGraph3D( int graphID )",
+			"description": "Shows the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string filePath )",
+			"description": "Loads a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filePath : The file name or path of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function11": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string filePath, string mode )",
+			"description": "Loads a file in the specified mode and plots it on the graph.<br \/>Specify the mode as one of the following string values.<dl><dt>AUTO<\/dt><dd>A mode that automatically determines the format from the contents of the file<\/dd><dt>MATRIX_CSV<\/dt><dd>A mode that loads the file as a comma-separated matrix format<\/dd><dt>MATRIX_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated matrix format<\/dd><dt>3COL_CSV or 3COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated three-column format<\/dd><dt>3COL_STSV or 3COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated three-column format<\/dd><dt>4COL_CSV or 4COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated four-column format<\/dd><dt>4COL_STSV or 4COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated four-column format<\/dd><\/dl>Note that, regarding delimiters, the file may still be loaded even if the specified mode and the actual file contents do not match, for example, a CSV file in an STSV mode or vice versa.However, that behavior depends on the correction mechanism on the graph-software side, and there is no guarantee that it will still work in future versions. Therefore, specify the mode correctly whenever possible.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filePath : The file name or path of the file to plot. \n(string type) mode : The mode of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string file[ ] )",
+			"description": "Loads multiple files and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) file : The file name or path of each file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setGraph3DFile",
+			"declaration": "void setGraph3DFile( int graphID, string file[ ], string mode[ ] )",
+			"description": "Loads multiple files in the specified modes and plots them on the graph.<br \/>Specify each mode as one of the following string values.<dl><dt>AUTO<\/dt><dd>A mode that automatically determines the format from the contents of the file<\/dd><dt>MATRIX_CSV<\/dt><dd>A mode that loads the file as a comma-separated matrix format<\/dd><dt>MATRIX_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated matrix format<\/dd><dt>3COL_CSV or 3COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated three-column format<\/dd><dt>3COL_STSV or 3COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated three-column format<\/dd><dt>4COL_CSV or 4COLUMNS_CSV<\/dt><dd>A mode that loads the file as a comma-separated four-column format<\/dd><dt>4COL_STSV or 4COLUMNS_STSV<\/dt><dd>A mode that loads the file as a tab- or space-separated four-column format<\/dd><\/dl>Note that, regarding delimiters, the file may still be loaded even if the specified mode and the actual file contents do not match, for example, a CSV file in an STSV mode or vice versa.However, that behavior depends on the correction mechanism on the graph-software side, and there is no guarantee that it will still work in future versions. Therefore, specify the mode correctly whenever possible.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) file : The array storing the file names or paths of the files to plot. \n(string[] type) mode : The array storing the modes of the files to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, string data )",
+			"description": "Loads text written in the same format as the contents of a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) data : The text written in the same format as the contents of a file. ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. \n(float[] type) dataZ : The array storing the Z coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataZ : The array storing the Z coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function17": {
+			"name": "setGraph3DData",
+			"declaration": "void setGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][][] type) dataX : The array storing the X coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataY : The array storing the Y coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataZ : The array storing the Z coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function18": {
+			"name": "addGraph3DData",
+			"declaration": "void addGraph3DData( int graphID, float dataX[ ], float dataY[ ], float dataZ[ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. \n(float[] type) dataZ : The array storing the Z coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function19": {
+			"name": "addGraph3DData",
+			"declaration": "void addGraph3DData( int graphID, float dataX[ ][ ], float dataY[ ][ ], float dataZ[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. \n(float[][] type) dataZ : The array storing the Z coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function20": {
+			"name": "addGraph3DData",
+			"declaration": "void addGraph3DData( int graphID, float dataX[ ][ ][ ], float dataY[ ][ ][ ], float dataZ[ ][ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][][] type) dataX : The array storing the X coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataY : The array storing the Y coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. \n(float[][][] type) dataZ : The array storing the Z coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh. ",
+			"returnValue": "(void type) "
+		},
+		"function21": {
+			"name": "setGraph3DConfigurationFile",
+			"declaration": "void setGraph3DConfigurationFile( int graphID, string file )",
+			"description": "Loads a configuration file and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) file : The file name or path of the configuration file. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "setGraph3DConfigurationCode",
+			"declaration": "void setGraph3DConfigurationCode( int graphID, string code )",
+			"description": "Loads code written in the same format as a configuration file, configuration code, and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \nline : The contents of the configuration code. ",
+			"returnValue": "(void type) "
+		},
+		"function23": {
+			"name": "setGraph3DRange",
+			"declaration": "void setGraph3DRange( int graphID, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax )",
+			"description": "Sets the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. \n(double type) zMin : The minimum value of the Z axis. \n(double type) zMax : The maximum value of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function24": {
+			"name": "setGraph3DRangeX",
+			"declaration": "void setGraph3DRangeX( int graphID, double xMin, double xMax )",
+			"description": "Sets the plot range of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "setGraph3DRangeY",
+			"declaration": "void setGraph3DRangeY( int graphID, double yMin, double yMax )",
+			"description": "Sets the plot range of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function26": {
+			"name": "setGraph3DRangeZ",
+			"declaration": "void setGraph3DRangeZ( int graphID, double zMin, double zMax )",
+			"description": "Sets the plot range of the Z axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) zMin : The minimum value of the Z axis. \n(double type) zMax : The maximum value of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "setGraph3DAutoRange",
+			"declaration": "void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ )",
+			"description": "Enables or disables the automatic adjustment feature for the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(bool type) autoX : True to enable automatic adjustment in the X-axis direction, or false to disable it. \n(bool type) autoY : True to enable automatic adjustment in the Y-axis direction, or false to disable it. \n(bool type) autoZ : True to enable automatic adjustment in the Z-axis direction, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function28": {
+			"name": "setGraph3DLabel",
+			"declaration": "void setGraph3DLabel( int graphID, string xLabel, string yLabel, string zLabel )",
+			"description": "Sets the labels of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) xLabel : The label of the X axis. \n(string type) yLabel : The label of the Y axis. \n(string type) zLabel : The label of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function29": {
+			"name": "setGraph3DLabelX",
+			"declaration": "void setGraph3DLabelX( int graphID, string label )",
+			"description": "Sets the label of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setGraph3DLabelY",
+			"declaration": "void setGraph3DLabelY( int graphID, string label )",
+			"description": "Sets the label of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "setGraph3DLabelZ",
+			"declaration": "void setGraph3DLabelZ( int graphID, string label )",
+			"description": "Sets the label of the Z axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the Z axis. ",
+			"returnValue": "(void type) "
+		},
+		"function32": {
+			"name": "setGraph3DTick",
+			"declaration": "void setGraph3DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ], double zTickCoords[ ], string zTickLabels[ ], double colorBarTickCoords[ ], string colorBarTickLabels[ ] )",
+			"description": "Sets the tick marks of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) xTickCoords : The coordinate values of the tick positions on the X axis. \n(string[] type) xTickLabels : The labels of the tick marks on the X axis. \n(double[] type) yTickCoords : The coordinate values of the tick positions on the Y axis. \n(string[] type) yTickLabels : The labels of the tick marks on the Y axis. \n(double[] type) zTickCoords : The coordinate values of the tick positions on the Z axis. \n(string[] type) zTickLabels : The labels of the tick marks on the Z axis. \n(double[] type) colorBarTickCoords : The coordinate values of the tick positions on the color bar. \n(string[] type) colorBarTickLabels : The labels of the tick marks on the color bar. ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "setGraph3DTickX",
+			"declaration": "void setGraph3DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function34": {
+			"name": "setGraph3DTickY",
+			"declaration": "void setGraph3DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "setGraph3DTickZ",
+			"declaration": "void setGraph3DTickZ( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the Z axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function36": {
+			"name": "setGraph3DTickColorBar",
+			"declaration": "void setGraph3DTickColorBar( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the color-bar axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "setGraph3DCameraAngle",
+			"declaration": "void setGraph3DCameraAngle( int graphID, float horizontalAngle, float verticalAngle, string mode )",
+			"description": "Sets the camera angle.Specify the vector from the origin of the graph to the camera position, the camera-direction vector, by using the horizontal angle and the vertical angle based on the zenith axis described below for the horizontalAngle and verticalAngle arguments.The vertical angle specifies the angle between the camera-direction vector and the zenith axis.The horizontal angle specifies the direction of the projection of the camera-direction vector onto the plane perpendicular to the zenith axis.Here, the zenith axis can be selected from the X, Y, or Z axis by specifying one of the following values in the mode argument:<dl><dt>ZENITH_X<\/dt><dd>An angle-specification mode in which the X axis is treated as the zenith axis<\/dd><dt>ZENITH_Y<\/dt><dd>An angle-specification mode in which the Y axis is treated as the zenith axis<\/dd><dt>ZENITH_Z<\/dt><dd>An angle-specification mode in which the Z axis is treated as the zenith axis<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float type) horizontalAngle : The horizontal angle. \n(float type) verticalAngle : The vertical angle. \n(string type) mode : The angle-specification mode. See the list above for the available values. ",
+			"returnValue": "(void type) "
+		},
+		"function38": {
+			"name": "setGraph3DCameraMagnification",
+			"declaration": "void setGraph3DCameraMagnification( int graphID, float magnification )",
+			"description": "Sets the camera magnification.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float type) magnification : The camera magnification. ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "setGraph3DCameraDistance",
+			"declaration": "void setGraph3DCameraDistance( int graphID, float distance )",
+			"description": "Sets the camera distance.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float type) distance : The camera distance. ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "setGraph3DCameraPerspective",
+			"declaration": "void setGraph3DCameraPerspective( int graphID, bool perspective )",
+			"description": "Sets whether the camera perspective is enabled.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(bool type) perspective : True to enable perspective, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function41": {
+			"name": "setGraph3DOption",
+			"declaration": "void setGraph3DOption( int graphID, string option, bool value )",
+			"description": "Sets an option item of the graph. The item names depend on the implementation. Representative option item names are as follows:<dl><dt>WITH_POINTS<\/dt><dd>Point plot<\/dd><dt>WITH_LINES<\/dt><dd>Line plot<\/dd><dt>WITH_MESHES<\/dt><dd>Mesh plot<\/dd><dt>WITH_SURFACES<\/dt><dd>Surface plot<\/dd><dt>WITH_MEMBRANES<\/dt><dd>Surface plot (Same as WITH_SURFACES)<\/dd><dt>FLAT<\/dt><dd>Flattening<\/dd><dt>FRAME<\/dt><dd>Frame drawing<\/dd><dt>SCALE<\/dt><dd>Scale drawing<\/dd><dt>GRID_LINE<\/dt><dd>Grid-line drawing<\/dd><dt>GRADATION<\/dt><dd>Gradient coloring by Z values<\/dd><dt>ALPHA<\/dt><dd>Translucent drawing<\/dd><dt>LOG_X<\/dt><dd>Display the X axis in logarithmic scale<\/dd><dt>LOG_Y<\/dt><dd>Display the Y axis in logarithmic scale<\/dd><dt>LOG_Z<\/dt><dd>Display the Z axis in logarithmic scale<\/dd><dt>REVERSE_X<\/dt><dd>Reverse the X axis<\/dd><dt>REVERSE_Y<\/dt><dd>Reverse the Y axis<\/dd><dt>REVERSE_Z<\/dt><dd>Reverse the Z axis<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) option : The name of the option item. \n(bool type) value : True to enable the option, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "setGraph3DMenu",
+			"declaration": "void setGraph3DMenu( int graphID, string option, string value )",
+			"description": "This function is effectively used only for label settings, and it can now be replaced by functions such as setGraph3DLabel and setGraph3DLabelX, Y, or Z.Because that is more readable, it is recommended to use that form from now on unless there is a specific reason not to.<br \/><br \/>Sets a menu item of the graph. The item names depend on the implementation. Representative menu item names are as follows:<dl><dt>SET_LABEL_X<\/dt><dd>The X-axis label<\/dd><dt>SET_LABEL_Y<\/dt><dd>The Y-axis label<\/dd><dt>SET_LABEL_Z<\/dt><dd>The Z-axis label<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) option : The name of the menu item. \n(string type) value : The value to set for the menu item. ",
+			"returnValue": "(void type) "
+		},
+		"function43": {
+			"name": "setGraph3DAnimation",
+			"declaration": "void setGraph3DAnimation( int graphID, string option, bool state )",
+			"description": "Enables or disables graph animation. The available animation modes depend on the implementation. Representative animation modes are as follows:<dl><dt>TRACE<\/dt><dd>Animate points while leaving trajectories<\/dd><dt>INDEX<\/dt><dd>Animate points<\/dd><dt>INDEX-SERIES<\/dt><dd>Animate series<\/dd><dt>INDEX-X<\/dt><dd>Animate lines in the X direction of mesh data<\/dd><dt>INDEX-Y<\/dt><dd>Animate lines in the Y direction of mesh data<\/dd><dt>RANGE-X<\/dt><dd>Slide the plot range in the X direction<\/dd><dt>RANGE-Y<\/dt><dd>Slide the plot range in the Y direction<\/dd><dt>RANGE-Z<\/dt><dd>Slide the plot range in the Z direction<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \nmode : The animation mode. \n(bool type) state : True to enable animation, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "exportGraph3D",
+			"declaration": "void exportGraph3D( int graphID, string filename, string format )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". ",
+			"returnValue": "(void type) "
+		},
+		"function45": {
+			"name": "exportGraph3D",
+			"declaration": "void exportGraph3D( int graphID, string filename, string format, float quality )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". \n(float type) quality : The quality, from 0.0 to 100.0. ",
+			"returnValue": "(void type) "
+		}
+	}
+}

@@ -1,0 +1,820 @@
+{
+	"libraryName": "Graphics3DFramework",
+	"libraryDescription": "<p>This library, graphics3d.Graphics3DFramework, is a lightweight framework for handling 3D computer graphics easily.<\/p><p>When writing a 3D CG program from scratch using only the standard VCSSL libraries Graphics3D and GUI,<br \/>you need to write several fixed pieces of code every time, such as creating the window and renderer, the animation loop,and basic event handlers.<br \/>Graphics3DFramework supports easy 3D CG development by preparing such fixed processing in advance as a framework template.<\/p><p>Required Processing<\/p><p>Structurally, Graphics3DFramework is already a complete 3D CG program by itself, and it can actually run as a standalone program.<br \/>However, by itself no 3D models are placed, so only a white screen is displayed.<\/p><p>In practice, you import Graphics3DFramework from your own module and describe the required processing, such as placing and moving 3D models.<br \/>Such processing is written by defining functions with specific names, just like event handlers for GUI components.<br \/>Then Graphics3DFramework automatically executes those event handler functions at appropriate timings.<\/p><p>Graphics3DFramework automatically executes the following event handler functions. Their definitions are optional, so define only the ones you need.<ul>  <li>void onStart( int renderer ) - Executed only once at startup. Write initialization processing such as creating and placing 3D models here. The old name initialize is also supported.<\/li>  <li>void onExit( int renderer ) - Executed only once at shutdown. Write any shutdown processing here if needed. The old name finalize is also supported.<\/li>  <li>void onPaint( int renderer ) - Executed every time the screen is updated, usually dozens of times per second. Write processing here when you want to draw foreground or background 2D CG contents. The old name paint is also supported.<\/li>  <li>void onUpdate( int renderer ) - Executed every time between screen updates, usually dozens of times per second. Write processing here when you want to move 3D models and so on. The old name update is also supported.<\/li>  <li>void onResize( int renderer ) - Executed when the window size changes. Write processing here when you want to adjust the layout of GUI components placed on the screen. The old name resize is also supported.<\/li><\/ul>In all of the above functions, the argument renderer receives the ID of the 3D CG renderer. Use it for placing 3D models and related processing.<\/p><p>Background and Foreground 2D CG Drawing<\/p><p>Graphics3DFramework also supports foreground and background 2D CG drawing.<br \/>However, this feature is disabled by default, so before using it, call<a href=\"#setForegroundRendererState\">setForegroundRendererState<\/a> ( true ) and<a href=\"#setBackgroundRendererState\">setBackgroundRendererState<\/a> ( true ) respectively.<br \/>After that, obtain the IDs of the 2D CG renderers with<a href=\"#getForegroundRenderer\">getForegroundRenderer<\/a> ( ) and<a href=\"#getBackgroundRenderer\">getBackgroundRenderer<\/a> ( ), and perform drawing in functions such as onPaint.<\/p><p>Window Customization<\/p><p>Graphics3DFramework allows margin areas to be set inside the window, where GUI components such as buttons and text fields can be placed.<br \/>Margins can be configured with functions such as <a href=\"#setMarginTop\">setMarginTop<\/a> ( int margin ) and <a href=\"#setMarginLeft\">setMarginLeft<\/a> ( int margin ).<br \/>Then obtain the window ID by <a href=\"#getWindow\">getWindow<\/a> ( ) and place GUI components freely in the margin areas.<\/p><p>Frame Rate Adjustment<\/p><p>Graphics3DFramework also has an automatic frame rate adjustment mechanism.<br \/>Specifically, it measures the time required for each frame and automatically adjusts the wait time of the animation loop so that the measured frame rate approaches the configured target frame rate.<br \/>Set the target frame rate with <a href=\"#setFrameRate\">setFrameRate<\/a> ( float rate ).The measured frame rate can be obtained with <a href=\"#getCurrentFrameRate\">getCurrentFrameRate<\/a> ( ).<\/p><p>Slowdown<\/p><p>Depending on the processing speed of the execution environment, if the drawing area is large or the drawing contents are heavy,<br \/>the measured frame rate may fail to reach the target frame rate even when the animation wait time is minimized. This phenomenon is a slowdown.<\/p><p>When a slowdown occurs, screen repainting may fail to keep up and the display may flicker.<br \/>In that case, flicker can be reduced by setting the target frame rate to a value with enough margin below the measured frame rate limit.<br \/>However, because the measured frame rate depends heavily on the environment,flicker can also be reduced by setting a relatively large lower limit for the animation wait time in milliseconds with <a href=\"#setAnimationWaitMin\">setAnimationWaitMin<\/a> ( int wait ).<br \/>Note that this lowers the upper limit of the measured frame rate.<\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "getGraphics",
+			"declaration": "int getGraphics()",
+			"description": "Returns the graphics resource ID of the 3D CG graphics.",
+			"returnValue": "(int type) The graphics resource ID of the 3D CG graphics."
+		},
+		"function1": {
+			"name": "getBackgroundGraphics",
+			"declaration": "int getBackgroundGraphics()",
+			"description": "Returns the graphics resource ID of the background 2D CG graphics.",
+			"returnValue": "(int type) The graphics resource ID of the background 2D CG graphics."
+		},
+		"function2": {
+			"name": "getForegroundGraphics",
+			"declaration": "int getForegroundGraphics()",
+			"description": "Returns the graphics resource ID of the foreground 2D CG graphics.",
+			"returnValue": "(int type) The graphics resource ID of the foreground 2D CG graphics."
+		},
+		"function3": {
+			"name": "getRenderer",
+			"declaration": "int getRenderer()",
+			"description": "Returns the renderer ID of the 3D CG renderer.",
+			"returnValue": "(int type) The renderer ID of the 3D CG renderer."
+		},
+		"function4": {
+			"name": "getBackgroundRenderer",
+			"declaration": "int getBackgroundRenderer()",
+			"description": "Returns the renderer ID of the background 2D CG renderer.",
+			"returnValue": "(int type) The renderer ID of the background 2D CG renderer."
+		},
+		"function5": {
+			"name": "getForegroundRenderer",
+			"declaration": "int getForegroundRenderer()",
+			"description": "Returns the renderer ID of the foreground 2D CG renderer.",
+			"returnValue": "(int type) The renderer ID of the foreground 2D CG renderer."
+		},
+		"function6": {
+			"name": "setBackgroundRendererState",
+			"declaration": "void setBackgroundRendererState(bool state)",
+			"description": "Sets whether the background 2D CG renderer is enabled.",
+			"parameters": "(bool type) state : Whether the background 2D CG renderer is enabled. It is enabled when true. ",
+			"returnValue": "(void type) "
+		},
+		"function7": {
+			"name": "setForegroundRendererState",
+			"declaration": "void setForegroundRendererState(bool state)",
+			"description": "Sets whether the foreground 2D CG renderer is enabled.",
+			"parameters": "(bool type) state : Whether the foreground 2D CG renderer is enabled. It is enabled when true. ",
+			"returnValue": "(void type) "
+		},
+		"function8": {
+			"name": "getImageLabel",
+			"declaration": "int getImageLabel()",
+			"description": "Returns the GUI component ID of the image label displaying the drawing contents.",
+			"returnValue": "(int type) The GUI component ID of the image label."
+		},
+		"function9": {
+			"name": "getGraphicsLabel",
+			"declaration": "int getGraphicsLabel()",
+			"description": "Returns the GUI component ID of the image label.The newer <a href=\"#getImageLabel\">getImageLabel<\/a> function is available for this purpose.This function is supported for compatibility.",
+			"returnValue": "(int type) The GUI component ID of the image label."
+		},
+		"function10": {
+			"name": "getWindow",
+			"declaration": "int getWindow()",
+			"description": "Gets the GUI component ID of the window.",
+			"returnValue": "(int type) The GUI component ID of the window."
+		},
+		"function11": {
+			"name": "setAnimationState",
+			"declaration": "void setAnimationState(bool enable)",
+			"description": "Sets whether animation mode is enabled.",
+			"parameters": "(bool type) enable : Whether animation mode is enabled. It is enabled when true. ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "getAnimationState",
+			"declaration": "bool getAnimationState()",
+			"description": "Gets whether animation mode is enabled.",
+			"returnValue": "(bool type) Whether animation mode is enabled. It is enabled when true."
+		},
+		"function13": {
+			"name": "setFrameRate",
+			"declaration": "void setFrameRate(float rate)",
+			"description": "Sets the screen update frequency of the animation, that is, the number of redraws per second.",
+			"parameters": "(float type) rate : The screen update frequency. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "getFrameRate",
+			"declaration": "float getFrameRate()",
+			"description": "Gets the configured screen update frequency of the animation, that is, the number of redraws per second.",
+			"returnValue": "(float type) The configured screen update frequency."
+		},
+		"function15": {
+			"name": "getCurrentFrameRate",
+			"declaration": "float getCurrentFrameRate()",
+			"description": "Gets the measured screen update frequency of the animation, that is, the number of redraws per second.",
+			"returnValue": "(float type) The measured screen update frequency."
+		},
+		"function16": {
+			"name": "getLastFrameTime",
+			"declaration": "int getLastFrameTime()",
+			"description": "Gets the time of the last screen update of the animation.The returned time usually represents the elapsed time from program startup in milliseconds.However, the unit may differ depending on the implementation.To eliminate implementation dependence completely, convert it through the Time.millisecond function before using it.",
+			"returnValue": "(int type) The time of the last screen update, usually in milliseconds."
+		},
+		"function17": {
+			"name": "getCurrentFrameRate",
+			"declaration": "float getCurrentFrameRate()",
+			"description": "Gets the measured screen update frequency of the animation, that is, the number of redraws per second.",
+			"returnValue": "(float type) The measured screen update frequency."
+		},
+		"function18": {
+			"name": "getLastFrameTime",
+			"declaration": "int getLastFrameTime()",
+			"description": "Gets the time of the last screen update of the animation.The returned time usually represents the elapsed time from program startup in milliseconds.However, the unit may differ depending on the implementation.To eliminate implementation dependence completely, convert it through the Time.millisecond function before using it.",
+			"returnValue": "(int type) The time of the last screen update, usually in milliseconds."
+		},
+		"function19": {
+			"name": "setPaintGraphics2DState",
+			"declaration": "void setPaintGraphics2DState(bool state)",
+			"description": "Sets whether Graphics3D.paintGraphics2D is called automatically for background and foreground drawing when the screen is drawn, before the paint call.If true is specified, it is called automatically.If false is set, it is not called automatically, so it needs to be called explicitly in the paint event handler or elsewhere.",
+			"parameters": "(bool type) state : The state to set. ",
+			"returnValue": "(void type) "
+		},
+		"function20": {
+			"name": "getPaintGraphics3DState",
+			"declaration": "bool getPaintGraphics3DState()",
+			"description": "Gets whether Graphics3D.paintGraphics3D is called automatically when the screen is drawn, before the paint call.",
+			"returnValue": "(bool type) The obtained state."
+		},
+		"function21": {
+			"name": "setMagnification",
+			"declaration": "void setMagnification(float rate)",
+			"description": "Sets the drawing scale. The scale corresponds to the radius in pixels at which a circle of radius 1.0 located at a distance of 1.0 from the viewpoint is drawn.",
+			"parameters": "(float type) rate : The drawing scale. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "getMagnification",
+			"declaration": "float getMagnification()",
+			"description": "Gets the drawing scale. The scale corresponds to the radius in pixels at which a circle of radius 1.0 located at a distance of 1.0 from the viewpoint is drawn.",
+			"returnValue": "(float type) The drawing scale."
+		},
+		"function23": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int r, int g, int b, int a)",
+			"description": "Sets the background color. Specify the red, green, blue, and alpha components of the background color in the range from 0 to 255.",
+			"parameters": "(int type) r : The red component of the background color, from 0 to 255. \n(int type) g : The green component of the background color, from 0 to 255. \n(int type) b : The blue component of the background color, from 0 to 255. \n(int type) a : The alpha component of the background color, from 0 to 255. ",
+			"returnValue": "(void type) "
+		},
+		"function24": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int color[ ])",
+			"description": "Sets the background color. Specify an array storing the red, green, blue, and alpha components of the background color in the range from 0 to 255.",
+			"parameters": "(int[] type) color : The background color array, where [0]=red, [1]=green, [2]=blue, and [3]=alpha, each in the range from 0 to 255. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "getBackgroundColor",
+			"declaration": "int[ ] getBackgroundColor()",
+			"description": "Gets the background color. The returned value is an array storing the red, green, blue, and alpha components of the background color in the range from 0 to 255.",
+			"returnValue": "(int[] type) The background color array, where [0]=red, [1]=green, [2]=blue, and [3]=alpha, each in the range from 0 to 255."
+		},
+		"function26": {
+			"name": "setDirectionalLightVector",
+			"declaration": "void setDirectionalLightVector(float x, float y, float z)",
+			"description": "Sets the direction vector of the directional light source. Specify the vector pointing toward the direction in which the light exists.",
+			"parameters": "(float type) x : The X component. \n(float type) y : The Y component. \n(float type) z : The Z component. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "setDirectionalLightVector",
+			"declaration": "void setDirectionalLightVector(float v[ ])",
+			"description": "Sets the direction vector of the directional light source. Specify the vector pointing toward the direction in which the light exists.",
+			"parameters": "(float[] type) v : The array of vector components, where v[0]=X, v[1]=Y, and v[2]=Z. ",
+			"returnValue": "(void type) "
+		},
+		"function28": {
+			"name": "getDirectionalLightVector",
+			"declaration": "float[ ] getDirectionalLightVector()",
+			"description": "Gets the direction vector of the directional light source. The returned vector points toward the direction in which the light exists.",
+			"returnValue": "(float[] type) The array of vector components, where v[0]=X, v[1]=Y, and v[2]=Z."
+		},
+		"function29": {
+			"name": "setDirectionalLightBrightness",
+			"declaration": "void setDirectionalLightBrightness(float power)",
+			"description": "Sets the intensity of the directional light source.",
+			"parameters": "(float type) power : The intensity. ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "getDirectionalLightBrightness",
+			"declaration": "float getDirectionalLightBrightness()",
+			"description": "Gets the intensity of the directional light source.",
+			"returnValue": "(float type) The intensity."
+		},
+		"function31": {
+			"name": "setAmbientLightBrightness",
+			"declaration": "void setAmbientLightBrightness(float power)",
+			"description": "Sets the intensity of the ambient light source.",
+			"parameters": "(float type) power : The intensity. ",
+			"returnValue": "(void type) "
+		},
+		"function32": {
+			"name": "getAmbientLightBrightness",
+			"declaration": "float getAmbientLightBrightness()",
+			"description": "Gets the intensity of the ambient light source.",
+			"returnValue": "(float type) The intensity."
+		},
+		"function33": {
+			"name": "setWindowTitle",
+			"declaration": "void setWindowTitle(string title)",
+			"description": "Sets the window title.",
+			"returnValue": "(void type) "
+		},
+		"function34": {
+			"name": "getWindowTitle",
+			"declaration": "string getWindowTitle()",
+			"description": "Gets the window title.",
+			"returnValue": "(string type) "
+		},
+		"function35": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int width, int height)",
+			"description": "Sets the window size.",
+			"parameters": "(int type) width : The width. \n(int type) height : The height. ",
+			"returnValue": "(void type) "
+		},
+		"function36": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int size[ ])",
+			"description": "Sets the window size.",
+			"parameters": "(int[] type) size : The window size, where [0]=width and [1]=height. ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "getWindowSize",
+			"declaration": "int[ ] getWindowSize()",
+			"description": "Gets the window size.",
+			"returnValue": "(int[] type) The window size, where [0]=width and [1]=height."
+		},
+		"function38": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int x, int y)",
+			"description": "Sets the window location.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner of the window. \n(int type) y : The Y coordinate of the top-left corner of the window. ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int location[ ])",
+			"description": "Sets the window location.",
+			"parameters": "size : The coordinates of the top-left corner of the window, where [0]=X and [1]=Y. ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "getWindowLocation",
+			"declaration": "int[ ] getWindowLocation()",
+			"description": "Gets the window location.",
+			"returnValue": "(int[] type) The coordinates of the top-left corner of the window, where [0]=X and [1]=Y."
+		},
+		"function41": {
+			"name": "setMarginRight",
+			"declaration": "void setMarginRight(int margin)",
+			"description": "Sets the right margin of the window.",
+			"parameters": "(int type) margin : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "getMarginRight",
+			"declaration": "int getMarginRight()",
+			"description": "Gets the right margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function43": {
+			"name": "setMarginLeft",
+			"declaration": "void setMarginLeft(int margin)",
+			"description": "Sets the left margin of the window.",
+			"parameters": "m : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "getMarginLeft",
+			"declaration": "int getMarginLeft()",
+			"description": "Gets the left margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function45": {
+			"name": "setMarginTop",
+			"declaration": "void setMarginTop(int margin)",
+			"description": "Sets the top margin of the window.",
+			"parameters": "m : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function46": {
+			"name": "getMarginTop",
+			"declaration": "int getMarginTop()",
+			"description": "Gets the top margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function47": {
+			"name": "setMarginBottom",
+			"declaration": "void setMarginBottom(int margin)",
+			"description": "Sets the bottom margin of the window.",
+			"parameters": "m : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function48": {
+			"name": "getMarginBottom",
+			"declaration": "int getMarginBottom()",
+			"description": "Gets the bottom margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function49": {
+			"name": "setAnimationWaitMin",
+			"declaration": "void setAnimationWaitMin(int wait)",
+			"description": "Sets the lower limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(void type) "
+		},
+		"function50": {
+			"name": "getAnimationWaitMin",
+			"declaration": "int getAnimationWaitMin()",
+			"description": "Sets the lower limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(int type) "
+		},
+		"function51": {
+			"name": "setAnimationWaitMax",
+			"declaration": "void setAnimationWaitMax(int wait)",
+			"description": "Sets the upper limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(void type) "
+		},
+		"function52": {
+			"name": "getAnimationWaitMax",
+			"declaration": "int getAnimationWaitMax()",
+			"description": "Sets the upper limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(int type) "
+		},
+		"function53": {
+			"name": "setMainLoopState",
+			"declaration": "void setMainLoopState(bool state)",
+			"description": "Sets whether the main loop continues. If it is set to false, the animation main loop exits and the program ends.",
+			"parameters": "(bool type) state : Whether the main loop continues. ",
+			"returnValue": "(void type) "
+		},
+		"function54": {
+			"name": "getMainLoopState",
+			"declaration": "bool getMainLoopState()",
+			"description": "Gets whether the main loop continues.",
+			"returnValue": "(bool type) Whether the main loop continues."
+		},
+		"function55": {
+			"name": "getMainArgument",
+			"declaration": "string[ ] getMainArgument()",
+			"description": "Gets the arguments of the main function.",
+			"returnValue": "(string[] type) The arguments of the main function."
+		},
+		"function56": {
+			"name": "export",
+			"declaration": "void export( string filePath, string format, float quality )",
+			"description": "Outputs the current contents of the drawing label as an image file.File output is not performed at the moment this function is called.It is executed at the next screen update timing.",
+			"parameters": "(string type) filePath : The output file name or file path. \n(string type) format : The file format, either \"PNG\" or \"JPEG\". \n(float type) quality : The quality. ",
+			"returnValue": "(void type) "
+		},
+		"function57": {
+			"name": "main",
+			"declaration": "void main( string args[ ] )",
+			"description": "The main function. It is normally executed automatically and calls the frameworkMain function.However, if the main program defines the main function,this function is no longer executed automatically, sothe frameworkMain function below needs to be called explicitly.",
+			"parameters": "(string[] type) args : The main arguments, which can also be obtained with the getMainArgument function. ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "frameworkMain",
+			"declaration": "void frameworkMain( string args[ ] )",
+			"description": "The main processing of the framework. It is normally executed automatically from the main function.However, if the main program defines the main function,it is no longer executed automatically, so it needs to be called at an appropriate timing.",
+			"parameters": "(string[] type) args : The main arguments, which can also be obtained with the getMainArgument function. ",
+			"returnValue": "(void type) "
+		},
+		"function59": {
+			"name": "onWindowClose",
+			"declaration": "void onWindowClose( int id )",
+			"description": "The event handler called when the window is closed.",
+			"parameters": "(int type) id : The GUI component ID of the window. ",
+			"returnValue": "(void type) "
+		},
+		"function60": {
+			"name": "onWindowResize",
+			"declaration": "void onWindowResize( int id, int width, int height )",
+			"description": "The event handler called when the window is resized.",
+			"parameters": "(int type) id : The GUI component ID of the window. \n(int type) width : The width of the window. \n(int type) height : The height of the window. ",
+			"returnValue": "(void type) "
+		},
+		"function61": {
+			"name": "paintWindow",
+			"declaration": "void paintWindow()",
+			"description": "Repaints the window.It is normally executed automatically, butIt is normally executed automatically, but when animation is disabled and in similar cases,it needs to be called explicitly when the screen is updated.",
+			"returnValue": "(void type) "
+		},
+		"function62": {
+			"name": "render",
+			"declaration": "void render()",
+			"description": "Calls the paint function and related processing to render the screen contents.It also composites the 3D CG contents with the background and foreground 2D CG contents.It is normally executed automatically, but when animation is disabled and in similar cases,it needs to be called explicitly when the screen is updated.",
+			"returnValue": "(void type) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "getGraphics",
+			"declaration": "int getGraphics()",
+			"description": "Returns the graphics resource ID of the 3D CG graphics.",
+			"returnValue": "(int type) The graphics resource ID of the 3D CG graphics."
+		},
+		"function1": {
+			"name": "getBackgroundGraphics",
+			"declaration": "int getBackgroundGraphics()",
+			"description": "Returns the graphics resource ID of the background 2D CG graphics.",
+			"returnValue": "(int type) The graphics resource ID of the background 2D CG graphics."
+		},
+		"function2": {
+			"name": "getForegroundGraphics",
+			"declaration": "int getForegroundGraphics()",
+			"description": "Returns the graphics resource ID of the foreground 2D CG graphics.",
+			"returnValue": "(int type) The graphics resource ID of the foreground 2D CG graphics."
+		},
+		"function3": {
+			"name": "getRenderer",
+			"declaration": "int getRenderer()",
+			"description": "Returns the renderer ID of the 3D CG renderer.",
+			"returnValue": "(int type) The renderer ID of the 3D CG renderer."
+		},
+		"function4": {
+			"name": "getBackgroundRenderer",
+			"declaration": "int getBackgroundRenderer()",
+			"description": "Returns the renderer ID of the background 2D CG renderer.",
+			"returnValue": "(int type) The renderer ID of the background 2D CG renderer."
+		},
+		"function5": {
+			"name": "getForegroundRenderer",
+			"declaration": "int getForegroundRenderer()",
+			"description": "Returns the renderer ID of the foreground 2D CG renderer.",
+			"returnValue": "(int type) The renderer ID of the foreground 2D CG renderer."
+		},
+		"function6": {
+			"name": "setBackgroundRendererState",
+			"declaration": "void setBackgroundRendererState(bool state)",
+			"description": "Sets whether the background 2D CG renderer is enabled.",
+			"parameters": "(bool type) state : Whether the background 2D CG renderer is enabled. It is enabled when true. ",
+			"returnValue": "(void type) "
+		},
+		"function7": {
+			"name": "setForegroundRendererState",
+			"declaration": "void setForegroundRendererState(bool state)",
+			"description": "Sets whether the foreground 2D CG renderer is enabled.",
+			"parameters": "(bool type) state : Whether the foreground 2D CG renderer is enabled. It is enabled when true. ",
+			"returnValue": "(void type) "
+		},
+		"function8": {
+			"name": "getImageLabel",
+			"declaration": "int getImageLabel()",
+			"description": "Returns the GUI component ID of the image label displaying the drawing contents.",
+			"returnValue": "(int type) The GUI component ID of the image label."
+		},
+		"function9": {
+			"name": "getGraphicsLabel",
+			"declaration": "int getGraphicsLabel()",
+			"description": "Returns the GUI component ID of the image label.The newer <a href=\"#getImageLabel\">getImageLabel<\/a> function is available for this purpose.This function is supported for compatibility.",
+			"returnValue": "(int type) The GUI component ID of the image label."
+		},
+		"function10": {
+			"name": "getWindow",
+			"declaration": "int getWindow()",
+			"description": "Gets the GUI component ID of the window.",
+			"returnValue": "(int type) The GUI component ID of the window."
+		},
+		"function11": {
+			"name": "setAnimationState",
+			"declaration": "void setAnimationState(bool enable)",
+			"description": "Sets whether animation mode is enabled.",
+			"parameters": "(bool type) enable : Whether animation mode is enabled. It is enabled when true. ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "getAnimationState",
+			"declaration": "bool getAnimationState()",
+			"description": "Gets whether animation mode is enabled.",
+			"returnValue": "(bool type) Whether animation mode is enabled. It is enabled when true."
+		},
+		"function13": {
+			"name": "setFrameRate",
+			"declaration": "void setFrameRate(float rate)",
+			"description": "Sets the screen update frequency of the animation, that is, the number of redraws per second.",
+			"parameters": "(float type) rate : The screen update frequency. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "getFrameRate",
+			"declaration": "float getFrameRate()",
+			"description": "Gets the configured screen update frequency of the animation, that is, the number of redraws per second.",
+			"returnValue": "(float type) The configured screen update frequency."
+		},
+		"function15": {
+			"name": "getCurrentFrameRate",
+			"declaration": "float getCurrentFrameRate()",
+			"description": "Gets the measured screen update frequency of the animation, that is, the number of redraws per second.",
+			"returnValue": "(float type) The measured screen update frequency."
+		},
+		"function16": {
+			"name": "getLastFrameTime",
+			"declaration": "int getLastFrameTime()",
+			"description": "Gets the time of the last screen update of the animation.The returned time usually represents the elapsed time from program startup in milliseconds.However, the unit may differ depending on the implementation.To eliminate implementation dependence completely, convert it through the Time.millisecond function before using it.",
+			"returnValue": "(int type) The time of the last screen update, usually in milliseconds."
+		},
+		"function17": {
+			"name": "getCurrentFrameRate",
+			"declaration": "float getCurrentFrameRate()",
+			"description": "Gets the measured screen update frequency of the animation, that is, the number of redraws per second.",
+			"returnValue": "(float type) The measured screen update frequency."
+		},
+		"function18": {
+			"name": "getLastFrameTime",
+			"declaration": "int getLastFrameTime()",
+			"description": "Gets the time of the last screen update of the animation.The returned time usually represents the elapsed time from program startup in milliseconds.However, the unit may differ depending on the implementation.To eliminate implementation dependence completely, convert it through the Time.millisecond function before using it.",
+			"returnValue": "(int type) The time of the last screen update, usually in milliseconds."
+		},
+		"function19": {
+			"name": "setPaintGraphics2DState",
+			"declaration": "void setPaintGraphics2DState(bool state)",
+			"description": "Sets whether Graphics3D.paintGraphics2D is called automatically for background and foreground drawing when the screen is drawn, before the paint call.If true is specified, it is called automatically.If false is set, it is not called automatically, so it needs to be called explicitly in the paint event handler or elsewhere.",
+			"parameters": "(bool type) state : The state to set. ",
+			"returnValue": "(void type) "
+		},
+		"function20": {
+			"name": "getPaintGraphics3DState",
+			"declaration": "bool getPaintGraphics3DState()",
+			"description": "Gets whether Graphics3D.paintGraphics3D is called automatically when the screen is drawn, before the paint call.",
+			"returnValue": "(bool type) The obtained state."
+		},
+		"function21": {
+			"name": "setMagnification",
+			"declaration": "void setMagnification(float rate)",
+			"description": "Sets the drawing scale. The scale corresponds to the radius in pixels at which a circle of radius 1.0 located at a distance of 1.0 from the viewpoint is drawn.",
+			"parameters": "(float type) rate : The drawing scale. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "getMagnification",
+			"declaration": "float getMagnification()",
+			"description": "Gets the drawing scale. The scale corresponds to the radius in pixels at which a circle of radius 1.0 located at a distance of 1.0 from the viewpoint is drawn.",
+			"returnValue": "(float type) The drawing scale."
+		},
+		"function23": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int r, int g, int b, int a)",
+			"description": "Sets the background color. Specify the red, green, blue, and alpha components of the background color in the range from 0 to 255.",
+			"parameters": "(int type) r : The red component of the background color, from 0 to 255. \n(int type) g : The green component of the background color, from 0 to 255. \n(int type) b : The blue component of the background color, from 0 to 255. \n(int type) a : The alpha component of the background color, from 0 to 255. ",
+			"returnValue": "(void type) "
+		},
+		"function24": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int color[ ])",
+			"description": "Sets the background color. Specify an array storing the red, green, blue, and alpha components of the background color in the range from 0 to 255.",
+			"parameters": "(int[] type) color : The background color array, where [0]=red, [1]=green, [2]=blue, and [3]=alpha, each in the range from 0 to 255. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "getBackgroundColor",
+			"declaration": "int[ ] getBackgroundColor()",
+			"description": "Gets the background color. The returned value is an array storing the red, green, blue, and alpha components of the background color in the range from 0 to 255.",
+			"returnValue": "(int[] type) The background color array, where [0]=red, [1]=green, [2]=blue, and [3]=alpha, each in the range from 0 to 255."
+		},
+		"function26": {
+			"name": "setDirectionalLightVector",
+			"declaration": "void setDirectionalLightVector(float x, float y, float z)",
+			"description": "Sets the direction vector of the directional light source. Specify the vector pointing toward the direction in which the light exists.",
+			"parameters": "(float type) x : The X component. \n(float type) y : The Y component. \n(float type) z : The Z component. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "setDirectionalLightVector",
+			"declaration": "void setDirectionalLightVector(float v[ ])",
+			"description": "Sets the direction vector of the directional light source. Specify the vector pointing toward the direction in which the light exists.",
+			"parameters": "(float[] type) v : The array of vector components, where v[0]=X, v[1]=Y, and v[2]=Z. ",
+			"returnValue": "(void type) "
+		},
+		"function28": {
+			"name": "getDirectionalLightVector",
+			"declaration": "float[ ] getDirectionalLightVector()",
+			"description": "Gets the direction vector of the directional light source. The returned vector points toward the direction in which the light exists.",
+			"returnValue": "(float[] type) The array of vector components, where v[0]=X, v[1]=Y, and v[2]=Z."
+		},
+		"function29": {
+			"name": "setDirectionalLightBrightness",
+			"declaration": "void setDirectionalLightBrightness(float power)",
+			"description": "Sets the intensity of the directional light source.",
+			"parameters": "(float type) power : The intensity. ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "getDirectionalLightBrightness",
+			"declaration": "float getDirectionalLightBrightness()",
+			"description": "Gets the intensity of the directional light source.",
+			"returnValue": "(float type) The intensity."
+		},
+		"function31": {
+			"name": "setAmbientLightBrightness",
+			"declaration": "void setAmbientLightBrightness(float power)",
+			"description": "Sets the intensity of the ambient light source.",
+			"parameters": "(float type) power : The intensity. ",
+			"returnValue": "(void type) "
+		},
+		"function32": {
+			"name": "getAmbientLightBrightness",
+			"declaration": "float getAmbientLightBrightness()",
+			"description": "Gets the intensity of the ambient light source.",
+			"returnValue": "(float type) The intensity."
+		},
+		"function33": {
+			"name": "setWindowTitle",
+			"declaration": "void setWindowTitle(string title)",
+			"description": "Sets the window title.",
+			"returnValue": "(void type) "
+		},
+		"function34": {
+			"name": "getWindowTitle",
+			"declaration": "string getWindowTitle()",
+			"description": "Gets the window title.",
+			"returnValue": "(string type) "
+		},
+		"function35": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int width, int height)",
+			"description": "Sets the window size.",
+			"parameters": "(int type) width : The width. \n(int type) height : The height. ",
+			"returnValue": "(void type) "
+		},
+		"function36": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int size[ ])",
+			"description": "Sets the window size.",
+			"parameters": "(int[] type) size : The window size, where [0]=width and [1]=height. ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "getWindowSize",
+			"declaration": "int[ ] getWindowSize()",
+			"description": "Gets the window size.",
+			"returnValue": "(int[] type) The window size, where [0]=width and [1]=height."
+		},
+		"function38": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int x, int y)",
+			"description": "Sets the window location.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner of the window. \n(int type) y : The Y coordinate of the top-left corner of the window. ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int location[ ])",
+			"description": "Sets the window location.",
+			"parameters": "size : The coordinates of the top-left corner of the window, where [0]=X and [1]=Y. ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "getWindowLocation",
+			"declaration": "int[ ] getWindowLocation()",
+			"description": "Gets the window location.",
+			"returnValue": "(int[] type) The coordinates of the top-left corner of the window, where [0]=X and [1]=Y."
+		},
+		"function41": {
+			"name": "setMarginRight",
+			"declaration": "void setMarginRight(int margin)",
+			"description": "Sets the right margin of the window.",
+			"parameters": "(int type) margin : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "getMarginRight",
+			"declaration": "int getMarginRight()",
+			"description": "Gets the right margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function43": {
+			"name": "setMarginLeft",
+			"declaration": "void setMarginLeft(int margin)",
+			"description": "Sets the left margin of the window.",
+			"parameters": "m : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "getMarginLeft",
+			"declaration": "int getMarginLeft()",
+			"description": "Gets the left margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function45": {
+			"name": "setMarginTop",
+			"declaration": "void setMarginTop(int margin)",
+			"description": "Sets the top margin of the window.",
+			"parameters": "m : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function46": {
+			"name": "getMarginTop",
+			"declaration": "int getMarginTop()",
+			"description": "Gets the top margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function47": {
+			"name": "setMarginBottom",
+			"declaration": "void setMarginBottom(int margin)",
+			"description": "Sets the bottom margin of the window.",
+			"parameters": "m : The margin in pixels. ",
+			"returnValue": "(void type) "
+		},
+		"function48": {
+			"name": "getMarginBottom",
+			"declaration": "int getMarginBottom()",
+			"description": "Gets the bottom margin of the window.",
+			"returnValue": "(int type) The margin in pixels."
+		},
+		"function49": {
+			"name": "setAnimationWaitMin",
+			"declaration": "void setAnimationWaitMin(int wait)",
+			"description": "Sets the lower limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(void type) "
+		},
+		"function50": {
+			"name": "getAnimationWaitMin",
+			"declaration": "int getAnimationWaitMin()",
+			"description": "Sets the lower limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(int type) "
+		},
+		"function51": {
+			"name": "setAnimationWaitMax",
+			"declaration": "void setAnimationWaitMax(int wait)",
+			"description": "Sets the upper limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(void type) "
+		},
+		"function52": {
+			"name": "getAnimationWaitMax",
+			"declaration": "int getAnimationWaitMax()",
+			"description": "Sets the upper limit of the animation wait time, that is, the wait time of the main loop.",
+			"returnValue": "(int type) "
+		},
+		"function53": {
+			"name": "setMainLoopState",
+			"declaration": "void setMainLoopState(bool state)",
+			"description": "Sets whether the main loop continues. If it is set to false, the animation main loop exits and the program ends.",
+			"parameters": "(bool type) state : Whether the main loop continues. ",
+			"returnValue": "(void type) "
+		},
+		"function54": {
+			"name": "getMainLoopState",
+			"declaration": "bool getMainLoopState()",
+			"description": "Gets whether the main loop continues.",
+			"returnValue": "(bool type) Whether the main loop continues."
+		},
+		"function55": {
+			"name": "getMainArgument",
+			"declaration": "string[ ] getMainArgument()",
+			"description": "Gets the arguments of the main function.",
+			"returnValue": "(string[] type) The arguments of the main function."
+		},
+		"function56": {
+			"name": "export",
+			"declaration": "void export( string filePath, string format, float quality )",
+			"description": "Outputs the current contents of the drawing label as an image file.File output is not performed at the moment this function is called.It is executed at the next screen update timing.",
+			"parameters": "(string type) filePath : The output file name or file path. \n(string type) format : The file format, either \"PNG\" or \"JPEG\". \n(float type) quality : The quality. ",
+			"returnValue": "(void type) "
+		},
+		"function57": {
+			"name": "main",
+			"declaration": "void main( string args[ ] )",
+			"description": "The main function. It is normally executed automatically and calls the frameworkMain function.However, if the main program defines the main function,this function is no longer executed automatically, sothe frameworkMain function below needs to be called explicitly.",
+			"parameters": "(string[] type) args : The main arguments, which can also be obtained with the getMainArgument function. ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "frameworkMain",
+			"declaration": "void frameworkMain( string args[ ] )",
+			"description": "The main processing of the framework. It is normally executed automatically from the main function.However, if the main program defines the main function,it is no longer executed automatically, so it needs to be called at an appropriate timing.",
+			"parameters": "(string[] type) args : The main arguments, which can also be obtained with the getMainArgument function. ",
+			"returnValue": "(void type) "
+		},
+		"function59": {
+			"name": "onWindowClose",
+			"declaration": "void onWindowClose( int id )",
+			"description": "The event handler called when the window is closed.",
+			"parameters": "(int type) id : The GUI component ID of the window. ",
+			"returnValue": "(void type) "
+		},
+		"function60": {
+			"name": "onWindowResize",
+			"declaration": "void onWindowResize( int id, int width, int height )",
+			"description": "The event handler called when the window is resized.",
+			"parameters": "(int type) id : The GUI component ID of the window. \n(int type) width : The width of the window. \n(int type) height : The height of the window. ",
+			"returnValue": "(void type) "
+		},
+		"function61": {
+			"name": "paintWindow",
+			"declaration": "void paintWindow()",
+			"description": "Repaints the window.It is normally executed automatically, butIt is normally executed automatically, but when animation is disabled and in similar cases,it needs to be called explicitly when the screen is updated.",
+			"returnValue": "(void type) "
+		},
+		"function62": {
+			"name": "render",
+			"declaration": "void render()",
+			"description": "Calls the paint function and related processing to render the screen contents.It also composites the 3D CG contents with the background and foreground 2D CG contents.It is normally executed automatically, but when animation is disabled and in similar cases,it needs to be called explicitly when the screen is updated.",
+			"returnValue": "(void type) "
+		}
+	}
+}

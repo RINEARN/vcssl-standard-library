@@ -1,0 +1,149 @@
+{
+	"libraryName": "Graphics",
+	"libraryDescription": "<p>The VCSSL Graphics library is one of the standard libraries for handling graphics in VCSSL.<\/p><p>In VCSSL, there are three standard libraries related to drawing: Graphics, Graphics2D, and Graphics3D.<br \/>Among them, the Graphics library provides management functions for drawing resources, while the Graphics2D and Graphics3D libraries provide the actual drawing functions.<\/p><p>To perform drawing, resources such as images, buffers, and streams are required.<br \/>In some, and probably many, languages, these are often treated as separate objects. In VCSSL, however, they are handled collectively as \"graphics resources.\"<br \/>In other words, in VCSSL, both a buffer for rendering real-time 3DCG animation and a fixed image loaded from an image file are treated uniformly as \"graphics resources.\"<\/p><p>The Graphics library provides management functions for these graphics resources, such as creation, disposal, input\/output, and basic processing.<br \/>For example, to read the image file \"input.png\", make its black parts transparent, and export it as \"output.png\", write the following:<div class=\"code\">int g1 = newGraphics(\"input.png\");  \/\/ Creates graphics resource g1 from an image file<br \/>int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  \/\/ Creates graphics resource g2 in which black in g1 is made transparent<br \/>exportGraphics(g2, \"output.png\", \"PNG\");  \/\/ Exports g2 to an image file<br \/>deleteGraphics(g1);  \/\/ Disposes g1<br \/>deleteGraphics(g2);  \/\/ Disposes g2<\/div><\/p><p>Functions are also provided for directly manipulating raster data (pixel arrays) to perform basic processing and drawing.<br \/>For more advanced drawing, use the Graphics2D and Graphics3D libraries together with this library.<\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics()",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function holds an image of size 0 pixels.",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function1": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( string filePath )",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function is pre-filled with an image loaded from an image file.",
+			"parameters": "(string type) filePath : The name or path of the image file. ",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function2": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function is pre-filled with an image loaded from pixel arrays.",
+			"parameters": "red[][] : The red component of pixels ([Y][X], 0 to 255). \ngreen[][] : The green component of pixels ([Y][X], 0 to 255). \nblue[][] : The blue component of pixels ([Y][X], 0 to 255). \nalpha[][] : The alpha component of pixels ([Y][X], 0 to 255). ",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function3": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int rgba[ ][ ][ ] )",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function is pre-filled with an image loaded from a pixel array.",
+			"parameters": "rgba[][][] : The pixel color components ([Y][X][color-component index], where the color-component index is 0=red, 1=green, 2=blue, and 3=alpha, with each value ranging from 0 to 255). ",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function4": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int baseGraphics, int fromRed, int fromGreen, int fromBlue, int fromAlpha, int toRed, int toGreen, int toBlue, int toAlpha )",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function is pre-filled with an image in which a specific color in another graphics resource has been converted to another color.",
+			"parameters": "(int type) baseGraphics : The graphics resource ID of the source graphics resource holding the image to be converted. \n(int type) fromRed : The red component of the source color to convert (0 to 255). \n(int type) fromGreen : The green component of the source color to convert (0 to 255). \n(int type) fromBlue : The blue component of the source color to convert (0 to 255). \n(int type) fromAlpha : The alpha component of the source color to convert (0 to 255). \n(int type) toRed : The red component of the destination color (0 to 255). \n(int type) toGreen : The green component of the destination color (0 to 255). \n(int type) toBlue : The blue component of the destination color (0 to 255). \n(int type) toAlpha : The alpha component of the destination color (0 to 255). ",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function5": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics( int baseGraphics, int fromColor[ ], int toColor[ ] )",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function is pre-filled with an image in which a specific color in another graphics resource has been converted to another color.",
+			"parameters": "(int type) baseGraphics : The graphics resource ID of the source graphics resource holding the image to be converted. \n(int[] type) fromColor : The array storing the components of the source color to convert. \n(int[] type) toColor : The array storing the components of the destination color. ",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function6": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics ( int baseGraphics, int width, int height, bool antialiasing )",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function is pre-filled with a resized version of another graphics resource.",
+			"parameters": "(int type) baseGraphics : The graphics resource ID of the source graphics resource holding the original image. \n(int type) width : The width of the graphics resource to create. The original image is resized to this width. \n(int type) height : The height of the graphics resource to create. The original image is resized to this height. \n(bool type) antialiasing : Whether to smooth the resized result. If true is specified, the result becomes smoother, but processing time increases. ",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function7": {
+			"name": "newGraphics",
+			"declaration": "int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight )",
+			"description": "Creates a graphics resource and returns its unique identifier, called the graphics resource ID.<br \/>The graphics resource created by this function is pre-filled with a cropped portion of another graphics resource.",
+			"parameters": "(int type) baseGraphics : The graphics resource ID of the source graphics resource holding the original image. \n(int type) cropX : The X coordinate of the upper-left corner of the area to crop from the original image. \n(int type) cropY : The Y coordinate of the upper-left corner of the area to crop from the original image. \n(int type) cropWidth : The width of the area to crop from the original image. \n(int type) cropHeight : The height of the area to crop from the original image. ",
+			"returnValue": "(int type) The graphics resource ID assigned to the created graphics resource."
+		},
+		"function8": {
+			"name": "deleteGraphics",
+			"declaration": "void deleteGraphics( int id )",
+			"description": "Disposes a graphics resource.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "getGraphicsWidth",
+			"declaration": "int getGraphicsWidth( int id )",
+			"description": "Returns the width, in pixels, of the image held by the graphics resource.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(int type) The width, in pixels, of the target graphics resource."
+		},
+		"function10": {
+			"name": "getGraphicsHeight",
+			"declaration": "int getGraphicsHeight( int id )",
+			"description": "Returns the height, in pixels, of the image held by the graphics resource.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(int type) The height, in pixels, of the target graphics resource."
+		},
+		"function11": {
+			"name": "exportGraphics",
+			"declaration": "void exportGraphics( int id, string name, string format )",
+			"description": "Outputs the image held by the graphics resource as an image file.",
+			"parameters": "(int type) id : The ID of the target graphics resource. \n(string type) name : The output file name. \n(string type) format : The format of the output file. Specify \"JPEG\", \"PNG\", or \"BMP\". ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "exportGraphics",
+			"declaration": "void exportGraphics( int id, string name, string format, double quality )",
+			"description": "Outputs the image held by the graphics resource as an image file.",
+			"parameters": "(int type) id : The ID of the target graphics resource. \n(string type) name : The output file name. \n(string type) format : The format of the output file. Specify \"JPEG\", \"PNG\", or \"BMP\". \n(double type) quality : The image quality (0.0 to 100.0). This is effective for JPEG. A larger value means higher quality. ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setGraphicsPixel",
+			"declaration": "void setGraphicsPixel( int id, int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )",
+			"description": "Replaces the image held by the graphics resource with the specified pixel arrays.",
+			"parameters": "(int type) id : The ID of the target graphics resource. \nred[][] : The red component of pixels ([Y][X], 0 to 255). \ngreen[][] : The green component of pixels ([Y][X], 0 to 255). \nblue[][] : The blue component of pixels ([Y][X], 0 to 255). \nalpha[][] : The alpha component of pixels ([Y][X], 0 to 255). ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setGraphicsPixel",
+			"declaration": "void setGraphicsPixel( int id, int rgba[ ][ ][ ] )",
+			"description": "Replaces the image held by the graphics resource with the specified pixel array.",
+			"parameters": "(int type) id : The ID of the target graphics resource. \nrgba[][][] : The pixel color components ([Y][X][color-component index], where the color-component index is 0=red, 1=green, 2=blue, and 3=alpha, with each value ranging from 0 to 255). ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "getGraphicsPixel",
+			"declaration": "int[ ][ ][ ] getGraphicsPixel( int id )",
+			"description": "Returns an array storing all pixel color components of the image.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(int[][][] type) The pixel color components ([Y][X][color-component index], where the color-component index is 0=red, 1=green, 2=blue, and 3=alpha, with each value ranging from 0 to 255)."
+		},
+		"function16": {
+			"name": "getGraphicsPixelRed",
+			"declaration": "int[ ][ ] getGraphicsPixelRed( int id )",
+			"description": "Returns an array storing only the red component for all pixels of the image.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(int[][] type) The red component of pixels ([Y][X], with values ranging from 0 to 255)."
+		},
+		"function17": {
+			"name": "getGraphicsPixelGreen",
+			"declaration": "int[ ][ ] getGraphicsPixelGreen( int id )",
+			"description": "Returns an array storing only the green component for all pixels of the image.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(int[][] type) The green component of pixels ([Y][X], with values ranging from 0 to 255)."
+		},
+		"function18": {
+			"name": "getGraphicsPixelBlue",
+			"declaration": "int[ ][ ] getGraphicsPixelBlue( int id )",
+			"description": "Returns an array storing only the blue component for all pixels of the image.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(int[][] type) The blue component of pixels ([Y][X], with values ranging from 0 to 255)."
+		},
+		"function19": {
+			"name": "getGraphicsPixelAlpha",
+			"declaration": "int[ ][ ] getGraphicsPixelAlpha( int id )",
+			"description": "Returns an array storing only the alpha component for all pixels of the image.",
+			"parameters": "(int type) id : The ID of the target graphics resource. ",
+			"returnValue": "(int[][] type) The alpha component of pixels ([Y][X], with values ranging from 0 to 255)."
+		}
+	}
+}

@@ -1,0 +1,1641 @@
+{
+	"libraryName": "GUI",
+	"libraryDescription": "<p>The VCSSL GUI library is the standard library for handling graphical user interfaces in VCSSL.<\/p><p>Because the GUI library is relatively large, it is difficult to use it only by referring to the function specifications described here.For concrete usage examples, see the Official VCSSL GUI Development Guide.<\/p><div style=\"border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;\"><div style=\"font-weight:bold;\">- Note -<\/div><div style=\"padding:10px;\">In programs using a GUI, event handlers are essential. In VCSSL, event handlers are executed in independent threads.The current version of RINEARN VCSSL Runtime does not yet provide sufficient support for multithreaded processing. This is because the current basic design of the VCSSL engine still partially follows the design of early VCSSL engines, which were developed assuming only single-threaded execution.As a result, depending on the processing performed, several issues including logical inconsistencies may occur. When writing event-handler processing in RINEARN VCSSL Runtime, do so with this situation in mind.At present, the following kinds of issues may occur.<\/div><div style=\"font-weight:bold;\">- Inconsistent indexes when the same array variable is accessed simultaneously from multiple threads<\/div><div style=\"padding:10px;\">In the current VCSSL engine, some modules that access array-variable values still retain designs intended only for single-threaded execution. Because of this, if the same array variable is accessed simultaneously, incorrect index values may be referenced.<\/div><div style=\"font-weight:bold;\">- Emergency shutdown of the engine caused by extremely frequent simultaneous multithreaded access to the same function<\/div><div style=\"padding:10px;\">In principle, the same function can be executed by multiple threads. In that case, arguments and local variables are secured separately for each thread so that they are not mixed up between threads. However, if simultaneous access is concentrated within too short an interval, this processing may fail to keep up, and the engine may perform an emergency shutdown to prevent inconsistencies. Overlap in function execution time is not the issue. The problem is when the moments of calling the function, that is, passing arguments, overlap.<\/div>Because issues such as the above may occur, when writing processing inside event handlers in the current RINEARN VCSSL Runtime, design it with the above points in mind and follow guidelines such as the following.<br \/><div style=\"font-weight:bold;\">- In event handlers, keep processing lightweight, such as storing event information in global variables, and perform the actual processing in the main thread whenever possible<\/div><br \/><div style=\"font-weight:bold;\">- Do not access array variables that are frequently accessed in the main thread from event handlers or other threads<\/div><\/div><div style=\"padding:10px;\">However, if the main thread, that is, the thread executing the automatically started processing at launch, finishes after only short tasks such as constructing the GUI screen, and thereafter almost all processing occurs only from GUI event handlers in response to user operations, then the above points do not need to be considered very much.<\/div>",
+	"structs": {
+	},
+	"variables": {
+		"variable0": {
+			"name": "MOUSE_LEFT",
+			"declaration": "const int MOUSE_LEFT",
+			"description": "The constant representing the left mouse button."
+		},
+		"variable1": {
+			"name": "MOUSE_MIDDLE",
+			"declaration": "const int MOUSE_MIDDLE",
+			"description": "The constant representing the middle mouse button."
+		},
+		"variable2": {
+			"name": "MOUSE_RIGHT",
+			"declaration": "const int MOUSE_RIGHT",
+			"description": "The constant representing the right mouse button."
+		},
+		"variable3": {
+			"name": "MOUSE_SINGLE",
+			"declaration": "const int MOUSE_SINGLE",
+			"description": "The constant representing a single mouse click."
+		},
+		"variable4": {
+			"name": "MOUSE_DOUBLE",
+			"declaration": "const int MOUSE_DOUBLE",
+			"description": "The constant representing a double mouse click."
+		},
+		"variable5": {
+			"name": "KEY_SPACE",
+			"declaration": "const int KEY_SPACE",
+			"description": "The constant representing the Space key."
+		},
+		"variable6": {
+			"name": "KEY_ENTER",
+			"declaration": "const int KEY_ENTER",
+			"description": "The constant representing the Enter key."
+		},
+		"variable7": {
+			"name": "KEY_SHIFT",
+			"declaration": "const int KEY_SHIFT",
+			"description": "The constant representing the Shift key."
+		},
+		"variable8": {
+			"name": "KEY_ALT",
+			"declaration": "const int KEY_ALT",
+			"description": "The constant representing the Alt key."
+		},
+		"variable9": {
+			"name": "KEY_AT",
+			"declaration": "const int KEY_AT",
+			"description": "The constant representing the @ key."
+		},
+		"variable10": {
+			"name": "KEY_TAB",
+			"declaration": "const int KEY_TAB",
+			"description": "The constant representing the Tab key."
+		},
+		"variable11": {
+			"name": "KEY_CONTROL",
+			"declaration": "const int KEY_CONTROL",
+			"description": "The constant representing the Ctrl key."
+		},
+		"variable12": {
+			"name": "KEY_BACK_SPACE",
+			"declaration": "const int KEY_BACK_SPACE",
+			"description": "The constant representing the Backspace key."
+		},
+		"variable13": {
+			"name": "KEY_A",
+			"declaration": "const int KEY_A",
+			"description": "The constant representing the A key."
+		},
+		"variable14": {
+			"name": "KEY_B",
+			"declaration": "const int KEY_B",
+			"description": "The constant representing the B key."
+		},
+		"variable15": {
+			"name": "KEY_C",
+			"declaration": "const int KEY_C",
+			"description": "The constant representing the C key."
+		},
+		"variable16": {
+			"name": "KEY_D",
+			"declaration": "const int KEY_D",
+			"description": "The constant representing the D key."
+		},
+		"variable17": {
+			"name": "KEY_E",
+			"declaration": "const int KEY_E",
+			"description": "The constant representing the E key."
+		},
+		"variable18": {
+			"name": "KEY_F",
+			"declaration": "const int KEY_F",
+			"description": "The constant representing the F key."
+		},
+		"variable19": {
+			"name": "KEY_G",
+			"declaration": "const int KEY_G",
+			"description": "The constant representing the G key."
+		},
+		"variable20": {
+			"name": "KEY_H",
+			"declaration": "const int KEY_H",
+			"description": "The constant representing the H key."
+		},
+		"variable21": {
+			"name": "KEY_I",
+			"declaration": "const int KEY_I",
+			"description": "The constant representing the I key."
+		},
+		"variable22": {
+			"name": "KEY_J",
+			"declaration": "const int KEY_J",
+			"description": "The constant representing the J key."
+		},
+		"variable23": {
+			"name": "KEY_K",
+			"declaration": "const int KEY_K",
+			"description": "The constant representing the K key."
+		},
+		"variable24": {
+			"name": "KEY_L",
+			"declaration": "const int KEY_L",
+			"description": "The constant representing the L key."
+		},
+		"variable25": {
+			"name": "KEY_M",
+			"declaration": "const int KEY_M",
+			"description": "The constant representing the M key."
+		},
+		"variable26": {
+			"name": "KEY_N",
+			"declaration": "const int KEY_N",
+			"description": "The constant representing the N key."
+		},
+		"variable27": {
+			"name": "KEY_O",
+			"declaration": "const int KEY_O",
+			"description": "The constant representing the O key."
+		},
+		"variable28": {
+			"name": "KEY_P",
+			"declaration": "const int KEY_P",
+			"description": "The constant representing the P key."
+		},
+		"variable29": {
+			"name": "KEY_Q",
+			"declaration": "const int KEY_Q",
+			"description": "The constant representing the Q key."
+		},
+		"variable30": {
+			"name": "KEY_R",
+			"declaration": "const int KEY_R",
+			"description": "The constant representing the R key."
+		},
+		"variable31": {
+			"name": "KEY_S",
+			"declaration": "const int KEY_S",
+			"description": "The constant representing the S key."
+		},
+		"variable32": {
+			"name": "KEY_T",
+			"declaration": "const int KEY_T",
+			"description": "The constant representing the T key."
+		},
+		"variable33": {
+			"name": "KEY_U",
+			"declaration": "const int KEY_U",
+			"description": "The constant representing the U key."
+		},
+		"variable34": {
+			"name": "KEY_V",
+			"declaration": "const int KEY_V",
+			"description": "The constant representing the V key."
+		},
+		"variable35": {
+			"name": "KEY_W",
+			"declaration": "const int KEY_W",
+			"description": "The constant representing the W key."
+		},
+		"variable36": {
+			"name": "KEY_X",
+			"declaration": "const int KEY_X",
+			"description": "The constant representing the X key."
+		},
+		"variable37": {
+			"name": "KEY_Y",
+			"declaration": "const int KEY_Y",
+			"description": "The constant representing the Y key."
+		},
+		"variable38": {
+			"name": "KEY_Z",
+			"declaration": "const int KEY_Z",
+			"description": "The constant representing the Z key."
+		},
+		"variable39": {
+			"name": "KEY_0",
+			"declaration": "const int KEY_0",
+			"description": "The constant representing the 0 key."
+		},
+		"variable40": {
+			"name": "KEY_1",
+			"declaration": "const int KEY_1",
+			"description": "The constant representing the 1 key."
+		},
+		"variable41": {
+			"name": "KEY_2",
+			"declaration": "const int KEY_2",
+			"description": "The constant representing the 2 key."
+		},
+		"variable42": {
+			"name": "KEY_3",
+			"declaration": "const int KEY_3",
+			"description": "The constant representing the 3 key."
+		},
+		"variable43": {
+			"name": "KEY_4",
+			"declaration": "const int KEY_4",
+			"description": "The constant representing the 4 key."
+		},
+		"variable44": {
+			"name": "KEY_5",
+			"declaration": "const int KEY_5",
+			"description": "The constant representing the 5 key."
+		},
+		"variable45": {
+			"name": "KEY_6",
+			"declaration": "const int KEY_6",
+			"description": "The constant representing the 6 key."
+		},
+		"variable46": {
+			"name": "KEY_7",
+			"declaration": "const int KEY_7",
+			"description": "The constant representing the 7 key."
+		},
+		"variable47": {
+			"name": "KEY_8",
+			"declaration": "const int KEY_8",
+			"description": "The constant representing the 8 key."
+		},
+		"variable48": {
+			"name": "KEY_9",
+			"declaration": "const int KEY_9",
+			"description": "The constant representing the 9 key."
+		},
+		"variable49": {
+			"name": "KEY_NUMPAD0",
+			"declaration": "const int KEY_NUMPAD0",
+			"description": "The constant representing the 0 key."
+		},
+		"variable50": {
+			"name": "KEY_NUMPAD1",
+			"declaration": "const int KEY_NUMPAD1",
+			"description": "The constant representing the 1 key."
+		},
+		"variable51": {
+			"name": "KEY_NUMPAD2",
+			"declaration": "const int KEY_NUMPAD2",
+			"description": "The constant representing the 2 key."
+		},
+		"variable52": {
+			"name": "KEY_NUMPAD3",
+			"declaration": "const int KEY_NUMPAD3",
+			"description": "The constant representing the 3 key."
+		},
+		"variable53": {
+			"name": "KEY_NUMPAD4",
+			"declaration": "const int KEY_NUMPAD4",
+			"description": "The constant representing the 4 key."
+		},
+		"variable54": {
+			"name": "KEY_NUMPAD5",
+			"declaration": "const int KEY_NUMPAD5",
+			"description": "The constant representing the 5 key."
+		},
+		"variable55": {
+			"name": "KEY_NUMPAD6",
+			"declaration": "const int KEY_NUMPAD6",
+			"description": "The constant representing the 6 key."
+		},
+		"variable56": {
+			"name": "KEY_NUMPAD7",
+			"declaration": "const int KEY_NUMPAD7",
+			"description": "The constant representing the 7 key."
+		},
+		"variable57": {
+			"name": "KEY_NUMPAD8",
+			"declaration": "const int KEY_NUMPAD8",
+			"description": "The constant representing the 8 key."
+		},
+		"variable58": {
+			"name": "KEY_NUMPAD9",
+			"declaration": "const int KEY_NUMPAD9",
+			"description": "The constant representing the 9 key."
+		},
+		"variable59": {
+			"name": "KEY_UP",
+			"declaration": "const int KEY_UP",
+			"description": "The constant representing the Up key."
+		},
+		"variable60": {
+			"name": "KEY_DOWN",
+			"declaration": "const int KEY_DOWN",
+			"description": "The constant representing the Down key."
+		},
+		"variable61": {
+			"name": "KEY_RIGHT",
+			"declaration": "const int KEY_RIGHT",
+			"description": "The constant representing the Right key."
+		},
+		"variable62": {
+			"name": "KEY_LEFT",
+			"declaration": "const int KEY_LEFT",
+			"description": "The constant representing the Left key."
+		},
+		"variable63": {
+			"name": "KEY_INSERT",
+			"declaration": "const int KEY_INSERT",
+			"description": "The constant representing the Insert key."
+		},
+		"variable64": {
+			"name": "KEY_HOME",
+			"declaration": "const int KEY_HOME",
+			"description": "The constant representing the Home key."
+		},
+		"variable65": {
+			"name": "KEY_DELETE",
+			"declaration": "const int KEY_DELETE",
+			"description": "The constant representing the Delete key."
+		},
+		"variable66": {
+			"name": "KEY_END",
+			"declaration": "const int KEY_END",
+			"description": "The constant representing the End key."
+		},
+		"variable67": {
+			"name": "KEY_PAGE_UP",
+			"declaration": "const int KEY_PAGE_UP",
+			"description": "The constant representing the Page Up key."
+		},
+		"variable68": {
+			"name": "KEY_PAGE_DOWN",
+			"declaration": "const int KEY_PAGE_DOWN",
+			"description": "The constant representing the Page Down key."
+		},
+		"variable69": {
+			"name": "KEY_CAPS_LOCK",
+			"declaration": "const int KEY_CAPS_LOCK",
+			"description": "The constant representing the Caps Lock key."
+		},
+		"variable70": {
+			"name": "KEY_BACK_SLASH",
+			"declaration": "const int KEY_BACK_SLASH",
+			"description": "The constant representing the backslash key."
+		},
+		"variable71": {
+			"name": "KEY_SLASH",
+			"declaration": "const int KEY_SLASH",
+			"description": "The constant representing the slash key."
+		},
+		"variable72": {
+			"name": "KEY_MINUS",
+			"declaration": "const int KEY_MINUS",
+			"description": "The constant representing the minus key."
+		},
+		"variable73": {
+			"name": "KEY_PLUS",
+			"declaration": "const int KEY_PLUS",
+			"description": "The constant representing the plus key."
+		},
+		"variable74": {
+			"name": "KEY_NUMBER",
+			"declaration": "const int KEY_NUMBER",
+			"description": "The constant representing the # key."
+		},
+		"variable75": {
+			"name": "KEY_SEMICOLON",
+			"declaration": "const int KEY_SEMICOLON",
+			"description": "The constant representing the semicolon key."
+		},
+		"variable76": {
+			"name": "KEY_COLON",
+			"declaration": "const int KEY_COLON",
+			"description": "The constant representing the colon key."
+		},
+		"variable77": {
+			"name": "KEY_COMMA",
+			"declaration": "const int KEY_COMMA",
+			"description": "The constant representing the comma key."
+		},
+		"variable78": {
+			"name": "KEY_PERIOD",
+			"declaration": "const int KEY_PERIOD",
+			"description": "The constant representing the period key."
+		},
+		"variable79": {
+			"name": "KEY_UNDERSCORE",
+			"declaration": "const int KEY_UNDERSCORE",
+			"description": "The constant representing the _ key."
+		},
+		"variable80": {
+			"name": "KEY_EXCLAMATION",
+			"declaration": "const int KEY_EXCLAMATION",
+			"description": "The constant representing the exclamation mark key."
+		},
+		"variable81": {
+			"name": "KEY_EQUALS",
+			"declaration": "const int KEY_EQUALS",
+			"description": "The constant representing the equals key."
+		},
+		"variable82": {
+			"name": "KEY_DOLLAR",
+			"declaration": "const int KEY_DOLLAR",
+			"description": "The constant representing the dollar sign key."
+		},
+		"variable83": {
+			"name": "KEY_CIRCUMFLEX",
+			"declaration": "const int KEY_CIRCUMFLEX",
+			"description": "The constant representing the circumflex key."
+		},
+		"variable84": {
+			"name": "KEY_LEFT_SQUARE_BRACKET",
+			"declaration": "const int KEY_LEFT_SQUARE_BRACKET",
+			"description": "The constant representing the left square bracket key."
+		},
+		"variable85": {
+			"name": "KEY_RIGHT_SQUARE_BRACKET",
+			"declaration": "const int KEY_RIGHT_SQUARE_BRACKET",
+			"description": "The constant representing the right square bracket key."
+		},
+		"variable86": {
+			"name": "KEY_LEFT_PARENTHESIS",
+			"declaration": "const int KEY_LEFT_PARENTHESIS",
+			"description": "The constant representing the left parenthesis key."
+		},
+		"variable87": {
+			"name": "KEY_RIGHT_PARENTHESIS",
+			"declaration": "const int KEY_RIGHT_PARENTHESIS",
+			"description": "The constant representing the right parenthesis key."
+		},
+		"variable88": {
+			"name": "KEY_SEPARATOR",
+			"declaration": "const int KEY_SEPARATOR",
+			"description": "The constant representing the vertical bar key."
+		},
+		"variable89": {
+			"name": "KEY_ADD",
+			"declaration": "const int KEY_ADD",
+			"description": "The constant representing the add key."
+		},
+		"variable90": {
+			"name": "KEY_SUBTRACT",
+			"declaration": "const int KEY_SUBTRACT",
+			"description": "The constant representing the subtract key."
+		},
+		"variable91": {
+			"name": "KEY_DIVIDE",
+			"declaration": "const int KEY_DIVIDE",
+			"description": "The constant representing the divide key."
+		},
+		"variable92": {
+			"name": "KEY_MULTIPLY",
+			"declaration": "const int KEY_MULTIPLY",
+			"description": "The constant representing the multiply key."
+		},
+		"variable93": {
+			"name": "KEY_F1",
+			"declaration": "const int KEY_F1",
+			"description": "The constant representing the F1 key."
+		},
+		"variable94": {
+			"name": "KEY_F2",
+			"declaration": "const int KEY_F2",
+			"description": "The constant representing the F2 key."
+		},
+		"variable95": {
+			"name": "KEY_F3",
+			"declaration": "const int KEY_F3",
+			"description": "The constant representing the F3 key."
+		},
+		"variable96": {
+			"name": "KEY_F4",
+			"declaration": "const int KEY_F4",
+			"description": "The constant representing the F4 key."
+		},
+		"variable97": {
+			"name": "KEY_F5",
+			"declaration": "const int KEY_F5",
+			"description": "The constant representing the F5 key."
+		},
+		"variable98": {
+			"name": "KEY_F6",
+			"declaration": "const int KEY_F6",
+			"description": "The constant representing the F6 key."
+		},
+		"variable99": {
+			"name": "KEY_F7",
+			"declaration": "const int KEY_F7",
+			"description": "The constant representing the F7 key."
+		},
+		"variable100": {
+			"name": "KEY_F8",
+			"declaration": "const int KEY_F8",
+			"description": "The constant representing the F8 key."
+		},
+		"variable101": {
+			"name": "KEY_F9",
+			"declaration": "const int KEY_F9",
+			"description": "The constant representing the F9 key."
+		},
+		"variable102": {
+			"name": "KEY_F10",
+			"declaration": "const int KEY_F10",
+			"description": "The constant representing the F10 key."
+		},
+		"variable103": {
+			"name": "KEY_F11",
+			"declaration": "const int KEY_F11",
+			"description": "The constant representing the F11 key."
+		},
+		"variable104": {
+			"name": "KEY_F12",
+			"declaration": "const int KEY_F12",
+			"description": "The constant representing the F12 key."
+		},
+		"variable105": {
+			"name": "KEY_F13",
+			"declaration": "const int KEY_F13",
+			"description": "The constant representing the F13 key."
+		},
+		"variable106": {
+			"name": "KEY_F14",
+			"declaration": "const int KEY_F14",
+			"description": "The constant representing the F14 key."
+		},
+		"variable107": {
+			"name": "KEY_F15",
+			"declaration": "const int KEY_F15",
+			"description": "The constant representing the F15 key."
+		},
+		"variable108": {
+			"name": "KEY_F16",
+			"declaration": "const int KEY_F16",
+			"description": "The constant representing the F16 key."
+		},
+		"variable109": {
+			"name": "KEY_F17",
+			"declaration": "const int KEY_F17",
+			"description": "The constant representing the F17 key."
+		},
+		"variable110": {
+			"name": "KEY_F18",
+			"declaration": "const int KEY_F18",
+			"description": "The constant representing the F18 key."
+		},
+		"variable111": {
+			"name": "KEY_F19",
+			"declaration": "const int KEY_F19",
+			"description": "The constant representing the F19 key."
+		},
+		"variable112": {
+			"name": "KEY_F20",
+			"declaration": "const int KEY_F20",
+			"description": "The constant representing the F20 key."
+		},
+		"variable113": {
+			"name": "INNER",
+			"declaration": "const int INNER",
+			"description": "The constant used to specify the inner area of a GUI component. It is used in the <a href=\"#getComponentSize\">getComponentSize<\/a> function."
+		},
+		"variable114": {
+			"name": "OUTER",
+			"declaration": "const int OUTER",
+			"description": "The constant used to specify the outer area of a GUI component. It is used in the <a href=\"#getComponentSize\">getComponentSize<\/a> function."
+		},
+		"variable115": {
+			"name": "LISTED",
+			"declaration": "const int LISTED",
+			"description": "The constant used to specify all listed items. It is used in the <a href=\"#setComponentStringArray\">setComponentStringArray<\/a> and <a href=\"#getComponentStringArray\">getComponentStringArray<\/a> functions."
+		},
+		"variable116": {
+			"name": "SELECTED",
+			"declaration": "const int SELECTED",
+			"description": "The constant used to specify all selected items. It is used in the <a href=\"#setComponentStringArray\">setComponentStringArray<\/a> and <a href=\"#getComponentStringArray\">getComponentStringArray<\/a> functions."
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "mountComponent",
+			"declaration": "void mountComponent( int componentID, int parentComponentID )",
+			"description": "Mounts a GUI component onto another GUI component.",
+			"parameters": "(int type) componentID : The ID of the GUI component to be mounted. \n(int type) parentComponentID : The ID of the destination GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function1": {
+			"name": "demountComponent",
+			"declaration": "void demountComponent( int componentID, int parentComponentID )",
+			"description": "Demounts a GUI component.",
+			"parameters": "(int type) componentID : The ID of the GUI component to be demounted. \n(int type) parentComponentID : The ID of the current parent GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function2": {
+			"name": "deleteComponent",
+			"declaration": "void deleteComponent( int componentID )",
+			"description": "Disposes a GUI component.",
+			"parameters": "(int type) componentID : The ID of the GUI component to be disposed. ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "newWindow",
+			"declaration": "int newWindow( int x, int y, int w, int h, string title )",
+			"description": "Creates a window, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The window title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function4": {
+			"name": "newButton",
+			"declaration": "int newButton( int x, int y, int w, int h, string text )",
+			"description": "Creates a button, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text displayed on the button. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function5": {
+			"name": "newTextField",
+			"declaration": "int newTextField( int x, int y, int w, int h, string text )",
+			"description": "Creates a text field, which is a component for entering a single line of text, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text displayed as the initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function6": {
+			"name": "newTextArea",
+			"declaration": "int newTextArea( int x, int y, int w, int h, string text )",
+			"description": "Creates a text area, which is a component for entering multiple lines of text, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text displayed as the initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function7": {
+			"name": "newTextLabel",
+			"declaration": "int newTextLabel( int x, int y, int w, int h, string text )",
+			"description": "Creates a text label, which is a component for displaying a single line of text, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text to be displayed. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function8": {
+			"name": "newImageLabel",
+			"declaration": "int newImageLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "Creates an image label, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) graphicsID : The ID of the graphics resource storing the image. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function9": {
+			"name": "newCheckBox",
+			"declaration": "int newCheckBox( int x, int y, int w, int h, string text, boolean b )",
+			"description": "Creates a check box, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text to be displayed. \n(boolean type) b : The initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function10": {
+			"name": "newSelectField",
+			"declaration": "int newSelectField( int x, int y, int w, int h, string str[  ] )",
+			"description": "Creates a select field, which is a single-line component allowing one item to be selected from choices, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string[] type) str : The choices. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function11": {
+			"name": "newSelectArea",
+			"declaration": "int newSelectArea( int x, int y, int w, int h, string str[  ] )",
+			"description": "Creates a select area, which is a multi-line component allowing multiple items to be selected from choices, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string[] type) str : The choices. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function12": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value )",
+			"description": "Creates a vertical slider for operating a float value in the range from 0.0 to 1.0, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function13": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "Creates a vertical slider for operating a float value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. \n(float type) min : The minimum value. \n(float type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function14": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "Creates a vertical slider for operating an int value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) value : The initial value. \n(int type) min : The minimum value. \n(int type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function15": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value )",
+			"description": "Creates a horizontal slider for operating a float value in the range from 0.0 to 1.0, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function16": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "Creates a horizontal slider for operating a float value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. \n(float type) min : The minimum value. \n(float type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function17": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "Creates a horizontal slider for operating an int value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) value : The initial value. \n(int type) min : The minimum value. \n(int type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function18": {
+			"name": "newPanel",
+			"declaration": "int newPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for free-position layout, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function19": {
+			"name": "newGridPanel",
+			"declaration": "int newGridPanel( int x, int y, int w, int h, string title, int rows, int columns )",
+			"description": "Creates a panel for grid layout, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function20": {
+			"name": "newFlowPanel",
+			"declaration": "int newFlowPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for flow layout, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function21": {
+			"name": "newTabPanel",
+			"declaration": "int newTabPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for tab display, and returns its unique identifier (GUI component ID). Use this panel by placing another panel on it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function22": {
+			"name": "newScrollPanel",
+			"declaration": "int newScrollPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for scroll display, and returns its unique identifier (GUI component ID). Use this panel by placing another panel on it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function23": {
+			"name": "paintComponent",
+			"declaration": "macro paintComponent( int componentID )",
+			"description": "Repaints a GUI component.Repainting is necessary when the displayed text or graphics resource has changed.It is also necessary when the displayed content of child components mounted on the component has changed.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. "
+		},
+		"function24": {
+			"name": "setComponentLocation",
+			"declaration": "void setComponentLocation( int componentID, int x, int y )",
+			"description": "Sets the location of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "getComponentLocation",
+			"declaration": "int[ ] getComponentLocation( int componentID )",
+			"description": "Gets the location of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int[] type) The top-left corner coordinates, where [0] is X and [1] is Y."
+		},
+		"function26": {
+			"name": "setComponentSize",
+			"declaration": "void setComponentSize( int componentID, int width, int height )",
+			"description": "Sets the size of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) width : The width. \n(int type) height : The height. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID )",
+			"description": "Gets the size of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int[] type) The size, where [0] is the width and [1] is the height."
+		},
+		"function28": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID, int option )",
+			"description": "Gets the size of a specific part of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) option : The part selection option (<a href=\"#OUTER\">OUTER<\/a> or <a href=\"#INNER\">INNER<\/a>). ",
+			"returnValue": "(int[] type) The size, where [0] is the width and [1] is the height."
+		},
+		"function29": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fr, int fg, int fb, int fa, int br, int bg, int bb, int ba )",
+			"description": "Sets the colors of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) fr : The red component of the foreground color (0 to 255). \n(int type) fg : The green component of the foreground color (0 to 255). \n(int type) fb : The blue component of the foreground color (0 to 255). \n(int type) fa : The alpha component of the foreground color (0 to 255). \n(int type) br : The red component of the background color (0 to 255). \n(int type) bg : The green component of the background color (0 to 255). \n(int type) bb : The blue component of the background color (0 to 255). \n(int type) ba : The alpha component of the background color (0 to 255). ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fgRGBA[ ], int bgRGBA[ ] )",
+			"description": "Sets the colors of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int[] type) fgRGBA : The array storing the foreground color components, where [0] is red, [1] is green, [2] is blue, and [3] is alpha, each in the range from 0 to 255. \n(int[] type) bgRGBA : The array storing the background color components, where [0] is red, [1] is green, [2] is blue, and [3] is alpha, each in the range from 0 to 255. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "getComponentColor",
+			"declaration": "macro getComponentColor( int componentID )",
+			"description": "Returns the colors of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "An int[][] array storing the color components, where [0][0] is the foreground red, [0][1] is the foreground green, [0][2] is the foreground blue, [0][3] is the foreground alpha, [1][0] is the background red, [1][1] is the background green, [1][2] is the background blue, and [1][3] is the background alpha, each in the range from 0 to 255."
+		},
+		"function32": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text )",
+			"description": "Sets the text of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(string type) text : The text. ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "getComponentText",
+			"declaration": "string getComponentText( int componentID )",
+			"description": "Gets the text of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(string type) The text."
+		},
+		"function34": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text[ ], int option )",
+			"description": "Sets the text data of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(string[] type) text : The text data. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "getComponentText",
+			"declaration": "string[ ] getComponentText( int componentID, int option )",
+			"description": "Gets the text data of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(string[] type) The text data."
+		},
+		"function36": {
+			"name": "setComponentImage",
+			"declaration": "void setComponentImage( int componentID, int graphicsID )",
+			"description": "Sets the image of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) graphicsID : The ID of the graphics resource storing the image. ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "getComponentImage",
+			"declaration": "int getComponentImage( int componentID )",
+			"description": "Returns the ID of the graphics resource storing the image of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int type) The ID of the graphics resource storing the image."
+		},
+		"function38": {
+			"name": "showComponent",
+			"declaration": "void showComponent( int componentID )",
+			"description": "Shows a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "hideComponent",
+			"declaration": "void hideComponent( int componentID )",
+			"description": "Hides a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "setComponentFont",
+			"declaration": "void setComponentFont( int componentID, string name )",
+			"description": "Sets the font of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(string type) name : The font name, depending on the implementation and environment. ",
+			"returnValue": "(void type) "
+		},
+		"function41": {
+			"name": "setComponentFontSize",
+			"declaration": "void setComponentFontSize( int componentID, int size )",
+			"description": "Sets the font size of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) size : The font size. ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "setComponentFontBold",
+			"declaration": "void setComponentFontBold( int componentID, bool isBold )",
+			"description": "Enables or disables bold style for the font of a GUI component. It cannot be used together with italic style.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(bool type) isBold : Whether to enable bold style. ",
+			"returnValue": "(void type) "
+		},
+		"function43": {
+			"name": "setComponentFontItalic",
+			"declaration": "void setComponentFontItalic( int componentID, bool isItalic )",
+			"description": "Enables or disables italic style for the font of a GUI component. It cannot be used together with bold style.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(bool type) isItalic : Whether to enable italic style. ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "setComponentFloat",
+			"declaration": "void setComponentFloat( int componentID, float value )",
+			"description": "Sets the float value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(float type) value : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function45": {
+			"name": "getComponentFloat",
+			"declaration": "float getComponentFloat( int componentID )",
+			"description": "Returns the float value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(float type) The held value."
+		},
+		"function46": {
+			"name": "setComponentInt",
+			"declaration": "void setComponentInt( int componentID, int value )",
+			"description": "Sets the int value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) value : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function47": {
+			"name": "getComponentInt",
+			"declaration": "int getComponentInt( int componentID )",
+			"description": "Returns the int value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int type) The held value."
+		},
+		"function48": {
+			"name": "setComponentBool",
+			"declaration": "void setComponentBool( int componentID, bool state )",
+			"description": "Sets the bool value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \nvalue : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function49": {
+			"name": "getComponentBool",
+			"declaration": "bool getComponentBool( int componentID )",
+			"description": "Returns the bool value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(bool type) The held value."
+		},
+		"function50": {
+			"name": "setComponentString",
+			"declaration": "void setComponentString( int componentID, string text )",
+			"description": "Sets the string value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \nvalue : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function51": {
+			"name": "getComponentString",
+			"declaration": "string getComponentString( int componentID )",
+			"description": "Returns the string value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(string type) The held value."
+		},
+		"function52": {
+			"name": "setComponentStringArray",
+			"declaration": "void setComponentStringArray( int componentID, string text[ ], int option )",
+			"description": "Sets the string array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \nvalue : The value to hold. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(void type) "
+		},
+		"function53": {
+			"name": "getComponentStringArray",
+			"declaration": "string[ ] getComponentStringArray( int componentID, int option )",
+			"description": "Returns the string array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(string[] type) The held value."
+		},
+		"function54": {
+			"name": "setComponentIntArray",
+			"declaration": "void setComponentIntArray( int componentID, int value[ ] )",
+			"description": "Sets the int array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int[] type) value : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function55": {
+			"name": "getComponentIntArray",
+			"declaration": "int[ ] getComponentIntArray( int componentID )",
+			"description": "Returns the int array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int[] type) The held value."
+		},
+		"function56": {
+			"name": "addComponent",
+			"declaration": "void addComponent( int componentID, int parentComponentID )",
+			"description": "Mounts a GUI component on another GUI component. Since VCSSL 3, the newer <a href=\"#mountComponent\">mountComponent<\/a> function has been supported. This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the GUI component to mount. \n(int type) componentID : The ID of the destination GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function57": {
+			"name": "removeComponent",
+			"declaration": "void removeComponent( int componentID, int parentComponentID )",
+			"description": "Demounts a GUI component. Since VCSSL 3, the newer <a href=\"#demountComponent\">demountComponent<\/a> function has been supported. This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the GUI component to demount. \n(int type) componentID : The ID of the current parent GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "newGraphicsLabel",
+			"declaration": "int newGraphicsLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "Creates a graphics label, which is a component displaying drawn content or an image, and returns its unique identifier (GUI component ID).Since VCSSL 3.3.24, the newer <a href=\"#newImageLabel\">newImageLabel<\/a> function has been supported.This function is supported for compatibility.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) graphicsID : The graphics resource ID of the displayed content. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function59": {
+			"name": "setComponentGraphics",
+			"declaration": "void setComponentGraphics( int componentID, int graphicsID )",
+			"description": "Sets the graphics resource ID of a GUI component.Since VCSSL 3.3.24, the newer <a href=\"#setComponentImage\">setComponentImage<\/a> function has been supported.This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) graphicsID : The graphics resource ID. ",
+			"returnValue": "(void type) "
+		},
+		"function60": {
+			"name": "getComponentGraphics",
+			"declaration": "int getComponentGraphics( int componentID )",
+			"description": "Returns the graphics resource ID of a GUI component.Since VCSSL 3.3.24, the newer <a href=\"#getComponentGraphics\">getComponentImage<\/a> function has been supported.This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int type) The graphics resource ID."
+		},
+		"function61": {
+			"name": "setComponentVisible",
+			"declaration": "void setComponentVisible( int componentID, bool b )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function62": {
+			"name": "getComponentVisible",
+			"declaration": "bool getComponentVisible( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(bool type) "
+		},
+		"function63": {
+			"name": "getComponentInnerSize",
+			"declaration": "int[ ] getComponentInnerSize( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(int[] type) "
+		},
+		"function64": {
+			"name": "getComponentInner",
+			"declaration": "int[ ] getComponentInner( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(int[] type) "
+		},
+		"function65": {
+			"name": "setComponentValue",
+			"declaration": "void setComponentValue( int componentID, float value )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function66": {
+			"name": "getComponentValue",
+			"declaration": "float getComponentValue( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(float type) "
+		},
+		"function67": {
+			"name": "setComponentState",
+			"declaration": "void setComponentState( int componentID, bool state )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function68": {
+			"name": "getComponentState",
+			"declaration": "bool getComponentState( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(bool type) "
+		},
+		"function69": {
+			"name": "setComponentValueFloat",
+			"declaration": "void setComponentValueFloat( int componentID, float value )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function70": {
+			"name": "getComponentValueFloat",
+			"declaration": "float getComponentValueFloat( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(float type) "
+		},
+		"function71": {
+			"name": "setComponentValueInt",
+			"declaration": "void setComponentValueInt( int componentID, int value )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function72": {
+			"name": "getComponentValueInt",
+			"declaration": "int getComponentValueInt( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(int type) "
+		},
+		"function73": {
+			"name": "setComponentValueBool",
+			"declaration": "void setComponentValueBool( int componentID, bool state )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function74": {
+			"name": "getComponentValueBool",
+			"declaration": "bool getComponentValueBool( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(bool type) "
+		},
+		"function75": {
+			"name": "setComponentValueString",
+			"declaration": "void setComponentValueString( int componentID, string text )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function76": {
+			"name": "getComponentValueString",
+			"declaration": "string getComponentValueString( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(string type) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "mountComponent",
+			"declaration": "void mountComponent( int componentID, int parentComponentID )",
+			"description": "Mounts a GUI component onto another GUI component.",
+			"parameters": "(int type) componentID : The ID of the GUI component to be mounted. \n(int type) parentComponentID : The ID of the destination GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function1": {
+			"name": "demountComponent",
+			"declaration": "void demountComponent( int componentID, int parentComponentID )",
+			"description": "Demounts a GUI component.",
+			"parameters": "(int type) componentID : The ID of the GUI component to be demounted. \n(int type) parentComponentID : The ID of the current parent GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function2": {
+			"name": "deleteComponent",
+			"declaration": "void deleteComponent( int componentID )",
+			"description": "Disposes a GUI component.",
+			"parameters": "(int type) componentID : The ID of the GUI component to be disposed. ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "newWindow",
+			"declaration": "int newWindow( int x, int y, int w, int h, string title )",
+			"description": "Creates a window, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The window title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function4": {
+			"name": "newButton",
+			"declaration": "int newButton( int x, int y, int w, int h, string text )",
+			"description": "Creates a button, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text displayed on the button. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function5": {
+			"name": "newTextField",
+			"declaration": "int newTextField( int x, int y, int w, int h, string text )",
+			"description": "Creates a text field, which is a component for entering a single line of text, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text displayed as the initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function6": {
+			"name": "newTextArea",
+			"declaration": "int newTextArea( int x, int y, int w, int h, string text )",
+			"description": "Creates a text area, which is a component for entering multiple lines of text, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text displayed as the initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function7": {
+			"name": "newTextLabel",
+			"declaration": "int newTextLabel( int x, int y, int w, int h, string text )",
+			"description": "Creates a text label, which is a component for displaying a single line of text, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text to be displayed. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function8": {
+			"name": "newImageLabel",
+			"declaration": "int newImageLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "Creates an image label, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) graphicsID : The ID of the graphics resource storing the image. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function9": {
+			"name": "newCheckBox",
+			"declaration": "int newCheckBox( int x, int y, int w, int h, string text, boolean b )",
+			"description": "Creates a check box, assigns a unique identifier (GUI component ID), and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) text : The text to be displayed. \n(boolean type) b : The initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function10": {
+			"name": "newSelectField",
+			"declaration": "int newSelectField( int x, int y, int w, int h, string str[  ] )",
+			"description": "Creates a select field, which is a single-line component allowing one item to be selected from choices, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string[] type) str : The choices. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function11": {
+			"name": "newSelectArea",
+			"declaration": "int newSelectArea( int x, int y, int w, int h, string str[  ] )",
+			"description": "Creates a select area, which is a multi-line component allowing multiple items to be selected from choices, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string[] type) str : The choices. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function12": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value )",
+			"description": "Creates a vertical slider for operating a float value in the range from 0.0 to 1.0, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function13": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "Creates a vertical slider for operating a float value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. \n(float type) min : The minimum value. \n(float type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function14": {
+			"name": "newVerticalSlider",
+			"declaration": "int newVerticalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "Creates a vertical slider for operating an int value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) value : The initial value. \n(int type) min : The minimum value. \n(int type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function15": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value )",
+			"description": "Creates a horizontal slider for operating a float value in the range from 0.0 to 1.0, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function16": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, float value, float min, float max )",
+			"description": "Creates a horizontal slider for operating a float value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(float type) value : The initial value. \n(float type) min : The minimum value. \n(float type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function17": {
+			"name": "newHorizontalSlider",
+			"declaration": "int newHorizontalSlider( int x, int y, int w, int h, int value, int min, int max )",
+			"description": "Creates a horizontal slider for operating an int value, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) value : The initial value. \n(int type) min : The minimum value. \n(int type) max : The maximum value. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function18": {
+			"name": "newPanel",
+			"declaration": "int newPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for free-position layout, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function19": {
+			"name": "newGridPanel",
+			"declaration": "int newGridPanel( int x, int y, int w, int h, string title, int rows, int columns )",
+			"description": "Creates a panel for grid layout, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function20": {
+			"name": "newFlowPanel",
+			"declaration": "int newFlowPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for flow layout, and returns its unique identifier (GUI component ID).",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function21": {
+			"name": "newTabPanel",
+			"declaration": "int newTabPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for tab display, and returns its unique identifier (GUI component ID). Use this panel by placing another panel on it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function22": {
+			"name": "newScrollPanel",
+			"declaration": "int newScrollPanel( int x, int y, int w, int h, string title )",
+			"description": "Creates a panel for scroll display, and returns its unique identifier (GUI component ID). Use this panel by placing another panel on it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(string type) title : The panel title. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function23": {
+			"name": "paintComponent",
+			"declaration": "macro paintComponent( int componentID )",
+			"description": "Repaints a GUI component.Repainting is necessary when the displayed text or graphics resource has changed.It is also necessary when the displayed content of child components mounted on the component has changed.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. "
+		},
+		"function24": {
+			"name": "setComponentLocation",
+			"declaration": "void setComponentLocation( int componentID, int x, int y )",
+			"description": "Sets the location of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "getComponentLocation",
+			"declaration": "int[ ] getComponentLocation( int componentID )",
+			"description": "Gets the location of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int[] type) The top-left corner coordinates, where [0] is X and [1] is Y."
+		},
+		"function26": {
+			"name": "setComponentSize",
+			"declaration": "void setComponentSize( int componentID, int width, int height )",
+			"description": "Sets the size of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) width : The width. \n(int type) height : The height. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID )",
+			"description": "Gets the size of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int[] type) The size, where [0] is the width and [1] is the height."
+		},
+		"function28": {
+			"name": "getComponentSize",
+			"declaration": "int[ ] getComponentSize( int componentID, int option )",
+			"description": "Gets the size of a specific part of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) option : The part selection option (<a href=\"#OUTER\">OUTER<\/a> or <a href=\"#INNER\">INNER<\/a>). ",
+			"returnValue": "(int[] type) The size, where [0] is the width and [1] is the height."
+		},
+		"function29": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fr, int fg, int fb, int fa, int br, int bg, int bb, int ba )",
+			"description": "Sets the colors of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) fr : The red component of the foreground color (0 to 255). \n(int type) fg : The green component of the foreground color (0 to 255). \n(int type) fb : The blue component of the foreground color (0 to 255). \n(int type) fa : The alpha component of the foreground color (0 to 255). \n(int type) br : The red component of the background color (0 to 255). \n(int type) bg : The green component of the background color (0 to 255). \n(int type) bb : The blue component of the background color (0 to 255). \n(int type) ba : The alpha component of the background color (0 to 255). ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setComponentColor",
+			"declaration": "void setComponentColor( int componentID, int fgRGBA[ ], int bgRGBA[ ] )",
+			"description": "Sets the colors of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int[] type) fgRGBA : The array storing the foreground color components, where [0] is red, [1] is green, [2] is blue, and [3] is alpha, each in the range from 0 to 255. \n(int[] type) bgRGBA : The array storing the background color components, where [0] is red, [1] is green, [2] is blue, and [3] is alpha, each in the range from 0 to 255. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "getComponentColor",
+			"declaration": "macro getComponentColor( int componentID )",
+			"description": "Returns the colors of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "An int[][] array storing the color components, where [0][0] is the foreground red, [0][1] is the foreground green, [0][2] is the foreground blue, [0][3] is the foreground alpha, [1][0] is the background red, [1][1] is the background green, [1][2] is the background blue, and [1][3] is the background alpha, each in the range from 0 to 255."
+		},
+		"function32": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text )",
+			"description": "Sets the text of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(string type) text : The text. ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "getComponentText",
+			"declaration": "string getComponentText( int componentID )",
+			"description": "Gets the text of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(string type) The text."
+		},
+		"function34": {
+			"name": "setComponentText",
+			"declaration": "void setComponentText( int componentID, string text[ ], int option )",
+			"description": "Sets the text data of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(string[] type) text : The text data. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "getComponentText",
+			"declaration": "string[ ] getComponentText( int componentID, int option )",
+			"description": "Gets the text data of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(string[] type) The text data."
+		},
+		"function36": {
+			"name": "setComponentImage",
+			"declaration": "void setComponentImage( int componentID, int graphicsID )",
+			"description": "Sets the image of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) graphicsID : The ID of the graphics resource storing the image. ",
+			"returnValue": "(void type) "
+		},
+		"function37": {
+			"name": "getComponentImage",
+			"declaration": "int getComponentImage( int componentID )",
+			"description": "Returns the ID of the graphics resource storing the image of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int type) The ID of the graphics resource storing the image."
+		},
+		"function38": {
+			"name": "showComponent",
+			"declaration": "void showComponent( int componentID )",
+			"description": "Shows a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function39": {
+			"name": "hideComponent",
+			"declaration": "void hideComponent( int componentID )",
+			"description": "Hides a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function40": {
+			"name": "setComponentFont",
+			"declaration": "void setComponentFont( int componentID, string name )",
+			"description": "Sets the font of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(string type) name : The font name, depending on the implementation and environment. ",
+			"returnValue": "(void type) "
+		},
+		"function41": {
+			"name": "setComponentFontSize",
+			"declaration": "void setComponentFontSize( int componentID, int size )",
+			"description": "Sets the font size of a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) size : The font size. ",
+			"returnValue": "(void type) "
+		},
+		"function42": {
+			"name": "setComponentFontBold",
+			"declaration": "void setComponentFontBold( int componentID, bool isBold )",
+			"description": "Enables or disables bold style for the font of a GUI component. It cannot be used together with italic style.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(bool type) isBold : Whether to enable bold style. ",
+			"returnValue": "(void type) "
+		},
+		"function43": {
+			"name": "setComponentFontItalic",
+			"declaration": "void setComponentFontItalic( int componentID, bool isItalic )",
+			"description": "Enables or disables italic style for the font of a GUI component. It cannot be used together with bold style.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(bool type) isItalic : Whether to enable italic style. ",
+			"returnValue": "(void type) "
+		},
+		"function44": {
+			"name": "setComponentFloat",
+			"declaration": "void setComponentFloat( int componentID, float value )",
+			"description": "Sets the float value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(float type) value : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function45": {
+			"name": "getComponentFloat",
+			"declaration": "float getComponentFloat( int componentID )",
+			"description": "Returns the float value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(float type) The held value."
+		},
+		"function46": {
+			"name": "setComponentInt",
+			"declaration": "void setComponentInt( int componentID, int value )",
+			"description": "Sets the int value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) value : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function47": {
+			"name": "getComponentInt",
+			"declaration": "int getComponentInt( int componentID )",
+			"description": "Returns the int value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int type) The held value."
+		},
+		"function48": {
+			"name": "setComponentBool",
+			"declaration": "void setComponentBool( int componentID, bool state )",
+			"description": "Sets the bool value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \nvalue : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function49": {
+			"name": "getComponentBool",
+			"declaration": "bool getComponentBool( int componentID )",
+			"description": "Returns the bool value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(bool type) The held value."
+		},
+		"function50": {
+			"name": "setComponentString",
+			"declaration": "void setComponentString( int componentID, string text )",
+			"description": "Sets the string value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \nvalue : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function51": {
+			"name": "getComponentString",
+			"declaration": "string getComponentString( int componentID )",
+			"description": "Returns the string value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(string type) The held value."
+		},
+		"function52": {
+			"name": "setComponentStringArray",
+			"declaration": "void setComponentStringArray( int componentID, string text[ ], int option )",
+			"description": "Sets the string array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \nvalue : The value to hold. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(void type) "
+		},
+		"function53": {
+			"name": "getComponentStringArray",
+			"declaration": "string[ ] getComponentStringArray( int componentID, int option )",
+			"description": "Returns the string array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) option : The option (<a href=\"#LISTED\">LISTED<\/a> or <a href=\"#SELECTED\">SELECTED<\/a>). ",
+			"returnValue": "(string[] type) The held value."
+		},
+		"function54": {
+			"name": "setComponentIntArray",
+			"declaration": "void setComponentIntArray( int componentID, int value[ ] )",
+			"description": "Sets the int array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int[] type) value : The value to hold. ",
+			"returnValue": "(void type) "
+		},
+		"function55": {
+			"name": "getComponentIntArray",
+			"declaration": "int[ ] getComponentIntArray( int componentID )",
+			"description": "Returns the int array value held by a GUI component.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int[] type) The held value."
+		},
+		"function56": {
+			"name": "addComponent",
+			"declaration": "void addComponent( int componentID, int parentComponentID )",
+			"description": "Mounts a GUI component on another GUI component. Since VCSSL 3, the newer <a href=\"#mountComponent\">mountComponent<\/a> function has been supported. This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the GUI component to mount. \n(int type) componentID : The ID of the destination GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function57": {
+			"name": "removeComponent",
+			"declaration": "void removeComponent( int componentID, int parentComponentID )",
+			"description": "Demounts a GUI component. Since VCSSL 3, the newer <a href=\"#demountComponent\">demountComponent<\/a> function has been supported. This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the GUI component to demount. \n(int type) componentID : The ID of the current parent GUI component. ",
+			"returnValue": "(void type) "
+		},
+		"function58": {
+			"name": "newGraphicsLabel",
+			"declaration": "int newGraphicsLabel( int x, int y, int w, int h, int graphicsID )",
+			"description": "Creates a graphics label, which is a component displaying drawn content or an image, and returns its unique identifier (GUI component ID).Since VCSSL 3.3.24, the newer <a href=\"#newImageLabel\">newImageLabel<\/a> function has been supported.This function is supported for compatibility.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner. \n(int type) y : The Y coordinate of the top-left corner. \nwidth : The width. \nheight : The height. \n(int type) graphicsID : The graphics resource ID of the displayed content. ",
+			"returnValue": "(int type) The GUI component ID."
+		},
+		"function59": {
+			"name": "setComponentGraphics",
+			"declaration": "void setComponentGraphics( int componentID, int graphicsID )",
+			"description": "Sets the graphics resource ID of a GUI component.Since VCSSL 3.3.24, the newer <a href=\"#setComponentImage\">setComponentImage<\/a> function has been supported.This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. \n(int type) graphicsID : The graphics resource ID. ",
+			"returnValue": "(void type) "
+		},
+		"function60": {
+			"name": "getComponentGraphics",
+			"declaration": "int getComponentGraphics( int componentID )",
+			"description": "Returns the graphics resource ID of a GUI component.Since VCSSL 3.3.24, the newer <a href=\"#getComponentGraphics\">getComponentImage<\/a> function has been supported.This function is supported for compatibility.",
+			"parameters": "(int type) componentID : The ID of the target GUI component. ",
+			"returnValue": "(int type) The graphics resource ID."
+		},
+		"function61": {
+			"name": "setComponentVisible",
+			"declaration": "void setComponentVisible( int componentID, bool b )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function62": {
+			"name": "getComponentVisible",
+			"declaration": "bool getComponentVisible( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(bool type) "
+		},
+		"function63": {
+			"name": "getComponentInnerSize",
+			"declaration": "int[ ] getComponentInnerSize( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(int[] type) "
+		},
+		"function64": {
+			"name": "getComponentInner",
+			"declaration": "int[ ] getComponentInner( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(int[] type) "
+		},
+		"function65": {
+			"name": "setComponentValue",
+			"declaration": "void setComponentValue( int componentID, float value )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function66": {
+			"name": "getComponentValue",
+			"declaration": "float getComponentValue( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(float type) "
+		},
+		"function67": {
+			"name": "setComponentState",
+			"declaration": "void setComponentState( int componentID, bool state )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function68": {
+			"name": "getComponentState",
+			"declaration": "bool getComponentState( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(bool type) "
+		},
+		"function69": {
+			"name": "setComponentValueFloat",
+			"declaration": "void setComponentValueFloat( int componentID, float value )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function70": {
+			"name": "getComponentValueFloat",
+			"declaration": "float getComponentValueFloat( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(float type) "
+		},
+		"function71": {
+			"name": "setComponentValueInt",
+			"declaration": "void setComponentValueInt( int componentID, int value )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function72": {
+			"name": "getComponentValueInt",
+			"declaration": "int getComponentValueInt( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(int type) "
+		},
+		"function73": {
+			"name": "setComponentValueBool",
+			"declaration": "void setComponentValueBool( int componentID, bool state )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function74": {
+			"name": "getComponentValueBool",
+			"declaration": "bool getComponentValueBool( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(bool type) "
+		},
+		"function75": {
+			"name": "setComponentValueString",
+			"declaration": "void setComponentValueString( int componentID, string text )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(void type) "
+		},
+		"function76": {
+			"name": "getComponentValueString",
+			"declaration": "string getComponentValueString( int componentID )",
+			"description": "The use of this function is not recommended. This function is supported for compatibility.",
+			"returnValue": "(string type) "
+		}
+	}
+}
