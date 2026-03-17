@@ -1,0 +1,29 @@
+{
+	"libraryName": "DataWrapper",
+	"libraryDescription": "<p>The data.DataWrapper library provides functionality for wrapping values of arbitrary types in a struct.It is mainly used for wrapping array data.<\/p><p>In VCSSL, jagged arrays are not allowed,so the number of elements in an array must be uniform within each dimension.<br \/>For example, multiple one-dimensional arrays with different numbers of elementscannot be combined into a two-dimensional array.<\/p><p>By wrapping array data in a struct,this restriction can be avoided.<br \/>In the above example, by creating a struct that wraps each one-dimensional arrayand then creating an array of those structs,a structure like a two-dimensional jagged array can be realized.<\/p><p>For such wrapping purposes, this module providesthe generic struct <a href=\"#DataWrapper\">DataWrapper<\/a>.<br \/>The wrap function wraps data of an arbitrary typeand converts it to a DataWrapper struct.The unwrap function can also be used to extract the original data.<\/p><p>DataWrapper is actually used in the implementations ofdata.<a href=\"WrappedList.html\">WrappedList<\/a>,<a href=\"WrappedStack.html\">WrappedStack<\/a>, and<a href=\"WrappedQueue.html\">WrappedQueue<\/a>.<br \/>In those libraries, DataWrapper is used to realize collection functionalitythat supports arrays having different numbers of elements.<\/p>",
+	"structs": {
+		"struct0": {
+			"name": "DataWrapper<Type>",
+			"declaration": "struct DataWrapper<Type>",
+			"description": "A struct for wrapping data of an arbitrary type."
+		}
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "wrap<Type>",
+			"declaration": "DataWrapper<Type> wrap<Type>(Type arg)",
+			"description": "Wraps data of an arbitrary type.",
+			"parameters": "(Type type) arg : The data to be wrapped. ",
+			"returnValue": "(DataWrapper&lt;Type&gt; type) A wrapper of the input value."
+		},
+		"function1": {
+			"name": "unwrap<Type>",
+			"declaration": "Type unwrap<Type>(DataWrapper<Type> wrapper)",
+			"description": "Extracts the wrapped data.",
+			"parameters": "(DataWrapper&lt;Type&gt; type) wrapper : The wrapper from which the data is to be extracted. ",
+			"returnValue": "(Type type) The value held by the wrapper."
+		}
+	}
+}

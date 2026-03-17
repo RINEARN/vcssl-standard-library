@@ -1,0 +1,431 @@
+{
+	"libraryName": "Text",
+	"libraryDescription": "<p>The VCSSL Text library is a standard library for text processing.<\/p><p>This library provides features such as obtaining lengths and substrings,searching and replacing, and splitting for string variables.Regular expressions can also be used in searching, replacing, and splitting.<\/p>",
+	"structs": {
+	},
+	"variables": {
+		"variable0": {
+			"name": "ALL",
+			"declaration": "const int ALL",
+			"description": "The search mode for finding all parts matching a string."
+		},
+		"variable1": {
+			"name": "ALL_PATTERN",
+			"declaration": "const int ALL_PATTERN",
+			"description": "The search mode for finding all parts matching a regular expression."
+		},
+		"variable2": {
+			"name": "FIRST",
+			"declaration": "const int FIRST",
+			"description": "The search mode for finding the first part matching a string."
+		},
+		"variable3": {
+			"name": "FIRST_PATTERN",
+			"declaration": "const int FIRST_PATTERN",
+			"description": "The search mode for finding the first part matching a regular expression."
+		},
+		"variable4": {
+			"name": "LAST",
+			"declaration": "const int LAST",
+			"description": "The search mode for finding the last part matching a string."
+		},
+		"variable5": {
+			"name": "LAST_PATTERN",
+			"declaration": "const int LAST_PATTERN",
+			"description": "The search mode for finding the last part matching a regular expression."
+		},
+		"variable6": {
+			"name": "START",
+			"declaration": "const int START",
+			"description": "The checking mode for determining whether the beginning of a string matches a substring."
+		},
+		"variable7": {
+			"name": "START_PATTERN",
+			"declaration": "const int START_PATTERN",
+			"description": "The checking mode for determining whether the beginning of a string matches a regular expression."
+		},
+		"variable8": {
+			"name": "END",
+			"declaration": "const int END",
+			"description": "The checking mode for determining whether the end of a string matches a substring."
+		},
+		"variable9": {
+			"name": "END_PATTERN",
+			"declaration": "const int END_PATTERN",
+			"description": "The checking mode for determining whether the end of a string matches a regular expression."
+		},
+		"variable10": {
+			"name": "CONTAIN",
+			"declaration": "const int CONTAIN",
+			"description": "The checking mode for determining whether any part of a string matches a substring."
+		},
+		"variable11": {
+			"name": "CONTAIN_PATTERN",
+			"declaration": "const int CONTAIN_PATTERN",
+			"description": "The checking mode for determining whether any part of a string matches a regular expression."
+		},
+		"variable12": {
+			"name": "FULL_PATTERN",
+			"declaration": "const int FULL_PATTERN",
+			"description": "The checking mode for determining whether an entire string matches a regular expression."
+		},
+		"variable13": {
+			"name": "TRIM",
+			"declaration": "const int TRIM",
+			"description": "The mode of the adjustText function for trimming leading and trailing whitespace and line breaks."
+		},
+		"variable14": {
+			"name": "LOWER_CASE",
+			"declaration": "const int LOWER_CASE",
+			"description": "The mode of the adjustText function for converting uppercase alphabetic characters to lowercase."
+		},
+		"variable15": {
+			"name": "UPPER_CASE",
+			"declaration": "const int UPPER_CASE",
+			"description": "The mode of the adjustText function for converting lowercase alphabetic characters to uppercase."
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "atText",
+			"declaration": "string atText( string text, int index )",
+			"description": "Returns the character at the specified index in a string as a one-character string value.",
+			"parameters": "(string type) text : The target string. \n(int type) index : The character index. ",
+			"returnValue": "(string type) The character."
+		},
+		"function1": {
+			"name": "checkText",
+			"declaration": "bool checkText( string text, string query, int mode )",
+			"description": "Determines whether the beginning, end, or whole of a string matches the specified string or regular expression.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring used for matching. \n(int type) mode : The checking mode ( <a href=\"#START\">START<\/a>, <a href=\"#END\">END<\/a>, <a href=\"#CONTAIN\">CONTAIN<\/a>, <a href=\"#START_PATTERN\">START_PATTERN<\/a>, <a href=\"#END_PATTERN\">END_PATTERN<\/a>, <a href=\"#CONTAIN_PATTERN\">CONTAIN_PATTERN<\/a>, <a href=\"#FULL_PATTERN\">FULL_PATTERN<\/a> ). ",
+			"returnValue": "(bool type) The result of the check (true if matched)."
+		},
+		"function2": {
+			"name": "adjustText",
+			"declaration": "string adjustText( string text, int mode )",
+			"description": "Adjusts text in the specified mode.<br \/>Depending on the mode, leading and trailing whitespace and line breaks can be removed, or alphabetic characters can be unified to uppercase or lowercase.",
+			"parameters": "(string type) text : The target text. \n(int type) mode : The adjustment mode ( <a href=\"#TRIM\">TRIM<\/a>, <a href=\"#LOWER_CASE\">LOWER_CASE<\/a>, <a href=\"#UPPER_CASE\">UPPER_CASE<\/a> ). ",
+			"returnValue": "(string type) The adjusted text."
+		},
+		"function3": {
+			"name": "cropText",
+			"declaration": "string cropText( string text, int cropBegin, int cropEnd )",
+			"description": "Returns the specified range extracted from a text.<br \/>If indices are assigned to the characters of the text starting from 0, the extracted range is the substring from cropBegin to cropEnd - 1.Also, if indices are assigned to the gaps between characters, the extracted range is exactly the part between the gap at cropBegin and the gap at cropEnd.",
+			"parameters": "(string type) text : The target text. \n(int type) cropBegin : The starting position of the range to be extracted. \n(int type) cropEnd : The ending position of the range to be extracted. ",
+			"returnValue": "(string type) The extracted text."
+		},
+		"function4": {
+			"name": "countText",
+			"declaration": "int countText( string text )",
+			"description": "Counts and returns the number of characters in a text.",
+			"parameters": "(string type) text : The target text. ",
+			"returnValue": "(int type) The number of characters in the text."
+		},
+		"function5": {
+			"name": "countText",
+			"declaration": "int countText( string text, string query, int mode )",
+			"description": "Searches a text for parts matching a substring or regular expression, and returns the number of matches.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(int type) The number of matches."
+		},
+		"function6": {
+			"name": "countText",
+			"declaration": "int countText( string text, string query, int searchBegin, int mode )",
+			"description": "Searches a text for parts matching a substring or regular expression from the specified position onward, and returns the number of matches.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(int type) The number of matches."
+		},
+		"function7": {
+			"name": "countText",
+			"declaration": "int countText( string text, string query, int searchBegin, int searchEnd, int mode )",
+			"description": "Searches within the specified range of a text for parts matching a substring or regular expression, and returns the number of matches.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) searchEnd : The character index of the search ending position plus 1 (see <a href=\"#cropText\">cropText<\/a>). \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(int type) The number of matches."
+		},
+		"function8": {
+			"name": "findText",
+			"declaration": "int[ ] findText( string text, string query, int mode )",
+			"description": "Searches a text for parts matching a substring or regular expression, and returns an array containing the character indices of the matched parts.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(int[] type) An array storing the character indices of the matched parts."
+		},
+		"function9": {
+			"name": "findText",
+			"declaration": "int[ ] findText( string text, string query, int searchBegin, int mode )",
+			"description": "Searches from the specified position onward in a text for parts matching a substring or regular expression, and returns an array containing the character indices of the matched parts.If no match is found, the return value is an array with zero elements.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(int[] type) An array storing the character indices of the matched parts."
+		},
+		"function10": {
+			"name": "findText",
+			"declaration": "int[ ] findText( string text, string query, int searchBegin, int searchEnd, int mode )",
+			"description": "Searches within the specified range of a text for parts matching a substring or regular expression, and returns an array containing the character indices of the matched parts.If no match is found, the return value is an array with zero elements.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) searchEnd : The character index of the search ending position plus 1 (see <a href=\"#cropText\">cropText<\/a>). \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(int[] type) An array storing the character indices of the matched parts."
+		},
+		"function11": {
+			"name": "extractText",
+			"declaration": "string[ ] extractText( string text, string query, int mode )",
+			"description": "Searches a text for parts matching a substring or regular expression, and returns an array containing the extracted matched strings.If no match is found, the return value is an array with zero elements.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string[] type) An array storing the extracted matched strings."
+		},
+		"function12": {
+			"name": "extractText",
+			"declaration": "string[ ] extractText( string text, string query, int searchBegin, int mode )",
+			"description": "Searches from the specified position onward in a text for parts matching a substring or regular expression, and returns an array containing the extracted matched strings.<br \/>If no match is found, the return value is an array with zero elements.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string[] type) An array storing the extracted matched strings."
+		},
+		"function13": {
+			"name": "extractText",
+			"declaration": "string[ ] extractText( string text, string query, int searchBegin, int searchEnd, int mode )",
+			"description": "Searches within the specified range of a text for parts matching a substring or regular expression, and returns an array containing the extracted matched strings.<br \/>If no match is found, the return value is an array with zero elements.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) searchEnd : The character index of the search ending position plus 1 (see <a href=\"#cropText\">cropText<\/a>). \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string[] type) An array storing the extracted matched strings."
+		},
+		"function14": {
+			"name": "replaceText",
+			"declaration": "string replaceText( string text, string query, string newPart, int mode )",
+			"description": "Searches a text for parts matching a substring or regular expression, and returns the text with the matched parts replaced by another string.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(string type) newPart : The string to replace the matched parts with. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string type) The text with the matched parts replaced."
+		},
+		"function15": {
+			"name": "replaceText",
+			"declaration": "string replaceText( string text, string query, string newPart, int searchBegin, int mode )",
+			"description": "Searches from the specified position onward in a text for parts matching a substring or regular expression, and returns the text with the matched parts replaced by another string.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(string type) newPart : The string to replace the matched parts with. \n(int type) searchBegin : The search starting position. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string type) The text with the matched parts replaced."
+		},
+		"function16": {
+			"name": "replaceText",
+			"declaration": "string replaceText( string text, string query, string newPart, int searchBegin, int searchEnd, int mode )",
+			"description": "Searches within the specified range of a text for parts matching a substring or regular expression, and returns the text with the matched parts replaced by another string.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(string type) newPart : The string to replace the matched parts with. \n(int type) searchBegin : The character index of the search starting position. \n(int type) searchEnd : The character index of the search ending position plus 1 (see <a href=\"#cropText\">cropText<\/a>). \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string type) The text with the matched parts replaced."
+		},
+		"function17": {
+			"name": "splitText",
+			"declaration": "string[ ] splitText( string text, string query, int mode )",
+			"description": "Searches a text for parts matching a substring or regular expression, and returns an array containing the original text split at those matched parts.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string[] type) An array of text pieces split at the matched parts."
+		},
+		"function18": {
+			"name": "splitText",
+			"declaration": "string[ ] splitText( string text, string query, int searchBegin, int mode )",
+			"description": "Searches from the specified position onward in a text for parts matching a substring or regular expression, and returns an array containing the original text split at those matched parts.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string[] type) An array of text pieces split at the matched parts."
+		},
+		"function19": {
+			"name": "splitText",
+			"declaration": "string[ ] splitText( string text, string query, int searchBegin, int searchEnd, int mode )",
+			"description": "Searches within the specified range of a text for parts matching a substring or regular expression, and returns an array containing the original text split at those matched parts.",
+			"parameters": "(string type) text : The target text. \n(string type) query : The substring to search for. \n(int type) searchBegin : The character index of the search starting position. \n(int type) searchEnd : The character index of the search ending position plus 1 (see <a href=\"#cropText\">cropText<\/a>). \n(int type) mode : The search mode ( <a href=\"#ALL\">ALL<\/a>, <a href=\"#FIRST\">FIRST<\/a>, <a href=\"#LAST\">LAST<\/a>, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a> ). ",
+			"returnValue": "(string[] type) An array of text pieces split at the matched parts."
+		},
+		"function20": {
+			"name": "split",
+			"declaration": "string[ ] split( string text, string query )",
+			"description": "Splits a string at positions matching a specific string, and returns the result as an array.<br \/>Currently, the newer <a href=\"#splitText\">splitText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#splitText\">splitText<\/a>(text, query, <a href=\"#ALL\">ALL<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span><br \/>Note that in this function, if query exists exactly at the end of the argument text, it is not regarded as being followed by an empty string, and no empty string is stored in the last element of the returned array.This behavior differs from splitText, but it will not be changed in order to preserve compatibility.",
+			"parameters": "(string type) text : The target string. \n(string type) query : The delimiter string, which is not included in the contents of the resulting string array. ",
+			"returnValue": "(string[] type) An array storing the split results."
+		},
+		"function21": {
+			"name": "splitPattern",
+			"declaration": "string[ ] splitPattern( string text, string query )",
+			"description": "Splits a string at positions matching a specific regular expression, and returns the result as an array.<br \/>Currently, the newer <a href=\"#splitText\">splitText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#splitText\">splitText<\/a>(text, query, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span><br \/>Note that in this function, if query exists exactly at the end of the argument text, it is not regarded as being followed by an empty string, and no empty string is stored in the last element of the returned array.This behavior differs from splitText, but it will not be changed in order to preserve compatibility.",
+			"parameters": "(string type) text : The target string. \n(string type) query : The delimiter regular expression, which is not included in the contents of the resulting string array. ",
+			"returnValue": "(string[] type) An array storing the split results."
+		},
+		"function22": {
+			"name": "replace",
+			"declaration": "string replace( string text, string oldText, string newText )",
+			"description": "Returns a string in which all occurrences of a substring contained in a string are replaced with another substring.<br \/>Currently, the newer <a href=\"#replaceText\">replaceText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#replaceText\">replaceText<\/a>(text, query, <a href=\"#ALL\">ALL<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) oldText : The substring before replacement. \n(string type) newText : The substring after replacement. ",
+			"returnValue": "(string type) The replacement result."
+		},
+		"function23": {
+			"name": "replacePattern",
+			"declaration": "string replacePattern( string text, string oldText, string newText )",
+			"description": "Returns a string in which all ranges matching a regular expression in a string are replaced with another substring.<br \/>Currently, the newer <a href=\"#replaceText\">replaceText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#replaceText\">replaceText<\/a>(text, query, <a href=\"#ALL_PATTERN\">ALL_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) oldText : The regular expression for replacement targets. \n(string type) newText : The substring after replacement. ",
+			"returnValue": "(string type) The replacement result."
+		},
+		"function24": {
+			"name": "replaceFirst",
+			"declaration": "string replaceFirst( string text, string oldText, string newText )",
+			"description": "Returns a string in which only the first occurrence of a substring contained in a string is replaced with another substring.<br \/>Currently, the newer <a href=\"#replaceText\">replaceText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#replaceText\">replaceText<\/a>(text, query, <a href=\"#FIRST\">FIRST<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) oldText : The substring before replacement. \n(string type) newText : The substring after replacement. ",
+			"returnValue": "(string type) The replacement result."
+		},
+		"function25": {
+			"name": "replaceFirstPattern",
+			"declaration": "string replaceFirstPattern( string text, string oldText, string newText )",
+			"description": "Returns a string in which only the first range matching a regular expression in a string is replaced with another substring.<br \/>Currently, the newer <a href=\"#replaceText\">replaceText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#replaceText\">replaceText<\/a>(text, query, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) oldText : The regular expression for replacement targets. \n(string type) newText : The substring after replacement. ",
+			"returnValue": "(string type) The replacement result."
+		},
+		"function26": {
+			"name": "replaceFirst",
+			"declaration": "string replaceFirst( string text, string oldText, string newText, int start )",
+			"description": "Returns a string in which a substring is replaced with another substring.If multiple matching substrings exist, only the first one at or after the index specified by the argument start is replaced.<br \/>Currently, the newer <a href=\"#replaceText\">replaceText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#replaceText\">replaceText<\/a>(text, query, start, <a href=\"#FIRST\">FIRST<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) oldText : The substring before replacement. \n(string type) newText : The substring after replacement. \n(int type) start : The start index of the search range. ",
+			"returnValue": "(string type) The replacement result."
+		},
+		"function27": {
+			"name": "replaceFirstPattern",
+			"declaration": "string replaceFirstPattern( string text, string oldText, string newText, int start )",
+			"description": "Returns a string in which a range matching a regular expression is replaced with another substring.If multiple matching ranges exist, only the first one at or after the index specified by the argument start is replaced.<br \/>Currently, the newer <a href=\"#replaceText\">replaceText<\/a> function is supported and provides the same or more advanced functionality.For example, <a href=\"#replaceText\">replaceText<\/a>(text, query, start, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) oldText : The regular expression for replacement targets. \n(string type) newText : The substring after replacement. \n(int type) start : The start index of the search range. ",
+			"returnValue": "(string type) The replacement result."
+		},
+		"function28": {
+			"name": "substring",
+			"declaration": "string substring( string text, int start, int end )",
+			"description": "Returns the substring in the specified index range within a string.<br \/>Currently, the newer <a href=\"#cropText\">cropText<\/a> function is supported and provides the same functionality.For example, <a href=\"#cropText\">cropText<\/a>(text, start, end) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(int type) start : The start index of the range. \n(int type) end : The end index of the range plus 1. ",
+			"returnValue": "(string type) The substring."
+		},
+		"function29": {
+			"name": "lengthOf",
+			"declaration": "int lengthOf( string text )",
+			"description": "Returns the number of characters in a string.<br \/>Currently, the newer <a href=\"#countText\">countText<\/a> function is supported and provides the same functionality.For example, <a href=\"#countText\">countText<\/a>(text) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. ",
+			"returnValue": "(int type) The number of characters."
+		},
+		"function30": {
+			"name": "startsWith",
+			"declaration": "bool startsWith( string text, string word )",
+			"description": "Determines whether a string starts with the specified substring.<br \/>Currently, the newer <a href=\"#checkText\">checkText<\/a> function is supported and provides the same functionality.For example, <a href=\"#checkText\">checkText<\/a>(text, word, <a href=\"#START\">START<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The substring. ",
+			"returnValue": "(bool type) Returns true if the string starts with the specified substring, or false otherwise."
+		},
+		"function31": {
+			"name": "endsWith",
+			"declaration": "bool endsWith( string text, string word )",
+			"description": "Determines whether a string ends with the specified substring.<br \/>Currently, the newer <a href=\"#checkText\">checkText<\/a> function is supported and provides the same functionality.For example, <a href=\"#checkText\">checkText<\/a>(text, word, <a href=\"#END\">END<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The substring. ",
+			"returnValue": "(bool type) Returns true if the string ends with the specified substring, or false otherwise."
+		},
+		"function32": {
+			"name": "match",
+			"declaration": "string match( string text, string pattern )",
+			"description": "Use of this API is not recommended.<br \/>Currently, the newer <a href=\"#extractText\">extractText<\/a> function is supported and provides the same functionality.For example, <a href=\"#extractText\">extractText<\/a>(text, pattern, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"returnValue": "(string type) "
+		},
+		"function33": {
+			"name": "match",
+			"declaration": "string match( string text, string pattern, int start )",
+			"description": "Use of this API is not recommended.<br \/>Currently, the newer <a href=\"#extractText\">extractText<\/a> function is supported and provides the same functionality.For example, <a href=\"#extractText\">extractText<\/a>(text, pattern, start, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"returnValue": "(string type) "
+		},
+		"function34": {
+			"name": "matchFull",
+			"declaration": "bool matchFull( string text, string pattern )",
+			"description": "Determines whether an entire string matches a regular expression.<br \/>Currently, the newer <a href=\"#checkText\">checkText<\/a> function is supported and provides the same functionality.For example, <a href=\"#checkText\">checkText<\/a>(text, word, <a href=\"#FULL_PATTERN\">FULL_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) pattern : The regular expression. ",
+			"returnValue": "(bool type) Returns true if the entire string matches the regular expression, or false otherwise."
+		},
+		"function35": {
+			"name": "matchFirst",
+			"declaration": "string matchFirst( string text, string pattern )",
+			"description": "Extracts and returns the first part matching a regular expression from a string.<br \/>Currently, the newer <a href=\"#extractText\">extractText<\/a> function is supported and provides the same functionality.For example, <a href=\"#extractText\">extractText<\/a>(text, pattern, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) pattern : The regular expression. ",
+			"returnValue": "(string type) The substring matching the regular expression."
+		},
+		"function36": {
+			"name": "matchFirst",
+			"declaration": "string matchFirst( string text, string pattern, int start )",
+			"description": "Extracts and returns a part matching a regular expression from a string.If multiple matching parts exist, only the first one at or after the index specified by the argument start is selected.<br \/>Currently, the newer <a href=\"#extractText\">extractText<\/a> function is supported and provides the same functionality.For example, <a href=\"#extractText\">extractText<\/a>(text, pattern, start, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) pattern : The regular expression. \n(int type) start : The start index of the search range. ",
+			"returnValue": "(string type) The substring matching the regular expression."
+		},
+		"function37": {
+			"name": "matchLast",
+			"declaration": "string matchLast( string text, string pattern )",
+			"description": "Extracts and returns the last part matching a regular expression from a string.<br \/>Currently, the newer <a href=\"#extractText\">extractText<\/a> function is supported and provides the same functionality.For example, <a href=\"#extractText\">extractText<\/a>(text, pattern, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) pattern : The regular expression. ",
+			"returnValue": "(string type) The substring matching the regular expression."
+		},
+		"function38": {
+			"name": "matchLast",
+			"declaration": "string matchLast( string text, string pattern, int end )",
+			"description": "Extracts and returns a part matching a regular expression from a string.If multiple matching parts exist, only the last one before the position of the index specified by the argument end is selected.<br \/>Currently, the newer <a href=\"#extractText\">extractText<\/a> function is supported and provides the same functionality.For example, <a href=\"#extractText\">extractText<\/a>(text, pattern, 0, end, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a>) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) pattern : The regular expression. \n(int type) end : The end index of the search range. ",
+			"returnValue": "(string type) The substring matching the regular expression."
+		},
+		"function39": {
+			"name": "indexOf",
+			"declaration": "int indexOf( string text, string word )",
+			"description": "Obtains the position of the specified substring in a string.If multiple occurrences exist, the first one is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, <a href=\"#FIRST\">FIRST<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/>To determine whether a string contains a substring, you can use something like 0 &lt; <a href=\"#countText\">countText<\/a>(text, word, <a href=\"#ALL\">ALL<\/a>).<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The substring. ",
+			"returnValue": "(int type) The position index of the substring."
+		},
+		"function40": {
+			"name": "indexOf",
+			"declaration": "int indexOf( string text, string word, int start )",
+			"description": "Obtains the position of the specified substring in a string.If multiple occurrences exist, the first one at or after the index specified by the argument start is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, start, <a href=\"#FIRST\">FIRST<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/>To determine whether a substring exists at or after the specified position in a string, you can use something like 0 &lt; <a href=\"#countText\">countText<\/a>(text, word, start, <a href=\"#ALL\">ALL<\/a>).<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The substring. \n(int type) start : The start index of the search range. ",
+			"returnValue": "(int type) The position index of the substring."
+		},
+		"function41": {
+			"name": "indexOfPattern",
+			"declaration": "string indexOfPattern( string text, string word )",
+			"description": "Obtains the position of the specified regular expression match in a string.If multiple matches exist, the first one is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The regular expression. ",
+			"returnValue": "(string type) The position index of the matched part."
+		},
+		"function42": {
+			"name": "indexOfPattern",
+			"declaration": "string indexOfPattern( string text, string word, int start )",
+			"description": "Obtains the position of the specified regular expression match in a string.If multiple matches exist, the first one at or after the index specified by the argument start is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, start, <a href=\"#FIRST_PATTERN\">FIRST_PATTERN<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The regular expression. \n(int type) start : The start index of the search range. ",
+			"returnValue": "(string type) The position index of the matched part."
+		},
+		"function43": {
+			"name": "lastIndexOf",
+			"declaration": "int lastIndexOf( string text, string word )",
+			"description": "Obtains the position of the specified substring in a string.If multiple occurrences exist, the last one is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, <a href=\"#LAST\">LAST<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The substring. ",
+			"returnValue": "(int type) The position index of the substring."
+		},
+		"function44": {
+			"name": "lastIndexOf",
+			"declaration": "int lastIndexOf( string text, string word, int end )",
+			"description": "Obtains the position of the specified substring in a string.If multiple occurrences exist, the last one before or at the index specified by the argument end is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, 0, end, <a href=\"#LAST\">LAST<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The substring. \n(int type) end : The end index of the search range. ",
+			"returnValue": "(int type) The position index of the substring."
+		},
+		"function45": {
+			"name": "lastIndexOfPattern",
+			"declaration": "string lastIndexOfPattern( string text, string word )",
+			"description": "Obtains the position of the specified regular expression match in a string.If multiple matches exist, the last one is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The regular expression. ",
+			"returnValue": "(string type) The position index of the matched part."
+		},
+		"function46": {
+			"name": "lastIndexOfPattern",
+			"declaration": "string lastIndexOfPattern( string text, string word, int end )",
+			"description": "Obtains the position of the specified regular expression match in a string.If multiple matches exist, the last one before or at the index specified by the argument end is selected. If none exists, -1 is returned.<br \/>Currently, the newer <a href=\"#findText\">findText<\/a> function is supported and provides the same functionality.For example, <a href=\"#findText\">findText<\/a>(text, word, 0, end, <a href=\"#LAST_PATTERN\">LAST_PATTERN<\/a>) gives the same result as this function.(However, if there is no match, an array with zero elements is returned.)<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(string type) word : The regular expression. \n(int type) end : The end index of the search range. ",
+			"returnValue": "(string type) The position index of the matched part."
+		},
+		"function47": {
+			"name": "charAt",
+			"declaration": "string charAt( string text, int index )",
+			"description": "Returns the character at the specified index in a string.<br \/>Currently, the newer <a href=\"#atText\">atText<\/a> function is supported and provides the same functionality.For example, <a href=\"#atText\">atText<\/a>(text, index) gives the same result as this function.<br \/><span style=\"font-weight:bold;\">This function is supported for compatibility.<\/span>",
+			"parameters": "(string type) text : The target string. \n(int type) index : The character index. ",
+			"returnValue": "(string type) The character."
+		},
+		"function48": {
+			"name": "tokenize",
+			"declaration": "string[ ] tokenize( string text )",
+			"description": "Splits a string into tokens separated by spaces, tabs, or line breaks, and returns them as an array.",
+			"parameters": "(string type) text : The target string. ",
+			"returnValue": "(string[] type) The token array."
+		}
+	}
+}

@@ -1,0 +1,215 @@
+{
+	"libraryName": "TextFile",
+	"libraryDescription": "<p>このライブラリ file.TextFile は、汎用的なテキストファイル入出力の機能を提供します。<br \/>特に、CSV形式やTSV形式のファイル入出力をサポートします。<\/p><p>そもそもVCSSLでは、最初期のバージョンから、CSV形式やTSV形式を含む、基礎的なテキストファイル入出力機能が標準でサポートされています。<br \/>しかし、初期のVCSSLが専ら数値計算を目的とした言語であった事から、これらの機能も数値データファイルの入出力を前提とした仕様となっており、汎用的な用途においては不便な点もあります。<br \/>例えば、VCSSLの標準機能である System.open(string filePath, string mode) 関数でCSV形式やTSV形式のファイルを開く事ができますが、これは数値データファイルの操作を想定して設計された機能であるため、非常に単純な動作を行います。特別な記号のエスケープや、値を必要に応じてダブルクォーテーションで囲むなどの処理は行われません。<br \/>（ その代わり、数値データファイルの入出力では高速に動作します。 ）<\/p><p>そこで、このモジュールでは、数値データファイルのみならず、より汎用的なテキストファイル入出力機能を提供する事を目的としています。<br \/>例えば書き込みにおいては、値がカンマ(CSV時)やタブ(TSV時)などの区切り文字を含む場合、値全体がダブルクォーテーションで囲まれます。値が改行を含む場合も同様です。<br \/>読み込み時においても、ダブルクォーテーションで囲まれた部分は、まとめて一つの値として読み込まれ、その中に区切り文字や改行を含んでいても問題ありません。<\/p><p>また、書き込む値がダブルクォーテーションを含む場合は、連続したダブルクォーテーションにエスケープされます。<br \/>読み込み時においても、連続したダブルクォーテーションはエスケープされているものとして扱われます。<\/p><p>なお、このモジュールでは、一般的なCSV形式やTSV形式だけでなく、区切り文字（デリミタ）や引用符（エンクロージャ）の記号を明示的に指定する事も可能です。<\/p>",
+	"structs": {
+		"struct0": {
+			"name": "TextFile",
+			"declaration": "struct TextFile",
+			"description": "テキストファイル構造体です。ファイルIDなどのシステムリソースや、区切り文字情報などを保持します。"
+		}
+	},
+	"variables": {
+		"variable0": {
+			"name": "READ",
+			"declaration": "const string READ",
+			"description": "汎用テキストファイルの「読み込み」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。引用符の挙動は <a href=\"#ENCLOSED_NONE\">ENCLOSED_NONE<\/a> が適用されます。"
+		},
+		"variable1": {
+			"name": "WRITE",
+			"declaration": "const string WRITE",
+			"description": "汎用テキストファイルの「書き込み」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。引用符の挙動は <a href=\"#ENCLOSED_NONE\">ENCLOSED_NONE<\/a> が適用されます。"
+		},
+		"variable2": {
+			"name": "APPEND",
+			"declaration": "const string APPEND",
+			"description": "汎用テキストファイルの「追記」モードです。区切り文字（デリミタ）及び引用符記号（エンクロージャ）は設定されません。引用符の挙動は <a href=\"#ENCLOSED_NONE\">ENCLOSED_NONE<\/a> が適用されます。"
+		},
+		"variable3": {
+			"name": "READ_TSV",
+			"declaration": "const string READ_TSV",
+			"description": "TSV形式ファイルの「読み込み」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a> が適用されます。"
+		},
+		"variable4": {
+			"name": "WRITE_TSV",
+			"declaration": "const string WRITE_TSV",
+			"description": "TSV形式ファイルの「書き込み」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a> が適用されます。"
+		},
+		"variable5": {
+			"name": "APPEND_TSV",
+			"declaration": "const string APPEND_TSV",
+			"description": "TSV形式ファイルの「追記」モードです。区切り文字（デリミタ）はタブ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a> が適用されます。"
+		},
+		"variable6": {
+			"name": "READ_CSV",
+			"declaration": "const string READ_CSV",
+			"description": "CSV形式ファイルの「読み込み」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a> が適用されます。"
+		},
+		"variable7": {
+			"name": "WRITE_CSV",
+			"declaration": "const string WRITE_CSV",
+			"description": "CSV形式ファイルの「書き込み」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a> が適用されます。"
+		},
+		"variable8": {
+			"name": "APPEND_CSV",
+			"declaration": "const string APPEND_CSV",
+			"description": "CSV形式ファイルの「追記」モードです。区切り文字（デリミタ）はカンマ記号、引用符記号（エンクロージャ）はダブルクォーテーションに設定されます。引用符の挙動は <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a> が適用されます。"
+		},
+		"variable9": {
+			"name": "ENCLOSED_ALL",
+			"declaration": "const int ENCLOSED_ALL",
+			"description": "全ての値を引用符記号（エンクロージャ）で囲むオプションです。"
+		},
+		"variable10": {
+			"name": "ENCLOSED_IF_NECESSARY",
+			"declaration": "const int ENCLOSED_IF_NECESSARY",
+			"description": "必要な値のみ引用符記号（エンクロージャ）で囲むオプションです。CSV\/TSV形式ファイルのデフォルト設定値です。"
+		},
+		"variable11": {
+			"name": "ENCLOSED_NONE",
+			"declaration": "const int ENCLOSED_NONE",
+			"description": "どの値も引用符記号（エンクロージャ）で囲まないオプションです。汎用テキストファイルのデフォルト設定値です。"
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "openTextFile",
+			"declaration": "TextFile openTextFile(string filePath, string mode)",
+			"description": "ファイル名とモードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。<dl>  <dt><a href=\"#WRITE\">WRITE<\/a><\/dt>  <dd>特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。<\/dd>  <dt><a href=\"#APPEND\">APPEND<\/a><\/dt>  <dd>特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。<\/dd>  <dt><a href=\"#READ\">READ<\/a><\/dt>  <dd>特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。<\/dd>  <dt><a href=\"#WRITE_CSV\">WRITE_CSV<\/a><\/dt>  <dd>CSV（カンマ区切り）ファイル用に設定された書き込みモードです。<\/dd>  <dt><a href=\"#APPEND_CSV\">APPEND_CSV<\/a><\/dt>  <dd>CSV（カンマ区切り）ファイル用に設定された追記モードです。<\/dd>  <dt><a href=\"#READ_CSV\">READ_CSV<\/a><\/dt>  <dd>CSV（カンマ区切り）ファイル用に設定された読み込みモードです。<\/dd>  <dt><a href=\"#WRITE_TSV\">WRITE_TSV<\/a><\/dt>  <dd>TSV（タブ区切り）ファイル用に設定された書き込みモードです。<\/dd>  <dt><a href=\"#APPEND_TSV\">APPEND_TSV<\/a><\/dt>  <dd>TSV（タブ区切り）ファイル用に設定された追記モードです。<\/dd>  <dt><a href=\"#READ_TSV\">READ_TSV<\/a><\/dt>  <dd>TSV（タブ区切り）ファイル用に設定された読み込みモードです。<\/dd><\/dl>",
+			"parameters": "(string型) filePath : ファイル名 \n(string型) mode : モード ",
+			"returnValue": "(TextFile型) 開いたファイルのテキストファイル構造体"
+		},
+		"function1": {
+			"name": "openTextFile",
+			"declaration": "TextFile openTextFile(string filePath, string mode, string textEncoding)",
+			"description": "ファイル名、モード、文字コードを指定して、テキストファイルを開きます。モードは下記の定数から選択します。<dl>  <dt><a href=\"#WRITE\">WRITE<\/a><\/dt>  <dd>特に何も設定されていない、汎用テキストファイル用の書き込みモードです。設定を独自に行う事もできます。<\/dd>  <dt><a href=\"#APPEND\">APPEND<\/a><\/dt>  <dd>特に何も設定されていない、汎用テキストファイル用の追記モードです。設定を独自に行う事もできます。<\/dd>  <dt><a href=\"#READ\">READ<\/a><\/dt>  <dd>特に何も設定されていない、汎用テキストファイル用の読み込みモードです。設定を独自に行う事もできます。<\/dd>  <dt><a href=\"#WRITE_CSV\">WRITE_CSV<\/a><\/dt>  <dd>CSV（カンマ区切り）ファイル用に設定された書き込みモードです。<\/dd>  <dt><a href=\"#APPEND_CSV\">APPEND_CSV<\/a><\/dt>  <dd>CSV（カンマ区切り）ファイル用に設定された追記モードです。<\/dd>  <dt><a href=\"#READ_CSV\">READ_CSV<\/a><\/dt>  <dd>CSV（カンマ区切り）ファイル用に設定された読み込みモードです。<\/dd>  <dt><a href=\"#WRITE_TSV\">WRITE_TSV<\/a><\/dt>  <dd>TSV（タブ区切り）ファイル用に設定された書き込みモードです。<\/dd>  <dt><a href=\"#APPEND_TSV\">APPEND_TSV<\/a><\/dt>  <dd>TSV（タブ区切り）ファイル用に設定された追記モードです。<\/dd>  <dt><a href=\"#READ_TSV\">READ_TSV<\/a><\/dt>  <dd>TSV（タブ区切り）ファイル用に設定された読み込みモードです。<\/dd><\/dl>また、文字コードは下記の文字列リテラルから選択ます。<dl>  <dt>&quotShift_JIS&quot<\/dt>  <dd>Shift_JIS です。ハイフン（ - ）では無くアンダーバー（ _ ）である事に注意して下さい。<\/dd>  <dt>&quotUTF-8&quot<\/dt>  <dd>UTF-8 です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。<\/dd>  <dt>&quotEUC-JP&quot<\/dt>  <dd>EUC-JP です。アンダーバー（ _ ）では無くハイフン（ - ）である事に注意して下さい。<\/dd><\/dl>",
+			"parameters": "(string型) filePath : ファイル名 \n(string型) mode : モード \nencoding : 文字コード ",
+			"returnValue": "(TextFile型) 開いたファイルのテキストファイル構造体"
+		},
+		"function2": {
+			"name": "close",
+			"declaration": "void close(TextFile &textFile)",
+			"description": "テキストファイルへのアクセスを閉じます。特に書き込みアクセス後には、バッファされている内容を最後まで書き込み切るためにも、必ず呼び出す必要があります。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(void型) "
+		},
+		"function3": {
+			"name": "getEndOfLineCode",
+			"declaration": "string getEndOfLineCode(TextFile &textFile)",
+			"description": "ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, LF, CR の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, LF, CR の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href=\"#setEndOfLineCode\">setEndOfLineCode<\/a> 関数で改行コードを明示指定した後は、その指定値が返されます。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(string型) 改行コード"
+		},
+		"function4": {
+			"name": "setEndOfLineCode",
+			"declaration": "void setEndOfLineCode(TextFile &textFile, string endOfLineCode)",
+			"description": "ファイル入出力に使用する改行コードを指定します。改行コードの指定には、System ライブラリに定義されている、以下の定数を使用する事が推奨されます。<dl>  <dt>LF<\/dt>  <dd>文字コードで 0x0A, 一般的なエスケープシーケンスで \n に対応する改行コードです。<\/dd>  <dt>CR<\/dt>  <dd>文字コードで 0x0D, 一般的なエスケープシーケンスで \r に対応する改行コードです。<\/dd>  <dt>CR+LF<\/dt>  <dd>文字コードで 0x0D 0x0A, 一般的なエスケープシーケンスで \r\n に対応する改行コードです。（これは1つの定数では無く、CRとLFを加算した式です。）<\/dd>  <dt>EOL<\/dt>  <dd>実行環境におけるデフォルトの文字コードを表します。通常は CR, LF, CR+LF のいずれかが使用されます。<\/dd><\/dl>",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 \n(string型) endOfLineCode : 改行コード ",
+			"returnValue": "(void型) "
+		},
+		"function5": {
+			"name": "setCommentLineCode",
+			"declaration": "void setCommentLineCode(TextFile &textFile, string commentLineCode)",
+			"description": "コメント行を表す行頭文字列を指定します。ここで指定した文字列で始まる行は、読み込み時に無視されます。また、<a href=\"#commentln\">commentln<\/a> 関数でコメント行を出力する際に、ここで指定した文字列が使用されます。なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。<br \/>この項目は、デフォルトでは何も設定されていないため、コメント行を考慮する際は必ず設定する必要があります。一般的によく用いられる行頭文字列は、以下のようなものがあります。<dl>  <dt>\"#\" (ナンバー記号)<\/dt>  <dd>CSV\/TSVファイルや、スクリプトなどによく用いられます。<\/dd>  <dt>\":\" （コロン）<\/dt>  <dd>一部の設定ファイルやスクリプトなどで用いられます。<\/dd>  <dt>\";\" （セミコロン）<\/dt>  <dd>一部の設定ファイルやスクリプトなどで用いられます。<\/dd>  <dt>\"\/\/\" （ダブルスラッシュ）<\/dt>  <dd>一部のプログラミング言語で用いられます。<\/dd><\/dl>",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 \nendOfLineCode : コメント行を表す行頭文字列 ",
+			"returnValue": "(void型) "
+		},
+		"function6": {
+			"name": "getCommentLineCode",
+			"declaration": "string getCommentLineCode(TextFile &textFile)",
+			"description": "コメント行を表す行頭文字列を返します。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(string型) コメント行を表す行頭文字列"
+		},
+		"function7": {
+			"name": "isReadable",
+			"declaration": "bool isReadable(TextFile &textFile)",
+			"description": "ファイルが読み込み可能な状態であるか確認します。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(bool型) 読み込み可能なモードであればtrue"
+		},
+		"function8": {
+			"name": "isWritable",
+			"declaration": "bool isWritable(TextFile &textFile)",
+			"description": "ファイルが書き込み可能な状態であるか確認します。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(bool型) 読み込み可能なモードであればtrue"
+		},
+		"function9": {
+			"name": "setDelimiter",
+			"declaration": "void setDelimiter(TextFile &textFile, string delimiter)",
+			"description": "値の区切り文字（デリミタ）を設定します。区切り文字を設定すると、 <a href=\"#read\">read<\/a> 関数や<a href=\"#readln\">readln<\/a> 関数が、値を区切って配列として返すようになります。一般的によく用いられる区切り文字は、以下のようなものがあります。また、<a href=\"#write\">write<\/a> 関数や<a href=\"#writeln\">writeln<\/a>が、書き込み時に値を区切り文字で区切るようになります。<dl>  <dt>\",\" (カンマ記号)<\/dt>  <dd>CSVファイルに用いられます。<\/dd>  <dt>\"\t\" (タブ記号)<\/dt>  <dd>TSVファイルに用いられます。<\/dd>  <dt>\"&nbsp\" (半角スペース記号)<\/dt>  <dd>SSVファイルに用いられます。<\/dd>  <dt>\";\" (セミコロン記号)<\/dt>  <dd>一部の設定ファイルに用いられます。<\/dd><\/dl>なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 \n(string型) delimiter : 値の区切り文字（デリミタ） ",
+			"returnValue": "(void型) "
+		},
+		"function10": {
+			"name": "setEnclosure",
+			"declaration": "void setEnclosure(TextFile &textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption)",
+			"description": "値を囲む引用符記号（エンクロージャ）を設定します。引用符記号を設定すると、<a href=\"#write\">write<\/a> 関数や<a href=\"#writeln\">writeln<\/a>が、書き込み時に値を引用符記号で囲むようになります。また、<a href=\"#read\">read<\/a> 関数や<a href=\"#readln\">readln<\/a> 関数が、読み込み時に引用符記号を解釈するようになります。<br \/>引用符記号は、enclosure に指定します。引数一般によく用いられる引用符記号は、以下のようなものがあります。<dl>  <dt>&quot\&quot&quot （ダブルクォーテーション）<\/dt>  <dd>「 &quot 」記号です。CSV\/TSV形式ファイルでよく用いられます。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。<\/dd>  <dt>&quot'&quot （シングルクォーテーション）<\/dt>  <dd>一部のファイルで使用されます。<\/dd><\/dl>なお、値が必ず引用符記号で囲まれるべきか、必要な場合のみ囲まれるべきかは、引数のオプション enclosingOption で指定します。このオプションの指定値は以下の定数から選択します。<dl>  <dt><a href=\"#ENCLOSED_ALL\">ENCLOSED_ALL<\/a><\/dt>  <dd>値が必ず引用符で囲まれる形式です。<\/dd>  <dt><a href=\"#ENCLOSED_ALL\">ENCLOSED_IF_NECESSARY<\/a><\/dt>  <dd>必要な場合のみ、値が引用符記号で囲まれる形式です。必要な場合とは、書き込み\/読み込み内容が、   「 区切り文字（デリミタ）、引用符記号、コメント行頭記号、改行 」のいずれかを含む場合です。<\/dd>  <dt><a href=\"#ENCLOSED_ALL\">ENCLOSED_NONE<\/a><\/dt>  <dd>いかなる場合においても、値が引用符で囲まれない形式です。<\/dd><\/dl>もしも、引用符記号で囲む値が、さらに引用符記号を含んでいる場合、それは別の記号でエスケープされる必要があります。これは引数 enclosureEscapeCharacter で指定します。一般的によく用いられるエスケープ記号は、以下のようなものがあります。<dl>  <dt>&quot\&quot&quot （ダブルクォーテーション）<\/dt>  <dd>「 &quot 」記号です。CSV\/TSV形式ファイルで、    引用符記号がダブルクォーテーションの場合、よく用いられます。    エスケープ結果は連続したダブルクォーテーションとなります。    VCSSLでは、ダブルクォーテーションは特別な意味を持つため、    このように &quot\&quot&quot というようなリテラルで指定します。<\/dd>  <dt>&quot\\&quot （バックスラッシュ）<\/dt>    <dd>「 \ 」記号です。プログラミング言語などでよく使用されます。    VCSSLでは、バックスラッシュは特別な意味を持つため、    このように &quot\\&quot というようなリテラルで指定します。<\/dd><\/dl>なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。",
+			"parameters": "(string型) enclosure : 値を囲む引用符文字（エンクロージャ） \n(string型) enclosureEscapeCharacter : 値に引用符文字（エンクロージャ）が含まれる場合にエスケープする文字 \n(int型) enclosingOption : 囲み方のオプション ",
+			"returnValue": "(void型) "
+		},
+		"function11": {
+			"name": "write",
+			"declaration": "void write(TextFile &textFile, ... string value[ ])",
+			"description": "テキストファイルに文字列を書き込みます。複数の内容を指定した場合、区切り文字（デリミタ）が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href=\"#setEnclosure\">setEnclosure<\/a> で行います。<br \/>なお、最後の書き込み内容の末尾に、区切り文字は付加されません。従って、連続的に呼び出して書き込みを行う場合、必要に応じて<a href=\"#delimit\">delimit<\/a> 関数で区切り文字を挟む必要があります。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 \n(...string[]型) value : 書き込む文字列（可変長引数のため複数指定可能） ",
+			"returnValue": "(void型) "
+		},
+		"function12": {
+			"name": "writeln",
+			"declaration": "void writeln(TextFile &textFile, ... string value[ ])",
+			"description": "テキストファイルに文字列を書き込み、改行します。複数の内容を指定した場合、区切り文字が設定されていれば、間に区切り文字を挟んで書き出します。また、必要に応じて値を引用符で囲んで書き出します。引用符でどのように囲むかの設定は、<a href=\"#setEnclosure\">setEnclosure<\/a> で行います。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 \n(...string[]型) value : 書き込む文字列（可変長引数のため複数指定可能） ",
+			"returnValue": "(void型) "
+		},
+		"function13": {
+			"name": "delimit",
+			"declaration": "void delimit(TextFile &textFile)",
+			"description": "テキストファイルに区切り文字を書き込みます。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(void型) "
+		},
+		"function14": {
+			"name": "commentln",
+			"declaration": "void commentln(TextFile &textFile, string comment)",
+			"description": "テキストファイルにコメント行を書き込みます。この関数をコールするよりも前に、<a href=\"#setCommentLineCode\">setCommentLineCode<\/a> 関数で、コメント行の行頭文字列を設定する必要があります。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 \n(string型) comment : コメント ",
+			"returnValue": "(void型) "
+		},
+		"function15": {
+			"name": "readln",
+			"declaration": "string[ ] readln(TextFile &textFile)",
+			"description": "テキストファイルから、一行分の内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href=\"#setEnclosure\">setEnclosure<\/a> で行います。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(string[]型) 読み込んだ内容"
+		},
+		"function16": {
+			"name": "read",
+			"declaration": "string[ ] read(TextFile &textFile)",
+			"description": "テキストファイルから、全ての内容を読み込みます。区切り文字（デリミタ）が設定されている場合、内容を区切り文字または改行で区切り、配列として返します。ただし引用符（エンクロージャ）が設定されている場合、引用符で囲まれた内部にある区切り文字や改行は、値に含まれると解釈されます(ENCLOSED_NONEオプション時は除く)。引用符をどのように解釈するかの設定は、<a href=\"#setEnclosure\">setEnclosure<\/a> で行います。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(string[]型) 読み込んだ内容"
+		},
+		"function17": {
+			"name": "loadln",
+			"declaration": "string loadln(TextFile &textFile)",
+			"description": "ファイルから一行を読み込み、そのまま返します。ただし、引用符記号が設定されていて、引用符記号で囲まれた内部に改行がある場合、それは行末とは見なされません。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。また、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(string型) 読み込んだ行の内容"
+		},
+		"function18": {
+			"name": "load",
+			"declaration": "string load(TextFile &textFile)",
+			"description": "ファイルから全行を読み込み、そのまま返します。ただし、コメント行の行頭文字が設定されている場合、コメント行は読み飛ばされます。なお、ファイル内に複数の改行コードが混在している場合は統一されます。ファイル内に複数の改行コードが混在している場合は、getEndOfLineCode 関数が返すものと同じ改行コードに統一されます。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(string型) 読み込んだ行の内容"
+		},
+		"function19": {
+			"name": "countln",
+			"declaration": "int countln(TextFile &textFile)",
+			"description": "テキストファイルの有効行数をカウントします。引用符記号が設定されていない場合、有効行数はファイルの行数に一致します。引用符記号が設定されている場合は、引用符記号で囲まれた内部にある改行はカウントされません。つまり、CSV\/TSV形式ファイルにおいては、値に含まれる改行はカウントされません。readln関数でCSV\/TSV形式ファイルを読み込む場合、まずこの関数で有効行数を取得して下さい。この関数が返す有効行数を超えてreadln関数をコールする事はできません。",
+			"parameters": "(TextFile型) textFile : 対象のテキストファイル構造体 ",
+			"returnValue": "(int型) テキストファイルの有効行数"
+		}
+	}
+}

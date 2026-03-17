@@ -1,0 +1,38 @@
+{
+	"libraryName": "GaussianFunction",
+	"libraryDescription": "<p>このライブラリ math.GaussianFunction は、ガウス関数を提供します。<br \/>提供される関数には、gauss と gaussian の 2 つの名前の関数がありますが、両者は指数部分母の係数が異なります。<br \/>前者のgauss(x,a,b,c) 関数は、a * exp( -(x-b)**2 \/ c**2 ) の値を計算します。<br \/>後者のgaussian(x,a,b,c) 関数は、a * exp( -(x-b)**2 \/ (2 * c**2) ) の値を計算します（指数部分母に係数 2 がかかる事に注意して下さい）。<\/p><p>なお、このモジュールでは varfloat 型や varcomplex 型など、多倍長精度のものも提供されますが、<br \/>ただアルゴリズムが実装されているだけであり、演算誤差の蓄積や、桁落ち等に対する特別な措置は行われません。<\/p><p>つまり、最終桁まで正しい値が得られる訳ではなく、演算結果の末尾に、常に誤差蓄積による正しくない部分が含まれます。<br \/>この誤差部分の長さは、実装のアルゴリズムの違いや、引数による収束速度の違い、桁落ちの度合いなど、場合によって異なります。<br \/>例えば、一般に特異点の近傍では収束が著しく遅くなり、それに伴って誤差蓄積も増大します。<\/p><p>従って、 varfloat 型や varcomplex 型などの多倍長精度の関数を使用する場合は、<br \/>必要な桁数よりも、十分に大きな桁数で関数を呼び出し、得られた結果から不要な（誤差を含む）部分を切り捨てて下さい。<\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "gauss",
+			"declaration": "float gauss(float x, float a, float b, float c)",
+			"description": "実数のガウス関数です。a * exp( -(x-b)**2 \/ c**2 ) の値を返します。gaussian 関数と異なるのは、指数部分母に 2 がかからない点です。",
+			"parameters": "(float型) x : 座標変数です。 \n(float型) a : 指数部にかかる係数です。 \n(float型) b : 座標のオフセット値です。 \n(float型) c : 指数部内分母の2次平方根です。 \nd : 指数部内分母の1次係数です。 ",
+			"returnValue": "(float型) 指数関数の値です。"
+		},
+		"function1": {
+			"name": "gauss",
+			"declaration": "varfloat gauss(varfloat x, varfloat a, varfloat b, varfloat c)",
+			"description": "実数のガウス関数です。a * exp( -(x-b)**2 \/ c**2 ) の値を返します。gaussian 関数と異なるのは、指数部分母に 2 がかからない点です。",
+			"parameters": "(varfloat型) x : 座標変数です。 \n(varfloat型) a : 指数部にかかる係数です。 \n(varfloat型) b : 座標のオフセット値です。 \n(varfloat型) c : 指数部内分母の2次平方根です。 \nd : 指数部内分母の1次係数です。 ",
+			"returnValue": "(varfloat型) 指数関数の値です。"
+		},
+		"function2": {
+			"name": "gaussian",
+			"declaration": "float gaussian(float x, float a, float b, float c)",
+			"description": "実数のガウス関数です。gauss 関数と異なるのは、指数部分母に 2 がかかる点です。a * exp( -(x-b)**2 \/ (2 * c**2) ) の値を返します。",
+			"parameters": "(float型) x : 座標変数です。 \n(float型) a : 指数部にかかる係数です。 \n(float型) b : 座標のオフセット値です。 \n(float型) c : 指数部内分母の平方根です。 ",
+			"returnValue": "(float型) 指数関数の値です。"
+		},
+		"function3": {
+			"name": "gaussian",
+			"declaration": "varfloat gaussian(varfloat x, varfloat a, varfloat b, varfloat c)",
+			"description": "実数のガウス関数です。gauss 関数と異なるのは、指数部分母に 2 がかかる点です。a * exp( -(x-b)**2 \/ (2 * c**2) ) の値を返します。",
+			"parameters": "(varfloat型) x : 座標変数です。 \n(varfloat型) a : 指数部にかかる係数です。 \n(varfloat型) b : 座標のオフセット値です。 \n(varfloat型) c : 指数部内分母の平方根です。 ",
+			"returnValue": "(varfloat型) 指数関数の値です。"
+		}
+	}
+}

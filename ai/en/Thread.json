@@ -1,0 +1,108 @@
+{
+	"libraryName": "Thread",
+	"libraryDescription": "<p>The VCSSL Thread library is a standard library for multithreading.<\/p><div style=\"border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;\"><div style=\"font-weight:bold;\">- Note -<\/div><div style=\"padding:10px;\">The current version of RINEARN VCSSL Runtime supports the VCSSL Thread API, but its support for multithreaded processing is not yet sufficient. This is because the basic design of the current VCSSL engine still partially follows the design of the early VCSSL engine, which had been developed assuming only single-threaded execution. As a result, depending on the processing contents, some inconveniences involving logical inconsistencies may occur. If you are considering using the VCSSL Thread API in RINEARN VCSSL Runtime, please make that decision with this situation in mind. The following are examples of issues that may currently occur.<\/div><div style=\"font-weight:bold;\">- Index inconsistencies when multiple threads access the same array variable at the same time<\/div><div style=\"padding:10px;\">In the current VCSSL engine, modules that refer to the values of array variables still include designs that assume only single-threaded execution. Because of this, if the same array variable is accessed simultaneously, incorrect index values may be referenced.<\/div><div style=\"font-weight:bold;\">- Performance bottlenecks<\/div><div style=\"padding:10px;\">The current VCSSL engine includes multiple points that become bottlenecks in multithreaded processing. Therefore, even if highly parallel work is divided among multiple threads, a major improvement in performance cannot be expected. In other words, the Thread API in RINEARN VCSSL Runtime is useful for creating multiple flows of processing, but it is not very meaningful for the purpose of extracting computational performance.<\/div><div style=\"font-weight:bold;\">- Emergency engine stop caused by very frequent simultaneous access from multiple threads to the same function<\/div><div style=\"padding:10px;\">In principle, the same function can be executed by multiple threads. In that case, arguments and local variables are allocated separately for each thread so that they are not mixed up across threads. However, if simultaneous accesses are concentrated within extremely short intervals, this handling may fail to keep up, and the engine may stop itself in an emergency to prevent inconsistencies. Note that overlap in the execution time of the function itself is not the problem. The problem occurs when the moments of calling the function, that is, the moments of passing arguments, overlap.<\/div>Because inconveniences such as the above may occur, use of the VCSSL Thread API is currently not recommended in RINEARN VCSSL Runtime for processing that requires strict correctness, such as scientific and technical calculations or numerical computations.<\/div>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "newThread",
+			"declaration": "int newThread()",
+			"description": "Creates a thread, assigns it a unique identifier called a thread ID, and returns it.",
+			"returnValue": "(int type) The thread ID assigned to the created thread."
+		},
+		"function1": {
+			"name": "deleteThread",
+			"declaration": "void deleteThread( int threadID )",
+			"description": "Disposes of a thread.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		},
+		"function2": {
+			"name": "startThread",
+			"declaration": "void startThread( int threadID )",
+			"description": "Starts execution of a thread.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "waitForThread",
+			"declaration": "void waitForThread( int threadID )",
+			"description": "Waits until execution of the thread has finished.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "sleepThread",
+			"declaration": "void sleepThread( int threadID, int time )",
+			"description": "Suspends execution of a thread temporarily.",
+			"parameters": "(int type) threadID : The ID of the target thread. \n(int type) time : The wait time in milliseconds. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "sleepThread",
+			"declaration": "void sleepThread( int threadID, int milliSeconds, nanoSeconds )",
+			"description": "Suspends execution of a thread temporarily.",
+			"parameters": "(int type) threadID : The ID of the target thread. \n(int type) milliSeconds : The wait time in milliseconds. \n( type) nanoSeconds : The wait time in nanoseconds. ",
+			"returnValue": "(void type) "
+		},
+		"function6": {
+			"name": "awaitThread",
+			"declaration": "void awaitThread( int threadID )",
+			"description": "Waits until execution of the thread has finished.Currently, the equivalent <a href=\"#waitForThread\">waitForThread<\/a> is recommended instead.This function is supported for compatibility.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "newThread",
+			"declaration": "int newThread()",
+			"description": "Creates a thread, assigns it a unique identifier called a thread ID, and returns it.",
+			"returnValue": "(int type) The thread ID assigned to the created thread."
+		},
+		"function1": {
+			"name": "deleteThread",
+			"declaration": "void deleteThread( int threadID )",
+			"description": "Disposes of a thread.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		},
+		"function2": {
+			"name": "startThread",
+			"declaration": "void startThread( int threadID )",
+			"description": "Starts execution of a thread.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "waitForThread",
+			"declaration": "void waitForThread( int threadID )",
+			"description": "Waits until execution of the thread has finished.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "sleepThread",
+			"declaration": "void sleepThread( int threadID, int time )",
+			"description": "Suspends execution of a thread temporarily.",
+			"parameters": "(int type) threadID : The ID of the target thread. \n(int type) time : The wait time in milliseconds. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "sleepThread",
+			"declaration": "void sleepThread( int threadID, int milliSeconds, nanoSeconds )",
+			"description": "Suspends execution of a thread temporarily.",
+			"parameters": "(int type) threadID : The ID of the target thread. \n(int type) milliSeconds : The wait time in milliseconds. \n( type) nanoSeconds : The wait time in nanoseconds. ",
+			"returnValue": "(void type) "
+		},
+		"function6": {
+			"name": "awaitThread",
+			"declaration": "void awaitThread( int threadID )",
+			"description": "Waits until execution of the thread has finished.Currently, the equivalent <a href=\"#waitForThread\">waitForThread<\/a> is recommended instead.This function is supported for compatibility.",
+			"parameters": "(int type) threadID : The ID of the target thread. ",
+			"returnValue": "(void type) "
+		}
+	}
+}

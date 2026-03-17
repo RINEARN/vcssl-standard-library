@@ -8,6 +8,7 @@ import data.DataWrapper;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ data.WrappedStack は、
  * スタック型のデータ構造を提供します。	
@@ -39,14 +40,49 @@ import data.DataWrapper;
  * 従って、要素が配列でない場合には、
  * WrappedStack よりも Stack の使用が推奨されます。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The data.WrappedStack library provides a stack-type data structure.
+ * </p>
+ *
+ * <p>
+ * This module provides the generic struct <a href="#WrappedStack">WrappedStack</a>,
+ * which stores stack data,
+ * and generic functions such as <a href="#push">push</a> and <a href="#pop">pop</a>
+ * for adding and removing data from it.
+ * </p>
+ *
+ * <p>
+ * In data.WrappedStack, elements are implemented as values wrapped and stored
+ * in the <a href="DataWrapper.html">DataWrapper</a> struct.
+ * <br />
+ * Therefore, unlike data.<a href="Stack.html">Stack</a>,
+ * WrappedStack can handle arrays as elements.
+ * </p>
+ *
+ * <p>
+ * On the other hand, because adding and removing elements involves wrapping them
+ * into the DataWrapper struct, processing becomes heavier than in Stack by that overhead.
+ * <br />
+ * Therefore, if the elements are not arrays,
+ * using Stack is recommended rather than WrappedStack.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スタック構造体です。スタックのデータを保持します。
+ *
+ * !--- locale=En-US ---
+ * The stack struct. It stores stack data.
  */
 public struct WrappedStack<Type>{
 	protected int size = 0;
@@ -55,9 +91,17 @@ public struct WrappedStack<Type>{
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 要素を全て削除します。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Removes all elements.
+ *
+ * @param stack The target stack struct.
  */
 public void clear<Type>( WrappedStack<Type> &stack ){
 	alloc[0] stack.data;
@@ -67,9 +111,17 @@ public void clear<Type>( WrappedStack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 使用中のサイズを返します。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the size currently in use.
+ *
+ * @param stack The target stack struct.
  */
 public int size<Type>( WrappedStack<Type> &stack ){
 	return stack.size;
@@ -77,10 +129,19 @@ public int size<Type>( WrappedStack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックに要素を追加します。
  *
  * @param stack 対象のスタック構造体
  * @param value 追加する要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Adds an element to the stack.
+ *
+ * @param stack The target stack struct.
+ * @param value The element to be added.
  */
 public void push<Type>( WrappedStack<Type> &stack, Type value ){
 	setProperLength<Type>(stack);
@@ -89,11 +150,21 @@ public void push<Type>( WrappedStack<Type> &stack, Type value ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックから要素を取り出します。
  * 取り出した要素は、スタックから削除されます。
  *
  * @param stack 対象のスタック構造体
  * @return 取り出した要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Removes and returns an element from the stack.
+ * The extracted element is deleted from the stack.
+ *
+ * @param stack The target stack struct.
+ * @return The extracted element.
  */
 public Type pop<Type>( WrappedStack<Type> &stack ){
 	setProperLength<Type>(stack);
@@ -103,10 +174,19 @@ public Type pop<Type>( WrappedStack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックから要素を削除せずに取り出します。
  *
  * @param stack 対象のスタック構造体
  * @return 取り出した要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns an element from the stack without removing it.
+ *
+ * @param stack The target stack struct.
+ * @return The extracted element.
  */
 public Type peek<Type>( WrappedStack<Type> &stack ){
 	checksize( stack.size-1 );
@@ -115,10 +195,19 @@ public Type peek<Type>( WrappedStack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックが指定された要素を含んでいるか判定します。
  *
  * @param stack 対象のスタック構造体
  * @param element 含まれるか判定したい要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Determines whether the stack contains the specified element.
+ *
+ * @param stack The target stack struct.
+ * @param element The element whose presence is to be checked.
  */
 public bool contains<Type>( WrappedStack<Type> &stack, Type element ){
 	int n = stack.size;
@@ -133,9 +222,17 @@ public bool contains<Type>( WrappedStack<Type> &stack, Type element ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックが保持する全要素の順序を反転させます。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Reverses the order of all elements held by the stack.
+ *
+ * @param stack The target stack struct.
  */
 public void reverse<Type>( WrappedStack<Type> &stack ){
 	int n = stack.size;
@@ -148,12 +245,22 @@ public void reverse<Type>( WrappedStack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックが保持する全要素を、DataWrapper配列に格納して返します。
  * なお、順序は pop や peek で
  * 最初に得られる要素を格納するものが [ 0 ] になります。
  *
  * @param stack 対象のスタック構造体
  * @return スタックの全要素をまとめたDataWrapper配列
+ *
+ * !--- locale=En-US ---
+ *
+ * Stores all elements held by the stack into a DataWrapper array and returns it.
+ * The order is such that the element obtained first by pop or peek becomes [0].
+ *
+ * @param stack The target stack struct.
+ * @return A DataWrapper array containing all elements of the stack.
  */
 public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedStack<Type> &stack ){
 	DataWrapper<Type> array[] = stack.data;
@@ -168,9 +275,17 @@ public DataWrapper<Type>[] toDataWrapperArray<Type>( WrappedStack<Type> &stack )
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 使用中のサイズに適切な配列バッファ長を設定します。
  *
  * @param stack 対象のスタック構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Sets an appropriate array buffer length according to the size currently in use.
+ *
+ * @param stack The target stack struct.
  */
 private void setProperLength<Type>( WrappedStack<Type> &stack ){
 	int zero = 0;
@@ -183,23 +298,40 @@ private void setProperLength<Type>( WrappedStack<Type> &stack ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スタックポインタの値が適正かどうかを確認し、不正ならエラーを出力します。
  *
  * @param size スタックポインタの値
+ *
+ * !--- locale=En-US ---
+ *
+ * Checks whether the value of the stack pointer is valid, and outputs an error if it is invalid.
+ *
+ * @param size The value of the stack pointer.
  */
 private int checksize(int size){
 	if(size < 0){
-		error("スタックポインタが負の値にアクセスしました。");
+		error("The stack pointer is negative. スタックポインタが負の値にアクセスしました。");
 	}
 }
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 現在のスタックバッファ長と、スタックポインタの値から、
  * 最適なスタックバッファ長を返します。
  *
  * @param length 現在のスタックバッファ長
  * @param size 現在のスタックポインタの値
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the optimal stack buffer length from the current stack buffer length and the value of the stack pointer.
+ *
+ * @param length The current stack buffer length.
+ * @param size The current value of the stack pointer.
  */
 private int getProperLength(int length, int size){
 	if( length == 0 ){
@@ -212,4 +344,3 @@ private int getProperLength(int length, int size){
 		return length;
 	}
 }
-

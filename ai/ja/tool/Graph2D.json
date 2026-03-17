@@ -1,0 +1,526 @@
+{
+	"libraryName": "Graph2D",
+	"libraryDescription": "<p>tool.Graph2D APIライブラリ（以下、Graph2Dライブラリ）は、2次元グラフソフトウェアを制御するためのライブラリです。<\/p><p>Graph2D ライブラリは拡張ライブラリであり、VCSSLの言語仕様における標準ライブラリには含まれていません。従って、全てのVCSSL処理系において、必ずしもGraph2D ライブラリの実装がサポートされるわけではありません。<\/p><p>Graph2D ライブラリの仕様は、広く一般的な2次元グラフソフトウェアをVCSSLから制御する事を想定して定義されており、特定の2次元グラフソフトウェアを前提としたものではありません。 Graph2D ライブラリの実装において、制御対象にどのような2次元グラフソフトウェアが採用されるかは処理系依存であり、処理系の開発元（ベンダー）、バージョン、またはグラフソフトウェアとの通信機能を提供するプラグインなどに依存します。このような事情があるため、Graph2D ライブラリが提供する各種関数も、異なる処理系に関しては、厳密に同一の挙動を期待すべきではありません。<\/p><p>また、同一の処理系であっても、Graph2D ライブラリは標準ライブラリでは無いため、その実装において、恒久的に同様の挙動が保証されるものではありません。Graph2D ライブラリの実装は、あくまで処理系が独自にサポートする拡張機能であるという点に留意しておく必要があります。例えば、グラフソフトウェアの大幅なアップデートが行われると、 それに伴い、Graph2D ライブラリの挙動も微妙に変化してしまうケースなどが考えられます。<\/p><p>RINEARN VCSSLランタイム、及びそれを搭載するVCSSL対応ソフトウェア（リニアンプロセッサーなど）では、Graph2D ライブラリをサポートしており、その実装には科学技術分野用グラフソフトウェア「 リニアングラフ2D 」を採用しています。リニアングラフ2D本体（ RinearnGraph2D.jar ）はVCSSLランタイムの配布パッケージ内に同梱されているため、別途何かを用意する必要はありません。<\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D()",
+			"description": "2次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。",
+			"returnValue": "(int型) 生成したグラフのID"
+		},
+		"function1": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D( int x, int y, int width, int height, string title )",
+			"description": "2次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。",
+			"parameters": "(int型) x : グラフウィンドウ左上頂点のX座標 \n(int型) y : グラフウィンドウ左上頂点のY座標 \n(int型) width : グラフウィンドウの幅 \n(int型) height : グラフウィンドウの高さ \n(string型) title : グラフウィンドウタイトル ",
+			"returnValue": "(int型) 生成したグラフのID"
+		},
+		"function2": {
+			"name": "getGraph2D",
+			"declaration": "int getGraph2D()",
+			"description": "処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。",
+			"returnValue": "(int型) 取得または生成したグラフID"
+		},
+		"function3": {
+			"name": "deleteGraph2D",
+			"declaration": "void deleteGraph2D( int graphID )",
+			"description": "グラフを破棄します。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function4": {
+			"name": "clearGraph2D",
+			"declaration": "void clearGraph2D( int graphID )",
+			"description": "グラフの内容をクリアします。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function5": {
+			"name": "getGraph2DGraphics",
+			"declaration": "int getGraph2DGraphics( int graphID )",
+			"description": "グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。変換されたグラフィックスデータは、2D\/3Dレンダラ―などで加工できます。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(int型) グラフィックスデータID"
+		},
+		"function6": {
+			"name": "setGraph2DLocation",
+			"declaration": "void setGraph2DLocation( int graphID, int x, int y )",
+			"description": "グラフウィンドウの位置を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(int型) x : グラフウィンドウ左上頂点のX座標 \n(int型) y : グラフウィンドウ左上頂点のY座標 ",
+			"returnValue": "(void型) "
+		},
+		"function7": {
+			"name": "setGraph2DSize",
+			"declaration": "void setGraph2DSize( int graphID, int width, int height )",
+			"description": "グラフウィンドウの大きさを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(int型) width : グラフウィンドウの幅 \n(int型) height : グラフウィンドウ高さ ",
+			"returnValue": "(void型) "
+		},
+		"function8": {
+			"name": "hideGraph2D",
+			"declaration": "void hideGraph2D( int graphID )",
+			"description": "グラフウィンドウを不可視化します。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function9": {
+			"name": "showGraph2D",
+			"declaration": "void showGraph2D( int graphID )",
+			"description": "グラフウィンドウを可視化します。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function10": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string filePath )",
+			"description": "ファイルを読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) filePath : プロットするファイルのファイル名またはパス ",
+			"returnValue": "(void型) "
+		},
+		"function11": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string file[ ] )",
+			"description": "複数のファイルを読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string[]型) file : プロットするファイルのファイル名またはパス ",
+			"returnValue": "(void型) "
+		},
+		"function12": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, string data )",
+			"description": "ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) data : ファイルの内容と同じ書式で記載されたテキスト ",
+			"returnValue": "(void型) "
+		},
+		"function13": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[]型) dataX : X座標を格納する配列（ [ 点インデックス ] ） \n(float[]型) dataY : Y座標を格納する配列（ [ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function14": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[][]型) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） \n(float[][]型) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function15": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフに追記プロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[]型) dataX : X座標を格納する配列（ [ 点インデックス ] ） \n(float[]型) dataY : Y座標を格納する配列（ [ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function16": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフに追記プロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[][]型) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） \n(float[][]型) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function17": {
+			"name": "setGraph2DConfigurationFile",
+			"declaration": "void setGraph2DConfigurationFile( int graphID, string file )",
+			"description": "設定ファイルを読み込み、グラフに自動で設定を行います。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) file : 設定ファイルのファイル名またはパス ",
+			"returnValue": "(void型) "
+		},
+		"function18": {
+			"name": "setGraph2DConfigurationCode",
+			"declaration": "void setGraph2DConfigurationCode( int graphID, string code )",
+			"description": "設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。",
+			"parameters": "(int型) graphID : 対象グラフのID \nline : 設定コードの内容 ",
+			"returnValue": "(void型) "
+		},
+		"function19": {
+			"name": "setGraph2DRange",
+			"declaration": "void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax )",
+			"description": "プロット範囲を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double型) xMin : X軸の最小値 \n(double型) xMax : X軸の最大値 \n(double型) yMin : Y軸の最小値 \n(double型) yMax : Y軸の最大値 ",
+			"returnValue": "(void型) "
+		},
+		"function20": {
+			"name": "setGraph2DRangeX",
+			"declaration": "void setGraph2DRangeX( int graphID, double xMin, double xMax )",
+			"description": "X軸のプロット範囲を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double型) xMin : X軸の最小値 \n(double型) xMax : X軸の最大値 ",
+			"returnValue": "(void型) "
+		},
+		"function21": {
+			"name": "setGraph2DRangeY",
+			"declaration": "void setGraph2DRangeY( int graphID, double yMin, double yMax )",
+			"description": "Y軸のプロット範囲を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double型) yMin : Y軸の最小値 \n(double型) yMax : Y軸の最大値 ",
+			"returnValue": "(void型) "
+		},
+		"function22": {
+			"name": "setGraph2DAutoRange",
+			"declaration": "void setGraph2DAutoRange( int graphID, bool autoX, bool autoY )",
+			"description": "プロット範囲の自動調整機能を有効化または無効化します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(bool型) autoX : X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse \n(bool型) autoY : Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse ",
+			"returnValue": "(void型) "
+		},
+		"function23": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "各軸のラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) xLabel : X軸のラベル \n(string型) yLabel : Y軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function24": {
+			"name": "setGraph2DLabelX",
+			"declaration": "void setGraph2DLabelX( int graphID, string label )",
+			"description": "X軸のラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) label : X軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function25": {
+			"name": "setGraph2DLabelY",
+			"declaration": "void setGraph2DLabelY( int graphID, string label )",
+			"description": "Y軸のラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) label : Y軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function26": {
+			"name": "setGraph2DTick",
+			"declaration": "void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] )",
+			"description": "各軸の目盛りを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double[]型) xTickCoords : X軸の目盛り刻み位置の座標値 \n(string[]型) xTickLabels : X軸の目盛りのラベル \n(double[]型) yTickCoords : Y軸の目盛り刻み位置の座標値 \n(string[]型) yTickLabels : Y軸の目盛りのラベル ",
+			"returnValue": "(void型) "
+		},
+		"function27": {
+			"name": "setGraph2DTickX",
+			"declaration": "void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "X軸の目盛りを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double[]型) tickCoords : 目盛り刻み位置の座標値 \n(string[]型) tickLabels : 目盛りのラベル ",
+			"returnValue": "(void型) "
+		},
+		"function28": {
+			"name": "setGraph2DTickY",
+			"declaration": "void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Y軸の目盛りを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double[]型) tickCoords : 目盛り刻み位置の座標値 \n(string[]型) tickLabels : 目盛りのラベル ",
+			"returnValue": "(void型) "
+		},
+		"function29": {
+			"name": "setGraph2DOption",
+			"declaration": "void setGraph2DOption( int graphID, string option, bool value )",
+			"description": "グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：<dl><dt>WITH_POINTS<\/dt><dd>点プロット<\/dd><dt>WITH_LINES<\/dt><dd>線プロット<\/dd><dt>WITH_DOTS<\/dt><dd>ドットプロット<\/dd><dt>WITH_GRID_LINE<\/dt><dd>グリッドライン描画<\/dd><dt>LOG_X<\/dt><dd>X対数軸表示<\/dd><dt>LOG_Y<\/dt><dd>Y対数軸表示<\/dd><dt>REVERSE_X<\/dt><dd>X軸反転表示<\/dd><dt>REVERSE_Y<\/dt><dd>Y軸反転表示<\/dd><\/dl>",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) option : オプション項目名 \n(bool型) value : オプションを有効にするならtrue、無効にするにはfalse ",
+			"returnValue": "(void型) "
+		},
+		"function30": {
+			"name": "setGraph2DMenu",
+			"declaration": "void setGraph2DMenu( int graphID, string menu, string value )",
+			"description": "※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph2DLabel 関数やsetGraph2DLabelX\/Y 関数などで代替可能です。そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。<br \/><br \/>グラフのメニュー項目を設定します。項目名は処理系に依存します。",
+			"parameters": "(int型) graphID : 対象グラフのID \noption : メニュー項目名 \n(string型) value : メニュー項目を有効にするならtrue、無効にするにはfalse ",
+			"returnValue": "(void型) "
+		},
+		"function31": {
+			"name": "setGraph2DAnimation",
+			"declaration": "void setGraph2DAnimation( int graphID, string mode, bool state )",
+			"description": "グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：<dl><dt>TRACE<\/dt><dd>点をアニメーションし、軌跡を残す<\/dd><dt>INDEX<\/dt><dd>点をアニメーションする<\/dd><dt>INDEX-SERIES<\/dt><dd>系列をアニメーションする<\/dd><\/dl>",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) mode : アニメーションモード \n(bool型) state : アニメーションを有効化するならtrue、無効化するならfalse ",
+			"returnValue": "(void型) "
+		},
+		"function32": {
+			"name": "setGraph2DTitle",
+			"declaration": "void setGraph2DTitle( int graphID, string title )",
+			"description": "グラフのタイトルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) title : タイトル ",
+			"returnValue": "(void型) "
+		},
+		"function33": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "グラフの軸ラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) xLabel : X軸のラベル \n(string型) yLabel : Y軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function34": {
+			"name": "setGraph2DLegend",
+			"declaration": "void setGraph2DLegend( int graphID, string legend[ ] )",
+			"description": "グラフの凡例を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string[]型) legend : 凡例を格納する配列（ [ 系列インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function35": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format )",
+			"description": "グラフを画像に出力します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) filename : 出力ファイル名またはパス \n形式（ : \"PNG\" または \"JPEG\" ） ",
+			"returnValue": "(void型) "
+		},
+		"function36": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format, float quality )",
+			"description": "グラフを画像に出力します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) filename : 出力ファイル名またはパス \n形式（ : \"PNG\" または \"JPEG\" ） \n(float型) quality : 品質（ 0.0 ~ 100.0 ） ",
+			"returnValue": "(void型) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D()",
+			"description": "2次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。",
+			"returnValue": "(int型) 生成したグラフのID"
+		},
+		"function1": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D( int x, int y, int width, int height, string title )",
+			"description": "2次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。",
+			"parameters": "(int型) x : グラフウィンドウ左上頂点のX座標 \n(int型) y : グラフウィンドウ左上頂点のY座標 \n(int型) width : グラフウィンドウの幅 \n(int型) height : グラフウィンドウの高さ \n(string型) title : グラフウィンドウタイトル ",
+			"returnValue": "(int型) 生成したグラフのID"
+		},
+		"function2": {
+			"name": "getGraph2D",
+			"declaration": "int getGraph2D()",
+			"description": "処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。",
+			"returnValue": "(int型) 取得または生成したグラフID"
+		},
+		"function3": {
+			"name": "deleteGraph2D",
+			"declaration": "void deleteGraph2D( int graphID )",
+			"description": "グラフを破棄します。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function4": {
+			"name": "clearGraph2D",
+			"declaration": "void clearGraph2D( int graphID )",
+			"description": "グラフの内容をクリアします。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function5": {
+			"name": "getGraph2DGraphics",
+			"declaration": "int getGraph2DGraphics( int graphID )",
+			"description": "グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。変換されたグラフィックスデータは、2D\/3Dレンダラ―などで加工できます。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(int型) グラフィックスデータID"
+		},
+		"function6": {
+			"name": "setGraph2DLocation",
+			"declaration": "void setGraph2DLocation( int graphID, int x, int y )",
+			"description": "グラフウィンドウの位置を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(int型) x : グラフウィンドウ左上頂点のX座標 \n(int型) y : グラフウィンドウ左上頂点のY座標 ",
+			"returnValue": "(void型) "
+		},
+		"function7": {
+			"name": "setGraph2DSize",
+			"declaration": "void setGraph2DSize( int graphID, int width, int height )",
+			"description": "グラフウィンドウの大きさを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(int型) width : グラフウィンドウの幅 \n(int型) height : グラフウィンドウ高さ ",
+			"returnValue": "(void型) "
+		},
+		"function8": {
+			"name": "hideGraph2D",
+			"declaration": "void hideGraph2D( int graphID )",
+			"description": "グラフウィンドウを不可視化します。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function9": {
+			"name": "showGraph2D",
+			"declaration": "void showGraph2D( int graphID )",
+			"description": "グラフウィンドウを可視化します。",
+			"parameters": "(int型) graphID : 対象グラフのID ",
+			"returnValue": "(void型) "
+		},
+		"function10": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string filePath )",
+			"description": "ファイルを読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) filePath : プロットするファイルのファイル名またはパス ",
+			"returnValue": "(void型) "
+		},
+		"function11": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string file[ ] )",
+			"description": "複数のファイルを読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string[]型) file : プロットするファイルのファイル名またはパス ",
+			"returnValue": "(void型) "
+		},
+		"function12": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, string data )",
+			"description": "ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) data : ファイルの内容と同じ書式で記載されたテキスト ",
+			"returnValue": "(void型) "
+		},
+		"function13": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[]型) dataX : X座標を格納する配列（ [ 点インデックス ] ） \n(float[]型) dataY : Y座標を格納する配列（ [ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function14": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフにプロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[][]型) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） \n(float[][]型) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function15": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフに追記プロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[]型) dataX : X座標を格納する配列（ [ 点インデックス ] ） \n(float[]型) dataY : Y座標を格納する配列（ [ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function16": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "座標値を格納する float 型配列を読み込み、グラフに追記プロットします。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(float[][]型) dataX : X座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） \n(float[][]型) dataY : Y座標を格納する配列（ [ 系列インデックス ][ 点インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function17": {
+			"name": "setGraph2DConfigurationFile",
+			"declaration": "void setGraph2DConfigurationFile( int graphID, string file )",
+			"description": "設定ファイルを読み込み、グラフに自動で設定を行います。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) file : 設定ファイルのファイル名またはパス ",
+			"returnValue": "(void型) "
+		},
+		"function18": {
+			"name": "setGraph2DConfigurationCode",
+			"declaration": "void setGraph2DConfigurationCode( int graphID, string code )",
+			"description": "設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。",
+			"parameters": "(int型) graphID : 対象グラフのID \nline : 設定コードの内容 ",
+			"returnValue": "(void型) "
+		},
+		"function19": {
+			"name": "setGraph2DRange",
+			"declaration": "void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax )",
+			"description": "プロット範囲を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double型) xMin : X軸の最小値 \n(double型) xMax : X軸の最大値 \n(double型) yMin : Y軸の最小値 \n(double型) yMax : Y軸の最大値 ",
+			"returnValue": "(void型) "
+		},
+		"function20": {
+			"name": "setGraph2DRangeX",
+			"declaration": "void setGraph2DRangeX( int graphID, double xMin, double xMax )",
+			"description": "X軸のプロット範囲を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double型) xMin : X軸の最小値 \n(double型) xMax : X軸の最大値 ",
+			"returnValue": "(void型) "
+		},
+		"function21": {
+			"name": "setGraph2DRangeY",
+			"declaration": "void setGraph2DRangeY( int graphID, double yMin, double yMax )",
+			"description": "Y軸のプロット範囲を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double型) yMin : Y軸の最小値 \n(double型) yMax : Y軸の最大値 ",
+			"returnValue": "(void型) "
+		},
+		"function22": {
+			"name": "setGraph2DAutoRange",
+			"declaration": "void setGraph2DAutoRange( int graphID, bool autoX, bool autoY )",
+			"description": "プロット範囲の自動調整機能を有効化または無効化します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(bool型) autoX : X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse \n(bool型) autoY : Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse ",
+			"returnValue": "(void型) "
+		},
+		"function23": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "各軸のラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) xLabel : X軸のラベル \n(string型) yLabel : Y軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function24": {
+			"name": "setGraph2DLabelX",
+			"declaration": "void setGraph2DLabelX( int graphID, string label )",
+			"description": "X軸のラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) label : X軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function25": {
+			"name": "setGraph2DLabelY",
+			"declaration": "void setGraph2DLabelY( int graphID, string label )",
+			"description": "Y軸のラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) label : Y軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function26": {
+			"name": "setGraph2DTick",
+			"declaration": "void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] )",
+			"description": "各軸の目盛りを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double[]型) xTickCoords : X軸の目盛り刻み位置の座標値 \n(string[]型) xTickLabels : X軸の目盛りのラベル \n(double[]型) yTickCoords : Y軸の目盛り刻み位置の座標値 \n(string[]型) yTickLabels : Y軸の目盛りのラベル ",
+			"returnValue": "(void型) "
+		},
+		"function27": {
+			"name": "setGraph2DTickX",
+			"declaration": "void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "X軸の目盛りを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double[]型) tickCoords : 目盛り刻み位置の座標値 \n(string[]型) tickLabels : 目盛りのラベル ",
+			"returnValue": "(void型) "
+		},
+		"function28": {
+			"name": "setGraph2DTickY",
+			"declaration": "void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Y軸の目盛りを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(double[]型) tickCoords : 目盛り刻み位置の座標値 \n(string[]型) tickLabels : 目盛りのラベル ",
+			"returnValue": "(void型) "
+		},
+		"function29": {
+			"name": "setGraph2DOption",
+			"declaration": "void setGraph2DOption( int graphID, string option, bool value )",
+			"description": "グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：<dl><dt>WITH_POINTS<\/dt><dd>点プロット<\/dd><dt>WITH_LINES<\/dt><dd>線プロット<\/dd><dt>WITH_DOTS<\/dt><dd>ドットプロット<\/dd><dt>WITH_GRID_LINE<\/dt><dd>グリッドライン描画<\/dd><dt>LOG_X<\/dt><dd>X対数軸表示<\/dd><dt>LOG_Y<\/dt><dd>Y対数軸表示<\/dd><dt>REVERSE_X<\/dt><dd>X軸反転表示<\/dd><dt>REVERSE_Y<\/dt><dd>Y軸反転表示<\/dd><\/dl>",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) option : オプション項目名 \n(bool型) value : オプションを有効にするならtrue、無効にするにはfalse ",
+			"returnValue": "(void型) "
+		},
+		"function30": {
+			"name": "setGraph2DMenu",
+			"declaration": "void setGraph2DMenu( int graphID, string menu, string value )",
+			"description": "※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph2DLabel 関数やsetGraph2DLabelX\/Y 関数などで代替可能です。そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。<br \/><br \/>グラフのメニュー項目を設定します。項目名は処理系に依存します。",
+			"parameters": "(int型) graphID : 対象グラフのID \noption : メニュー項目名 \n(string型) value : メニュー項目を有効にするならtrue、無効にするにはfalse ",
+			"returnValue": "(void型) "
+		},
+		"function31": {
+			"name": "setGraph2DAnimation",
+			"declaration": "void setGraph2DAnimation( int graphID, string mode, bool state )",
+			"description": "グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：<dl><dt>TRACE<\/dt><dd>点をアニメーションし、軌跡を残す<\/dd><dt>INDEX<\/dt><dd>点をアニメーションする<\/dd><dt>INDEX-SERIES<\/dt><dd>系列をアニメーションする<\/dd><\/dl>",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) mode : アニメーションモード \n(bool型) state : アニメーションを有効化するならtrue、無効化するならfalse ",
+			"returnValue": "(void型) "
+		},
+		"function32": {
+			"name": "setGraph2DTitle",
+			"declaration": "void setGraph2DTitle( int graphID, string title )",
+			"description": "グラフのタイトルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) title : タイトル ",
+			"returnValue": "(void型) "
+		},
+		"function33": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "グラフの軸ラベルを設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) xLabel : X軸のラベル \n(string型) yLabel : Y軸のラベル ",
+			"returnValue": "(void型) "
+		},
+		"function34": {
+			"name": "setGraph2DLegend",
+			"declaration": "void setGraph2DLegend( int graphID, string legend[ ] )",
+			"description": "グラフの凡例を設定します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string[]型) legend : 凡例を格納する配列（ [ 系列インデックス ] ） ",
+			"returnValue": "(void型) "
+		},
+		"function35": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format )",
+			"description": "グラフを画像に出力します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) filename : 出力ファイル名またはパス \n形式（ : \"PNG\" または \"JPEG\" ） ",
+			"returnValue": "(void型) "
+		},
+		"function36": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format, float quality )",
+			"description": "グラフを画像に出力します。",
+			"parameters": "(int型) graphID : 対象グラフのID \n(string型) filename : 出力ファイル名またはパス \n形式（ : \"PNG\" または \"JPEG\" ） \n(float型) quality : 品質（ 0.0 ~ 100.0 ） ",
+			"returnValue": "(void型) "
+		}
+	}
+}

@@ -5,6 +5,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ data.Queue は、
  * キュー型のデータ構造を提供します。	
@@ -24,14 +25,39 @@ coding UTF-8;
  * data.<a href="WrappedQueue.html">WrappedQueue</a> 
  * を使用して下さい。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The data.Queue library provides a queue-type data structure.
+ * </p>
+ *
+ * <p>
+ * This module provides the generic struct <a href="#Queue">Queue</a>,
+ * which stores queue data,
+ * and generic functions such as <a href="#enqueue">enqueue</a> and <a href="#dequeue">dequeue</a>
+ * for adding and removing data from it.
+ * </p>
+ *
+ * <p>
+ * Note that arrays cannot be handled as elements in data.Queue.
+ * If you want to use arrays as elements, use
+ * data.<a href="WrappedQueue.html">WrappedQueue</a>.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
 /**
+ * !--- locale=Ja-JP ---
  * キュー構造体です。キューのデータを保持します。
+ *
+ * !--- locale=En-US ---
+ * The queue struct. It stores queue data.
  */
 public struct Queue<Type>{
 	protected int first = 0;
@@ -42,9 +68,17 @@ public struct Queue<Type>{
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 要素を全て削除します。
  *
  * @param queue 対象のキュー構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Removes all elements.
+ *
+ * @param queue The target queue struct.
  */
 public void clear<Type>( Queue<Type> &queue ){
 	alloc[0] queue.data;
@@ -56,9 +90,17 @@ public void clear<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 使用中のサイズを返します。
  *
  * @param queue 対象のキュー構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the size currently in use.
+ *
+ * @param queue The target queue struct.
  */
 public int size<Type>( Queue<Type> &queue ){
 	return queue.size;
@@ -66,10 +108,19 @@ public int size<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューに要素を追加します。
  *
  * @param queue 対象のキュー構造体
  * @param value 追加する要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Adds an element to the queue.
+ *
+ * @param queue The target queue struct.
+ * @param value The element to be added.
  */
 public void enqueue<Type>( Queue<Type> &queue, Type value ){
 	queue.size++;
@@ -80,10 +131,19 @@ public void enqueue<Type>( Queue<Type> &queue, Type value ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューから要素を取り出します。取り出した要素は、キューから削除されます。
  *
  * @param queue 対象のキュー構造体
  * @return 取り出した要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Removes and returns an element from the queue. The extracted element is deleted from the queue.
+ *
+ * @param queue The target queue struct.
+ * @return The extracted element.
  */
 public Type dequeue<Type>( Queue<Type> &queue ){
 	queue.size--;
@@ -96,10 +156,19 @@ public Type dequeue<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューから要素を削除せずに取り出します。
  *
  * @param queue 対象のキュー構造体
  * @return 取り出した要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns an element from the queue without removing it.
+ *
+ * @param queue The target queue struct.
+ * @return The extracted element.
  */
 public Type peek<Type>( Queue<Type> &queue ){
 	return queue.data[ queue.first ];
@@ -107,10 +176,19 @@ public Type peek<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューが指定された要素を含んでいるか判定します。
  *
  * @param queue 対象のキュー構造体
- * @param 含まれるか判定したい要素
+ * @param element 含まれるか判定したい要素
+ *
+ * !--- locale=En-US ---
+ *
+ * Determines whether the queue contains the specified element.
+ *
+ * @param queue The target queue struct.
+ * @param element The element whose presence is to be checked.
  */
 public bool contains<Type>( Queue<Type> &queue, Type element ){
 	int n = queue.size;
@@ -124,9 +202,17 @@ public bool contains<Type>( Queue<Type> &queue, Type element ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューが保持する全要素の順序を反転させます。
  *
  * @param queue 対象のキュー構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Reverses the order of all elements held by the queue.
+ *
+ * @param queue The target queue struct.
  */
 public void reverse<Type>( Queue<Type> &queue ){
 
@@ -145,10 +231,19 @@ public void reverse<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューが保持する全要素を、1次元の配列に変換して返します。
  *
  * @param queue 対象のキュー構造体
  * @return スタックの全要素をまとめた1次元配列
+ *
+ * !--- locale=En-US ---
+ *
+ * Converts all elements held by the queue into a one-dimensional array and returns it.
+ *
+ * @param queue The target queue struct.
+ * @return A one-dimensional array containing all elements of the queue.
  */
 public Type[] toArray<Type>( Queue<Type> &queue ){
 
@@ -163,9 +258,17 @@ public Type[] toArray<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューバッファを、必要に応じて最適な容量に再確保します。
  *
  * @param queue 対象のキュー構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Reallocates the queue buffer to an optimal capacity when necessary.
+ *
+ * @param queue The target queue struct.
  */
 private int setProperLength<Type>( Queue<Type> &queue ){
 
@@ -191,22 +294,39 @@ private int setProperLength<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューのサイズが適正かどうかを確認し、不正ならエラーを出力します。
  *
  * @param size キューのサイズ
+ *
+ * !--- locale=En-US ---
+ *
+ * Checks whether the queue size is valid, and outputs an error if it is invalid.
+ *
+ * @param size The queue size.
  */
 private int checksize(int size){
 	if(size < 0){
-		error("キューの容量が負になりました。");
+		error("The Queue size is negative. キューの容量が負になりました。");
 	}
 }
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューバッファ（リングバッファ）をシフトし、
  * 先頭をインデックス 0 に合わせます。
  *
  * @param queue 対象のキュー構造体
+ *
+ * !--- locale=En-US ---
+ *
+ * Shifts the queue buffer, which is a ring buffer,
+ * so that its beginning is aligned to index 0.
+ *
+ * @param queue The target queue struct.
  */
 private void shiftData<Type>( Queue<Type> &queue ){
 	int zero = 0;
@@ -229,10 +349,19 @@ private void shiftData<Type>( Queue<Type> &queue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 現在のキューバッファ長と、その中の使用量から、最適なキューバッファ長を返します。
  *
  * @param length 現在のキューバッファ長
  * @param usage 現在のキューバッファ使用量
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the optimal queue buffer length from the current queue buffer length and its current usage.
+ *
+ * @param length The current queue buffer length.
+ * @param usage The current usage of the queue buffer.
  */
 private int getProperLength(int length, int usage){
 	if( length == 0 ){
@@ -248,11 +377,21 @@ private int getProperLength(int length, int usage){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * キューのリングバッファ内で、実際に使用している長さを返します。
  *
  * @param first 先頭インデックス
  * @param last 終端インデックス
  * @param length バッファ長
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the length actually in use within the ring buffer of the queue.
+ *
+ * @param first The first index.
+ * @param last The last index.
+ * @param length The buffer length.
  */
 private int getUsage(int first, int last, int length){
 	if(first <= last){
@@ -261,4 +400,3 @@ private int getUsage(int first, int last, int length){
 		return last - first + length;
 	}
 }
-

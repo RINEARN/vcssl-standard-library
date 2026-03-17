@@ -1,0 +1,215 @@
+{
+	"libraryName": "TextFile",
+	"libraryDescription": "<p>The file.TextFile library provides generic text file input\/output functions.<br \/>In particular, it supports file input\/output in CSV and TSV formats.<\/p><p>VCSSL has supported basic text file input\/output functions, including CSV and TSV formats,since its earliest versions.<br \/>However, because early VCSSL was a language intended mainly for numerical computation,those functions were also specified on the assumption of reading and writing numeric data files,and can therefore be inconvenient for general-purpose use.<br \/>For example, CSV and TSV files can be opened with VCSSL's standard System.open(string filePath, string mode) function,but since that function was designed with manipulation of numeric data files in mind, its behavior is very simple.It does not perform processing such as escaping special symbols or enclosing values in double quotation marks when necessary.<br \/>(Instead, it operates quickly for input\/output of numeric data files.)<\/p><p>Therefore, this module is intended to provide more general-purpose text file input\/output functions,not only for numeric data files.<br \/>For example, when writing, if a value contains a delimiter such as a comma in CSV or a tab in TSV,the whole value is enclosed in double quotation marks.The same applies when the value contains line breaks.<br \/>When reading, parts enclosed in double quotation marks are also read collectively as one value,so it is not a problem even if they contain delimiters or line breaks.<\/p><p>Also, if a written value contains double quotation marks, they are escaped as consecutive double quotation marks.<br \/>Likewise, when reading, consecutive double quotation marks are treated as escaped quotation marks.<\/p><p>In addition, this module allows you to specify not only common CSV and TSV formats,but also delimiter and enclosure symbols explicitly.<\/p>",
+	"structs": {
+		"struct0": {
+			"name": "TextFile",
+			"declaration": "struct TextFile",
+			"description": "The text file struct. It holds system resources such as the file ID, and information such as delimiters."
+		}
+	},
+	"variables": {
+		"variable0": {
+			"name": "READ",
+			"declaration": "const string READ",
+			"description": "The \"read\" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href=\"#ENCLOSED_NONE\">ENCLOSED_NONE<\/a>."
+		},
+		"variable1": {
+			"name": "WRITE",
+			"declaration": "const string WRITE",
+			"description": "The \"write\" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href=\"#ENCLOSED_NONE\">ENCLOSED_NONE<\/a>."
+		},
+		"variable2": {
+			"name": "APPEND",
+			"declaration": "const string APPEND",
+			"description": "The \"append\" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href=\"#ENCLOSED_NONE\">ENCLOSED_NONE<\/a>."
+		},
+		"variable3": {
+			"name": "READ_TSV",
+			"declaration": "const string READ_TSV",
+			"description": "The \"read\" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a>."
+		},
+		"variable4": {
+			"name": "WRITE_TSV",
+			"declaration": "const string WRITE_TSV",
+			"description": "The \"write\" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a>."
+		},
+		"variable5": {
+			"name": "APPEND_TSV",
+			"declaration": "const string APPEND_TSV",
+			"description": "The \"append\" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a>."
+		},
+		"variable6": {
+			"name": "READ_CSV",
+			"declaration": "const string READ_CSV",
+			"description": "The \"read\" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a>."
+		},
+		"variable7": {
+			"name": "WRITE_CSV",
+			"declaration": "const string WRITE_CSV",
+			"description": "The \"write\" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a>."
+		},
+		"variable8": {
+			"name": "APPEND_CSV",
+			"declaration": "const string APPEND_CSV",
+			"description": "The \"append\" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href=\"#ENCLOSED_IF_NECESSARY\">ENCLOSED_IF_NECESSARY<\/a>."
+		},
+		"variable9": {
+			"name": "ENCLOSED_ALL",
+			"declaration": "const int ENCLOSED_ALL",
+			"description": "The option to enclose all values in enclosure symbols."
+		},
+		"variable10": {
+			"name": "ENCLOSED_IF_NECESSARY",
+			"declaration": "const int ENCLOSED_IF_NECESSARY",
+			"description": "The option to enclose only necessary values in enclosure symbols. This is the default setting for CSV and TSV files."
+		},
+		"variable11": {
+			"name": "ENCLOSED_NONE",
+			"declaration": "const int ENCLOSED_NONE",
+			"description": "The option not to enclose any values in enclosure symbols. This is the default setting for generic text files."
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "openTextFile",
+			"declaration": "TextFile openTextFile(string filePath, string mode)",
+			"description": "Opens a text file by specifying its file name and mode.Select the mode from the constants below.<dl>  <dt><a href=\"#WRITE\">WRITE<\/a><\/dt>  <dd>The write mode for generic text files with no special settings. You can also configure settings manually.<\/dd>  <dt><a href=\"#APPEND\">APPEND<\/a><\/dt>  <dd>The append mode for generic text files with no special settings. You can also configure settings manually.<\/dd>  <dt><a href=\"#READ\">READ<\/a><\/dt>  <dd>The read mode for generic text files with no special settings. You can also configure settings manually.<\/dd>  <dt><a href=\"#WRITE_CSV\">WRITE_CSV<\/a><\/dt>  <dd>The write mode configured for CSV (comma-separated) files.<\/dd>  <dt><a href=\"#APPEND_CSV\">APPEND_CSV<\/a><\/dt>  <dd>The append mode configured for CSV (comma-separated) files.<\/dd>  <dt><a href=\"#READ_CSV\">READ_CSV<\/a><\/dt>  <dd>The read mode configured for CSV (comma-separated) files.<\/dd>  <dt><a href=\"#WRITE_TSV\">WRITE_TSV<\/a><\/dt>  <dd>The write mode configured for TSV (tab-separated) files.<\/dd>  <dt><a href=\"#APPEND_TSV\">APPEND_TSV<\/a><\/dt>  <dd>The append mode configured for TSV (tab-separated) files.<\/dd>  <dt><a href=\"#READ_TSV\">READ_TSV<\/a><\/dt>  <dd>The read mode configured for TSV (tab-separated) files.<\/dd><\/dl>",
+			"parameters": "(string type) filePath : The file name. \n(string type) mode : The mode. ",
+			"returnValue": "(TextFile type) The TextFile struct of the opened file."
+		},
+		"function1": {
+			"name": "openTextFile",
+			"declaration": "TextFile openTextFile(string filePath, string mode, string textEncoding)",
+			"description": "Opens a text file by specifying its file name, mode, and text encoding.Select the mode from the constants below.<dl>  <dt><a href=\"#WRITE\">WRITE<\/a><\/dt>  <dd>The write mode for generic text files with no special settings. You can also configure settings manually.<\/dd>  <dt><a href=\"#APPEND\">APPEND<\/a><\/dt>  <dd>The append mode for generic text files with no special settings. You can also configure settings manually.<\/dd>  <dt><a href=\"#READ\">READ<\/a><\/dt>  <dd>The read mode for generic text files with no special settings. You can also configure settings manually.<\/dd>  <dt><a href=\"#WRITE_CSV\">WRITE_CSV<\/a><\/dt>  <dd>The write mode configured for CSV (comma-separated) files.<\/dd>  <dt><a href=\"#APPEND_CSV\">APPEND_CSV<\/a><\/dt>  <dd>The append mode configured for CSV (comma-separated) files.<\/dd>  <dt><a href=\"#READ_CSV\">READ_CSV<\/a><\/dt>  <dd>The read mode configured for CSV (comma-separated) files.<\/dd>  <dt><a href=\"#WRITE_TSV\">WRITE_TSV<\/a><\/dt>  <dd>The write mode configured for TSV (tab-separated) files.<\/dd>  <dt><a href=\"#APPEND_TSV\">APPEND_TSV<\/a><\/dt>  <dd>The append mode configured for TSV (tab-separated) files.<\/dd>  <dt><a href=\"#READ_TSV\">READ_TSV<\/a><\/dt>  <dd>The read mode configured for TSV (tab-separated) files.<\/dd><\/dl>Also, choose the text encoding from the following string literals.<dl>  <dt>&quotShift_JIS&quot<\/dt>  <dd>Shift_JIS. Note that it uses an underscore ( _ ), not a hyphen ( - ).<\/dd>  <dt>&quotUTF-8&quot<\/dt>  <dd>UTF-8. Note that it uses a hyphen ( - ), not an underscore ( _ ).<\/dd>  <dt>&quotEUC-JP&quot<\/dt>  <dd>EUC-JP. Note that it uses a hyphen ( - ), not an underscore ( _ ).<\/dd><\/dl>",
+			"parameters": "(string type) filePath : The file name. \n(string type) mode : The mode. \nencoding : The text encoding. ",
+			"returnValue": "(TextFile type) The TextFile struct of the opened file."
+		},
+		"function2": {
+			"name": "close",
+			"declaration": "void close(TextFile &textFile)",
+			"description": "Closes access to the text file.In particular, after write access, this function must always be called in order to flush all buffered contents to the end.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(void type) "
+		},
+		"function3": {
+			"name": "getEndOfLineCode",
+			"declaration": "string getEndOfLineCode(TextFile &textFile)",
+			"description": "Obtains the line break code used for file input\/output.In read mode, the line break code used in the file is analyzed,and the one considered appropriate among CR+LF, LF, and CR is returned.If multiple line break codes are mixed,they are checked in the order of priority CR+LF, LF, and CR.If none of them applies, NULL is returned.After the line break code has been explicitly specified with the <a href=\"#setEndOfLineCode\">setEndOfLineCode<\/a> function,that specified value is returned.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(string type) The line break code."
+		},
+		"function4": {
+			"name": "setEndOfLineCode",
+			"declaration": "void setEndOfLineCode(TextFile &textFile, string endOfLineCode)",
+			"description": "Specifies the line break code used for file input\/output.To specify the line break code, it is recommended to use the following constants defined in the System library.<dl>  <dt>LF<\/dt>  <dd>A line break code with character code 0x0A, corresponding to \n in common escape sequences.<\/dd>  <dt>CR<\/dt>  <dd>A line break code with character code 0x0D, corresponding to \r in common escape sequences.<\/dd>  <dt>CR+LF<\/dt>  <dd>A line break code with character codes 0x0D 0x0A, corresponding to \r\n in common escape sequences. (This is not a single constant but an expression adding CR and LF.)<\/dd>  <dt>EOL<\/dt>  <dd>Represents the default line break code in the execution environment. Usually CR, LF, or CR+LF is used.<\/dd><\/dl>",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. \n(string type) endOfLineCode : The line break code. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "setCommentLineCode",
+			"declaration": "void setCommentLineCode(TextFile &textFile, string commentLineCode)",
+			"description": "Specifies the line-start string representing a comment line.Lines starting with the string specified here are ignored when reading.Also, when outputting a comment line with the <a href=\"#commentln\">commentln<\/a> function,the string specified here is used.In read mode, when this function is called,the information about how far the file has been read is reset.<br \/>This item is not set by default,so it must be set explicitly when comment lines need to be taken into account.Commonly used line-start strings include the following.<dl>  <dt>\"#\" (number sign)<\/dt>  <dd>Often used in CSV\/TSV files and scripts.<\/dd>  <dt>\":\" (colon)<\/dt>  <dd>Used in some configuration files and scripts.<\/dd>  <dt>\";\" (semicolon)<\/dt>  <dd>Used in some configuration files and scripts.<\/dd>  <dt>\"\/\/\" (double slash)<\/dt>  <dd>Used in some programming languages.<\/dd><\/dl>",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. \nendOfLineCode : The line-start string representing a comment line. ",
+			"returnValue": "(void type) "
+		},
+		"function6": {
+			"name": "getCommentLineCode",
+			"declaration": "string getCommentLineCode(TextFile &textFile)",
+			"description": "Returns the line-start string representing a comment line.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(string type) The line-start string representing a comment line."
+		},
+		"function7": {
+			"name": "isReadable",
+			"declaration": "bool isReadable(TextFile &textFile)",
+			"description": "Checks whether the file is in a readable state.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(bool type) Returns true if it is in a readable mode."
+		},
+		"function8": {
+			"name": "isWritable",
+			"declaration": "bool isWritable(TextFile &textFile)",
+			"description": "Checks whether the file is in a writable state.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(bool type) Returns true if it is in a writable mode."
+		},
+		"function9": {
+			"name": "setDelimiter",
+			"declaration": "void setDelimiter(TextFile &textFile, string delimiter)",
+			"description": "Sets the delimiter used to separate values.When a delimiter is set, the <a href=\"#read\">read<\/a> function andthe <a href=\"#readln\">readln<\/a> function return values separated by that delimiter as an array.Also, the <a href=\"#write\">write<\/a> and<a href=\"#writeln\">writeln<\/a> functions separate values with the delimiter when writing.Commonly used delimiters include the following.<dl>  <dt>\",\" (comma)<\/dt>  <dd>Used in CSV files.<\/dd>  <dt>\"\t\" (tab)<\/dt>  <dd>Used in TSV files.<\/dd>  <dt>\"&nbsp\" (space)<\/dt>  <dd>Used in SSV files.<\/dd>  <dt>\";\" (semicolon)<\/dt>  <dd>Used in some configuration files.<\/dd><\/dl>In read mode, when this function is called,the information about how far the file has been read is reset.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. \n(string type) delimiter : The value delimiter. ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "setEnclosure",
+			"declaration": "void setEnclosure(TextFile &textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption)",
+			"description": "Sets the enclosure symbol used to surround values.When an enclosure symbol is set, the <a href=\"#write\">write<\/a> and<a href=\"#writeln\">writeln<\/a> functions surround values with the enclosure symbol when writing.Also, the <a href=\"#read\">read<\/a> and<a href=\"#readln\">readln<\/a> functions interpret enclosure symbols when reading.<br \/>The enclosure symbol is specified by the enclosure argument. Commonly used enclosure symbols include the following.<dl>  <dt>&quot\&quot&quot (double quotation mark)<\/dt>  <dd>This is the &quot symbol. It is commonly used in CSV and TSV files.    In VCSSL, double quotation marks have a special meaning,    so they are specified with a literal such as &quot\&quot&quot.<\/dd>  <dt>&quot'&quot (single quotation mark)<\/dt>  <dd>Used in some files.<\/dd><\/dl>Whether values should always be enclosed, or enclosed only when necessary,is specified by the enclosingOption argument.Choose this option from the following constants.<dl>  <dt><a href=\"#ENCLOSED_ALL\">ENCLOSED_ALL<\/a><\/dt>  <dd>A format in which values are always enclosed.<\/dd>  <dt><a href=\"#ENCLOSED_ALL\">ENCLOSED_IF_NECESSARY<\/a><\/dt>  <dd>A format in which values are enclosed only when necessary. \"Necessary\" means that the written or read contents include   any of the following: delimiter, enclosure symbol, comment-line prefix, or line break.<\/dd>  <dt><a href=\"#ENCLOSED_ALL\">ENCLOSED_NONE<\/a><\/dt>  <dd>A format in which values are never enclosed in any case.<\/dd><\/dl>If a value to be enclosed itself contains enclosure symbols,they need to be escaped with another character. This is specified by the enclosureEscapeCharacter argument.Commonly used escape characters include the following.<dl>  <dt>&quot\&quot&quot (double quotation mark)<\/dt>  <dd>This is the &quot symbol. In CSV and TSV files,    it is often used when the enclosure symbol is a double quotation mark.    The escaping result becomes consecutive double quotation marks.    In VCSSL, double quotation marks have a special meaning,    so they are specified with a literal such as &quot\&quot&quot.<\/dd>  <dt>&quot\\&quot (backslash)<\/dt>  <dd>This is the \ symbol. It is often used in programming languages.    In VCSSL, backslashes have a special meaning,    so they are specified with a literal such as &quot\\&quot.<\/dd><\/dl>In read mode, when this function is called,the information about how far the file has been read is reset.",
+			"parameters": "(string type) enclosure : The enclosure symbol surrounding values. \n(string type) enclosureEscapeCharacter : The character used to escape enclosure symbols contained in values. \n(int type) enclosingOption : The enclosure option. ",
+			"returnValue": "(void type) "
+		},
+		"function11": {
+			"name": "write",
+			"declaration": "void write(TextFile &textFile, ... string value[ ])",
+			"description": "Writes strings to a text file.If multiple contents are specified, and a delimiter is set, they are written with the delimiter inserted between them.Also, values are enclosed in quotation symbols when necessary.The setting for how values are enclosed is configured by <a href=\"#setEnclosure\">setEnclosure<\/a>.<br \/>Note that no delimiter is appended after the last written value.Therefore, when writing by calling this function repeatedly, it is necessary to insert delimiters with the<a href=\"#delimit\">delimit<\/a> function when needed.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. \n(...string[] type) value : The strings to be written (multiple values can be specified because this is a variable-length argument). ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "writeln",
+			"declaration": "void writeln(TextFile &textFile, ... string value[ ])",
+			"description": "Writes strings to a text file and then inserts a line break.If multiple contents are specified, and a delimiter is set, they are written with the delimiter inserted between them.Also, values are enclosed in quotation symbols when necessary.The setting for how values are enclosed is configured by <a href=\"#setEnclosure\">setEnclosure<\/a>.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. \n(...string[] type) value : The strings to be written (multiple values can be specified because this is a variable-length argument). ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "delimit",
+			"declaration": "void delimit(TextFile &textFile)",
+			"description": "Writes a delimiter to the text file.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "commentln",
+			"declaration": "void commentln(TextFile &textFile, string comment)",
+			"description": "Writes a comment line to the text file.Before calling this function, it is necessary to set the line-start string of comment lines with the<a href=\"#setCommentLineCode\">setCommentLineCode<\/a> function.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. \n(string type) comment : The comment. ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "readln",
+			"declaration": "string[ ] readln(TextFile &textFile)",
+			"description": "Reads the contents of one line from the text file.If a delimiter is set, the contents are split by the delimiter and returned as an array.However, if an enclosure is set,delimiters and line breaks inside enclosed sections are interpreted as part of the value (except when the ENCLOSED_NONE option is used).The setting for how enclosures are interpreted is configured by <a href=\"#setEnclosure\">setEnclosure<\/a>.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(string[] type) The read contents."
+		},
+		"function16": {
+			"name": "read",
+			"declaration": "string[ ] read(TextFile &textFile)",
+			"description": "Reads all contents from the text file.If a delimiter is set, the contents are split by delimiters or line breaks and returned as an array.However, if an enclosure is set,delimiters and line breaks inside enclosed sections are interpreted as part of the value (except when the ENCLOSED_NONE option is used).The setting for how enclosures are interpreted is configured by <a href=\"#setEnclosure\">setEnclosure<\/a>.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(string[] type) The read contents."
+		},
+		"function17": {
+			"name": "loadln",
+			"declaration": "string loadln(TextFile &textFile)",
+			"description": "Reads one line from the file and returns it as is.However, if an enclosure symbol is set and there are line breaks inside enclosed sections, they are not regarded as line ends.If multiple line break codes are mixed in the file,they are normalized to the same line break code returned by the getEndOfLineCode function.Also, if a comment-line prefix is set, comment lines are skipped.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(string type) The contents of the read line."
+		},
+		"function18": {
+			"name": "load",
+			"declaration": "string load(TextFile &textFile)",
+			"description": "Reads all lines from the file and returns them as is.However, if a comment-line prefix is set, comment lines are skipped.Also, if multiple line break codes are mixed in the file, they are normalized.If multiple line break codes are mixed in the file,they are normalized to the same line break code returned by the getEndOfLineCode function.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(string type) The contents read from the file."
+		},
+		"function19": {
+			"name": "countln",
+			"declaration": "int countln(TextFile &textFile)",
+			"description": "Counts the effective number of lines in the text file.If no enclosure symbol is set, the effective number of lines is equal to the number of lines in the file.If an enclosure symbol is set, line breaks inside enclosed sections are not counted.In other words, in CSV and TSV files, line breaks contained in values are not counted.When reading CSV or TSV files with the readln function, obtain the effective number of lines with this function first.The readln function cannot be called beyond the effective line count returned by this function.",
+			"parameters": "(TextFile type) textFile : The target TextFile struct. ",
+			"returnValue": "(int type) The effective number of lines in the text file."
+		}
+	}
+}

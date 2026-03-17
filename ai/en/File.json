@@ -1,0 +1,194 @@
+{
+	"libraryName": "File",
+	"libraryDescription": "<p>The VCSSL File library is a standard library that provides various file-related functions, such as obtaining file paths and getting lists of file names in directories.<br \/>However, this library does not handle file I\/O. For file I\/O, use the <a href=\"System.html\">System<\/a> library or the <a href=\"file\/TextFile.html\">file.TextFile<\/a> library.<\/p>",
+	"structs": {
+	},
+	"variables": {
+		"variable0": {
+			"name": "ABSOLUTE",
+			"declaration": "const int ABSOLUTE",
+			"description": "The option value representing an absolute path."
+		},
+		"variable1": {
+			"name": "RELATIVE",
+			"declaration": "const int RELATIVE",
+			"description": "The option value representing a relative path."
+		},
+		"variable2": {
+			"name": "PARENT",
+			"declaration": "const int PARENT",
+			"description": "The option value representing a parent directory."
+		},
+		"variable3": {
+			"name": "HOME",
+			"declaration": "const int HOME",
+			"description": "The option value representing the user's home directory."
+		},
+		"variable4": {
+			"name": "ROOT",
+			"declaration": "const int ROOT",
+			"description": "The option value representing the root directory."
+		},
+		"variable5": {
+			"name": "TMP",
+			"declaration": "const int TMP",
+			"description": "The option value representing the temporary-file directory provided by the computer."
+		},
+		"variable6": {
+			"name": "UNORDERED",
+			"declaration": "const int UNORDERED",
+			"description": "The option value representing an unordered file order."
+		},
+		"variable7": {
+			"name": "LEXICAL",
+			"declaration": "const int LEXICAL",
+			"description": "The option value representing a lexically sorted file order."
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "isDirectory",
+			"declaration": "bool isDirectory( string pathOrName )",
+			"description": "Determines whether the specified file is a directory.",
+			"parameters": "(string type) pathOrName : The name or path of the target file. ",
+			"returnValue": "(bool type) Returns true if it is a directory, otherwise false."
+		},
+		"function1": {
+			"name": "makeDirectory",
+			"declaration": "void makeDirectory( string pathOrName )",
+			"description": "Creates a new directory.",
+			"parameters": "(string type) pathOrName : The name or path of the directory to create. ",
+			"returnValue": "(void type) "
+		},
+		"function2": {
+			"name": "listDirectory",
+			"declaration": "string[ ] listDirectory( string pathOrName )",
+			"description": "Returns the list of file names directly under the specified directory. The order of file names is not specifically sorted and depends on the environment and implementation.",
+			"parameters": "(string type) pathOrName : The name or path of the target directory. ",
+			"returnValue": "(string[] type) The list of file names directly under the directory."
+		},
+		"function3": {
+			"name": "listDirectory",
+			"declaration": "string[ ] listDirectory( string pathOrName, bool sortByIgnoreCase, int sortOption )",
+			"description": "Returns the list of file names directly under the specified directory. A sorting option for file names can be specified.",
+			"parameters": "(string type) pathOrName : The name or path of the target directory. \n(bool type) sortByIgnoreCase : Whether case should be distinguished when sorting. If true, case differences are ignored. \n(int type) sortOption : The sorting option. Specify <a href=\"#UNORDERED\">UNORDERED<\/a> or <a href=\"#LEXICAL\">LEXICAL<\/a>. ",
+			"returnValue": "(string[] type) The list of file names directly under the directory."
+		},
+		"function4": {
+			"name": "makeFile",
+			"declaration": "void makeFile( string pathOrName )",
+			"description": "Creates a new file.",
+			"parameters": "(string type) pathOrName : The name or path of the file to create. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "getFileName",
+			"declaration": "string getFileName( string path )",
+			"description": "Gets the file-name part from a file path.",
+			"parameters": "(string type) path : The path of the target file. ",
+			"returnValue": "(string type) The file name."
+		},
+		"function6": {
+			"name": "removeFile",
+			"declaration": "void removeFile( string pathOrName )",
+			"description": "Deletes a file.<br \/>If the target is a directory, it cannot be deleted unless it is empty, so its contents must be removed first.",
+			"parameters": "(string type) pathOrName : The name or path of the target file. ",
+			"returnValue": "(void type) "
+		},
+		"function7": {
+			"name": "moveFile",
+			"declaration": "void moveFile( string pathOrName, string newName )",
+			"description": "Moves a file or changes its file name.<br \/>If both arguments are only file names, or if both are file paths in the same directory, the operation becomes a file rename.If the arguments are file paths in different directories, the operation becomes a file move.Moving across drives may not be supported depending on the environment.",
+			"parameters": "(string type) pathOrName : The name or path of the target file. \n(string type) newName : The new name or destination path. ",
+			"returnValue": "(void type) "
+		},
+		"function8": {
+			"name": "renameFile",
+			"declaration": "void renameFile( string pathOrName, string newName )",
+			"description": "Renames a file.<br \/>If a path is specified instead of just a file name as the destination,the file is moved. However, moving across drives may not be supported depending on the environment.<br \/><div style=\"font-weight:bold;\">Note: The use of this API is not recommended. Its behavior depends on the implementation and version. In VCSSL 3.3 and later, use <a href=\"#moveFile\">moveFile<\/a> instead.If you must use this API and want to avoid such dependencies, specify the destination file path newPath as an absolute path. The behavior when specifying only a relative path or file name depends on the implementation and version.In the current standard VCSSL runtime, if a file name or relative path is specified for newPath, it is interpreted relative to the location of the executed program. However, in older versions such as VCSSL 3.2 and earlier, it may instead be interpreted relative to the implementation location.By specifying an absolute path, you can avoid version-dependent behavior.For example, if you write renameFile(\"Test1.txt\", \"Test2.txt\");, the current standard VCSSL runtime renames Test1.txt to Test2.txt in the same directory. However, in older versions, \"Test2.txt\" may be interpreted as a path relative to the implementation, so the file may be moved to the implementation directory where VCSSL.jar exists. Even in older versions, if you want to rename a file within the same directory, write something like renameFile(\"hoge1.txt\", getFilePath(\"hoge2.txt\", getFilePath(\".\")) );.<\/div>",
+			"parameters": "(string type) pathOrName : The name or path of the target file. \n(string type) newName : The new name or destination path. To avoid dependency on older versions or implementations, specifying an absolute path is recommended. ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "copyFile",
+			"declaration": "void copyFile( string inputPath, string outputPath )",
+			"description": "Copies a file.",
+			"parameters": "(string type) inputPath : The name or path of the source file. \n(string type) outputPath : The name or path of the destination file. ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "getFilePath",
+			"declaration": "string getFilePath( string pathOrName )",
+			"description": "Gets and returns the absolute path from a file name or relative path.",
+			"parameters": "(string type) pathOrName : The file name or relative path of the target file. ",
+			"returnValue": "(string type) The absolute path of the target file."
+		},
+		"function11": {
+			"name": "getFilePath",
+			"declaration": "string getFilePath( string pathOrName, int type )",
+			"description": "Gets and returns an absolute path, relative path, or parent-directory path from a file name or path.",
+			"parameters": "(string type) pathOrName : The name or path of the target file. \n(int type) type : The type of path to obtain. Specify <a href=\"#ABSOLUTE\">ABSOLUTE<\/a>, <a href=\"#RELATIVE\">RELATIVE<\/a>, or <a href=\"#PARENT\">PARENT<\/a>, which represent absolute path, relative path, and parent-directory path respectively. ",
+			"returnValue": "(string type) The path of the target file. The kind of path is specified by the argument type."
+		},
+		"function12": {
+			"name": "getFilePath",
+			"declaration": "string getFilePath( string pathOrName, string directory )",
+			"description": "Converts and returns a file name or relative path, interpreted from the specified base directory, as an absolute path.",
+			"parameters": "(string type) pathOrName : The name or relative path of the target file as seen from the base directory. \n(string type) directory : The base directory of the relative path. Specify it as a name or relative path based on the executed program, or as an absolute path. ",
+			"returnValue": "(string type) The absolute path of the target file."
+		},
+		"function13": {
+			"name": "getFilePath",
+			"declaration": "string getFilePath( string pathOrName, string directory, int type )",
+			"description": "Converts a file name or relative path interpreted from the specified base directory into an absolute path, a relative path based on the executed program, or a parent-directory path based on the executed program.",
+			"parameters": "(string type) pathOrName : The name or path of the target file. \n(string type) directory : The base directory of the relative path. Specify it as a name or relative path based on the executed program, or as an absolute path. \n(int type) type : The type of path to obtain. Specify <a href=\"#ABSOLUTE\">ABSOLUTE<\/a>, <a href=\"#RELATIVE\">RELATIVE<\/a>, or <a href=\"#PARENT\">PARENT<\/a>, which represent absolute path, relative path, and parent-directory path respectively. ",
+			"returnValue": "(string type) The path of the target file. The kind of path is specified by the argument type."
+		},
+		"function14": {
+			"name": "getFilePath",
+			"declaration": "string[ ] getFilePath( int target )",
+			"description": "Gets the paths of special locations in the runtime environment or operating system.",
+			"parameters": "(int type) target : The kind of special location to obtain. Specify <a href=\"#HOME\">HOME<\/a>, <a href=\"#ROOT\">ROOT<\/a>, or <a href=\"#TMP\">TMP<\/a>. They mean the user's home directory, the root directory, and the temporary-file directory provided by the computer, respectively. ",
+			"returnValue": "(string[] type) The path of the special location. The location is specified by the argument target. The behavior when obtaining <a href=\"#ROOT\">ROOT<\/a> depends on the operating system. On operating systems without a single root, an array of drive names will probably be returned."
+		},
+		"function15": {
+			"name": "getMainDirectory",
+			"declaration": "string getMainDirectory()",
+			"description": "Returns the path of the directory containing the executed program.<br \/>It can now be obtained by <a href=\"#getFilePath\">getFilePath<\/a>(\".\"). This function is supported for compatibility.",
+			"returnValue": "(string type) The path of the directory containing the executed program."
+		},
+		"function16": {
+			"name": "getHomeDirectory",
+			"declaration": "string getHomeDirectory()",
+			"description": "Returns the path of the home directory.<br \/>It can now be obtained by <a href=\"#getFilePath\">getFilePath<\/a>( <a href=\"#HOME\">HOME<\/a> ). This function is supported for compatibility.",
+			"returnValue": "(string type) The path of the home directory."
+		},
+		"function17": {
+			"name": "getRootDirectory",
+			"declaration": "string[ ] getRootDirectory()",
+			"description": "Returns the path of the root directory.<br \/>It can now be obtained by <a href=\"#getFilePath\">getFilePath<\/a>( <a href=\"#ROOT\">ROOT<\/a> ). This function is supported for compatibility.",
+			"returnValue": "(string[] type) The path of the root directory."
+		},
+		"function18": {
+			"name": "getParentDirectory",
+			"declaration": "string getParentDirectory( string pathOrName )",
+			"description": "Returns the path of the parent directory.<br \/>It can now be obtained by <a href=\"#getFilePath\">getFilePath<\/a>( pathOrName, <a href=\"#PARENT\">PARENT<\/a> ). This function is supported for compatibility.",
+			"parameters": "(string type) pathOrName : The name or path of the target file. ",
+			"returnValue": "(string type) The path of the parent directory."
+		},
+		"function19": {
+			"name": "getFileRelativePath",
+			"declaration": "string getFileRelativePath( string pathOrName, string directory )",
+			"description": "Converts and returns a relative path based on the specified directory into a relative path based on the executed program.<br \/>It can now be obtained by <a href=\"#getFilePath\">getFilePath<\/a>( pathOrName, directory, <a href=\"#RELATIVE\">RELATIVE<\/a> ). This function is supported for compatibility.",
+			"parameters": "(string type) pathOrName : The name or path of the target file. \n(string type) directory : The path of the base directory. ",
+			"returnValue": "(string type) The relative path."
+		},
+		"function20": {
+			"name": "getFileList",
+			"declaration": "string[ ] getFileList( string pathOrName )",
+			"description": "Gets the list of file names directly under the specified directory.<br \/>It can now be obtained by <a href=\"#listDirectory\">listDirectory<\/a>( pathOrName ). This function is supported for compatibility.<br \/>In this function, the ordering of file names depends on the environment and operating system. Processing that assumes a specific order is not recommended. The newer <a href=\"#listDirectory\">listDirectory<\/a>( pathOrName ) can accept sorting options.",
+			"parameters": "(string type) pathOrName : The name or path of the target directory. ",
+			"returnValue": "(string[] type) The list of file names directly under the specified directory (the order depends on the environment)."
+		}
+	}
+}

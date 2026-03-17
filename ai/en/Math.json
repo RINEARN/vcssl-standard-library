@@ -1,0 +1,535 @@
+{
+	"libraryName": "Math",
+	"libraryDescription": "<p>The VCSSL Math library is a standard library providing mathematical functions.<br \/>Specifically, it includes exponential functions, logarithmic functions, square roots and n-th roots, factorials, trigonometric functions, inverse trigonometric functions, hyperbolic functions, inverse hyperbolic functions, and absolute-value and max\/min functions.<\/p><p>This library provides mathematical functions in both 64-bit float precision and arbitrary precision. The former is handled as the float type, and the latter as the varfloat type.<br \/>In VCSSL, the float type is not distinguished from the double type. Both have the precision defined by the implementation, and in the current official implementation they are IEEE754 64-bit floats.<br \/>As for the varfloat type, the current official implementation does not use a unified standard specification.Instead, it adopts a proprietary decimal arbitrary-precision specification. Rounding is performed by truncation in decimal arithmetic.<br \/>The detailed specification of the varfloat type depends on the implementation, and may be changed to some unified standard in the future.<\/p><p>For the float (double) implementations of mathematical functions, built-in implementation features are used, and they are handled at runtime as a kind of special arithmetic instruction.<br \/>Many of the float implementations of mathematical functions provided by the Math library are function macros wrapping such special arithmetic instructions.<br \/>Therefore, they have no function-call overhead and generally provide good performance.<\/p><p>In contrast, the varfloat (arbitrary-precision) implementations of mathematical functions are implemented in VCSSL code.<br \/>Specifically, the algorithms for obtaining values are all implemented in VCSSL using the varfloat type, by methods such as Maclaurin expansion, Taylor expansion, Newton's method, and the Gauss-Legendre algorithm.<br \/>For this reason, the execution speed is generally in the slow category. This is due to factors such as the implementation being written in a scripting language, and the varfloat type itself being slow to operate on.<br \/>As a concrete example, the following code calculates sin(1) with 1000 significant digits. In this calculation, the sin function takes just under one second to execute.<div class=\"code\">digit( 1000 ); \/\/ Set the number of significant digits to 1000<br \/>varfloat value = sin( 1.0vf ); \/\/ Calculate the sin function<br \/>print( value ); \/\/ Output<\/div><\/p><p>In the varfloat implementations of mathematical functions, many depend on convergence algorithms, so some accumulated error may appear in the trailing digits.<br \/>Anticipating this, the functions internally calculate using a somewhat larger number of digits, varying by function, and truncate the extra digits when returning the value.<br \/>However, this is only an auxiliary measure and does not guarantee that digits affected by accumulated error are always eliminated for every possible number of significant digits and every argument.<br \/>Depending on the function, validation of accumulated error is generally performed assuming uses of a few dozen significant digits and arguments within ordinary ranges.<br \/>For uses requiring thousands to tens of thousands of digits, or for arguments near singular points, accumulated error generally becomes larger and may not fit within the truncated extra digits, so it can also appear in the trailing digits of the returned value.<br \/>Therefore, for such uses, please also use a sufficiently large number of significant digits on the caller side while taking accumulated error into account, and take measures such as truncating extra digits.<\/p>",
+	"structs": {
+	},
+	"variables": {
+		"variable0": {
+			"name": "PI",
+			"declaration": "const float PI",
+			"description": "The value of pi in float precision. To obtain a varfloat value in arbitrary precision, use <a href=\"#pi\">pi<\/a>()."
+		},
+		"variable1": {
+			"name": "E",
+			"declaration": "const float E",
+			"description": "The value of Euler's number, the base of natural logarithms, in float precision. To obtain a varfloat value in arbitrary precision, calculate it with <a href=\"#exp\">exp<\/a>( 1.0vf )."
+		}
+	},
+	"functions": {
+		"function0": {
+			"name": "nan",
+			"declaration": "macro nan( float arg )",
+			"description": "Determines whether a float value is NaN.",
+			"parameters": "(float type) arg : The value to be checked. ",
+			"returnValue": "Returns true if it is NaN, or false otherwise.",
+			"example": "float x = 0.0\/0.0; bool isNaN = nan(x); print(\"isNaN=\" + isNaN);"
+		},
+		"function1": {
+			"name": "inf",
+			"declaration": "macro inf( float arg )",
+			"description": "Determines whether a float value is Inf.",
+			"parameters": "(float type) arg : The value to be checked. ",
+			"returnValue": "Returns true if it is Inf, or false otherwise.",
+			"example": "float x = 1.0\/0.0; bool isInf = inf(x); print(\"isInf=\" + isInf);"
+		},
+		"function2": {
+			"name": "and",
+			"declaration": "macro and( int number1, int number2 )",
+			"description": "Calculates the bitwise AND operation on int values.",
+			"parameters": "(int type) number1 : A value to be operated on. \n(int type) number2 : A value to be operated on. ",
+			"returnValue": "The calculated value.",
+			"example": "int a = 0b01010101; int b = 0b11110000; int c = and(a, b); print( bin(c) ); \/\/ 0b1010000"
+		},
+		"function3": {
+			"name": "or",
+			"declaration": "macro or( int number1, int number2 )",
+			"description": "Calculates the bitwise OR operation on int values.",
+			"parameters": "(int type) number1 : A value to be operated on. \n(int type) number2 : A value to be operated on. ",
+			"returnValue": "The calculated value.",
+			"example": "int a = 0b01010101; int b = 0b11110000; int c = or(a, b); print( bin(c) ); \/\/ 0b11110101"
+		},
+		"function4": {
+			"name": "xor",
+			"declaration": "macro xor( int number1, int number2 )",
+			"description": "Calculates the bitwise XOR operation on int values.",
+			"parameters": "(int type) number1 : A value to be operated on. \n(int type) number2 : A value to be operated on. ",
+			"returnValue": "The calculated value.",
+			"example": "int a = 0b01010101; int b = 0b11110000; int c = xor(a, b); print( bin(c) ); \/\/ 0b10100101"
+		},
+		"function5": {
+			"name": "random",
+			"declaration": "macro random()",
+			"description": "Returns a value greater than or equal to 0.0 and less than 1.0. Note that the documentation before VCSSL 3.0.20 stated that it \"returns a random value from 0.0 to 1.0,\" but that expression was ambiguous, and in practice a value exactly equal to 1.0 is never returned.",
+			"returnValue": "The random value.",
+			"example": "float v = random(); print(v); \/\/ 0.367283... (random)"
+		},
+		"function6": {
+			"name": "rand",
+			"declaration": "macro rand()",
+			"description": "Equivalent to random. The use of random is currently recommended instead. Because the name of this function can cause confusion with integer random numbers, its use is no longer recommended. In the future, changing the type of this function may be considered.",
+			"returnValue": "The random value."
+		},
+		"function7": {
+			"name": "pi",
+			"declaration": "varfloat pi()",
+			"description": "Calculates the value of pi.<br \/>Internally, it is calculated by the Gauss-Legendre algorithm using 1.1 times the original number of digits.<br \/>A high-precision value of pi is required when calculating periodic functions or simulations with periodic boundaries, such as rotational systems and mapping systems, in order to obtain remainders of arguments or coordinates modulo pi.In fact, the Math library itself uses it for calculations such as varfloat trigonometric functions.",
+			"returnValue": "(varfloat type) The value of pi.",
+			"example": "digit(100); varfloat pi = pi(); print(pi); \/\/ 3.14..."
+		},
+		"function8": {
+			"name": "exp",
+			"declaration": "macro exp( float arg )",
+			"description": "Calculates the exponential function with Euler's number as the base.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float e = exp(1.0); print(e); \/\/ 2.71..."
+		},
+		"function9": {
+			"name": "exp",
+			"declaration": "varfloat exp( varfloat arg )",
+			"description": "Calculates the exponential function with Euler's number as the base.<br \/>Internally, it is calculated by Maclaurin expansion using 1.34 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4.This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat e = exp(1.0vf); print(e); \/\/ 2.71..."
+		},
+		"function10": {
+			"name": "pow",
+			"declaration": "macro pow( float arg1, float arg2 )",
+			"description": "Calculates a power.",
+			"parameters": "(float type) arg1 : The base. \n(float type) arg2 : The exponent. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = pow(1.2, 3.4); print(f); \/\/ 1.8587..."
+		},
+		"function11": {
+			"name": "pow",
+			"declaration": "varfloat pow( varfloat arg1, varint arg2 )",
+			"description": "Calculates a power whose exponent is an integer.<br \/>Internally, it is calculated by repeated multiplication using 2.1 times the number of digits given by \"the original number of digits plus the absolute value of the order of the exponent (arg2).\"However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4.This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg1 : The base. \n(varint type) arg2 : The exponent. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function12": {
+			"name": "pow",
+			"declaration": "varfloat pow( varfloat arg1, varfloat arg2 )",
+			"description": "Calculates a power whose exponent is a floating-point number, that is, a real number.<br \/>Internally, it is calculated using 1.2 times the number of digits given by \"the original number of digits plus the absolute value of the order of the exponent (arg2),\" by either Maclaurin expansion or a combination of exponential and logarithmic functions.However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4.This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg1 : The base. \n(varfloat type) arg2 : The exponent. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = pow(1.2vf, 3.4vf); print(v); \/\/ 1.8587..."
+		},
+		"function13": {
+			"name": "pow",
+			"declaration": "varfloat pow( varint arg1, varfloat arg2 )",
+			"description": "Calculates a power.<br \/>Internally, arg1 is cast to varfloat and then pow( varfloat, varfloat ) is used.",
+			"parameters": "(varint type) arg1 : The base. \n(varfloat type) arg2 : The exponent. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function14": {
+			"name": "ln",
+			"declaration": "macro ln( float arg )",
+			"description": "Calculates the natural logarithm. It is the same as log.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = ln(10.0); print(f); \/\/ 2.302585..."
+		},
+		"function15": {
+			"name": "ln",
+			"declaration": "macro ln( varfloat arg )",
+			"description": "Calculates the natural logarithm. It is the same as log.<br \/>Internally, log(varfloat) is used as is.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "digit(50); varfloat v = ln(10.0vf); print(v); \/\/ 2.302585..."
+		},
+		"function16": {
+			"name": "log",
+			"declaration": "macro log( float arg )",
+			"description": "Calculates the natural logarithm. It is the same as ln.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = log(10.0); print(f); \/\/ 2.302585..."
+		},
+		"function17": {
+			"name": "log",
+			"declaration": "varfloat log( varfloat arg )",
+			"description": "Calculates the natural logarithm. It is the same as ln.<br \/>Internally, it is calculated using 1.34 times the original number of digits, by Newton's method for arguments greater than or equal to 1, and by Taylor expansion for arguments less than or equal to 1.However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4.This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = log(10.0vf); print(v); \/\/ 2.302585..."
+		},
+		"function18": {
+			"name": "log10",
+			"declaration": "macro log10( float arg )",
+			"description": "Calculates the common logarithm.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = log(10.0); print(f); \/\/ 1.0"
+		},
+		"function19": {
+			"name": "log10",
+			"declaration": "varfloat log10( varfloat arg )",
+			"description": "Calculates the common logarithm.<br \/>Internally, it is calculated by \"log10(x) = ln(x) \/ ln(10)\" using 2.2 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = log10(10.0vf); print(v);"
+		},
+		"function20": {
+			"name": "sqrt",
+			"declaration": "macro sqrt( float arg )",
+			"description": "Calculates the square root.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = sqrt(2.0); print(f); \/\/ 1.4142..."
+		},
+		"function21": {
+			"name": "sqrt",
+			"declaration": "varfloat sqrt( varfloat arg )",
+			"description": "Calculates the square root.<br \/>Internally, it is calculated by Newton's method using 1.34 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = sqrt(2.0vf); print(v); \/\/ 1.4142..."
+		},
+		"function22": {
+			"name": "root",
+			"declaration": "macro root( float arg, int rootPower )",
+			"description": "Calculates the n-th root.",
+			"parameters": "(float type) arg : The value to be calculated. \n(int type) rootPower : The n in the n-th root. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = root(2.0, 3); print(f); \/\/ 1.259921..."
+		},
+		"function23": {
+			"name": "root",
+			"declaration": "varfloat root( varfloat arg, varint p )",
+			"description": "Calculates the n-th root.<br \/>Internally, it is calculated by Newton's method using 1.34 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. \n(varint type) p : The n in the n-th root. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = root(2.0vf,3v); print(v); \/\/ 1.259921..."
+		},
+		"function24": {
+			"name": "root",
+			"declaration": "varfloat root( varfloat arg, varfloat vfp )",
+			"description": "Calculates the n-th root.<br \/>Internally, it is calculated by Newton's method using 1.34 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using the original number of digits plus 4. This extra number of digits may be changed in the future, probably in the direction of higher precision.Note that the second argument of this function is always regarded as an integer.This function is supported only for convenience in modes such as calculator software, where numeric literals are regarded as floating-point numbers.Since there is no particular advantage to using it in ordinary situations, please use root( varfloat, varint ).",
+			"parameters": "(varfloat type) arg : The value to be calculated. \n(varfloat type) vfp : The n in the n-th root. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function25": {
+			"name": "abs",
+			"declaration": "macro abs( float arg )",
+			"description": "Calculates the absolute value.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = abs(-1.2); print(f); \/\/ 1.2"
+		},
+		"function26": {
+			"name": "abs",
+			"declaration": "macro abs( int arg )",
+			"description": "Calculates the absolute value.",
+			"parameters": "(int type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "int i = abs(-123); print(i); \/\/ 123"
+		},
+		"function27": {
+			"name": "abs",
+			"declaration": "varfloat abs( varfloat arg )",
+			"description": "Calculates the absolute value.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = abs(-1.2vf); print(v); \/\/ 1.2"
+		},
+		"function28": {
+			"name": "abs",
+			"declaration": "varint abs( varint arg )",
+			"description": "Calculates the absolute value.",
+			"parameters": "(varint type) arg : The value to be calculated. ",
+			"returnValue": "(varint type) The calculated value.",
+			"example": "digit(50); varint v = abs(-123v); print(v); \/\/ 123"
+		},
+		"function29": {
+			"name": "max",
+			"declaration": "macro max( float arg1, float arg2 )",
+			"description": "Returns the larger of the two arguments.",
+			"parameters": "(float type) arg1 : A value to be calculated. \n(float type) arg2 : A value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function30": {
+			"name": "max",
+			"declaration": "macro max( int arg1, int arg2 )",
+			"description": "Returns the larger of the two arguments.",
+			"parameters": "(int type) arg1 : A value to be calculated. \n(int type) arg2 : A value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function31": {
+			"name": "max",
+			"declaration": "varfloat max( varfloat arg1, varfloat arg2 )",
+			"description": "Returns the larger of the two arguments.",
+			"parameters": "(varfloat type) arg1 : A value to be calculated. \n(varfloat type) arg2 : A value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function32": {
+			"name": "max",
+			"declaration": "varint max( varint arg1, varint arg2 )",
+			"description": "Returns the larger of the two arguments.",
+			"parameters": "(varint type) arg1 : A value to be calculated. \n(varint type) arg2 : A value to be calculated. ",
+			"returnValue": "(varint type) The calculated value."
+		},
+		"function33": {
+			"name": "min",
+			"declaration": "macro min( float arg1, float arg2 )",
+			"description": "Returns the smaller of the two arguments.",
+			"parameters": "(float type) arg1 : A value to be calculated. \n(float type) arg2 : A value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function34": {
+			"name": "min",
+			"declaration": "macro min( int arg1, int arg2 )",
+			"description": "Returns the smaller of the two arguments.",
+			"parameters": "(int type) arg1 : A value to be calculated. \n(int type) arg2 : A value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function35": {
+			"name": "min",
+			"declaration": "varfloat min( varfloat arg1, varfloat arg2 )",
+			"description": "Returns the smaller of the two arguments.",
+			"parameters": "(varfloat type) arg1 : A value to be calculated. \n(varfloat type) arg2 : A value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function36": {
+			"name": "min",
+			"declaration": "varint min( varint arg1, varint arg2 )",
+			"description": "Returns the smaller of the two arguments.",
+			"parameters": "(varint type) arg1 : A value to be calculated. \n(varint type) arg2 : A value to be calculated. ",
+			"returnValue": "(varint type) The calculated value."
+		},
+		"function37": {
+			"name": "fac",
+			"declaration": "float fac( float arg )",
+			"description": "Calculates the factorial. Although both the argument and the return value of this function are float, the calculation is performed after internally rounding to a nearby int. The conversion may affect the precision because of rounding error. If strict exactness is required, use the version taking an int argument.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "(float type) The calculated value."
+		},
+		"function38": {
+			"name": "fac",
+			"declaration": "macro fac( int arg )",
+			"description": "Calculates the factorial.",
+			"parameters": "(int type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function39": {
+			"name": "fac",
+			"declaration": "varint fac( varint arg )",
+			"description": "Calculates the factorial.",
+			"parameters": "(varint type) arg : The value to be calculated. ",
+			"returnValue": "(varint type) The calculated value."
+		},
+		"function40": {
+			"name": "fac",
+			"declaration": "varfloat fac( varfloat arg )",
+			"description": "Calculates the factorial.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function41": {
+			"name": "sin",
+			"declaration": "macro sin( float arg )",
+			"description": "Calculates the sine function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = sin(1.0); print(f); \/\/ 0.84147..."
+		},
+		"function42": {
+			"name": "sin",
+			"declaration": "varfloat sin( varfloat arg )",
+			"description": "Calculates the sine function.<br \/>Internally, it is calculated by Maclaurin expansion using \"1.34 times the original number of digits plus 10 times the order of the argument\" digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4, plus 10 times the order of the argument\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.<br \/>For arguments outside the range from 0 to pi\/2, the symmetry and periodicity of trigonometric functions are used, and internally the calculation is performed using values in the range from 0 to pi.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = sin(1.0vf); print(v); \/\/ 0.84147..."
+		},
+		"function43": {
+			"name": "cos",
+			"declaration": "macro cos( float arg )",
+			"description": "Calculates the cosine function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = cos(1.0); print(f); \/\/ 0.5403..."
+		},
+		"function44": {
+			"name": "cos",
+			"declaration": "varfloat cos( varfloat arg )",
+			"description": "Calculates the cosine function.<br \/>Internally, it is calculated by Maclaurin expansion using \"1.34 times the original number of digits plus 10 times the order of the argument\" digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4, plus 10 times the order of the argument\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.<br \/>For arguments outside the range from 0 to pi\/2, the symmetry and periodicity of trigonometric functions are used, and internally the calculation is performed using values in the range from 0 to pi.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = cos(1.0vf); print(v); \/\/ 0.5403..."
+		},
+		"function45": {
+			"name": "tan",
+			"declaration": "macro tan( float arg )",
+			"description": "Calculates the tangent function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value.",
+			"example": "float f = tan(1.0); print(f); \/\/ 1.5574..."
+		},
+		"function46": {
+			"name": "tan",
+			"declaration": "varfloat tan( varfloat arg )",
+			"description": "Calculates the tangent function.<br \/>Internally, it is calculated by \"tan(x) = sin(x) \/ cos(x)\" using 2.1 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value.",
+			"example": "digit(50); varfloat v = tan(1.0vf); print(v); \/\/ 1.5574..."
+		},
+		"function47": {
+			"name": "asin",
+			"declaration": "macro asin( float arg )",
+			"description": "Calculates the arcsine function, which is the inverse function of sine.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function48": {
+			"name": "asin",
+			"declaration": "varfloat asin( varfloat arg )",
+			"description": "Calculates the arcsine function, which is the inverse function of sine.<br \/>Internally, it is calculated using 1.34 times the original number of digits, by Maclaurin expansion for arguments whose absolute value is 0.7 or less, and by Newton's method outside that range.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function49": {
+			"name": "acos",
+			"declaration": "macro acos( float arg )",
+			"description": "Calculates the arccosine function, which is the inverse function of cosine.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function50": {
+			"name": "acos",
+			"declaration": "varfloat acos( varfloat arg )",
+			"description": "Calculates the arccosine function, which is the inverse function of cosine.<br \/>Internally, it is calculated by \"acos(x) = pi\/2 - asin(x)\" using 1.34 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function51": {
+			"name": "atan",
+			"declaration": "macro atan( float arg )",
+			"description": "Calculates the arctangent function, which is the inverse function of tangent.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function52": {
+			"name": "atan",
+			"declaration": "varfloat atan( varfloat arg )",
+			"description": "Calculates the arctangent function, which is the inverse function of tangent.<br \/>Internally, it is calculated using 1.34 times the original number of digits, by Maclaurin expansion for arguments whose absolute value is 0.7 or less, and by Newton's method outside that range.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function53": {
+			"name": "sinh",
+			"declaration": "macro sinh( float arg )",
+			"description": "Calculates the hyperbolic sine function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function54": {
+			"name": "sinh",
+			"declaration": "varfloat sinh( varfloat arg )",
+			"description": "Calculates the hyperbolic sine function.<br \/>Internally, it is calculated by \"sinh(x) = ( exp(x) - exp(-x) ) \/ 2\" using 2.1 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function55": {
+			"name": "cosh",
+			"declaration": "macro cosh( float arg )",
+			"description": "Calculates the hyperbolic cosine function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function56": {
+			"name": "cosh",
+			"declaration": "varfloat cosh( varfloat arg )",
+			"description": "Calculates the hyperbolic cosine function.<br \/>Internally, it is calculated by \"cosh(x) = ( exp(x) + exp(-x) ) \/ 2\" using 2.1 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function57": {
+			"name": "tanh",
+			"declaration": "macro tanh( float arg )",
+			"description": "Calculates the hyperbolic tangent function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function58": {
+			"name": "tanh",
+			"declaration": "varfloat tanh( varfloat arg )",
+			"description": "Calculates the hyperbolic tangent function.<br \/>Internally, it is calculated by \"tanh(x) = ( exp(x) - exp(-x) ) \/ ( exp(x) + exp(-x) )\" using 2.8 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function59": {
+			"name": "asinh",
+			"declaration": "macro asinh( float arg )",
+			"description": "Calculates the inverse hyperbolic sine function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function60": {
+			"name": "asinh",
+			"declaration": "varfloat asinh( varfloat arg )",
+			"description": "Calculates the inverse hyperbolic sine function.<br \/>Internally, it is calculated by \"asinh(x) = ln( x + sqrt( x*x + 1 ) )\" using 2.1 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function61": {
+			"name": "acosh",
+			"declaration": "macro acosh( float arg )",
+			"description": "Calculates the inverse hyperbolic cosine function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function62": {
+			"name": "acosh",
+			"declaration": "varfloat acosh( varfloat arg )",
+			"description": "Calculates the inverse hyperbolic cosine function.<br \/>Internally, it is calculated by \"acosh(x) = ln( x + sqrt( x*x - 1 ) )\" using 2.1 times the original number of digits.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function63": {
+			"name": "atanh",
+			"declaration": "macro atanh( float arg )",
+			"description": "Calculates the inverse hyperbolic tangent function.",
+			"parameters": "(float type) arg : The value to be calculated. ",
+			"returnValue": "The calculated value."
+		},
+		"function64": {
+			"name": "atanh",
+			"declaration": "varfloat atanh( varfloat arg )",
+			"description": "Calculates the inverse hyperbolic tangent function.<br \/>Internally, it is calculated using 2.1 times the original number of digits. For arguments whose absolute value is 0.9 or less, \"atanh(x) = 1\/2 * log(1+x)\/log(1-x)\" is used, and outside that range it is calculated by Newton's method.However, when the number of digits is 10 or less, it is calculated using \"the original number of digits plus 4\" digits. This extra number of digits may be changed in the future, probably in the direction of higher precision.By using the symmetry of the function, negative arguments are calculated using the value for the corresponding positive argument.<br \/><span style=\"font-weight:bold;\">In older versions, values could not be obtained for arguments less than or equal to -0.7, on the negative-infinity side. The calculation would not finish, or 0 would be returned. This problem was fixed in VCSSL 3.3.2.<\/span>",
+			"parameters": "(varfloat type) arg : The value to be calculated. ",
+			"returnValue": "(varfloat type) The calculated value."
+		},
+		"function65": {
+			"name": "deg",
+			"declaration": "macro deg( float rad )",
+			"description": "Converts an angle from radians to degrees.",
+			"parameters": "(float type) rad : The angle in radians. ",
+			"returnValue": "The angle in degrees.",
+			"example": "float f = deg(PI); print(f); \/\/ 180.0"
+		},
+		"function66": {
+			"name": "deg",
+			"declaration": "varfloat deg(varfloat rad)",
+			"description": "Converts an angle from radians to degrees.<br \/>Internally, it is calculated using 1.34 times the original number of digits, by \"radians = degrees * pi \/ 180\".",
+			"parameters": "(varfloat type) rad : The angle in radians. ",
+			"returnValue": "(varfloat type) The angle in degrees.",
+			"example": "digit(50); varfloat v = deg(pi()); print(v); \/\/ 179.999...9; print( round(v, 40v, HALF_UP) ); \/\/ 180.0"
+		},
+		"function67": {
+			"name": "rad",
+			"declaration": "macro rad( float deg )",
+			"description": "Converts an angle from degrees to radians.",
+			"parameters": "(float type) deg : The angle in degrees. ",
+			"returnValue": "The angle in radians.",
+			"example": "float f = rad(180.0); print(f); \/\/ 3.14..."
+		},
+		"function68": {
+			"name": "rad",
+			"declaration": "varfloat rad(varfloat deg)",
+			"description": "Converts an angle from degrees to radians.<br \/>Internally, it is calculated using 1.34 times the original number of digits, by \"degrees = radians * 180 \/ pi\".",
+			"parameters": "(varfloat type) deg : The angle in degrees. ",
+			"returnValue": "(varfloat type) The angle in radians.",
+			"example": "digit(50); varfloat v = rad(180.0vf); print(v); \/\/ 3.14..."
+		}
+	}
+}

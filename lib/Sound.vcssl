@@ -20,6 +20,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * VCSSL Sound ライブラリ は、サウンドを扱う標準ライブラリです。
  * </p>
@@ -47,7 +48,38 @@ coding UTF-8;
  * 関数にフレーム値 0 を指定してサウンドを巻き戻し、再び <a href="#startSound">startSound</a> 関数で再生します。
  * </p>
  * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL Sound library is a standard library for handling sound.
+ * </p>
+ * 
+ * <p>
+ * The basic flow of sound playback in VCSSL is as follows.
+ * </p>
+ * 
+ * <p>
+ * First, load sound data from a file with the <a href="#newSound">newSound</a> function.
+ * Currently, the only sound format available in VCSSL is the WAVE format, with the file extension .wav.
+ * </p>
+ * 
+ * <p>
+ * Next, set the volume with the <a href="#setSoundGain">setSoundGain</a> function,
+ * and then start playback with the <a href="#startSound">startSound</a> function.
+ * Sound playback is performed asynchronously with respect to VCSSL program execution.
+ * In other words, VCSSL processing continues without waiting for the sound playback to finish.
+ * The same applies when multiple sounds are played. Sounds are played asynchronously without waiting for one another to finish.
+ * </p>
+ * 
+ * <p>
+ * When sound playback finishes, the <a href="#onSoundEnd">onSoundEnd</a> event handler is called.
+ * If you want to repeat playback of a sound, specify the frame value 0 to the <a href="#setSoundFrame">setSoundFrame</a>
+ * function there to rewind the sound, and then play it again with the <a href="#startSound">startSound</a> function.
+ * </p>
+ * 
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -55,16 +87,29 @@ coding UTF-8;
 
 
 
-/** エラーメッセージ、ファイルが見つからなかった場合。 */
-private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、ファイルが見つからなかった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when a file is not found.
+ */
+private const string ERROR_FILE_NOT_FOUND = "File not found. ファイルが見つかりません: ";
 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドファイルを読み込んでサウンドデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。
  *
  * @param filePath 読み込むサウンドファイルの名称またはパス（現時点でWAV形式のみ対応）
  * @return 生成したサウンドデータに割り振られたサウンドデータID（識別番号）
+ *
+ * !--- locale=En-US ---
+ * Loads a sound file, creates sound data from it, assigns its unique identifier, called the sound data ID, and returns it.
+ *
+ * @param filePath The name or path of the sound file to be loaded. At present, only the WAV format is supported.
+ * @return The sound data ID assigned to the created sound data.
  */
 int newSound(string filePath){
 	bool exist = ___exists(filePath);
@@ -78,9 +123,15 @@ int newSound(string filePath){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドデータを破棄します。
  *
  * @param soundID 対象サウンドデータのID
+ *
+ * !--- locale=En-US ---
+ * Disposes of sound data.
+ *
+ * @param soundID The ID of the target sound data.
  */
 void deleteSound(int soundID){
 	SYSTEM_PROCESS_DRIVER_SOUND_deleteSound(soundID);
@@ -88,9 +139,15 @@ void deleteSound(int soundID){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの再生を開始します。
  *
  * @param soundID 対象サウンドデータのID
+ *
+ * !--- locale=En-US ---
+ * Starts playback of a sound.
+ *
+ * @param soundID The ID of the target sound data.
  */
 void startSound(int soundID){
 	SYSTEM_PROCESS_DRIVER_SOUND_startSound(soundID);
@@ -98,9 +155,15 @@ void startSound(int soundID){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの再生を一時停止します。
  *
  * @param soundID 対象サウンドデータのID
+ *
+ * !--- locale=En-US ---
+ * Stops playback of a sound temporarily.
+ *
+ * @param soundID The ID of the target sound data.
  */
 void stopSound(int soundID){
 	SYSTEM_PROCESS_DRIVER_SOUND_stopSound(soundID);
@@ -108,10 +171,17 @@ void stopSound(int soundID){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの音量ゲインを設定します。
  *
  * @param soundID 対象サウンドデータのID
  * @param gain 音量ゲイン。
+ *
+ * !--- locale=En-US ---
+ * Sets the volume gain of a sound.
+ *
+ * @param soundID The ID of the target sound data.
+ * @param gain The volume gain.
  */
 void setSoundGain(int soundID, float gain){
 	SYSTEM_PROCESS_DRIVER_SOUND_setSoundVolumeGain(soundID, gain);
@@ -119,10 +189,17 @@ void setSoundGain(int soundID, float gain){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの再生位置をフレーム単位で設定します。
  *
  * @param soundID 対象サウンドデータのID
  * @param gain 再生位置フレーム
+ *
+ * !--- locale=En-US ---
+ * Sets the playback position of a sound in units of frames.
+ *
+ * @param soundID The ID of the target sound data.
+ * @param gain The playback position frame.
  */
 void setSoundFrame(int soundID, int frame){
 	SYSTEM_PROCESS_DRIVER_SOUND_setSoundFrame(soundID, frame);
@@ -130,20 +207,34 @@ void setSoundFrame(int soundID, int frame){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの再生位置をフレーム単位で取得します。
  *
  * @param soundID 対象サウンドデータのID
  * @return 現在の再生位置フレーム
+ *
+ * !--- locale=En-US ---
+ * Gets the playback position of a sound in units of frames.
+ *
+ * @param soundID The ID of the target sound data.
+ * @return The current playback position frame.
  */
 int getSoundFrame(int soundID){
 	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundFrame(soundID);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの長さをフレーム数単位で取得します。
  *
  * @param soundID 対象サウンドデータのID
  * @return 総フレーム数
+ *
+ * !--- locale=En-US ---
+ * Gets the length of a sound in units of frames.
+ *
+ * @param soundID The ID of the target sound data.
+ * @return The total number of frames.
  */
 int getSoundFrameLength(int soundID){
 	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundFrameLength(soundID);
@@ -151,10 +242,17 @@ int getSoundFrameLength(int soundID){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの再生位置を時間単位（ミリ秒）で設定します。
  *
  * @param soundID 対象サウンドデータのID
  * @param milliSec 再生位置時間（ミリ秒）
+ *
+ * !--- locale=En-US ---
+ * Sets the playback position of a sound in units of time, in milliseconds.
+ *
+ * @param soundID The ID of the target sound data.
+ * @param milliSec The playback position time in milliseconds.
  */
 void setSoundTime(int soundID, int milliSec){
 	int frame = getSoundFrameLength(soundID) * ( (double)milliSec / getSoundTimeLength(soundID) );
@@ -163,10 +261,17 @@ void setSoundTime(int soundID, int milliSec){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの再生位置を時間単位（ミリ秒）で取得します。
  *
  * @param soundID 対象サウンドデータのID
  * @return 再生位置時間（ミリ秒）
+ *
+ * !--- locale=En-US ---
+ * Gets the playback position of a sound in units of time, in milliseconds.
+ *
+ * @param soundID The ID of the target sound data.
+ * @return The playback position time in milliseconds.
  */
 int getSoundTime(int soundID){
 	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundTime(soundID);
@@ -174,12 +279,18 @@ int getSoundTime(int soundID){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * サウンドの長さを時間単位（ミリ秒）で取得します。
  *
  * @param soundID 対象サウンドデータのID
  * @return 総ミリ秒数
+ *
+ * !--- locale=En-US ---
+ * Gets the length of a sound in units of time, in milliseconds.
+ *
+ * @param soundID The ID of the target sound data.
+ * @return The total number of milliseconds.
  */
 int getSoundTimeLength(int soundID){
 	return SYSTEM_PROCESS_DRIVER_SOUND_getSoundTimeLength(soundID);
 }
-

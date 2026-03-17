@@ -20,6 +20,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * VCSSL Process ライブラリ は、オペレーティングシステムと通信し、プロセスを起動・制御するための標準ライブラリです。
  * 起動したプロセスと、標準入出力でやり取りする事も可能です。
@@ -85,7 +86,72 @@ coding UTF-8;
  * そのシェルスクリプト内で作業ディレクトリを設定する」などの方法が有効です。
  * </p>
  * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL Process library is a standard library for communicating with the operating system and for launching and controlling processes.
+ * It can also exchange data with launched processes through standard input and output.
+ * </p>
+ * 
+ * <p>
+ * The Process library provides features such as executing operating-system commands from VCSSL and launching other applications.
+ * It is also needed when linking a VCSSL program with programs developed in languages other than VCSSL.
+ * </p>
+ * 
+ * <p>
+ * The basic flow of process control in VCSSL is as follows.
+ * </p>
+ * 
+ * <p>
+ * First, create a process with the <a href="#newProcess">newProcess</a> function.
+ * At this point, execution has not started yet. This function assigns and returns a process-specific ID, called the process ID
+ * (the process ID here is assigned by the VCSSL implementation, and generally does not match the ID assigned by the operating system).
+ * </p>
+ * 
+ * <p>
+ * Next, start execution of the process with the <a href="#startProcess">startProcess</a> function.
+ * Process execution is performed asynchronously with respect to VCSSL program execution.
+ * In other words, VCSSL processing continues without waiting for the process to finish.
+ * If you want VCSSL-side processing to wait until the process ends,
+ * use the <a href="#waitForProcess">waitForProcess</a> function.
+ * </p>
+ * 
+ * <p>
+ * When the process finishes, the <a href="#onProcessEnd">onProcessEnd</a> event handler is called.
+ * There you perform tasks such as disposing of the process.
+ * </p>
+ * 
+ * <p>
+ * There are two ways to obtain the standard output of a process.
+ * One is to call the <a href="#getProcessOutput">getProcessOutput</a> function and retrieve it actively at any timing.
+ * This is convenient, for example, when you want to obtain the entire standard output after the process has finished.
+ * The other is to retrieve it passively by using the <a href="#onProcessOutput">onProcessOutput</a> event handler.
+ * This is convenient when you want to return responses to standard input according to the received standard output.
+ * However, in that case, note that the standard output is buffered, probably line by line,
+ * and there may be a time lag before it is passed to the event handler, especially when the process is waiting for input without outputting a newline.
+ * For interactions where this time lag becomes a problem, call the
+ * <a href="#flushProcessOutput">flushProcessOutput</a> function as needed from loops or elsewhere,
+ * and flush the buffer at appropriate times.
+ * If standard output or error messages become garbled, set the character encoding by using
+ * <a href="#setProcessOutputEncoding">setProcessOutputEncoding</a> and <a href="#setProcessErrorEncoding">setProcessErrorEncoding</a>.
+ * </p>
+ *
+ * <p>
+ * By default, the working directory of a created process is the directory containing the VCSSL script, that is, the main directory.
+ * You can set the working directory as needed by using <a href="#setProcessWorkingDirectory">setProcessWorkingDirectory</a>.
+ * Note that it is not automatically set to the directory containing the process executable.
+ * Also note that the working directory of a process may not always be set as expected depending on the environment, and the same applies to the default directory.
+ * For example, on classic shells and command-line terminals, special paths that cannot be set as the current directory may fail to be assigned as the working directory.
+ * A known concrete example is a UNC-format path pointing to a directory on the network that is not connected as a network drive.
+ * </p>
+ * 
+ * <p>
+ * To control conditions such as the working directory more reliably and make debugging easier, it is effective to use methods such as wrapping the execution command in a shell script and setting the working directory inside that shell script.
+ * </p>
+ * 
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -94,6 +160,7 @@ coding UTF-8;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。
  * <br />
  * この関数によるプロセスの生成後、<a href="#startProcess">startProcess</a> をコールするまで実行は開始されないため（ VCSSL 3.3以降 ）、その間に標準入力内容の設定などを行う事ができます。
@@ -121,6 +188,33 @@ coding UTF-8;
  *
  * @param command[] オペレーティングシステムに渡すコマンド。一般的な環境では [0] に実行ファイル（アプリケーション）の絶対パス、[1] 以降に起動時のコマンドライン引数を指定します。実行ファイルの絶対パスは <a href="File.html#getFilePath">File.getFilePath</a> を使用して取得できます。なお、環境変数 PATH/Path にパスが登録されている実行ファイルは、絶対パスではなく実行ファイル名のみもで実行できる場合があります（環境依存）。
  * @return 生成したプロセスに割り振られたプロセスID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a process for a native application, assigns its unique identifier called a process ID, and returns it.
+ * <br />
+ * After creating the process with this function, execution does not start until <a href="#startProcess">startProcess</a> is called, since VCSSL 3.3, so you can set standard input and other properties in the meantime.
+ * Processes can also be created by <a href="System.html#exec">System.exec</a>, but exec starts execution at the same time as process creation.
+ * <br />
+ * For example, to start "test.exe" with the command-line arguments "1", "2", and "3", after importing the File and Process libraries:
+ * <br />
+ * string command[] = { getFilePath("test.exe"), "1", "2", "3" }
+ * <br />
+ * int processID = newProcess(command);
+ * <br />
+ * and so on. To start execution, then call:
+ * <br />
+ * <a href="#startProcess">startProcess</a>(processID);
+ * <br />
+ * To wait until it finishes, then call:
+ * <br />
+ * <a href="#waitForProcess">waitForProcess</a>(processID);
+ * <br />
+ * By default, the working directory of the created process is set to the directory containing the VCSSL script, that is, the main directory.
+ * You can set the working directory as needed by using <a href="#setProcessWorkingDirectory">setProcessWorkingDirectory</a>.
+ * In either case, it may fail to be set for special path formats. See the overview at the beginning of this page for details.
+ *
+ * @param command[] The command passed to the operating system. In typical environments, specify the absolute path of the executable application at [0], and command-line arguments at [1] and later. The absolute path of the executable can be obtained by using <a href="File.html#getFilePath">File.getFilePath</a>. Note that executables whose paths are registered in the PATH/Path environment variable may sometimes be executable by file name alone instead of by absolute path, depending on the environment.
+ * @return The process ID assigned to the created process.
  */
 int newProcess( string command[] ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_createProcess( command );
@@ -128,6 +222,7 @@ int newProcess( string command[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ネイティブアプリケーションのプロセスを生成し、それに固有の識別番号である「プロセスID」を割り振って返します。
  * <br />
  * 基本的には newProcess(string command[]) と同じ機能ですが、引数を配列に区切らなくても、コマンドライン端末のように1行でまとめて記述する事ができます。
@@ -136,6 +231,16 @@ int newProcess( string command[] ){
  *
  * @param command オペレーティングシステムに渡すコマンド。コマンド入力端末に入力するように、1行にまとめて指定します。ただし環境によっては使用できない場合があります。
  * @return 生成したプロセスに割り振られたプロセスID（識別番号）。
+ *
+ * !--- locale=En-US ---
+ * Creates a process for a native application, assigns its unique identifier called a process ID, and returns it.
+ * <br />
+ * Basically, it provides the same function as newProcess(string command[]), but you can write the command as a single line like in a command-line terminal without splitting the arguments into an array.
+ * This is convenient, but because how the contents are split depends on the environment and implementation, it can instead lead to behavior that is harder to debug when running on different environments or after version changes.
+ * If it does not work as expected, or if you want to emphasize future stability, using newProcess(string command[]) with arguments explicitly split into an array is recommended.
+ *
+ * @param command The command passed to the operating system. Specify it as a single line, as if entering it in a command-line terminal. However, it may not be available depending on the environment.
+ * @return The process ID assigned to the created process.
  */
 int newProcess( string command ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_createProcess( command );
@@ -143,6 +248,7 @@ int newProcess( string command ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ネイティブアプリケーションのプロセスを実行開始します。
  * <br />
  * 実行開始後は、VCSSLの実行とは独立に、非同期に処理が行われます。
@@ -150,6 +256,15 @@ int newProcess( string command ){
  * <a href="#waitForProcess">waitForProcess</a> をコールしてください。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Starts execution of a native application process.
+ * <br />
+ * After execution starts, processing is performed asynchronously and independently of VCSSL execution.
+ * If you want VCSSL-side processing to wait until the process finishes,
+ * call <a href="#waitForProcess">waitForProcess</a>.
+ *
+ * @param processID The process ID of the target process.
  */
 void startProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_startProcess( processID );
@@ -157,12 +272,21 @@ void startProcess( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ネイティブアプリケーションのプロセスに関するリソースを破棄します。プロセスの実行終了後にコールしてください。
  * <br />
  * ただし、プロセスの実行途中でコールしてはいけません。プロセスを実行途中で破棄するには
  * 先に <a href="#destroyProcess">destroyProcess</a> で強制終了させてください。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Disposes of the resources related to a native application process. Call it after the process has finished executing.
+ * <br />
+ * However, it must not be called while the process is still running. To dispose of a process during execution,
+ * first terminate it forcibly with <a href="#destroyProcess">destroyProcess</a>.
+ *
+ * @param processID The process ID of the target process.
  */
 void deleteProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_disposeProcess( processID );
@@ -170,9 +294,15 @@ void deleteProcess( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ネイティブアプリケーションのプロセスを、実行途中で強制終了します。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Forcibly terminates a native application process while it is running.
+ *
+ * @param processID The process ID of the target process.
  */
 void destroyProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_destroyProcess( processID );
@@ -180,6 +310,7 @@ void destroyProcess( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスに渡す標準入力内容を設定します。
  * <br />
  * 入力内容はバッファされ、プロセスが実際に入力待ちの状態になったタイミングで、プロセスに渡されます。
@@ -197,6 +328,25 @@ void destroyProcess( int processID ){
  * その際、環境にもよりますが、入力内容の末尾には改行コードを付けておかないと、受理されない場合があります。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Sets the standard input content to be passed to the process.
+ * <br />
+ * The input content is buffered and passed to the process when the process actually enters a waiting-for-input state.
+ * Therefore, you can also set all standard input needed until the process finishes at once, separated by newline characters.
+ * <br />
+ * For example, to input "1", "2", and "3" in sequence:
+ * <br />
+ * setProcessInput(processID, "1" + EOL + "2" + EOL + "3" + EOL);
+ * <br />
+ * and so on.
+ * <br />
+ * If the input becomes garbled, set the character encoding appropriate for the process with <a href="#setProcessInputEncoding">setProcessInputEncoding</a>.
+ * <br />
+ * Also, instead of relying on buffering, you can perform standard input interactively, that is, step by step, together with obtaining standard output.
+ * In that case, depending on the environment, the input may not be accepted unless a newline character is appended at the end.
+ *
+ * @param processID The process ID of the target process.
  */
 void setProcessInput( int processID, string command ){
   SYSTEM_PROCESS_DRIVER_NATIVE_setProcessInput( processID, command );
@@ -204,6 +354,7 @@ void setProcessInput( int processID, string command ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * コールされた時点までにバッファされている、プロセスの標準出力内容を取得します。
  * <br />
  * 環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。
@@ -213,6 +364,17 @@ void setProcessInput( int processID, string command ){
  *
  * @param processID 対象プロセスのプロセスID。
  * @return プロセスのバッファされている標準出力内容。
+ *
+ * !--- locale=En-US ---
+ * Gets the standard output content of the process buffered up to the time of the call.
+ * <br />
+ * Depending on the environment, there may be a limit on the buffer size, or efficiency may decrease as the buffer accumulates.
+ * Therefore, for native applications that produce a large amount of standard output,
+ * clear the buffer as needed with <a href="#clearProcessOutput">clearProcessOutput</a>.
+ * If the retrieved content becomes garbled, set the character encoding appropriate for the process with <a href="#setProcessOutputEncoding">setProcessOutputEncoding</a>.
+ *
+ * @param processID The process ID of the target process.
+ * @return The buffered standard output content of the process.
  */
 string getProcessOutput( int processID ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_getProcessOutput( processID );
@@ -220,6 +382,7 @@ string getProcessOutput( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * コールされた時点までにバッファされている、プロセスの標準エラー出力内容を取得します。
  * <br />
  * 環境によっては、バッファ量に上限があったり、バッファ量が蓄積すると効率が低下する事があります。
@@ -229,6 +392,17 @@ string getProcessOutput( int processID ){
  *
  * @param processID 対象プロセスのプロセスID。
  * @return プロセスのバッファされている標準エラー出力内容。
+ *
+ * !--- locale=En-US ---
+ * Gets the standard error output content of the process buffered up to the time of the call.
+ * <br />
+ * Depending on the environment, there may be a limit on the buffer size, or efficiency may decrease as the buffer accumulates.
+ * Therefore, for native applications that produce a large amount of standard error output,
+ * clear the buffer as needed with <a href="#clearProcessError">clearProcessError</a>.
+ * If the retrieved content becomes garbled, set the character encoding appropriate for the process with <a href="#setProcessErrorEncoding">setProcessErrorEncoding</a>.
+ *
+ * @param processID The process ID of the target process.
+ * @return The buffered standard error output content of the process.
  */
 string getProcessError( int processID ){
   return SYSTEM_PROCESS_DRIVER_NATIVE_getProcessError( processID );
@@ -236,11 +410,19 @@ string getProcessError( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの標準出力バッファをクリアします。
  * 標準出力内容が多いネイティブアプリケーションについては、
  * バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Clears the standard output buffer of the process.
+ * For native applications producing a large amount of standard output,
+ * clear it as needed because efficiency may decrease as the buffer accumulates.
+ *
+ * @param processID The process ID of the target process.
  */
 void clearProcessOutput( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_clearProcessOutput( processID );
@@ -248,11 +430,19 @@ void clearProcessOutput( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの標準エラー出力バッファをクリアします。
  * 標準出力内容が多いネイティブアプリケーションについては、
  * バッファ量が蓄積してくると効率が低下するため、適時クリアしてください。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Clears the standard error output buffer of the process.
+ * For native applications producing a large amount of standard output,
+ * clear it as needed because efficiency may decrease as the buffer accumulates.
+ *
+ * @param processID The process ID of the target process.
  */
 void clearProcessError( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_clearProcessError( processID );
@@ -260,11 +450,19 @@ void clearProcessError( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの標準出力バッファをフラッシュします。
  * フラッシュを行うと、その時点でバッファされている内容が全て
  * onProcessOutput に流されます。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Flushes the standard output buffer of the process.
+ * When flushed, all content buffered at that point is sent to
+ * onProcessOutput.
+ *
+ * @param processID The process ID of the target process.
  */
 void flushProcessOutput( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_flushProcessOutput( processID );
@@ -272,11 +470,19 @@ void flushProcessOutput( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの標準エラー出力バッファをフラッシュします。
  * フラッシュを行うと、その時点でバッファされている内容が全て
  * onProcessError に流されます。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Flushes the standard error output buffer of the process.
+ * When flushed, all content buffered at that point is sent to
+ * onProcessError.
+ *
+ * @param processID The process ID of the target process.
  */
 void flushProcessError( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_flushProcessError( processID );
@@ -285,6 +491,7 @@ void flushProcessError( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスに渡す標準入力のテキストエンコーディングを設定します。
  * <br />
  * この設定は、プロセスの標準入力の使用前に済ませる必要があります。
@@ -292,6 +499,15 @@ void flushProcessError( int processID ){
  *
  * @param processID 対象プロセスのプロセスID。
  * @param inputEncoding 標準入力内容のテキストエンコーディング。
+ *
+ * !--- locale=En-US ---
+ * Sets the text encoding of the standard input passed to the process.
+ * <br />
+ * This setting must be made before using the standard input of the process.
+ * If it is set after some standard input has already been performed, it may not be applied.
+ *
+ * @param processID The process ID of the target process.
+ * @param inputEncoding The text encoding of the standard input content.
  */
 void setProcessInputEncoding( int processID, string inputEncoding ){
   SYSTEM_PROCESS_DRIVER_NATIVE_setProcessInputEncoding( processID, inputEncoding );
@@ -299,6 +515,7 @@ void setProcessInputEncoding( int processID, string inputEncoding ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの標準出力内容のテキストエンコーディングを設定します。
  * <br />
  * この設定は、プロセスの標準出力の使用前に済ませる必要があります。
@@ -306,6 +523,15 @@ void setProcessInputEncoding( int processID, string inputEncoding ){
  *
  * @param processID 対象プロセスのプロセスID。
  * @param outputEncoding 標準出力内容のテキストエンコーディング。
+ *
+ * !--- locale=En-US ---
+ * Sets the text encoding of the standard output content of the process.
+ * <br />
+ * This setting must be made before using the standard output of the process.
+ * If it is set after some standard output has already been performed, it may not be applied.
+ *
+ * @param processID The process ID of the target process.
+ * @param outputEncoding The text encoding of the standard output content.
  */
 void setProcessOutputEncoding( int processID, string outputEncoding ){
   SYSTEM_PROCESS_DRIVER_NATIVE_setProcessOutputEncoding( processID, outputEncoding );
@@ -313,6 +539,7 @@ void setProcessOutputEncoding( int processID, string outputEncoding ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの標準エラー出力内容のテキストエンコーディングを設定します。
  * <br />
  * この設定は、プロセスの標準エラー出力の使用前に済ませる必要があります。
@@ -320,6 +547,15 @@ void setProcessOutputEncoding( int processID, string outputEncoding ){
  *
  * @param processID 対象プロセスのプロセスID。
  * @param errorEncoding 標準エラー出力内容のテキストエンコーディング。
+ *
+ * !--- locale=En-US ---
+ * Sets the text encoding of the standard error output content of the process.
+ * <br />
+ * This setting must be made before using the standard error output of the process.
+ * If it is set after some standard error output has already been performed, it may not be applied.
+ *
+ * @param processID The process ID of the target process.
+ * @param errorEncoding The text encoding of the standard error output content.
  */
 void setProcessErrorEncoding( int processID, string errorEncoding ){
   SYSTEM_PROCESS_DRIVER_NATIVE_setProcessErrorEncoding( processID, errorEncoding );
@@ -327,6 +563,7 @@ void setProcessErrorEncoding( int processID, string errorEncoding ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの作業ディレクトリを設定します。
  * <br />
  * この設定は、startProcess によるプロセスの実行開始前に済ませる必要があります。
@@ -345,6 +582,25 @@ void setProcessErrorEncoding( int processID, string errorEncoding ){
  * 
  * @param processID 対象プロセスのプロセスID。
  * @param workingDirectoryPath 作業ディレクトリのパス
+ *
+ * !--- locale=En-US ---
+ * Sets the working directory of the process.
+ * <br />
+ * This setting must be made before starting execution of the process by startProcess.
+ * If it is set after execution starts, it will not be applied.
+ * <br />
+ * If you execute the process without setting a working directory, the directory containing the VCSSL script, that is, the main directory, becomes the working directory.
+ * Note that this is not the directory containing the executable file of the process.
+ * <br />
+ * <br />
+ * Also note that the working directory of the process may not always be set as expected depending on the environment, and the same applies to the default directory.
+ * For example, on classic shells and command-line terminals, special paths that cannot be set as the current directory may fail to be assigned as the working directory.
+ * A known concrete example is a UNC-format path pointing to a directory on the network that is not connected as a network drive.
+ * <br />
+ * To control conditions such as the working directory more reliably and make debugging easier, it is effective to use methods such as wrapping the execution command in a shell script and setting the working directory inside that shell script.
+ * 
+ * @param processID The process ID of the target process.
+ * @param workingDirectoryPath The path of the working directory.
  */
 void setProcessWorkingDirectory( int processID, string workingDirectoryPath ){
   SYSTEM_PROCESS_DRIVER_NATIVE_setProcessWorkingDirectory( processID, workingDirectoryPath );
@@ -352,10 +608,17 @@ void setProcessWorkingDirectory( int processID, string workingDirectoryPath ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの終了ステータスコードを返します。
  *
  * @param processID 対象プロセスのプロセスID。
  * @return プロセスの終了ステータスコード。
+ *
+ * !--- locale=En-US ---
+ * Returns the exit status code of the process.
+ *
+ * @param processID The process ID of the target process.
+ * @return The exit status code of the process.
  */
 int getProcessExitValue( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_getProcessExitValue( processID );
@@ -363,12 +626,17 @@ int getProcessExitValue( int processID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロセスの実行が終了するまで、VCSSL側の実行を待機します。
  *
  * @param processID 対象プロセスのプロセスID。
+ *
+ * !--- locale=En-US ---
+ * Waits on the VCSSL side until execution of the process finishes.
+ *
+ * @param processID The process ID of the target process.
  */
 void waitForProcess( int processID ){
   SYSTEM_PROCESS_DRIVER_NATIVE_waitForProcess( processID );
 }
-
 

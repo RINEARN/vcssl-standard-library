@@ -1,0 +1,131 @@
+coding UTF-8;
+
+// AI用JSONドキュメント群を1枚に結合するための即席スクリプト Ver.1.0.0
+//（本当に即席の実装なので汚いです）
+
+import System;
+import File;
+import Text;
+
+// 出力ファイルパス、入出力文字コード等
+const string OUTPUT_FILE_PATH = "./VCSSL_Standard_Library_Reference_in_Japanese.json";
+const string OUTPUT_ENCODING = "UTF-8";
+const string INPUT_ENCODING = "UTF-8";
+
+// 処理はここから始まる
+void main() {
+	
+	// 出力ファイルを開いて最上階層ブロックの「{」を書き込み
+	int outputFile = open(OUTPUT_FILE_PATH, WRITE, OUTPUT_ENCODING);
+	writeln(outputFile, "{");
+	
+	// --------------------------------------------------
+	// 以下、各JSONドキュメントを読み込み、少し整形しつつ出力ファイル内に書き込んでいく
+	
+	// 引数: 出力ファイルID, 入力ファイルパス, ライブラリ名(結合JSON内でのキーを兼ねる), 最後の入力ファイルかどうか(末尾カンマの付加の有無で要る)
+	
+	writeContentFromJSONFile(outputFile, "ja/System.json", "System", false);
+	writeContentFromJSONFile(outputFile, "ja/Math.json", "Math", false);
+	writeContentFromJSONFile(outputFile, "ja/Text.json", "Text", false);
+	writeContentFromJSONFile(outputFile, "ja/File.json", "File", false);
+	writeContentFromJSONFile(outputFile, "ja/Color.json", "Color", false);
+	writeContentFromJSONFile(outputFile, "ja/GUI.json", "GUI", false);
+	writeContentFromJSONFile(outputFile, "ja/Graphics.json", "Graphics", false);
+	writeContentFromJSONFile(outputFile, "ja/Graphics2D.json", "Graphics2D", false);
+	writeContentFromJSONFile(outputFile, "ja/Graphics3D.json", "Graphics3D", false);
+	writeContentFromJSONFile(outputFile, "ja/Time.json", "Time", false);
+	writeContentFromJSONFile(outputFile, "ja/Sound.json", "Sound", false);
+	writeContentFromJSONFile(outputFile, "ja/Process.json", "Process", false);
+	writeContentFromJSONFile(outputFile, "ja/Thread.json", "Thread", false);
+	
+	writeContentFromJSONFile(outputFile, "ja/tool/Graph2D.json", "tool.Graph2D", false);
+	writeContentFromJSONFile(outputFile, "ja/tool/Graph3D.json", "tool.Graph3D", false);
+	
+	writeContentFromJSONFile(outputFile, "ja/graphics2d/Graphics2DFramework.json", "graphics2d.Graphics2DFramework", false);
+	writeContentFromJSONFile(outputFile, "ja/graphics3d/Graphics3DFramework.json", "graphics3d.Graphics3DFramework", false);
+	
+	writeContentFromJSONFile(outputFile, "ja/data/DataWrapper.json", "data.DataWrapper", false);
+	writeContentFromJSONFile(outputFile, "ja/data/List.json", "data.List", false);
+	writeContentFromJSONFile(outputFile, "ja/data/Queue.json", "data.Queue", false);
+	writeContentFromJSONFile(outputFile, "ja/data/Stack.json", "data.Stack", false);
+	writeContentFromJSONFile(outputFile, "ja/data/WrappedList.json", "data.WrappedList", false);
+	writeContentFromJSONFile(outputFile, "ja/data/WrappedQueue.json", "data.WrappedQueue", false);
+	writeContentFromJSONFile(outputFile, "ja/data/WrappedStack.json", "data.WrappedStack", false);
+	
+	writeContentFromJSONFile(outputFile, "ja/file/TextFile.json", "file.TextFile", false);
+	
+	writeContentFromJSONFile(outputFile, "ja/math/ElementaryFunction.json", "math.ElementaryFunction", false);
+	writeContentFromJSONFile(outputFile, "ja/math/FourierTransform.json", "math.FourierTransform", false);
+	writeContentFromJSONFile(outputFile, "ja/math/GaussianFunction.json", "math.GaussianFunction", false);
+	writeContentFromJSONFile(outputFile, "ja/math/StatisticalFunction.json", "math.StatisticalFunction", false);
+	
+	writeContentFromJSONFile(outputFile, "ja/system/Bool.json", "system.Bool", false);
+	writeContentFromJSONFile(outputFile, "ja/system/Complex.json", "system.Complex", false);
+	writeContentFromJSONFile(outputFile, "ja/system/Float.json", "system.Float", false);
+	writeContentFromJSONFile(outputFile, "ja/system/Int.json", "system.Int", false);
+	writeContentFromJSONFile(outputFile, "ja/system/String.json", "system.String", false);
+	
+	writeContentFromJSONFile(outputFile, "ja/gui/ButtonPanel.json", "gui.ButtonPanel", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/ButtonWindow.json", "gui.ButtonWindow", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/CheckBoxPanel.json", "gui.CheckBoxPanel", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/CheckBoxWindow.json", "gui.CheckBoxWindow", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/HorizontalSliderPanel.json", "gui.HorizontalSliderPanel", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/HorizontalSliderWindow.json", "gui.HorizontalSliderWindow", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/ImageLabelWindow.json", "gui.ImageLabelWindow", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/TextFieldPanel.json", "gui.TextFieldPanel", false);
+	writeContentFromJSONFile(outputFile, "ja/gui/TextFieldWindow.json", "gui.TextFieldWindow", true); // Specify true for the last JSON file
+	
+	// JSONドキュメント読み込みここまで
+	// --------------------------------------------------
+	
+	// 最上階層ブロックの「}」を書き込み、出力ファイルを閉じる
+	writeln(outputFile, "}");
+	close(outputFile);
+	popup("complete!");
+}
+
+
+// JSONドキュメント一枚の内容を読み込み、少し整形して、出力ファイル内に書き込む
+// 引数: 出力ファイルID, 入力ファイルパス, ライブラリ名(結合JSON内でのキーを兼ねる), 最後の入力ファイルかどうか(末尾カンマの付加の有無で要る)
+void writeContentFromJSONFile(int outputFile, string inputFilePath, string libraryName, boolean isLastJSONFile) {
+	println("load: " + inputFilePath);
+	string indent = "\t";
+	
+	// 結合JSON内でのキーとしてライブラリ名を書き込む
+	write(outputFile, indent + "\"" + libraryName + "\": ");
+	
+	// 読み込むファイルを開く
+	int inputFile = open(inputFilePath, READ, INPUT_ENCODING);
+	int lineCount = countln(inputFile);
+	
+	// 1行ずつ読み込み、インデントを調整して書き込んでいく
+	for (int iline=0; iline<lineCount; iline++) {
+		
+		// 1行読み込む
+		string line = readln(inputFile);
+		
+		// 先頭行以外はインデントを付加する
+		//（先頭行は「{」なので、キーの直後にゼロインデントで書き込みたい）
+		if (iline != 0) {
+			write(outputFile, indent);
+		}
+		
+		// 行を書き込む
+		write(outputFile, line);
+		
+		// 最後のJSONドキュメントでなければカンマを付加する
+		//（閉じブロック「}」は読み込んだファイル内に含まれている）
+		if (iline == lineCount - 1) {
+			if (isLastJSONFile) {
+				write(outputFile, EOL);
+			} else {
+				write(outputFile, "," + EOL);
+			}
+		} else {
+			write(outputFile, EOL);
+		}
+	}
+	
+	// 入力ファイルを閉じて完了
+	close(inputFile);
+}

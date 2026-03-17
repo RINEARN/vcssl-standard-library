@@ -1,0 +1,71 @@
+{
+	"libraryName": "WrappedStack",
+	"libraryDescription": "<p>このライブラリ data.WrappedStack は、スタック型のデータ構造を提供します。\t<\/p><p>このモジュールでは、スタックのデータを保持するジェネリック構造体 <a href=\"#WrappedStack\">WrappedStack<\/a> と、それに対してデータを出し入れするジェネリック関数 <a href=\"#push\">push<\/a>, <a href=\"#pop\">pop<\/a> などが提供されます。 <\/p><p>なお、この data.WrappedStack では、要素を <a href=\"DataWrapper.html\">DataWrapper<\/a> 構造体でラッピングして保持する実装になっています。<br \/>そのため WrappedStackでは、 data.<a href=\"Stack.html\">Stack<\/a> とは異なり、配列を要素として扱う事ができます。<\/p><p>反面、要素の出し入れの際に DataWrapper 構造体へのラッピング処理を伴うため、そのオーバーヘッドの分だけ、Stack よりも処理が重くなります。<br \/>従って、要素が配列でない場合には、WrappedStack よりも Stack の使用が推奨されます。<\/p>",
+	"structs": {
+		"struct0": {
+			"name": "WrappedStack<Type>",
+			"declaration": "struct WrappedStack<Type>",
+			"description": "スタック構造体です。スタックのデータを保持します。"
+		}
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "clear<Type>",
+			"declaration": "void clear<Type>( WrappedStack<Type> &stack )",
+			"description": "要素を全て削除します。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 ",
+			"returnValue": "(void型) "
+		},
+		"function1": {
+			"name": "size<Type>",
+			"declaration": "int size<Type>( WrappedStack<Type> &stack )",
+			"description": "使用中のサイズを返します。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 ",
+			"returnValue": "(int型) "
+		},
+		"function2": {
+			"name": "push<Type>",
+			"declaration": "void push<Type>( WrappedStack<Type> &stack, Type value )",
+			"description": "スタックに要素を追加します。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 \n(Type型) value : 追加する要素 ",
+			"returnValue": "(void型) "
+		},
+		"function3": {
+			"name": "pop<Type>",
+			"declaration": "Type pop<Type>( WrappedStack<Type> &stack )",
+			"description": "スタックから要素を取り出します。取り出した要素は、スタックから削除されます。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 ",
+			"returnValue": "(Type型) 取り出した要素"
+		},
+		"function4": {
+			"name": "peek<Type>",
+			"declaration": "Type peek<Type>( WrappedStack<Type> &stack )",
+			"description": "スタックから要素を削除せずに取り出します。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 ",
+			"returnValue": "(Type型) 取り出した要素"
+		},
+		"function5": {
+			"name": "contains<Type>",
+			"declaration": "bool contains<Type>( WrappedStack<Type> &stack, Type element )",
+			"description": "スタックが指定された要素を含んでいるか判定します。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 \n(Type型) element : 含まれるか判定したい要素 ",
+			"returnValue": "(bool型) "
+		},
+		"function6": {
+			"name": "reverse<Type>",
+			"declaration": "void reverse<Type>( WrappedStack<Type> &stack )",
+			"description": "スタックが保持する全要素の順序を反転させます。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 ",
+			"returnValue": "(void型) "
+		},
+		"function7": {
+			"name": "toDataWrapperArray<Type>",
+			"declaration": "DataWrapper<Type>[ ] toDataWrapperArray<Type>( WrappedStack<Type> &stack )",
+			"description": "スタックが保持する全要素を、DataWrapper配列に格納して返します。なお、順序は pop や peek で最初に得られる要素を格納するものが [ 0 ] になります。",
+			"parameters": "(WrappedStack&lt;Type&gt;型) stack : 対象のスタック構造体 ",
+			"returnValue": "(DataWrapper&lt;Type&gt;[]型) スタックの全要素をまとめたDataWrapper配列"
+		}
+	}
+}

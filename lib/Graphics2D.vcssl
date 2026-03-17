@@ -21,6 +21,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * VCSSL Graphics2D ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つであり、
  * アニメーション対応の2次元コンピュータグラフィックス（2DCG）描画機能を提供します。
@@ -28,10 +29,24 @@ coding UTF-8;
  * 
  * <p>
  * Graphics2Dライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。
- * 具体的な使用方法については、「 VCSSL公式開発ガイド 」をご参照ください。
+ * 具体的な使用方法については、「 VCSSL 2DCG開発ガイド 」をご参照ください。
+ * </p>
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL Graphics2D library is one of the standard libraries for handling graphics in VCSSL,
+ * and provides animation-capable 2D computer graphics (2DCG) rendering functions.
  * </p>
  * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * <p>
+ * Because the Graphics2D library is relatively large, it is difficult to use it effectively by referring only to the function specifications described here.
+ * For specific usage examples and guidance, refer to the "Official VCSSL 2DCG Development Guide."
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -40,21 +55,36 @@ coding UTF-8;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 2DCGレンダラーを生成し、固有の識別番号（ レンダラーID ）を割り振って返します。
  * 
- * @param width 描画領域の幅
- * @param height 描画領域の高さ
- * @param graphicsID 使用するグラフィックスリソースのID
- * @return レンダラーID
+ * @param width 描画領域の幅。
+ * @param height 描画領域の高さ。
+ * @param graphicsID 使用するグラフィックスデータ（グラフィックスリソース）のID。
+ * @return レンダラーID。
+ *
+ * !--- locale=En-US ---
+ * Creates a 2DCG renderer and returns its unique identifier, called the renderer ID.
+ * 
+ * @param width The width of the drawing area.
+ * @param height The height of the drawing area.
+ * @param graphicsID The ID of the graphics resource to use.
+ * @return The renderer ID.
  */
 int newGraphics2DRenderer( int width, int height, int graphicsID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsEngine2D( graphicsID, width, height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 2DCGレンダラーを破棄します。
  * 
- * @param rendererID 破棄するレンダラーのID
+ * @param rendererID 破棄するレンダラーのID。
+ *
+ * !--- locale=En-US ---
+ * Disposes a 2DCG renderer.
+ * 
+ * @param rendererID The ID of the renderer to dispose.
  */
 void deleteGraphics2DRenderer( int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeGraphicsEngine2D( rendererID );
@@ -62,51 +92,87 @@ void deleteGraphics2DRenderer( int rendererID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトを合成し、2DCGを描画します。
  * 
- * @param rendererID レンダラーID
+ * @param rendererID レンダラーID。
+ *
+ * !--- locale=En-US ---
+ * Composites sprites and renders the 2DCG scene.
+ * 
+ * @param rendererID The renderer ID.
  */
 macro paintGraphics2D( int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_repaintGraphics2D( rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画内容を背景色でクリアします。
  * 
- * @param rendererID レンダラーID
+ * @param rendererID レンダラーID。
+ *
+ * !--- locale=En-US ---
+ * Clears the drawing contents with the background color.
+ * 
+ * @param rendererID The renderer ID.
  */
 macro clearGraphics2D( int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_clearGraphics2D( rendererID, false );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画内容を背景色でクリアし、必要であれば全てのスプライトを配置解除します。
  * 
- * @param rendererID レンダラーID
- * @param removeAll 全てのスプライトを配置解除するかどうか
+ * @param rendererID レンダラーID。
+ * @param removeAll 全てのスプライトを配置解除するかどうか。
+ *
+ * !--- locale=En-US ---
+ * Clears the drawing contents with the background color and, if necessary, removes all mounted sprites.
+ * 
+ * @param rendererID The renderer ID.
+ * @param removeAll Whether to remove all mounted sprites.
  */
 macro clearGraphics2D( int rendererID, bool removeAll ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_clearGraphics2D( rendererID, removeAll );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 背景色を設定します。
  * 
- * @param rendererID レンダラーID
- * @param red 赤色成分（ 0 - 255 ）
- * @param green 緑色成分（ 0 - 255 ）
- * @param blue 青色成分（ 0 - 255 ）
- * @param alpha α値成分（ 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param red 赤色成分（ 0 - 255 ）。
+ * @param green 緑色成分（ 0 - 255 ）。
+ * @param blue 青色成分（ 0 - 255 ）。
+ * @param alpha α値成分（ 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Sets the background color.
+ * 
+ * @param rendererID The renderer ID.
+ * @param red The red component (0 to 255).
+ * @param green The green component (0 to 255).
+ * @param blue The blue component (0 to 255).
+ * @param alpha The alpha component (0 to 255).
  */
 macro setGraphics2DColor( int rendererID, int red, int green, int blue, int alpha ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsBackground2D( rendererID, red, green, blue, alpha );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 背景色を設定します。
  * 
- * @param rendererID レンダラーID
- * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Sets the background color.
+ * 
+ * @param rendererID The renderer ID.
+ * @param rgba The array storing the color components ([0]=red, [1]=green, [2]=blue, [3]=alpha, each ranging from 0 to 255).
  */
 void setGraphics2DColor( int rendererID, int rgba[] ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsBackground2D( rendererID, rgba[0], rgba[1], rgba[2], rgba[3] );
@@ -114,11 +180,19 @@ void setGraphics2DColor( int rendererID, int rgba[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画領域の大きさを設定します。
  * 
- * @param rendererID レンダラーID
- * @param width 幅
- * @param height 高さ
+ * @param rendererID レンダラーID。
+ * @param width 幅。
+ * @param height 高さ。
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the drawing area.
+ * 
+ * @param rendererID The renderer ID.
+ * @param width The width.
+ * @param height The height.
  */
 macro setGraphics2DSize( int rendererID, int width, int height ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsSize2D( rendererID, width, height );
@@ -126,23 +200,40 @@ macro setGraphics2DSize( int rendererID, int width, int height ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画色を設定します。
  * 
- * @param rendererID レンダラーID
- * @param red 赤色成分（ 0 - 255 ）
- * @param green 緑色成分（ 0 - 255 ）
- * @param blue 青色成分（ 0 - 255 ）
- * @param alpha α値成分（ 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param red 赤色成分（ 0 - 255 ）。
+ * @param green 緑色成分（ 0 - 255 ）。
+ * @param blue 青色成分（ 0 - 255 ）。
+ * @param alpha α値成分（ 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Sets the drawing color.
+ * 
+ * @param rendererID The renderer ID.
+ * @param red The red component (0 to 255).
+ * @param green The green component (0 to 255).
+ * @param blue The blue component (0 to 255).
+ * @param alpha The alpha component (0 to 255).
  */
 macro setDrawColor( int rendererID, int red, int green, int blue, int alpha ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsForeground2D( rendererID, red, green, blue, alpha );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画色を設定します。
  * 
- * @param rendererID レンダラーID
- * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Sets the drawing color.
+ * 
+ * @param rendererID The renderer ID.
+ * @param rgba The array storing the color components ([0]=red, [1]=green, [2]=blue, [3]=alpha, each ranging from 0 to 255).
  */
 void setDrawColor( int rendererID, int rgba[] ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setGraphicsForeground2D( rendererID, rgba[0], rgba[1], rgba[2], rgba[3] );
@@ -152,40 +243,68 @@ void setDrawColor( int rendererID, int rgba[] ){
 
 
 /**
- * テキスト描画に使用するフォントを設定します
+ * !--- locale=Ja-JP ---
+ * テキスト描画に使用するフォントを設定します。
  * 
- * @param rendererID レンダラーID
- * @param name フォント名（処理系依存、環境依存）
+ * @param rendererID レンダラーID。
+ * @param name フォント名（処理系依存、環境依存）。
+ *
+ * !--- locale=En-US ---
+ * Sets the font used for text drawing.
+ * 
+ * @param rendererID The renderer ID.
+ * @param name The font name. This depends on the implementation and environment.
  */
 void setDrawFont( int rendererID, string name ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFont( rendererID, name );
 }
 
 /**
- * テキスト描画に使用するフォントのサイズを設定します
+ * !--- locale=Ja-JP ---
+ * テキスト描画に使用するフォントのサイズを設定します。
  * 
- * @param rendererID レンダラーID
- * @param size フォントサイズ
+ * @param rendererID レンダラーID。
+ * @param size フォントサイズ。
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the font used for text drawing.
+ * 
+ * @param rendererID The renderer ID.
+ * @param size The font size.
  */
 void setDrawFontSize( int rendererID, int size ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFontSize( rendererID, size );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * テキスト描画に使用するフォントを太字に設定または解除します。イタリック体と併用はできません。
  * 
- * @param rendererID レンダラーID
- * @param isBold 太字設定
+ * @param rendererID レンダラーID。
+ * @param isBold 太字設定。
+ *
+ * !--- locale=En-US ---
+ * Enables or disables bold style for the font used in text drawing. It cannot be used together with italic style.
+ * 
+ * @param rendererID The renderer ID.
+ * @param isBold Whether bold style is enabled.
  */
 void setDrawFontBold( int rendererID, bool isBold ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFontBold( rendererID, isBold );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * テキスト描画に使用するフォントをイタリック体に設定または解除します。太字と併用はできません。
  * 
- * @param rendererID レンダラーID
- * @param isItalic イタリック体設定
+ * @param rendererID レンダラーID。
+ * @param isItalic イタリック体設定。
+ *
+ * !--- locale=En-US ---
+ * Enables or disables italic style for the font used in text drawing. It cannot be used together with bold style.
+ * 
+ * @param rendererID The renderer ID.
+ * @param isItalic Whether italic style is enabled.
  */
 void setDrawFontItalic( int rendererID, bool isItalic ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setDrawFontItalic( rendererID, isItalic );
@@ -194,13 +313,23 @@ void setDrawFontItalic( int rendererID, bool isItalic ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 点を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 中心のX座標
- * @param vartex_y 中心のY座標
- * @param radius 半径
- * @param fill 塗りつぶすかどうか
+ * @param rendererID レンダラーID。
+ * @param vertex_x 中心のX座標。
+ * @param vertex_y 中心のY座標。
+ * @param radius 半径。
+ * @param fill 塗りつぶすかどうか。
+ *
+ * !--- locale=En-US ---
+ * Draws a point.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the center.
+ * @param vertex_y The Y coordinate of the center.
+ * @param radius The radius.
+ * @param fill Whether to fill the point.
  */
 void drawPoint( int rendererID, int vertex_x, int vertex_y, int radius, bool fill ){
   int ellipseX = vertex_x - radius;
@@ -211,78 +340,138 @@ void drawPoint( int rendererID, int vertex_x, int vertex_y, int radius, bool fil
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 直線（線分）を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x1 頂点1のX座標
- * @param vartex_y1 頂点1のY座標
- * @param vartex_x2 頂点2のX座標
- * @param vartex_y2 頂点2のY座標
+ * @param rendererID レンダラーID。
+ * @param vertex_x1 頂点1のX座標。
+ * @param vertex_y1 頂点1のY座標。
+ * @param vertex_x2 頂点2のX座標。
+ * @param vertex_y2 頂点2のY座標。
+ *
+ * !--- locale=En-US ---
+ * Draws a straight line segment.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x1 The X coordinate of the first endpoint.
+ * @param vertex_y1 The Y coordinate of the first endpoint.
+ * @param vertex_x2 The X coordinate of the second endpoint.
+ * @param vertex_y2 The Y coordinate of the second endpoint.
  */
 macro drawLine( int rendererID, int vertex_x1, int vertex_y1, int vertex_x2, int vertex_y2 ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawLine( rendererID, vertex_x1, vertex_y1, vertex_x2, vertex_y2 );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 任意の太さで、直線（線分）を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x1 頂点1のX座標
- * @param vartex_y1 頂点1のY座標
- * @param vartex_x2 頂点2のX座標
- * @param vartex_y2 頂点2のY座標
- * @param lineWidth 線の太さ
+ * @param rendererID レンダラーID。
+ * @param vertex_x1 頂点1のX座標。
+ * @param vertex_y1 頂点1のY座標。
+ * @param vertex_x2 頂点2のX座標。
+ * @param vertex_y2 頂点2のY座標。
+ * @param lineWidth 線の太さ。
+ *
+ * !--- locale=En-US ---
+ * Draws a straight line segment with an arbitrary thickness.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x1 The X coordinate of the first endpoint.
+ * @param vertex_y1 The Y coordinate of the first endpoint.
+ * @param vertex_x2 The X coordinate of the second endpoint.
+ * @param vertex_y2 The Y coordinate of the second endpoint.
+ * @param lineWidth The line thickness.
  */
 macro drawLine( int rendererID, int vertex_x1, int vertex_y1, int vertex_x2, int vertex_y2, int lineWidth ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawLineW( rendererID, vertex_x1, vertex_y1, vertex_x2, vertex_y2, lineWidth );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 楕円を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 外接長方形の左上頂点X座標
- * @param vartex_y 外接長方形の左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
+ * @param rendererID レンダラーID。
+ * @param vertex_x 外接長方形の左上頂点X座標。
+ * @param vertex_y 外接長方形の左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ *
+ * !--- locale=En-US ---
+ * Draws an ellipse.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param vertex_y The Y coordinate of the top-left corner of the bounding rectangle.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the ellipse.
  */
 macro drawEllipse( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawEllipse( rendererID, vertex_x, vertex_y, width, height, fill );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 長方形を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
+ * @param rendererID レンダラーID。
+ * @param vertex_x 左上頂点X座標。
+ * @param vertex_y 左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ *
+ * !--- locale=En-US ---
+ * Draws a rectangle.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the rectangle.
  */
 macro drawRectangle( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawRectangle( rendererID, vertex_x, vertex_y, width, height, fill );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 折れ線を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 頂点のX座標を格納する配列
- * @param vartex_y 頂点のY座標を格納する配列
+ * @param rendererID レンダラーID。
+ * @param vertex_x 頂点のX座標を格納する配列。
+ * @param vertex_y 頂点のY座標を格納する配列。
+ *
+ * !--- locale=En-US ---
+ * Draws a polyline.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The array storing the X coordinates of vertices.
+ * @param vertex_y The array storing the Y coordinates of vertices.
  */
 macro drawPolyline( int rendererID, int vertex_x[], int vertex_y[] ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolyline( rendererID, vertex_x, vertex_y );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 任意の太さで、折れ線を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 頂点のX座標を格納する配列
- * @param vartex_y 頂点のY座標を格納する配列
- * @param lineWidth 線の太さ
+ * @param rendererID レンダラーID。
+ * @param vertex_x 頂点のX座標を格納する配列。
+ * @param vertex_y 頂点のY座標を格納する配列。
+ * @param lineWidth 線の太さ。
+ *
+ * !--- locale=En-US ---
+ * Draws a polyline with an arbitrary thickness.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The array storing the X coordinates of vertices.
+ * @param vertex_y The array storing the Y coordinates of vertices.
+ * @param lineWidth The line thickness.
  */
 macro drawPolyline( int rendererID, int vertex_x[], int vertex_y[], int lineWidth ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolylineW( rendererID, vertex_x, vertex_y, lineWidth );
@@ -290,24 +479,42 @@ macro drawPolyline( int rendererID, int vertex_x[], int vertex_y[], int lineWidt
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 多角形を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 頂点のX座標を格納する配列
- * @param vartex_y 頂点のY座標を格納する配列
- * @param fill 塗りつぶすかどうか
+ * @param rendererID レンダラーID。
+ * @param vertex_x 頂点のX座標を格納する配列。
+ * @param vertex_y 頂点のY座標を格納する配列。
+ * @param fill 塗りつぶすかどうか。
+ *
+ * !--- locale=En-US ---
+ * Draws a polygon.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The array storing the X coordinates of vertices.
+ * @param vertex_y The array storing the Y coordinates of vertices.
+ * @param fill Whether to fill the polygon.
  */
 macro drawPolygon( int rendererID, int vertex_x[], int vertex_y[], bool fill ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolygon( rendererID, vertex_x, vertex_y, fill );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 任意の太さで、多角形を描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 頂点のX座標を格納する配列
- * @param vartex_y 頂点のY座標を格納する配列
- * @param lineWidth 線の太さ
+ * @param rendererID レンダラーID。
+ * @param vertex_x 頂点のX座標を格納する配列。
+ * @param vertex_y 頂点のY座標を格納する配列。
+ * @param lineWidth 線の太さ。
+ *
+ * !--- locale=En-US ---
+ * Draws a polygon with an arbitrary thickness.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The array storing the X coordinates of vertices.
+ * @param vertex_y The array storing the Y coordinates of vertices.
+ * @param lineWidth The line thickness.
  */
 macro drawPolygon( int rendererID, int vertex_x[], int vertex_y[], int lineWidth ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawPolygonW( rendererID, vertex_x, vertex_y, lineWidth );
@@ -317,26 +524,46 @@ macro drawPolygon( int rendererID, int vertex_x[], int vertex_y[], int lineWidth
 
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストを1行で描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x テキスト始点X座標
- * @param vartex_y テキスト始点Y座標
- * @param textString テキストの内容
+ * @param rendererID レンダラーID。
+ * @param vertex_x テキスト始点X座標。
+ * @param vertex_y テキスト始点Y座標。
+ * @param textString テキストの内容。
+ *
+ * !--- locale=En-US ---
+ * Draws a single line of text.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the text starting position.
+ * @param vertex_y The Y coordinate of the text starting position.
+ * @param textString The text content.
  */
 macro drawText( int rendererID, int vertex_x, int vertex_y, string textString ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawText( rendererID, textString, vertex_x, vertex_y );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストを、折り返しながら複数行で描画します。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x テキスト始点X座標
- * @param vartex_y テキスト始点Y座標
- * @param width 行の幅
- * @param height 行の高さ
- * @param textString テキストの内容
+ * @param rendererID レンダラーID。
+ * @param vertex_x テキスト始点X座標。
+ * @param vertex_y テキスト始点Y座標。
+ * @param width 行の幅。
+ * @param height 行の高さ。
+ * @param textString テキストの内容。
+ *
+ * !--- locale=En-US ---
+ * Draws text over multiple lines with wrapping.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the text starting position.
+ * @param vertex_y The Y coordinate of the text starting position.
+ * @param width The line width.
+ * @param height The line height.
+ * @param textString The text content.
  */
 macro drawText( int rendererID, int vertex_x, int vertex_y, int width, int height, string textString ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawText( rendererID, textString, vertex_x, vertex_y, width, height );
@@ -345,32 +572,53 @@ macro drawText( int rendererID, int vertex_x, int vertex_y, int width, int heigh
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像を描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param graphicsID 画像を格納するグラフィックスデータのID
+ * @param rendererID レンダラーID。
+ * @param vertex_x 左上頂点X座標。
+ * @param vertex_y 左上頂点Y座標。
+ * @param graphicsID 画像を格納するグラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Draws an image. The drawing result of another 2D or 3D renderer can also be composited and drawn as an image.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
+ * @param graphicsID The ID of the graphics resource storing the image.
  */
 macro drawImage( int rendererID, int vertex_x, int vertex_y, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像をリサイズして描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param width 幅
- * @param height 高さ
- * @param graphicsID 画像を格納するグラフィックスデータのID
+ * @param rendererID レンダラーID。
+ * @param vertex_x 左上頂点X座標。
+ * @param vertex_y 左上頂点Y座標。
+ * @param width 幅。
+ * @param height 高さ。
+ * @param graphicsID 画像を格納するグラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Draws an image after resizing it. The drawing result of another 2D or 3D renderer can also be composited and drawn as an image.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param graphicsID The ID of the graphics resource storing the image.
  */
 macro drawImage( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y, width, height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像の一部を抜き出して描画します。別の2D/3Dレンダラーの描画結果を、画像として合成的に描画する事もできます。
  * 
  * なお、VCSSL 3.4.8 以前のバージョンにおいては、この関数の挙動はドキュメントの引数の説明と異なっていたため、
@@ -378,16 +626,34 @@ macro drawImage( int rendererID, int vertex_x, int vertex_y, int width, int heig
  * VCSSL 3.4.8 以前の挙動を期待したい場合は、この関数の代わりに drawGraphics 関数を使用するよう、
  * 呼び出し側のコードの記述を置き換えてください。
  * 
- * @param rendererID レンダラーID
- * @param x 描画する左上頂点X座標
- * @param y 描画する左上頂点Y座標
- * @param width 描画する幅
- * @param height 描画する高さ
- * @param cropX 元の画像から抜き出す領域の左上頂点X座標
- * @param cropY 元の画像から抜き出す領域の左上頂点Y座標
- * @param cropWidth 元の画像から抜き出す領域の幅
- * @param cropHeight 元の画像から抜き出す領域の高さ
- * @param graphicsID 画像を格納するグラフィックスデータのID
+ * @param rendererID レンダラーID。
+ * @param x 描画する左上頂点X座標。
+ * @param y 描画する左上頂点Y座標。
+ * @param width 描画する幅。
+ * @param height 描画する高さ。
+ * @param cropX 元の画像から抜き出す領域の左上頂点X座標。
+ * @param cropY 元の画像から抜き出す領域の左上頂点Y座標。
+ * @param cropWidth 元の画像から抜き出す領域の幅。
+ * @param cropHeight 元の画像から抜き出す領域の高さ。
+ * @param graphicsID 画像を格納するグラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Draws a cropped portion of an image. The drawing result of another 2D or 3D renderer can also be composited and drawn as an image.
+ *
+ * In VCSSL 3.4.8 and earlier, the behavior of this function differed from the argument descriptions in the documentation.
+ * In VCSSL 3.4.10, the behavior was corrected to match the documentation.
+ * If you need the behavior of VCSSL 3.4.8 or earlier, replace calls to this function with calls to drawGraphics instead.
+ * 
+ * @param rendererID The renderer ID.
+ * @param x The X coordinate of the top-left corner of the drawing position.
+ * @param y The Y coordinate of the top-left corner of the drawing position.
+ * @param width The drawing width.
+ * @param height The drawing height.
+ * @param cropX The X coordinate of the top-left corner of the source region.
+ * @param cropY The Y coordinate of the top-left corner of the source region.
+ * @param cropWidth The width of the source region.
+ * @param cropHeight The height of the source region.
+ * @param graphicsID The ID of the graphics resource storing the image.
  */
 void drawImage( int rendererID, int x, int y, int width, int height, int cropX, int cropY, int cropWidth, int cropHeight, int graphicsID ){
 
@@ -404,23 +670,40 @@ void drawImage( int rendererID, int x, int y, int width, int height, int cropX, 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画内容を、ピクセル色成分配列で直接的に設定します。
  * 
- * @param rendererID レンダラーID
- * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Directly sets the drawing contents from pixel color-component arrays.
+ * 
+ * @param rendererID The renderer ID.
+ * @param red The array storing the red components ([Y][X], values from 0 to 255).
+ * @param green The array storing the green components ([Y][X], values from 0 to 255).
+ * @param blue The array storing the blue components ([Y][X], values from 0 to 255).
+ * @param alpha The array storing the alpha components ([Y][X], values from 0 to 255).
  */
 macro setPixel( int rendererID, int red[][], int green[][], int blue[][], int alpha[][] ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel( rendererID, red, green, blue, alpha );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画内容を、ピクセル色成分配列で直接的に設定します。
  * 
- * @param rendererID レンダラーID
- * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Directly sets the drawing contents from a pixel color-component array.
+ * 
+ * @param rendererID The renderer ID.
+ * @param rgba The array storing the color components ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
  */
 macro setPixel( int rendererID, int rgba[][][] ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setPixel3( rendererID, rgba );
@@ -428,15 +711,27 @@ macro setPixel( int rendererID, int rgba[][][] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画内容の上に、ピクセル色成分配列の内容を重ねて描画します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点のX座標
- * @param y 左上頂点のY座標
- * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param x 左上頂点のX座標。
+ * @param y 左上頂点のY座標。
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Draws the contents of pixel color-component arrays on top of the current drawing contents.
+ * 
+ * @param rendererID The renderer ID.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param red The array storing the red components ([Y][X], values from 0 to 255).
+ * @param green The array storing the green components ([Y][X], values from 0 to 255).
+ * @param blue The array storing the blue components ([Y][X], values from 0 to 255).
+ * @param alpha The array storing the alpha components ([Y][X], values from 0 to 255).
  */
 void drawPixel( int rendererID, int x, int y, int red[][], int green[][], int blue[][], int alpha[][] ){
 
@@ -454,12 +749,21 @@ void drawPixel( int rendererID, int x, int y, int red[][], int green[][], int bl
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画内容の上に、ピクセル色成分配列の内容を重ねて描画します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点のX座標
- * @param y 左上頂点のY座標
- * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param x 左上頂点のX座標。
+ * @param y 左上頂点のY座標。
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Draws the contents of a pixel color-component array on top of the current drawing contents.
+ * 
+ * @param rendererID The renderer ID.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param rgba The array storing the color components ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
  */
 void drawPixel( int rendererID, int x, int y, int rgba[][][] ){
 
@@ -476,17 +780,31 @@ void drawPixel( int rendererID, int x, int y, int rgba[][][] ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画内容の上に、ピクセル色成分配列の内容をリサイズした上で、重ねて描画します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点のX座標
- * @param y 左上頂点のY座標
- * @param width 幅
- * @param height 高さ
- * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param x 左上頂点のX座標。
+ * @param y 左上頂点のY座標。
+ * @param width 幅。
+ * @param height 高さ。
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Resizes the contents of pixel color-component arrays and draws them on top of the current drawing contents.
+ * 
+ * @param rendererID The renderer ID.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param red The array storing the red components ([Y][X], values from 0 to 255).
+ * @param green The array storing the green components ([Y][X], values from 0 to 255).
+ * @param blue The array storing the blue components ([Y][X], values from 0 to 255).
+ * @param alpha The array storing the alpha components ([Y][X], values from 0 to 255).
  */
 void drawPixel( int rendererID, int x, int y, int width, int height, int red[][], int green[][], int blue[][], int alpha[][] ){
 
@@ -504,14 +822,25 @@ void drawPixel( int rendererID, int x, int y, int width, int height, int red[][]
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画内容の上に、ピクセル色成分配列の内容をリサイズした上で、重ねて描画します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点のX座標
- * @param y 左上頂点のY座標
- * @param width 幅
- * @param height 高さ
- * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param x 左上頂点のX座標。
+ * @param y 左上頂点のY座標。
+ * @param width 幅。
+ * @param height 高さ。
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Resizes the contents of a pixel color-component array and draws them on top of the current drawing contents.
+ * 
+ * @param rendererID The renderer ID.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param rgba The array storing the color components ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
  */
 void drawPixel( int rendererID, int x, int y, int width, int height, int rgba[][][] ){
 
@@ -528,21 +857,39 @@ void drawPixel( int rendererID, int x, int y, int width, int height, int rgba[][
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画内容の上に、ピクセル色成分配列の内容から指定領域を抜き出し、重ねて描画します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点のX座標
- * @param y 左上頂点のY座標
- * @param width 幅
- * @param height 高さ
- * @param baseX 抜き出す領域の左上頂点X座標
- * @param baseY 抜き出す領域の左上頂点Y座標
- * @param baseWidth 抜き出す領域の幅
- * @param baseHeight 抜き出す領域の高さ
- * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param x 左上頂点のX座標。
+ * @param y 左上頂点のY座標。
+ * @param width 幅。
+ * @param height 高さ。
+ * @param baseX 抜き出す領域の左上頂点X座標。
+ * @param baseY 抜き出す領域の左上頂点Y座標。
+ * @param baseWidth 抜き出す領域の幅。
+ * @param baseHeight 抜き出す領域の高さ。
+ * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Extracts a specified region from pixel color-component arrays and draws it on top of the current drawing contents.
+ * 
+ * @param rendererID The renderer ID.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param baseX The X coordinate of the top-left corner of the source region.
+ * @param baseY The Y coordinate of the top-left corner of the source region.
+ * @param baseWidth The width of the source region.
+ * @param baseHeight The height of the source region.
+ * @param red The array storing the red components ([Y][X], values from 0 to 255).
+ * @param green The array storing the green components ([Y][X], values from 0 to 255).
+ * @param blue The array storing the blue components ([Y][X], values from 0 to 255).
+ * @param alpha The array storing the alpha components ([Y][X], values from 0 to 255).
  */
 void drawPixel( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int red[][], int green[][], int blue[][], int alpha[][] ){
 
@@ -560,18 +907,33 @@ void drawPixel( int rendererID, int x, int y, int width, int height, int baseX, 
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画内容の上に、ピクセル色成分配列の内容から指定領域を抜き出し、重ねて描画します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点のX座標
- * @param y 左上頂点のY座標
- * @param width 幅
- * @param height 高さ
- * @param baseX 抜き出す領域の左上頂点X座標
- * @param baseY 抜き出す領域の左上頂点Y座標
- * @param baseWidth 抜き出す領域の幅
- * @param baseHeight 抜き出す領域の高さ
- * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @param x 左上頂点のX座標。
+ * @param y 左上頂点のY座標。
+ * @param width 幅。
+ * @param height 高さ。
+ * @param baseX 抜き出す領域の左上頂点X座標。
+ * @param baseY 抜き出す領域の左上頂点Y座標。
+ * @param baseWidth 抜き出す領域の幅。
+ * @param baseHeight 抜き出す領域の高さ。
+ * @param rgba 赤色成分を格納する配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Extracts a specified region from a pixel color-component array and draws it on top of the current drawing contents.
+ * 
+ * @param rendererID The renderer ID.
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param baseX The X coordinate of the top-left corner of the source region.
+ * @param baseY The Y coordinate of the top-left corner of the source region.
+ * @param baseWidth The width of the source region.
+ * @param baseHeight The height of the source region.
+ * @param rgba The array storing the color components ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
  */
 void drawPixel( int rendererID, int x, int y, int width, int height, int baseX, int baseY, int baseWidth, int baseHeight, int rgba[][][] ){
 
@@ -590,50 +952,85 @@ void drawPixel( int rendererID, int x, int y, int width, int height, int baseX, 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画領域の保持する内容を、ピクセル色成分配列に変換して返します。
  * 
- * @param rendererID レンダラーID
- * @return ピクセル色成分配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @return ピクセル色成分配列（ [Y座標][X座標][0:赤, 1:緑, 2:青, 3:α]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Converts the contents of the drawing area into a pixel color-component array and returns it.
+ * 
+ * @param rendererID The renderer ID.
+ * @return The pixel color-component array ([Y][X][0:red, 1:green, 2:blue, 3:alpha], values from 0 to 255).
  */
 int[][][] getPixel( int rendererID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixel3( rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画領域の保持する内容を、ピクセルの赤色成分配列に変換して返します。
  * 
- * @param rendererID レンダラーID
- * @return ピクセルの赤色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @return ピクセルの赤色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Converts the contents of the drawing area into an array of red pixel components and returns it.
+ * 
+ * @param rendererID The renderer ID.
+ * @return The array of red pixel components ([Y][X], values from 0 to 255).
  */
 int[][] getPixelRed( int rendererID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelRed( rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画領域の保持する内容を、ピクセルの緑色成分配列に変換して返します。
  * 
- * @param rendererID レンダラーID
- * @return ピクセルの緑色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @return ピクセルの緑色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Converts the contents of the drawing area into an array of green pixel components and returns it.
+ * 
+ * @param rendererID The renderer ID.
+ * @return The array of green pixel components ([Y][X], values from 0 to 255).
  */
 int[][] getPixelGreen( int rendererID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelGreen( rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画領域の保持する内容を、ピクセルの青色成分配列に変換して返します。
  * 
- * @param rendererID レンダラーID
- * @return ピクセルの青色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @return ピクセルの青色成分配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Converts the contents of the drawing area into an array of blue pixel components and returns it.
+ * 
+ * @param rendererID The renderer ID.
+ * @return The array of blue pixel components ([Y][X], values from 0 to 255).
  */
 int[][] getPixelBlue( int rendererID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelBlue( rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画領域の保持する内容を、ピクセルのα値成分配列に変換して返します。
  * 
- * @param rendererID レンダラーID
- * @return ピクセルのα値成分配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param rendererID レンダラーID。
+ * @return ピクセルのα値成分配列（ [Y座標][X座標]、 値は 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Converts the contents of the drawing area into an array of alpha pixel components and returns it.
+ * 
+ * @param rendererID The renderer ID.
+ * @return The array of alpha pixel components ([Y][X], values from 0 to 255).
  */
 int[][] getPixelAlpha( int rendererID ){
   return SYSTEM_PROCESS_DRIVER_GRAPHICS_getPixelAlpha( rendererID );
@@ -676,14 +1073,23 @@ int[][] getPixelAlpha( int rendererID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 点スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param x 外接長方形の左上頂点X座標
- * @param y 外接長方形の左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
- * @return スプライトID
+ * @param x 外接長方形の左上頂点X座標。
+ * @param y 外接長方形の左上頂点Y座標。
+ * @param radius 半径。
+ * @param fill 塗りつぶすかどうか。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates a point sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param y The Y coordinate of the top-left corner of the bounding rectangle.
+ * @param radius The radius.
+ * @param fill Whether to fill the sprite.
+ * @return The sprite ID.
  */
 int newPointSprite( int x, int y, int radius, bool fill ){
   int ellipseX = x - radius;
@@ -698,14 +1104,23 @@ int newPointSprite( int x, int y, int radius, bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 直線（線分）スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param rendererID レンダラーID
- * @param x1 頂点1のX座標
- * @param y1 頂点1のY座標
- * @param x2 頂点2のX座標
- * @param y2 頂点2のY座標
- * @return スプライトID
+ * @param x1 頂点1のX座標。
+ * @param y1 頂点1のY座標。
+ * @param x2 頂点2のX座標。
+ * @param y2 頂点2のY座標。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates a line-segment sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x1 The X coordinate of the first endpoint.
+ * @param y1 The Y coordinate of the first endpoint.
+ * @param x2 The X coordinate of the second endpoint.
+ * @param y2 The Y coordinate of the second endpoint.
+ * @return The sprite ID.
  */
 int newLineSprite( int x1, int y1, int x2, int y2 ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineLayer();
@@ -720,14 +1135,25 @@ int newLineSprite( int x1, int y1, int x2, int y2 ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 楕円スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param x 外接長方形の左上頂点X座標
- * @param y 外接長方形の左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
- * @return スプライトID
+ * @param x 外接長方形の左上頂点X座標。
+ * @param y 外接長方形の左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates an ellipse sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param y The Y coordinate of the top-left corner of the bounding rectangle.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the sprite.
+ * @return The sprite ID.
  */
 int newEllipseSprite( int x, int y, int width, int height, bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createEllipseLayer();
@@ -738,15 +1164,25 @@ int newEllipseSprite( int x, int y, int width, int height, bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 長方形スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点X座標
- * @param y 左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
- * @return スプライトID
+ * @param x 左上頂点X座標。
+ * @param y 左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates a rectangle sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the sprite.
+ * @return The sprite ID.
  */
 int newRectangleSprite( int x, int y, int width, int height, bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createRectangleLayer();
@@ -757,12 +1193,19 @@ int newRectangleSprite( int x, int y, int width, int height, bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 折れ線スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param rendererID レンダラーID
- * @param x 頂点のX座標を格納する配列
- * @param y 頂点のY座標を格納する配列
- * @return スプライトID
+ * @param x 頂点のX座標を格納する配列。
+ * @param y 頂点のY座標を格納する配列。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates a polyline sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x The array storing the X coordinates of vertices.
+ * @param y The array storing the Y coordinates of vertices.
+ * @return The sprite ID.
  */
 int newPolylineSprite( int x[], int y[] ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolylineLayer();
@@ -771,13 +1214,21 @@ int newPolylineSprite( int x[], int y[] ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 多角形スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param rendererID レンダラーID
- * @param x 頂点のX座標を格納する配列
- * @param y 頂点のY座標を格納する配列
- * @param fill 塗りつぶすかどうか
- * @return スプライトID
+ * @param x 頂点のX座標を格納する配列。
+ * @param y 頂点のY座標を格納する配列。
+ * @param fill 塗りつぶすかどうか。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates a polygon sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x The array storing the X coordinates of vertices.
+ * @param y The array storing the Y coordinates of vertices.
+ * @param fill Whether to fill the sprite.
+ * @return The sprite ID.
  */
 int newPolygonSprite( int x[], int y[], bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolygonLayer();
@@ -787,15 +1238,25 @@ int newPolygonSprite( int x[], int y[], bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点X座標
- * @param y 左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param graphicsID 画像を格納するグラフィックスデータのID
- * @return スプライトID
+ * @param x 左上頂点X座標。
+ * @param y 左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param graphicsID 画像を格納するグラフィックスデータのID。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates an image sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param graphicsID The ID of the graphics resource storing the image.
+ * @return The sprite ID.
  */
 int newImageSprite( int x, int y, int width, int height, int graphicsID ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLayer();
@@ -806,15 +1267,25 @@ int newImageSprite( int x, int y, int width, int height, int graphicsID ){
 }
 
 /**
- * テキストプライトを生成し、固有の識別番号（ スプライトID ）を返します。
+ * !--- locale=Ja-JP ---
+ * テキストスプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * 
- * @param rendererID レンダラーID
- * @param x テキスト始点X座標
- * @param y テキスト始点Y座標
- * @param width 行の幅
- * @param height 行の高さ
- * @param テキストの内容
- * @return スプライトID
+ * @param x テキスト始点X座標。
+ * @param y テキスト始点Y座標。
+ * @param width 行の幅。
+ * @param height 行の高さ。
+ * @param text テキストの内容。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates a text sprite and returns its unique identifier, called the sprite ID.
+ * 
+ * @param x The X coordinate of the text starting position.
+ * @param y The Y coordinate of the text starting position.
+ * @param width The line width.
+ * @param height The line height.
+ * @param text The text content.
+ * @return The sprite ID.
  */
 int newTextSprite( int x, int y, int width, int height, string text ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextLayer();
@@ -831,29 +1302,49 @@ int newTextSprite( int x, int y, int width, int height, string text ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトを破棄します。
  * 
- * @param spriteID 対象スプライトのID
+ * @param spriteID 対象スプライトのID。
+ *
+ * !--- locale=En-US ---
+ * Disposes a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
  */
 void deleteSprite( int spriteID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeLayer( spriteID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトを配置します。
  * 
- * @param spriteID 対象スプライトのID
- * @param rendererID レンダラーID
+ * @param spriteID 対象スプライトのID。
+ * @param rendererID レンダラーID。
+ *
+ * !--- locale=En-US ---
+ * Mounts a sprite onto a renderer.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param rendererID The renderer ID.
  */
 void mountSprite( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトを配置解除します。
  * 
- * @param spriteID 対象スプライトのID
- * @param rendererID レンダラーID
+ * @param spriteID 対象スプライトのID。
+ * @param rendererID レンダラーID。
+ *
+ * !--- locale=En-US ---
+ * Demounts a sprite from a renderer.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param rendererID The renderer ID.
  */
 void demountSprite( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
@@ -861,21 +1352,36 @@ void demountSprite( int spriteID, int rendererID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトの深度を設定します。スプライトは、深度の値が大きいほど奥に、小さいほど手前に表示されます。
  * 
- * @param spriteID 対象スプライトのID
- * @param vartex_z 深度
+ * @param spriteID 対象スプライトのID。
+ * @param vertex_z 深度。
+ *
+ * !--- locale=En-US ---
+ * Sets the depth of a sprite. A larger depth value places the sprite farther back, and a smaller value places it closer to the front.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param vertex_z The depth.
  */
 macro setSpriteDepth( int spriteID, double vertex_z ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerZ( spriteID, vertex_z );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトの位置を設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param vartex_x 左上頂点のX座標
- * @param vartex_y 左上頂点のY座標
+ * @param spriteID 対象スプライトのID。
+ * @param vertex_x 左上頂点のX座標。
+ * @param vertex_y 左上頂点のY座標。
+ *
+ * !--- locale=En-US ---
+ * Sets the position of a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
  */
 macro setSpriteLocation( int spriteID, int vertex_x, int vertex_y ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( spriteID, vertex_x, vertex_y );
@@ -883,87 +1389,150 @@ macro setSpriteLocation( int spriteID, int vertex_x, int vertex_y ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトの大きさを設定します。この関数は、点スプライトのように、サイズを1個のパラメータで指定できるスプライトに使用します。
  * 
- * @param spriteID 対象スプライトのID
- * @param radius 半径
+ * @param spriteID 対象スプライトのID。
+ * @param size 半径。
+ *
+ * !--- locale=En-US ---
+ * Sets the size of a sprite. This function is used for sprites whose size can be specified by a single parameter, such as point sprites.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param size The radius.
  */
 void setSpriteSize( int spriteID, int size ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( spriteID, 2*size, 2*size );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトの大きさを設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param width 幅
- * @param height 高さ
+ * @param spriteID 対象スプライトのID。
+ * @param width 幅。
+ * @param height 高さ。
+ *
+ * !--- locale=En-US ---
+ * Sets the size of a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param width The width.
+ * @param height The height.
  */
 macro setSpriteSize( int spriteID, int width, int height ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( spriteID, width, height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトのクリップ情報を設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param clip_x クリップ領域のX座標
- * @param clip_y クリップ領域のY座標
- * @param clip_width クリップ領域の幅
- * @param clip_height クリップ領域の高さ
+ * @param spriteID 対象スプライトのID。
+ * @param clip_x クリップ領域のX座標。
+ * @param clip_y クリップ領域のY座標。
+ * @param clip_width クリップ領域の幅。
+ * @param clip_height クリップ領域の高さ。
+ *
+ * !--- locale=En-US ---
+ * Sets the clipping information of a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param clip_x The X coordinate of the clipping area.
+ * @param clip_y The Y coordinate of the clipping area.
+ * @param clip_width The width of the clipping area.
+ * @param clip_height The height of the clipping area.
  */
 macro setSpriteClip( int spriteID, int clip_x, int clip_y, int clip_width, int clip_height ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerClipping( spriteID, clip_x, clip_y, clip_width, clip_height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトの色を設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param red 赤色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param green 緑色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param blue 青色成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
- * @param alpha α値成分を格納する配列（ [Y座標][X座標]、 値は 0 - 255 ）
+ * @param spriteID 対象スプライトのID。
+ * @param red 赤色成分（ 0 - 255 ）。
+ * @param green 緑色成分（ 0 - 255 ）。
+ * @param blue 青色成分（ 0 - 255 ）。
+ * @param alpha α値成分（ 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Sets the color of a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param red The red component (0 to 255).
+ * @param green The green component (0 to 255).
+ * @param blue The blue component (0 to 255).
+ * @param alpha The alpha component (0 to 255).
  */
 macro setSpriteColor( int spriteID, int red, int green, int blue, int alpha ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerColor( spriteID, red, green, blue, alpha );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトの色を設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）
+ * @param spriteID 対象スプライトのID。
+ * @param rgba 色成分を格納する配列（ [0]が赤、[1]が緑、[2]が青、[3]がαで、各色 0 - 255 ）。
+ *
+ * !--- locale=En-US ---
+ * Sets the color of a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param rgba The array storing the color components ([0]=red, [1]=green, [2]=blue, [3]=alpha, each ranging from 0 to 255).
  */
 void setSpriteColor( int spriteID, int rgba[] ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerColor( spriteID, rgba[0], rgba[1], rgba[2], rgba[3] );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトを塗りつぶすかどうか設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param fillState スプライトを塗りつぶすかどうか
+ * @param spriteID 対象スプライトのID。
+ * @param fillState スプライトを塗りつぶすかどうか。
+ *
+ * !--- locale=En-US ---
+ * Sets whether the sprite is filled.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param fillState Whether the sprite is filled.
  */
 macro setSpriteFill( int spriteID, bool fillState ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( spriteID, fillState );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトのテキストを設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param text テキストの内容
+ * @param spriteID 対象スプライトのID。
+ * @param textString テキストの内容。
+ *
+ * !--- locale=En-US ---
+ * Sets the text of a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param textString The text content.
  */
 macro setSpriteText( int spriteID, string textString ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerText( spriteID, textString );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトの画像を設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param graphicsID 画像を格納するグラフィックスデータのID
+ * @param spriteID 対象スプライトのID。
+ * @param graphicsID 画像を格納するグラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Sets the image of a sprite.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param graphicsID The ID of the graphics resource storing the image.
  */
 macro setSpriteImage( int spriteID, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( spriteID, graphicsID );
@@ -974,40 +1543,68 @@ macro setSpriteImage( int spriteID, int graphicsID ){
 
 
 /**
- * スプライトのテキスト描画に使用するフォントを設定します
+ * !--- locale=Ja-JP ---
+ * スプライトのテキスト描画に使用するフォントを設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param name フォント名（処理系依存、環境依存）
+ * @param spriteID 対象スプライトのID。
+ * @param name フォント名（処理系依存、環境依存）。
+ *
+ * !--- locale=En-US ---
+ * Sets the font used for sprite text drawing.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param name The font name. This depends on the implementation and environment.
  */
 void setSpriteFont( int spriteID, string name ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFont( spriteID, name );
 }
 
 /**
- * スプライトのテキスト描画に使用するフォントのサイズを設定します
+ * !--- locale=Ja-JP ---
+ * スプライトのテキスト描画に使用するフォントのサイズを設定します。
  * 
- * @param spriteID 対象スプライトのID
- * @param size フォントサイズ
+ * @param spriteID 対象スプライトのID。
+ * @param size フォントサイズ。
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the font used for sprite text drawing.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param size The font size.
  */
 void setSpriteFontSize( int spriteID, int size ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontSize( spriteID, size );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトのテキスト描画に使用するフォントを太字に設定または解除します。イタリック体と併用はできません。
  * 
- * @param spriteID 対象スプライトのID
- * @param isBold 太字設定
+ * @param spriteID 対象スプライトのID。
+ * @param isBold 太字設定。
+ *
+ * !--- locale=En-US ---
+ * Enables or disables bold style for the font used in sprite text drawing. It cannot be used together with italic style.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param isBold Whether bold style is enabled.
  */
 void setSpriteFontBold( int spriteID, bool isBold ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontBold( spriteID, isBold );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトのテキスト描画に使用するフォントをイタリック体に設定または解除します。太字と併用はできません。
  * 
- * @param spriteID 対象スプライトのID
- * @param isItalic イタリック体設定
+ * @param spriteID 対象スプライトのID。
+ * @param isItalic イタリック体設定。
+ *
+ * !--- locale=En-US ---
+ * Enables or disables italic style for the font used in sprite text drawing. It cannot be used together with bold style.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param isItalic Whether italic style is enabled.
  */
 void setSpriteFontItalic( int spriteID, bool isItalic ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontItalic( spriteID, isItalic );
@@ -1037,32 +1634,58 @@ void setSpriteFontItalic( int spriteID, bool isItalic ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 楕円を描画します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#drawEllipse">drawEllipse</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 外接長方形の左上頂点X座標
- * @param vartex_y 外接長方形の左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
+ * @param rendererID レンダラーID。
+ * @param vertex_x 外接長方形の左上頂点X座標。
+ * @param vertex_y 外接長方形の左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ *
+ * !--- locale=En-US ---
+ * Draws an ellipse.
+ * The newer <a href="#drawEllipse">drawEllipse</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param vertex_y The Y coordinate of the top-left corner of the bounding rectangle.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the ellipse.
  */
 macro drawOval( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawEllipse( rendererID, vertex_x, vertex_y, width, height, fill );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 長方形を描画します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#drawRectangle">drawRectangle</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
+ * @param rendererID レンダラーID。
+ * @param vertex_x 左上頂点X座標。
+ * @param vertex_y 左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ *
+ * !--- locale=En-US ---
+ * Draws a rectangle.
+ * The newer <a href="#drawRectangle">drawRectangle</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the rectangle.
  */
 macro drawRect( int rendererID, int vertex_x, int vertex_y, int width, int height, bool fill ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawRectangle( rendererID, vertex_x, vertex_y, width, height, fill );
@@ -1072,36 +1695,61 @@ macro drawRect( int rendererID, int vertex_x, int vertex_y, int width, int heigh
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容を描画します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param graphicsID グラフィックスデータのID
+ * @param rendererID レンダラーID。
+ * @param vertex_x 左上頂点X座標。
+ * @param vertex_y 左上頂点Y座標。
+ * @param graphicsID グラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Draws the contents of graphics data generated from the drawing result of another renderer or from an image file.
+ * The newer <a href="#drawImage">drawImage</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
+ * @param graphicsID The graphics resource ID.
  */
 macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容をリサイズして描画します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param rendererID レンダラーID
- * @param vartex_x 左上頂点X座標
- * @param vartex_y 左上頂点Y座標
- * @param width 幅
- * @param height 高さ
- * @param graphicsID グラフィックスデータのID
+ * @param rendererID レンダラーID。
+ * @param vertex_x 左上頂点X座標。
+ * @param vertex_y 左上頂点Y座標。
+ * @param width 幅。
+ * @param height 高さ。
+ * @param graphicsID グラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Draws resized contents of graphics data generated from the drawing result of another renderer or from an image file.
+ * The newer <a href="#drawImage">drawImage</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param rendererID The renderer ID.
+ * @param vertex_x The X coordinate of the top-left corner.
+ * @param vertex_y The Y coordinate of the top-left corner.
+ * @param width The width.
+ * @param height The height.
+ * @param graphicsID The graphics resource ID.
  */
 macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int width, int height, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_drawGraphics( rendererID, graphicsID, vertex_x, vertex_y, width, height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 別のレンダラーの描画結果や、画像ファイルなどから生成したグラフィックスデータを読み込み、その内容から指定領域を抜き出して描画します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#drawImage">drawImage</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
@@ -1112,16 +1760,36 @@ macro drawGraphics( int rendererID, int vertex_x, int vertex_y, int width, int h
  * 従って、旧来のプログラムで互換性を優先する場合はこの関数を使用し、
  * 新しいプログラムでは <a href="#drawImage">drawImage</a> 関数を使用するよう使い分けてください。
  * 
- * @param rendererID レンダラーID
- * @param fromLeftTopX 元の画像内での、切り抜く領域の左上頂点X座標
- * @param fromLeftTopY 元の画像内での、切り抜く領域の左上頂点Y座標
- * @param fromRightBottomX 元の画像内での、切り抜く領域の右下頂点X座標
- * @param fromRightBottomY 元の画像内での、切り抜く領域の右下頂点Y座標
- * @param toLeftTopX 描画する位置の左上頂点X座標
- * @param toLeftTopY 描画する位置の左上頂点Y座標
- * @param toRightBottomX 描画する位置の右下頂点X座標
- * @param toRightBottomY 描画する位置の右下頂点Y座標
- * @param graphicsID 元の画像を格納するグラフィックスデータのID
+ * @param rendererID レンダラーID。
+ * @param fromLeftTopX 元の画像内での、切り抜く領域の左上頂点X座標。
+ * @param fromLeftTopY 元の画像内での、切り抜く領域の左上頂点Y座標。
+ * @param fromRightBottomX 元の画像内での、切り抜く領域の右下頂点X座標。
+ * @param fromRightBottomY 元の画像内での、切り抜く領域の右下頂点Y座標。
+ * @param toLeftTopX 描画する位置の左上頂点X座標。
+ * @param toLeftTopY 描画する位置の左上頂点Y座標。
+ * @param toRightBottomX 描画する位置の右下頂点X座標。
+ * @param toRightBottomY 描画する位置の右下頂点Y座標。
+ * @param graphicsID 元の画像を格納するグラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Draws a specified region extracted from graphics data generated from the drawing result of another renderer or from an image file.
+ * The newer <a href="#drawImage">drawImage</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * In VCSSL 3.4.8 and earlier, the documented explanation of the arguments for this function was incorrect, so the documentation was corrected in VCSSL 3.4.10. Therefore, the behavior of this function itself has not changed.
+ * On the other hand, the newer <a href="#drawImage">drawImage</a> function was changed so that its behavior matches the original documentation.
+ * Therefore, use this function when compatibility with older programs is important, and use <a href="#drawImage">drawImage</a> in new programs.
+ * 
+ * @param rendererID The renderer ID.
+ * @param fromLeftTopX The X coordinate of the top-left corner of the cropped area in the source image.
+ * @param fromLeftTopY The Y coordinate of the top-left corner of the cropped area in the source image.
+ * @param fromRightBottomX The X coordinate of the lower-right corner of the cropped area in the source image.
+ * @param fromRightBottomY The Y coordinate of the lower-right corner of the cropped area in the source image.
+ * @param toLeftTopX The X coordinate of the top-left corner of the drawing position.
+ * @param toLeftTopY The Y coordinate of the top-left corner of the drawing position.
+ * @param toRightBottomX The X coordinate of the lower-right corner of the drawing position.
+ * @param toRightBottomY The Y coordinate of the lower-right corner of the drawing position.
+ * @param graphicsID The graphics resource ID storing the source image.
  */
 void drawGraphics( int rendererID, int fromLeftTopX, int fromLeftTopY, int fromRightBottomX, int fromRightBottmY, int toLeftTopX, int toLeftTopY, int toRightBottmX, int toRightBottomY, int graphicsID ){
 
@@ -1133,16 +1801,29 @@ void drawGraphics( int rendererID, int fromLeftTopX, int fromLeftTopY, int fromR
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 楕円スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#newEllipseSprite">newEllipseSprite</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param x 外接長方形の左上頂点X座標
- * @param y 外接長方形の左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
- * @return スプライトID
+ * @param x 外接長方形の左上頂点X座標。
+ * @param y 外接長方形の左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates an ellipse sprite and returns its unique identifier, called the sprite ID.
+ * The newer <a href="#newEllipseSprite">newEllipseSprite</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param x The X coordinate of the top-left corner of the bounding rectangle.
+ * @param y The Y coordinate of the top-left corner of the bounding rectangle.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the sprite.
+ * @return The sprite ID.
  */
 int newOvalSprite( int x, int y, int width, int height, bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createEllipseLayer();
@@ -1153,17 +1834,29 @@ int newOvalSprite( int x, int y, int width, int height, bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 長方形スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#newRectangleSprite">newRectangleSprite</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点X座標
- * @param y 左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param fill 塗りつぶすかどうか
- * @return スプライトID
+ * @param x 左上頂点X座標。
+ * @param y 左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param fill 塗りつぶすかどうか。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates a rectangle sprite and returns its unique identifier, called the sprite ID.
+ * The newer <a href="#newRectangleSprite">newRectangleSprite</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param fill Whether to fill the sprite.
+ * @return The sprite ID.
  */
 int newRectSprite( int x, int y, int width, int height, bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createRectangleLayer();
@@ -1176,17 +1869,29 @@ int newRectSprite( int x, int y, int width, int height, bool fill ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像スプライトを生成し、固有の識別番号（ スプライトID ）を返します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#newImageSprite">newImageSprite</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param rendererID レンダラーID
- * @param x 左上頂点X座標
- * @param y 左上頂点Y座標
- * @param width 外接長方形の幅
- * @param height 外接長方形の高さ
- * @param graphicsID グラフィックスデータのID
- * @return スプライトID
+ * @param x 左上頂点X座標。
+ * @param y 左上頂点Y座標。
+ * @param width 外接長方形の幅。
+ * @param height 外接長方形の高さ。
+ * @param graphicsID グラフィックスデータのID。
+ * @return スプライトID。
+ *
+ * !--- locale=En-US ---
+ * Creates an image sprite and returns its unique identifier, called the sprite ID.
+ * The newer <a href="#newImageSprite">newImageSprite</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param x The X coordinate of the top-left corner.
+ * @param y The Y coordinate of the top-left corner.
+ * @param width The width of the bounding rectangle.
+ * @param height The height of the bounding rectangle.
+ * @param graphicsID The graphics resource ID.
+ * @return The sprite ID.
  */
 int newGraphicsSprite( int x, int y, int width, int height, int graphicsID ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLayer();
@@ -1198,20 +1903,34 @@ int newGraphicsSprite( int x, int y, int width, int height, int graphicsID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトを配置します。VCSSL 3 以降では、より新しい <a href="#mountSprite">mountSprite</a> 関数がサポートされています。この関数は互換目的でサポートされています。
  * 
- * @param spriteID 対象スプライトのID
- * @param rendererID レンダラーID
+ * @param spriteID 対象スプライトのID。
+ * @param rendererID レンダラーID。
+ *
+ * !--- locale=En-US ---
+ * Mounts a sprite. The newer <a href="#mountSprite">mountSprite</a> function has been supported since VCSSL 3. This function is supported for compatibility.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param rendererID The renderer ID.
  */
 void addSprite( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトを配置解除します。VCSSL 3 以降では、より新しい <a href="#demountSprite">demountSprite</a> 関数がサポートされています。この関数は互換目的でサポートされています。
  * 
- * @param spriteID 対象スプライトのID
- * @param rendererID レンダラーID
+ * @param spriteID 対象スプライトのID。
+ * @param rendererID レンダラーID。
+ *
+ * !--- locale=En-US ---
+ * Demounts a sprite. The newer <a href="#demountSprite">demountSprite</a> function has been supported since VCSSL 3. This function is supported for compatibility.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param rendererID The renderer ID.
  */
 void removeSprite( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
@@ -1221,12 +1940,21 @@ void removeSprite( int spriteID, int rendererID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スプライトのグラフィックスデータを設定します。
  * VCSSL 3.3.24 以降では、より新しい <a href="#setSpriteImage">setSpriteImage</a> 関数がサポートされています。
  * この関数は互換目的でサポートされています。
  * 
- * @param spriteID 対象スプライトのID
- * @param graphicsID グラフィックスデータのID
+ * @param spriteID 対象スプライトのID。
+ * @param graphicsID グラフィックスデータのID。
+ *
+ * !--- locale=En-US ---
+ * Sets the graphics data of a sprite.
+ * The newer <a href="#setSpriteImage">setSpriteImage</a> function has been supported since VCSSL 3.3.24.
+ * This function is supported for compatibility.
+ * 
+ * @param spriteID The ID of the target sprite.
+ * @param graphicsID The graphics resource ID.
  */
 macro setSpriteGraphics( int spriteID, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( spriteID, graphicsID );
@@ -1239,42 +1967,66 @@ macro setSpriteGraphics( int spriteID, int graphicsID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newLayer(){
   return -1;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void deleteLayer( int spriteID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_disposeLayer( spriteID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void mountLayer( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void addLayer( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_addLayer( spriteID, rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void demountLayer( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void removeLayer( int spriteID, int rendererID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_removeLayer( spriteID, rendererID );
@@ -1283,56 +2035,88 @@ void removeLayer( int spriteID, int rendererID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerDepth( int spriteID, double vertex_z ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerZ( spriteID, vertex_z );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerLocation( int spriteID, int vertex_x, int vertex_y ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerLocation( spriteID, vertex_x, vertex_y );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerSize( int spriteID, int width, int height ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerSize( spriteID, width, height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerClipping( int spriteID, int clip_x, int clip_y, int clip_width, int clip_height ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerClipping( spriteID, clip_x, clip_y, clip_width, clip_height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerColor( int spriteID, int red, int green, int blue, int alpha ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerColor( spriteID, red, green, blue, alpha );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerFill( int spriteID, bool fillState ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFill( spriteID, fillState );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerText( int spriteID, string textString ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerText( spriteID, textString );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 macro setLayerGraphics( int spriteID, int graphicsID ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerGraphics( spriteID, graphicsID );
@@ -1340,28 +2124,44 @@ macro setLayerGraphics( int spriteID, int graphicsID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setLayerFont( int spriteID, string name ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFont( spriteID, name );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setLayerFontSize( int spriteID, int size ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontSize( spriteID, size );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setLayerFontBold( int spriteID, bool b ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontBold( spriteID, b );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 void setLayerFontItalic( int spriteID, bool b ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerFontItalic( spriteID, b );
@@ -1370,7 +2170,11 @@ void setLayerFontItalic( int spriteID, bool b ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newOvalLayer( int x, int y, int width, int height, bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createEllipseLayer();
@@ -1381,7 +2185,11 @@ int newOvalLayer( int x, int y, int width, int height, bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newRectLayer( int x, int y, int width, int height, bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createRectangleLayer();
@@ -1392,7 +2200,11 @@ int newRectLayer( int x, int y, int width, int height, bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newLineLayer( int x1, int y1, int x2, int y2 ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createLineLayer();
@@ -1407,7 +2219,11 @@ int newLineLayer( int x1, int y1, int x2, int y2 ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newPolylineLayer( int x[], int y[] ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolylineLayer();
@@ -1416,7 +2232,11 @@ int newPolylineLayer( int x[], int y[] ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newPolygonLayer( int x[], int y[], bool fill ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createPolygonLayer();
@@ -1426,7 +2246,11 @@ int newPolygonLayer( int x[], int y[], bool fill ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newGraphicsLayer( int x, int y, int width, int height, int graphicsID ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createGraphicsLayer();
@@ -1437,7 +2261,11 @@ int newGraphicsLayer( int x, int y, int width, int height, int graphicsID ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * この関数の使用は推奨されません。この関数は、互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ * The use of this function is not recommended. This function is supported for compatibility.
  */
 int newTextLayer( int x, int y, int width, int height, string text ){
   int index = SYSTEM_PROCESS_DRIVER_GRAPHICS_createTextLayer();
@@ -1446,12 +2274,5 @@ int newTextLayer( int x, int y, int width, int height, string text ){
   SYSTEM_PROCESS_DRIVER_GRAPHICS_setLayerText( index, text );
   return index;
 }
-
-
-
-
-
-
-
 
 

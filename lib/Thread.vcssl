@@ -20,37 +20,72 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * VCSSL Thread ライブラリ は、マルチスレッドを扱うための標準ライブラリです。
  * </p>
- * 
+ *
  * <div style="border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;">
  * <div style="font-weight:bold;">- 注意 -</div>
  * <div style="padding:10px;">
  * 現行版の RINEARN VCSSL Runtime では、VCSSL Thread APIをサポートしていますが、マルチスレッド処理への対応が十分ではありません。 これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。 これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。 RINEARN VCSSL Runtime で VCSSL Thread API の使用を検討する場合は、この事情を踏まえた上で判断してください。現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。 
  * </div>
- * 
+ *
  * <div style="font-weight:bold;">・同一の配列変数へ、複数スレッドから同時アクセスした場合における、インデックスの不整合</div>
- * 
+ *
  * <div style="padding:10px;">
  * 現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。 
  * </div>
- * 
+ *
  * <div style="font-weight:bold;">・パフォーマンスのボトルネック</div>
- * 
+ *
  * <div style="padding:10px;">
  * 現在のVCSSLエンジンには、マルチスレッド処理ではボトルネックとなる箇所を複数含んでいます。このため、並列性の高い処理を複数スレッドで分担しても、パフォーマンスの大幅な向上は見込めません。 つまり、RINEARN VCSSL Runtime における Thread API は、あくまで複数の処理の流れを作る目的には有効ですが、演算パフォーマンスを引き出すような目的にはあまり意味がありません。 
  * </div>
- * 
+ *
  * <div style="font-weight:bold;">・同一の関数への、非常に頻繁な複数スレッド同時アクセスに伴う、エンジンの緊急停止</div>
- * 
+ *
  * <div style="padding:10px;">
  * 原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。 しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。 ※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。
  * </div>
  * 以上のような不都合が生じる可能性があるため、現状の RINEARN VCSSL Runtime では、VCSSL Thread APIを厳密性の要求される処理（科学技術計算や数値計算など）に使用する事は推奨されません。
  * </div>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL Thread library is a standard library for multithreading.
+ * </p>
+ *
+ * <div style="border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;">
+ * <div style="font-weight:bold;">- Note -</div>
+ * <div style="padding:10px;">
+ * The current version of RINEARN VCSSL Runtime supports the VCSSL Thread API, but its support for multithreaded processing is not yet sufficient. This is because the basic design of the current VCSSL engine still partially follows the design of the early VCSSL engine, which had been developed assuming only single-threaded execution. As a result, depending on the processing contents, some inconveniences involving logical inconsistencies may occur. If you are considering using the VCSSL Thread API in RINEARN VCSSL Runtime, please make that decision with this situation in mind. The following are examples of issues that may currently occur.
+ * </div>
+ *
+ * <div style="font-weight:bold;">- Index inconsistencies when multiple threads access the same array variable at the same time</div>
+ *
+ * <div style="padding:10px;">
+ * In the current VCSSL engine, modules that refer to the values of array variables still include designs that assume only single-threaded execution. Because of this, if the same array variable is accessed simultaneously, incorrect index values may be referenced.
+ * </div>
+ *
+ * <div style="font-weight:bold;">- Performance bottlenecks</div>
+ *
+ * <div style="padding:10px;">
+ * The current VCSSL engine includes multiple points that become bottlenecks in multithreaded processing. Therefore, even if highly parallel work is divided among multiple threads, a major improvement in performance cannot be expected. In other words, the Thread API in RINEARN VCSSL Runtime is useful for creating multiple flows of processing, but it is not very meaningful for the purpose of extracting computational performance.
+ * </div>
+ *
+ * <div style="font-weight:bold;">- Emergency engine stop caused by very frequent simultaneous access from multiple threads to the same function</div>
+ *
+ * <div style="padding:10px;">
+ * In principle, the same function can be executed by multiple threads. In that case, arguments and local variables are allocated separately for each thread so that they are not mixed up across threads. However, if simultaneous accesses are concentrated within extremely short intervals, this handling may fail to keep up, and the engine may stop itself in an emergency to prevent inconsistencies. Note that overlap in the execution time of the function itself is not the problem. The problem occurs when the moments of calling the function, that is, the moments of passing arguments, overlap.
+ * </div>
+ * Because inconveniences such as the above may occur, use of the VCSSL Thread API is currently not recommended in RINEARN VCSSL Runtime for processing that requires strict correctness, such as scientific and technical calculations or numerical computations.
+ * </div>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -59,9 +94,17 @@ coding UTF-8;
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スレッドを生成し、それに固有の識別番号である「スレッドID」を割り振って返します。
  *
  * @return 生成したスレッドに割り振られたスレッドID（識別番号）
+ *
+ * !--- locale=En-US ---
+ *
+ * Creates a thread, assigns it a unique identifier called a thread ID, and returns it.
+ *
+ * @return The thread ID assigned to the created thread.
  */
 int newThread(){
   return SYSTEM_PROCESS_DRIVER_THREAD_createThread();
@@ -69,9 +112,17 @@ int newThread(){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スレッドを破棄します。
  *
  * @param threadID 対象スレッドのID
+ *
+ * !--- locale=En-US ---
+ *
+ * Disposes of a thread.
+ *
+ * @param threadID The ID of the target thread.
  */
 void deleteThread( int threadID ){
   SYSTEM_PROCESS_DRIVER_THREAD_disposeThread( threadID );
@@ -84,20 +135,104 @@ int getThreadLimit(){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * スレッドの実行を開始します。
  *
  * @param threadID 対象スレッドのID
+ *
+ * !--- locale=En-US ---
+ *
+ * Starts execution of a thread.
+ *
+ * @param threadID The ID of the target thread.
  */
 void startThread( int threadID ){
   SYSTEM_PROCESS_DRIVER_THREAD_startThread( threadID );
 }
 
 
+/**
+ * !--- locale=Ja-JP ---
+ *
+ * スレッドの実行が終了するまで、呼び出し元の処理を待機します。
+ *
+ * @param threadID 対象スレッドのID
+ *
+ * !--- locale=En-US ---
+ *
+ * Waits until execution of the thread has finished.
+ *
+ * @param threadID The ID of the target thread.
+ */
+void waitForThread( int threadID ){
+  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID );
+}
+void waitForThread( int threadID, int timeOut ){
+  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, timeOut );
+}
+
 
 /**
- * スレッドの実行が終了するまで、呼び出し元の処理を待機します。
- * 
+ * !--- locale=Ja-JP ---
+ *
+ * スレッドの実行を一時停止します。
+ *
  * @param threadID 対象スレッドのID
+ * @param time 待機する時間のミリ秒数
+ *
+ * !--- locale=En-US ---
+ *
+ * Suspends execution of a thread temporarily.
+ *
+ * @param threadID The ID of the target thread.
+ * @param time The wait time in milliseconds.
+ */
+void sleepThread( int threadID, int time ){
+  SYSTEM_PROCESS_DRIVER_THREAD_sleepThread( threadID, time );
+}
+
+
+/**
+ * !--- locale=Ja-JP ---
+ *
+ * スレッドの実行を一時停止します。
+ *
+ * @param threadID 対象スレッドのID
+ * @param milliSeconds 待機する時間のミリ秒数
+ * @param nanoSeconds 待機する時間のナノ秒数
+ *
+ * !--- locale=En-US ---
+ *
+ * Suspends execution of a thread temporarily.
+ *
+ * @param threadID The ID of the target thread.
+ * @param milliSeconds The wait time in milliseconds.
+ * @param nanoSeconds The wait time in nanoseconds.
+ */
+void sleepThread( int threadID, int milliSeconds, nanoSeconds ){
+  SYSTEM_PROCESS_DRIVER_THREAD_sleepThread( threadID, milliSeconds, nanoSeconds );
+}
+
+
+
+
+/**
+ * !--- locale=Ja-JP ---
+ *
+ * スレッドの実行が終了するまで、呼び出し元の処理を待機します。
+ * 現在は、同機能の <a href="#waitForThread">waitForThread</a> の方が推奨されています。
+ * この関数は互換目的でサポートされています。
+ *
+ * @param threadID 対象スレッドのID
+ *
+ * !--- locale=En-US ---
+ *
+ * Waits until execution of the thread has finished.
+ * Currently, the equivalent <a href="#waitForThread">waitForThread</a> is recommended instead.
+ * This function is supported for compatibility.
+ *
+ * @param threadID The ID of the target thread.
  */
 void awaitThread( int threadID ){
   SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, -1 );
@@ -110,51 +245,3 @@ void awaitThread( int threadID ){
 void awaitThread( int threadID, int timeOut ){
   SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, timeOut );
 }
-
-
-
-
-
-
-
-
-/**
- * スレッドの実行を一時停止します。
- *
- * @param threadID 対象スレッドのID
- * @param time 待機する時間のミリ秒数
- */
-void sleepThread( int threadID, int time ){
-  SYSTEM_PROCESS_DRIVER_THREAD_sleepThread( threadID, time );
-}
-
-
-/**
- * スレッドの実行を一時停止します。
- *
- * @param threadID 対象スレッドのID
- * @param milliSeconds 待機する時間のミリ秒数
- * @param nanoSeconds 待機する時間のナノ秒数
- */
-void sleepThread( int threadID, int milliSeconds, nanoSeconds ){
-  SYSTEM_PROCESS_DRIVER_THREAD_sleepThread( threadID, milliSeconds, nanoSeconds );
-}
-
-
-
-/**
- * スレッドの実行が終了するまで、呼び出し元の処理を待機します。
- * 現在は、より新しい <a href="#awaitThread">awaitThread</a> が利用可能です。
- * この関数は互換目的でサポートされています。
- * 
- * @param threadID 対象スレッドのID
- */
-void waitForThread( int threadID ){
-  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID );
-}
-void waitForThread( int threadID, int timeOut ){
-  SYSTEM_PROCESS_DRIVER_THREAD_awaitThread( threadID, timeOut );
-}
-
-
-

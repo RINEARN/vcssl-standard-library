@@ -20,30 +20,58 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * tool.Graph3D ライブラリ APIライブラリ（以下、Graph3D ライブラリライブラリ）は、3次元グラフソフトウェアを制御するためのライブラリです。
  * </p>
- * 
+ *
  * <p>
  * Graph3D ライブラリは拡張ライブラリであり、VCSSLの言語仕様における標準ライブラリには含まれていません。従って、全てのVCSSL処理系において、必ずしもGraph3D ライブラリの実装がサポートされるわけではありません。
  * </p>
- * 
+ *
  * <p>
  * Graph3D ライブラリの仕様は、広く一般的な3次元グラフソフトウェアをVCSSLから制御する事を想定して定義されており、特定の3次元グラフソフトウェアを前提としたものではありません。 Graph3D ライブラリの実装において、制御対象にどのような3次元グラフソフトウェアが採用されるかは処理系依存であり、処理系の開発元（ベンダー）、バージョン、またはグラフソフトウェアとの通信機能を提供するプラグインなどに依存します。このような事情があるため、Graph3D ライブラリが提供する各種関数も、異なる処理系に関しては、厳密に同一の挙動を期待すべきではありません。
  * </p>
- * 
+ *
  * <p>
  * また、同一の処理系であっても、Graph3D ライブラリは標準ライブラリでは無いため、その実装において、恒久的に同様の挙動が保証されるものではありません。Graph3D ライブラリの実装は、あくまで処理系が独自にサポートする拡張機能であるという点に留意しておく必要があります。例えば、グラフソフトウェアの大幅なアップデートが行われると、 それに伴い、Graph3D ライブラリの挙動も微妙に変化してしまうケースなどが考えられます。
  * </p>
- * 
+ *
  * <p>
  * RINEARN VCSSLランタイム、及びそれを搭載するVCSSL対応ソフトウェア（リニアンプロセッサーなど）では、
  * Graph3D ライブラリをサポートしており、その実装には科学技術分野用グラフソフトウェア「 リニアングラフ3D 」を採用しています。
  * リニアングラフ3D本体（ RinearnGraph3D ライブラリ.jar ）はVCSSLランタイムの配布パッケージ内に同梱されているため、
  * 別途何かを用意する必要はありません。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The tool.Graph3D API library, hereafter the Graph3D library, is a library for controlling 3D graph software.
+ * </p>
+ *
+ * <p>
+ * The Graph3D library is an extension library and is not included in the standard libraries defined by the VCSSL language specification. Therefore, support for the Graph3D library implementation is not guaranteed in every VCSSL implementation.
+ * </p>
+ *
+ * <p>
+ * The specification of the Graph3D library is defined assuming control of widely used general-purpose 3D graph software from VCSSL, and it is not intended for a specific 3D graph application. In an implementation of the Graph3D library, what kind of 3D graph software is adopted as the control target depends on the implementation, the vendor of the implementation, its version, or plugins that provide communication functions with graph software. Because of these circumstances, the functions provided by the Graph3D library should not be expected to behave in exactly the same way across different implementations.
+ * </p>
+ *
+ * <p>
+ * Even in the same implementation, because the Graph3D library is not a standard library, its implementation is not guaranteed to behave permanently in the same way. Keep in mind that the implementation of the Graph3D library is only an extension feature supported independently by the implementation. For example, if the graph software receives a major update, the behavior of the Graph3D library may also change slightly as a result.
+ * </p>
+ *
+ * <p>
+ * In the RINEARN VCSSL Runtime and VCSSL-supported software equipped with it, such as Rinearn Processor,
+ * the Graph3D library is supported, and its implementation adopts the graph software RINRARN Graph 3D for scientific and technical fields.
+ * Since the RINRARN Graph 3D program itself, RinearnGraph3D.jar, is bundled in the distribution package of the VCSSL Runtime,
+ * nothing needs to be prepared separately.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -51,28 +79,50 @@ coding UTF-8;
 
 
 
-/** エラーメッセージ、ファイルが見つからなかった場合。 */
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、ファイルが見つからなかった場合。
+ * !--- locale=En-US ---
+ * The error message used when the file is not found.
+ */
 private const string ERROR_FILE_NOT_FOUND = "File Not Found Error / ファイルが見つかりません: ";
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 3次元グラフをデフォルトのサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。
- * 
+ *
  * @return 生成したグラフのID
+ *
+ * !--- locale=En-US ---
+ * Creates a 3D graph with the default size, assigns its unique identifier, the graph ID, and returns it.
+ *
+ * @return The ID of the created graph.
  */
 int newGraph3D(){
   return SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3D();
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 3次元グラフを指定されたサイズで生成し、それに固有の識別番号 ( グラフID ) を割り振って返します。
- * 
+ *
  * @param x グラフウィンドウ左上頂点のX座標
  * @param y グラフウィンドウ左上頂点のY座標
  * @param width グラフウィンドウの幅
  * @param height グラフウィンドウの高さ
  * @param title グラフウィンドウタイトル
  * @return 生成したグラフのID
+ *
+ * !--- locale=En-US ---
+ * Creates a 3D graph with the specified size, assigns its unique identifier, the graph ID, and returns it.
+ *
+ * @param x The X coordinate of the top-left corner of the graph window.
+ * @param y The Y coordinate of the top-left corner of the graph window.
+ * @param width The width of the graph window.
+ * @param height The height of the graph window.
+ * @param title The title of the graph window.
+ * @return The ID of the created graph.
  */
 int newGraph3D( int x, int y, int width, int height, string title ){
   int graphID = SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3D();
@@ -83,79 +133,137 @@ int newGraph3D( int x, int y, int width, int height, string title ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 処理系で起動・確保されている特別なグラフがあれば、そのグラフIDを取得します。無ければ新規生成します。
- * 
+ *
  * @return 取得または生成したグラフID
+ *
+ * !--- locale=En-US ---
+ * If there is a special graph started and allocated by the implementation, gets its graph ID. Otherwise, creates a new one.
+ *
+ * @return The obtained or created graph ID.
  */
 int getGraph3D(){
   return SYSTEM_PROCESS_DRIVER_GRAPH3D_getGraph3DSystemDefaultInstance();
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフを破棄します。
- * 
+ *
  * @param graphID 対象グラフのID
+ *
+ * !--- locale=En-US ---
+ * Destroys the graph.
+ *
+ * @param graphID The ID of the target graph.
  */
 void deleteGraph3D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_deleteGraph3D( graphID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフの内容をクリアします。
- * 
+ *
  * @param graphID 対象グラフのID
+ *
+ * !--- locale=En-US ---
+ * Clears the contents of the graph.
+ *
+ * @param graphID The ID of the target graph.
  */
 void clearGraph3D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_clearGraph3D( graphID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフの保持している描画内容を、Graphicsライブラリ互換のグラフィックスデータに変換します。
  * 変換されたグラフィックスデータは、2D/3Dレンダラ―などで加工できます。
- * 
+ *
  * @param graphID 対象グラフのID
  * @return グラフィックスデータID
+ *
+ * !--- locale=En-US ---
+ * Converts the drawing contents held by the graph into graphics resource compatible with the Graphics library.
+ * The converted graphics resource can be processed with a 2D or 3D renderer and so on.
+ *
+ * @param graphID The ID of the target graph.
+ * @return The graphics resource ID.
  */
 int getGraph3DGraphics( int graphID ){
   return SYSTEM_PROCESS_DRIVER_GRAPH3D_newGraph3DGraphics( graphID );
 }
 
+// ※ 改名/拡張案：
+//    後々で getGraphics2DImage を追加する場合、そちらはその瞬間のグラフスクリーンのスナップショットを返すようにする。
+//    getGraphics2DGraphics は、リアルタイムで更新され得るグラフィックスリソースを返すものとして、共存させる。
+
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフウィンドウの位置を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param x グラフウィンドウ左上頂点のX座標
  * @param y グラフウィンドウ左上頂点のY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the location of the graph window.
+ *
+ * @param graphID The ID of the target graph.
+ * @param x The X coordinate of the top-left corner of the graph window.
+ * @param y The Y coordinate of the top-left corner of the graph window.
  */
 void setGraph3DLocation( int graphID, int x, int y ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLocation( graphID, x, y );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフウィンドウの大きさを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param width グラフウィンドウの幅
  * @param height グラフウィンドウ高さ
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the graph window.
+ *
+ * @param graphID The ID of the target graph.
+ * @param width The width of the graph window.
+ * @param height The height of the graph window.
  */
 void setGraph3DSize( int graphID, int width, int height ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DSize( graphID, width, height );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフウィンドウを不可視化します。
- * 
+ *
  * @param graphID 対象グラフのID
+ *
+ * !--- locale=En-US ---
+ * Hides the graph window.
+ *
+ * @param graphID The ID of the target graph.
  */
 void hideGraph3D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_hideGraph3D( graphID );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフウィンドウを可視化します。
- * 
+ *
  * @param graphID 対象グラフのID
+ *
+ * !--- locale=En-US ---
+ * Shows the graph window.
+ *
+ * @param graphID The ID of the target graph.
  */
 void showGraph3D( int graphID ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_showGraph3D( graphID );
@@ -163,10 +271,17 @@ void showGraph3D( int graphID ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルを読み込み、グラフにプロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param filePath プロットするファイルのファイル名またはパス
+ *
+ * !--- locale=En-US ---
+ * Loads a file and plots it on the graph.
+ *
+ * @param graphID The ID of the target graph.
+ * @param filePath The file name or path of the file to plot.
  */
 void setGraph3DFile( int graphID, string filePath ){
   bool exist = ___exists(filePath);
@@ -179,6 +294,7 @@ void setGraph3DFile( int graphID, string filePath ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルを指定したモードで読み込み、グラフにプロットします。
  * <br />
  * モードは、以下の値を文字列として指定します。
@@ -200,12 +316,52 @@ void setGraph3DFile( int graphID, string filePath ){
  * </dl>
  * なお、区切り記号については、指定モードと実際のファイル内容が食い違っても読み込める場合があります（例えばCSVファイルをSTSV系のモードで読めたり、その逆など）。
  * しかし、これはグラフソフト側の訂正機構による挙動であり、将来のバージョンでも開ける保証はありません。そのため、可能な限り正しく指定してください。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param filePath プロットするファイルのファイル名またはパス
  * @param mode プロットするファイルのモード
+ *
+ * !--- locale=En-US ---
+ * Loads a file in the specified mode and plots it on the graph.
+ * <br />
+ * Specify the mode as one of the following string values.
+ * <dl>
+ * <dt>AUTO</dt>
+ * <dd>A mode that automatically determines the format from the contents of the file</dd>
+ * <dt>MATRIX_CSV</dt>
+ * <dd>A mode that loads the file as a comma-separated matrix format</dd>
+ * <dt>MATRIX_STSV</dt>
+ * <dd>A mode that loads the file as a tab- or space-separated matrix format</dd>
+ * <dt>3COL_CSV or 3COLUMNS_CSV</dt>
+ * <dd>A mode that loads the file as a comma-separated three-column format</dd>
+ * <dt>3COL_STSV or 3COLUMNS_STSV</dt>
+ * <dd>A mode that loads the file as a tab- or space-separated three-column format</dd>
+ * <dt>4COL_CSV or 4COLUMNS_CSV</dt>
+ * <dd>A mode that loads the file as a comma-separated four-column format</dd>
+ * <dt>4COL_STSV or 4COLUMNS_STSV</dt>
+ * <dd>A mode that loads the file as a tab- or space-separated four-column format</dd>
+ * </dl>
+ * Note that, regarding delimiters, the file may still be loaded even if the specified mode and the actual file contents do not match, for example, a CSV file in an STSV mode or vice versa.
+ * However, that behavior depends on the correction mechanism on the graph-software side, and there is no guarantee that it will still work in future versions. Therefore, specify the mode correctly whenever possible.
+ *
+ * @param graphID The ID of the target graph.
+ * @param filePath The file name or path of the file to plot.
+ * @param mode The mode of the file to plot.
  */
 void setGraph3DFile( int graphID, string filePath, string mode ){
+  if (mode == "3COLUMN_CSV") {
+    mode = "3COLUMNS_CSV";
+  }
+  if (mode == "3COLUMN_STSV") {
+    mode = "3COLUMNS_STSV";
+  }
+  if (mode == "4COLUMN_CSV") {
+    mode = "4COLUMNS_CSV";
+  }
+  if (mode == "4COLUMN_STSV") {
+    mode = "4COLUMNS_STSV";
+  }
+
   bool exist = ___exists(filePath);
   if(!exist){
     error(ERROR_FILE_NOT_FOUND + filePath);
@@ -216,10 +372,17 @@ void setGraph3DFile( int graphID, string filePath, string mode ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 複数のファイルを読み込み、グラフにプロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param file プロットするファイルのファイル名またはパス
+ *
+ * !--- locale=En-US ---
+ * Loads multiple files and plots them on the graph.
+ *
+ * @param graphID The ID of the target graph.
+ * @param file The file name or path of each file to plot.
  */
 void setGraph3DFile( int graphID, string file[] ){
   int n = length(file);
@@ -237,6 +400,7 @@ void setGraph3DFile( int graphID, string file[] ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 複数のファイルを、指定したモードで読み込み、グラフにプロットします。
  * <br />
  * モードは、以下の値を文字列として指定します。
@@ -258,12 +422,52 @@ void setGraph3DFile( int graphID, string file[] ){
  * </dl>
  * なお、区切り記号については、指定モードと実際のファイル内容が食い違っても読み込める場合があります（例えばCSVファイルをSTSV系のモードで読めたり、その逆など）。
  * しかし、これはグラフソフト側の訂正機構による挙動であり、将来のバージョンでも開ける保証はありません。そのため、可能な限り正しく指定してください。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param file プロットする各ファイルの、ファイル名またはパスを格納する配列
  * @param mode プロットする各ファイルの、モードを格納する配列
+ *
+ * !--- locale=En-US ---
+ * Loads multiple files in the specified modes and plots them on the graph.
+ * <br />
+ * Specify each mode as one of the following string values.
+ * <dl>
+ * <dt>AUTO</dt>
+ * <dd>A mode that automatically determines the format from the contents of the file</dd>
+ * <dt>MATRIX_CSV</dt>
+ * <dd>A mode that loads the file as a comma-separated matrix format</dd>
+ * <dt>MATRIX_STSV</dt>
+ * <dd>A mode that loads the file as a tab- or space-separated matrix format</dd>
+ * <dt>3COL_CSV or 3COLUMNS_CSV</dt>
+ * <dd>A mode that loads the file as a comma-separated three-column format</dd>
+ * <dt>3COL_STSV or 3COLUMNS_STSV</dt>
+ * <dd>A mode that loads the file as a tab- or space-separated three-column format</dd>
+ * <dt>4COL_CSV or 4COLUMNS_CSV</dt>
+ * <dd>A mode that loads the file as a comma-separated four-column format</dd>
+ * <dt>4COL_STSV or 4COLUMNS_STSV</dt>
+ * <dd>A mode that loads the file as a tab- or space-separated four-column format</dd>
+ * </dl>
+ * Note that, regarding delimiters, the file may still be loaded even if the specified mode and the actual file contents do not match, for example, a CSV file in an STSV mode or vice versa.
+ * However, that behavior depends on the correction mechanism on the graph-software side, and there is no guarantee that it will still work in future versions. Therefore, specify the mode correctly whenever possible.
+ *
+ * @param graphID The ID of the target graph.
+ * @param file The array storing the file names or paths of the files to plot.
+ * @param mode The array storing the modes of the files to plot.
  */
 void setGraph3DFile( int graphID, string file[], string mode[] ){
+  if (mode == "3COLUMN_CSV") {
+    mode = "3COLUMNS_CSV";
+  }
+  if (mode == "3COLUMN_STSV") {
+    mode = "3COLUMNS_STSV";
+  }
+  if (mode == "4COLUMN_CSV") {
+    mode = "4COLUMNS_CSV";
+  }
+  if (mode == "4COLUMN_STSV") {
+    mode = "4COLUMNS_STSV";
+  }
+
   int n = length(file);
   string arg[ 2 * n + 1 ];
   arg[ 0 ] = graphID;
@@ -284,10 +488,17 @@ void setGraph3DFile( int graphID, string file[], string mode[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルの内容と同じ書式で記載されたテキストを読み込み、グラフにプロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param data ファイルの内容と同じ書式で記載されたテキスト
+ *
+ * !--- locale=En-US ---
+ * Loads text written in the same format as the contents of a file and plots it on the graph.
+ *
+ * @param graphID The ID of the target graph.
+ * @param data The text written in the same format as the contents of a file.
  */
 void setGraph3DData( int graphID, string data ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DDataString( graphID, data );
@@ -295,36 +506,63 @@ void setGraph3DData( int graphID, string data ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param dataX X座標を格納する配列（ [ 点インデックス ] ）
  * @param dataY Y座標を格納する配列（ [ 点インデックス ] ）
  * @param dataZ Z座標を格納する配列（ [ 点インデックス ] ）
+ *
+ * !--- locale=En-US ---
+ * Loads float arrays storing coordinate values and plots them on the graph.
+ *
+ * @param graphID The ID of the target graph.
+ * @param dataX The array storing the X coordinates, indexed by point index.
+ * @param dataY The array storing the Y coordinates, indexed by point index.
+ * @param dataZ The array storing the Z coordinates, indexed by point index.
  */
 void setGraph3DData( int graphID, float dataX[], float dataY[], float dataZ[] ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DData( graphID, dataX, dataY, dataZ );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param dataX X座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataY Y座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataZ Z座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ *
+ * !--- locale=En-US ---
+ * Loads float arrays storing coordinate values and plots them on the graph.
+ *
+ * @param graphID The ID of the target graph.
+ * @param dataX The array storing the X coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh.
+ * @param dataY The array storing the Y coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh.
+ * @param dataZ The array storing the Z coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh.
  */
 void setGraph3DData( int graphID, float dataX[][], float dataY[][], float dataZ[][] ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DData( graphID, dataX, dataY, dataZ );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 座標値を格納する float 型配列を読み込み、グラフにプロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param dataX X座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataY Y座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataZ Z座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ *
+ * !--- locale=En-US ---
+ * Loads float arrays storing coordinate values and plots them on the graph.
+ *
+ * @param graphID The ID of the target graph.
+ * @param dataX The array storing the X coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh.
+ * @param dataY The array storing the Y coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh.
+ * @param dataZ The array storing the Z coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh.
  */
 void setGraph3DData( int graphID, float dataX[][][], float dataY[][][], float dataZ[][][] ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DData( graphID, dataX, dataY, dataZ );
@@ -334,36 +572,63 @@ void setGraph3DData( int graphID, float dataX[][][], float dataY[][][], float da
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param dataX X座標を格納する配列（ [ 点インデックス ] ）
  * @param dataY Y座標を格納する配列（ [ 点インデックス ] ）
  * @param dataZ Z座標を格納する配列（ [ 点インデックス ] ）
+ *
+ * !--- locale=En-US ---
+ * Loads float arrays storing coordinate values and adds them to the graph as an additional plot.
+ *
+ * @param graphID The ID of the target graph.
+ * @param dataX The array storing the X coordinates, indexed by point index.
+ * @param dataY The array storing the Y coordinates, indexed by point index.
+ * @param dataZ The array storing the Z coordinates, indexed by point index.
  */
 void addGraph3DData( int graphID, float dataX[], float dataY[], float dataZ[] ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_addGraph3DData( graphID, dataX, dataY, dataZ );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param dataX X座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataY Y座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataZ Z座標を格納する配列（ [ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ *
+ * !--- locale=En-US ---
+ * Loads float arrays storing coordinate values and adds them to the graph as an additional plot.
+ *
+ * @param graphID The ID of the target graph.
+ * @param dataX The array storing the X coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh.
+ * @param dataY The array storing the Y coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh.
+ * @param dataZ The array storing the Z coordinates, indexed by Y-direction index on the mesh and X-direction index on the mesh.
  */
 void addGraph3DData( int graphID, float dataX[][], float dataY[][], float dataZ[][] ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_addGraph3DData( graphID, dataX, dataY, dataZ );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 座標値を格納する float 型配列を読み込み、グラフに追記プロットします。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param dataX X座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataY Y座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
  * @param dataZ Z座標を格納する配列（ [ 系列インデックス ][ メッシュ上のY方向インデックス ][ メッシュ上のX方向インデックス ] ）
+ *
+ * !--- locale=En-US ---
+ * Loads float arrays storing coordinate values and adds them to the graph as an additional plot.
+ *
+ * @param graphID The ID of the target graph.
+ * @param dataX The array storing the X coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh.
+ * @param dataY The array storing the Y coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh.
+ * @param dataZ The array storing the Z coordinates, indexed by series index, Y-direction index on the mesh, and X-direction index on the mesh.
  */
 void addGraph3DData( int graphID, float dataX[][][], float dataY[][][], float dataZ[][][] ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_addGraph3DData( graphID, dataX, dataY, dataZ );
@@ -372,10 +637,17 @@ void addGraph3DData( int graphID, float dataX[][][], float dataY[][][], float da
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 設定ファイルを読み込み、グラフに自動で設定を行います。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param file 設定ファイルのファイル名またはパス
+ *
+ * !--- locale=En-US ---
+ * Loads a configuration file and applies settings to the graph automatically.
+ *
+ * @param graphID The ID of the target graph.
+ * @param file The file name or path of the configuration file.
  */
 void setGraph3DConfigurationFile( int graphID, string file ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DConfigurationFile( graphID, file );
@@ -383,10 +655,17 @@ void setGraph3DConfigurationFile( int graphID, string file ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 設定ファイルと同様の書式で記載されたコード（設定コード）を読み込み、グラフに自動で設定を行います。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param line 設定コードの内容
+ *
+ * !--- locale=En-US ---
+ * Loads code written in the same format as a configuration file, configuration code, and applies settings to the graph automatically.
+ *
+ * @param graphID The ID of the target graph.
+ * @param line The contents of the configuration code.
  */
 void setGraph3DConfigurationCode( int graphID, string code ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DConfigurationLine( graphID, code );
@@ -403,8 +682,9 @@ void setGraph3DScaleColor( int graphID, int red, int green, int blue, int alpha 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロット範囲を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param xMin X軸の最小値
  * @param xMax X軸の最大値
@@ -412,39 +692,74 @@ void setGraph3DScaleColor( int graphID, int red, int green, int blue, int alpha 
  * @param yMax Y軸の最大値
  * @param zMin Z軸の最小値
  * @param zMax Z軸の最大値
+ *
+ * !--- locale=En-US ---
+ * Sets the plot range.
+ *
+ * @param graphID The ID of the target graph.
+ * @param xMin The minimum value of the X axis.
+ * @param xMax The maximum value of the X axis.
+ * @param yMin The minimum value of the Y axis.
+ * @param yMax The maximum value of the Y axis.
+ * @param zMin The minimum value of the Z axis.
+ * @param zMax The maximum value of the Z axis.
  */
 void setGraph3DRange( int graphID, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRange( graphID, xMin, xMax, yMin, yMax, zMin, zMax );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * X軸のプロット範囲を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param xMin X軸の最小値
  * @param xMax X軸の最大値
+ *
+ * !--- locale=En-US ---
+ * Sets the plot range of the X axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param xMin The minimum value of the X axis.
+ * @param xMax The maximum value of the X axis.
  */
 void setGraph3DRangeX( int graphID, double xMin, double xMax ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRangeX( graphID, xMin, xMax );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * Y軸のプロット範囲を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param yMin Y軸の最小値
  * @param yMax Y軸の最大値
+ *
+ * !--- locale=En-US ---
+ * Sets the plot range of the Y axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param yMin The minimum value of the Y axis.
+ * @param yMax The maximum value of the Y axis.
  */
 void setGraph3DRangeY( int graphID, double yMin, double yMax ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRangeY( graphID, yMin, yMax );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * Z軸のプロット範囲を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param zMin Z軸の最小値
  * @param zMax Z軸の最大値
+ *
+ * !--- locale=En-US ---
+ * Sets the plot range of the Z axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param zMin The minimum value of the Z axis.
+ * @param zMax The maximum value of the Z axis.
  */
 void setGraph3DRangeZ( int graphID, double zMin, double zMax ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DRangeZ( graphID, zMin, zMax );
@@ -453,12 +768,21 @@ void setGraph3DRangeZ( int graphID, double zMin, double zMax ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プロット範囲の自動調整機能を有効化または無効化します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param autoX X軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
  * @param autoY Y軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
  * @param autoZ Z軸方向の自動調性機能を有効にするならtrue、無効にするならfalse
+ *
+ * !--- locale=En-US ---
+ * Enables or disables the automatic adjustment feature for the plot range.
+ *
+ * @param graphID The ID of the target graph.
+ * @param autoX True to enable automatic adjustment in the X-axis direction, or false to disable it.
+ * @param autoY True to enable automatic adjustment in the Y-axis direction, or false to disable it.
+ * @param autoZ True to enable automatic adjustment in the Z-axis direction, or false to disable it.
  */
 void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DAutoRange( graphID, autoX, autoY, autoZ );
@@ -466,12 +790,21 @@ void setGraph3DAutoRange( int graphID, bool autoX, bool autoY, bool autoZ ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 各軸のラベルを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param xLabel X軸のラベル
  * @param yLabel Y軸のラベル
  * @param zLabel Z軸のラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the labels of each axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param xLabel The label of the X axis.
+ * @param yLabel The label of the Y axis.
+ * @param zLabel The label of the Z axis.
  */
 void setGraph3DLabel( int graphID, string xLabel, string yLabel, string zLabel ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelX( graphID, xLabel );
@@ -480,30 +813,51 @@ void setGraph3DLabel( int graphID, string xLabel, string yLabel, string zLabel )
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * X軸のラベルを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param label X軸のラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the label of the X axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param label The label of the X axis.
  */
 void setGraph3DLabelX( int graphID, string label ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelX( graphID, label );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * Y軸のラベルを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param label Y軸のラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the label of the Y axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param label The label of the Y axis.
  */
 void setGraph3DLabelY( int graphID, string label ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelY( graphID, label );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * Z軸のラベルを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param label Z軸のラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the label of the Z axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param label The label of the Z axis.
  */
 void setGraph3DLabelZ( int graphID, string label ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DLabelZ( graphID, label );
@@ -513,8 +867,9 @@ void setGraph3DLabelZ( int graphID, string label ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 各軸の目盛りを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param xTickCoords X軸の目盛り刻み位置の座標値
  * @param xTickLabels X軸の目盛りのラベル
@@ -524,6 +879,19 @@ void setGraph3DLabelZ( int graphID, string label ){
  * @param zTickLabels Z軸の目盛りのラベル
  * @param colorBarTickCoords カラーバーの目盛り刻み位置の座標値
  * @param colorBarTickLabels カラーバーの目盛りのラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the tick marks of each axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param xTickCoords The coordinate values of the tick positions on the X axis.
+ * @param xTickLabels The labels of the tick marks on the X axis.
+ * @param yTickCoords The coordinate values of the tick positions on the Y axis.
+ * @param yTickLabels The labels of the tick marks on the Y axis.
+ * @param zTickCoords The coordinate values of the tick positions on the Z axis.
+ * @param zTickLabels The labels of the tick marks on the Z axis.
+ * @param colorBarTickCoords The coordinate values of the tick positions on the color bar.
+ * @param colorBarTickLabels The labels of the tick marks on the color bar.
  */
 void setGraph3DTick( int graphID, double xTickCoords[], string xTickLabels[], double yTickCoords[], string yTickLabels[], double zTickCoords[], string zTickLabels[], double colorBarTickCoords[], string colorBarTickLabels[] ){
 	setGraph3DTickX(graphID, xTickCoords, xTickLabels);
@@ -533,11 +901,19 @@ void setGraph3DTick( int graphID, double xTickCoords[], string xTickLabels[], do
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * X軸の目盛りを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param tickCoords 目盛り刻み位置の座標値
  * @param tickLabels 目盛りのラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the tick marks of the X axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param tickCoords The coordinate values of the tick positions.
+ * @param tickLabels The labels of the tick marks.
  */
 void setGraph3DTickX( int graphID, double tickCoords[], string tickLabels[] ){
 	int tickCoordsN = length(tickCoords, 0);
@@ -567,11 +943,19 @@ void setGraph3DTickX( int graphID, double tickCoords[], string tickLabels[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * Y軸の目盛りを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param tickCoords 目盛り刻み位置の座標値
  * @param tickLabels 目盛りのラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the tick marks of the Y axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param tickCoords The coordinate values of the tick positions.
+ * @param tickLabels The labels of the tick marks.
  */
 void setGraph3DTickY( int graphID, double tickCoords[], string tickLabels[] ){
 	int tickCoordsN = length(tickCoords, 0);
@@ -601,11 +985,19 @@ void setGraph3DTickY( int graphID, double tickCoords[], string tickLabels[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * Z軸の目盛りを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param tickCoords 目盛り刻み位置の座標値
  * @param tickLabels 目盛りのラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the tick marks of the Z axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param tickCoords The coordinate values of the tick positions.
+ * @param tickLabels The labels of the tick marks.
  */
 void setGraph3DTickZ( int graphID, double tickCoords[], string tickLabels[] ){
 	int tickCoordsN = length(tickCoords, 0);
@@ -635,11 +1027,19 @@ void setGraph3DTickZ( int graphID, double tickCoords[], string tickLabels[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * カラーバー軸の目盛りを設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param tickCoords 目盛り刻み位置の座標値
  * @param tickLabels 目盛りのラベル
+ *
+ * !--- locale=En-US ---
+ * Sets the tick marks of the color-bar axis.
+ *
+ * @param graphID The ID of the target graph.
+ * @param tickCoords The coordinate values of the tick positions.
+ * @param tickLabels The labels of the tick marks.
  */
 void setGraph3DTickColorBar( int graphID, double tickCoords[], string tickLabels[] ){
 	int tickCoordsN = length(tickCoords, 0);
@@ -670,6 +1070,7 @@ void setGraph3DTickColorBar( int graphID, double tickCoords[], string tickLabels
 
 
 /**
+ * !--- locale=Ja-JP ---
  * カメラアングルを設定します。
  * 引数 horizontalAngle と verticalAngle には、グラフ原点からカメラ位置を見るベクトル（カメラ方向ベクトル）を、天頂軸（後述）を基準とした水平角と垂直角で指定します。
  * 垂直角は、カメラ方向ベクトルが天頂軸となす角度を指定します。
@@ -683,11 +1084,31 @@ void setGraph3DTickColorBar( int graphID, double tickCoords[], string tickLabels
  *   <dt>ZENITH_Z</dt>
  *     <dd>Z軸を天頂軸とする角度指定モード</dd>
  * </dl>
- * 
+ *
  * @param graphID 対象グラフのID
  * @param horizontalAngle 水平角
  * @param verticalAngle 垂直角
  * @param mode 角度指定モード（値は上記のリスト参照）
+ *
+ * !--- locale=En-US ---
+ * Sets the camera angle.
+ * Specify the vector from the origin of the graph to the camera position, the camera-direction vector, by using the horizontal angle and the vertical angle based on the zenith axis described below for the horizontalAngle and verticalAngle arguments.
+ * The vertical angle specifies the angle between the camera-direction vector and the zenith axis.
+ * The horizontal angle specifies the direction of the projection of the camera-direction vector onto the plane perpendicular to the zenith axis.
+ * Here, the zenith axis can be selected from the X, Y, or Z axis by specifying one of the following values in the mode argument:
+ * <dl>
+ * <dt>ZENITH_X</dt>
+ * <dd>An angle-specification mode in which the X axis is treated as the zenith axis</dd>
+ * <dt>ZENITH_Y</dt>
+ * <dd>An angle-specification mode in which the Y axis is treated as the zenith axis</dd>
+ * <dt>ZENITH_Z</dt>
+ * <dd>An angle-specification mode in which the Z axis is treated as the zenith axis</dd>
+ * </dl>
+ *
+ * @param graphID The ID of the target graph.
+ * @param horizontalAngle The horizontal angle.
+ * @param verticalAngle The vertical angle.
+ * @param mode The angle-specification mode. See the list above for the available values.
  */
 void setGraph3DCameraAngle( int graphID, float horizontalAngle, float verticalAngle, string mode ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraAngle( graphID, horizontalAngle, verticalAngle, mode );
@@ -695,10 +1116,17 @@ void setGraph3DCameraAngle( int graphID, float horizontalAngle, float verticalAn
 
 
 /**
+ * !--- locale=Ja-JP ---
  * カメラ倍率を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param magnification カメラ倍率
+ *
+ * !--- locale=En-US ---
+ * Sets the camera magnification.
+ *
+ * @param graphID The ID of the target graph.
+ * @param magnification The camera magnification.
  */
 void setGraph3DCameraMagnification( int graphID, float magnification ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraMagnification( graphID, magnification );
@@ -706,10 +1134,17 @@ void setGraph3DCameraMagnification( int graphID, float magnification ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * カメラ距離を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param distance カメラ距離
+ *
+ * !--- locale=En-US ---
+ * Sets the camera distance.
+ *
+ * @param graphID The ID of the target graph.
+ * @param distance The camera distance.
  */
 void setGraph3DCameraDistance( int graphID, float distance ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraDistance( graphID, distance );
@@ -717,10 +1152,17 @@ void setGraph3DCameraDistance( int graphID, float distance ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * カメラの遠近感の有効/無効を設定します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param perspective 遠近感の有効/無効（有効な場合にtrue）
+ *
+ * !--- locale=En-US ---
+ * Sets whether the camera perspective is enabled.
+ *
+ * @param graphID The ID of the target graph.
+ * @param perspective True to enable perspective, or false to disable it.
  */
 void setGraph3DCameraPerspective( int graphID, bool perspective ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DCameraPerspective( graphID, perspective );
@@ -728,6 +1170,7 @@ void setGraph3DCameraPerspective( int graphID, bool perspective ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフのオプション項目を設定します。項目名は処理系に依存します。代表的なオプション項目名は以下の通りです：
  * <dl>
  *   <dt>WITH_POINTS</dt>
@@ -736,9 +1179,11 @@ void setGraph3DCameraPerspective( int graphID, bool perspective ){
  *     <dd>線プロット</dd>
  *   <dt>WITH_MESHES</dt>
  *     <dd>メッシュプロット</dd>
- *   <dt>WITH_MEMBRANES</dt>
+ *   <dt>WITH_SURFACES</dt>
  *     <dd>曲面プロット</dd>
-
+ *   <dt>WITH_MEMBRANES</dt>
+ *     <dd>曲面プロット (WITH_SURFACESと同じ)</dd>
+ *
  *   <dt>FLAT</dt>
  *     <dd>平面化</dd>
  *   <dt>FRAME</dt>
@@ -751,7 +1196,7 @@ void setGraph3DCameraPerspective( int graphID, bool perspective ){
  *     <dd>Z値によるグラデーション彩色</dd>
  *   <dt>ALPHA</dt>
  *     <dd>半透明描画</dd>
-
+ *
  *   <dt>LOG_X</dt>
  *     <dd>X対数軸表示</dd>
  *   <dt>LOG_Y</dt>
@@ -765,17 +1210,72 @@ void setGraph3DCameraPerspective( int graphID, bool perspective ){
  *   <dt>REVERSE_Z</dt>
  *     <dd>Z軸反転表示</dd>
  * </dl>
- * 
+ *
  * @param graphID 対象グラフのID
  * @param option オプション項目名
  * @param value オプションを有効にするならtrue、無効にするにはfalse
+ *
+ * !--- locale=En-US ---
+ * Sets an option item of the graph. The item names depend on the implementation. Representative option item names are as follows:
+ * <dl>
+ * <dt>WITH_POINTS</dt>
+ * <dd>Point plot</dd>
+ * <dt>WITH_LINES</dt>
+ * <dd>Line plot</dd>
+ * <dt>WITH_MESHES</dt>
+ * <dd>Mesh plot</dd>
+ * <dt>WITH_SURFACES</dt>
+ * <dd>Surface plot</dd>
+ * <dt>WITH_MEMBRANES</dt>
+ * <dd>Surface plot (Same as WITH_SURFACES)</dd>
+ *
+ * <dt>FLAT</dt>
+ * <dd>Flattening</dd>
+ * <dt>FRAME</dt>
+ * <dd>Frame drawing</dd>
+ * <dt>SCALE</dt>
+ * <dd>Scale drawing</dd>
+ * <dt>GRID_LINE</dt>
+ * <dd>Grid-line drawing</dd>
+ * <dt>GRADATION</dt>
+ * <dd>Gradient coloring by Z values</dd>
+ * <dt>ALPHA</dt>
+ * <dd>Translucent drawing</dd>
+ *
+ * <dt>LOG_X</dt>
+ * <dd>Display the X axis in logarithmic scale</dd>
+ * <dt>LOG_Y</dt>
+ * <dd>Display the Y axis in logarithmic scale</dd>
+ * <dt>LOG_Z</dt>
+ * <dd>Display the Z axis in logarithmic scale</dd>
+ * <dt>REVERSE_X</dt>
+ * <dd>Reverse the X axis</dd>
+ * <dt>REVERSE_Y</dt>
+ * <dd>Reverse the Y axis</dd>
+ * <dt>REVERSE_Z</dt>
+ * <dd>Reverse the Z axis</dd>
+ * </dl>
+ *
+ * @param graphID The ID of the target graph.
+ * @param option The name of the option item.
+ * @param value True to enable the option, or false to disable it.
  */
 void setGraph3DOption( int graphID, string option, bool value ){
+  if (option == "WITH_SURFACES") {
+    option = "WITH_MEMBRANES";
+  }
+  if (option == "SURFACES") {
+    option = "WITH_MEMBRANES";
+  }
+  if (option == "SURFACE") {
+    option = "WITH_MEMBRANES";
+  }
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DOption( graphID, option, value );
 }
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ※ この関数の用途は、事実上ラベル設定専用であり、現在は setGraph3DLabel 関数やsetGraph3DLabelX/Y/Z 関数などで代替可能です。
  * そちらの方が可読性が高いため、特に事情が無ければ、今後はそちらを用いる事が推奨されます。
  * <br />
@@ -789,10 +1289,29 @@ void setGraph3DOption( int graphID, string option, bool value ){
  *   <dt>SET_LABEL_Z</dt>
  *     <dd>Z軸ラベル</dd>
  * </dl>
- * 
+ *
  * @param graphID 対象グラフのID
  * @param option メニュー項目名
  * @param value メニュー項目を有効にするならtrue、無効にするにはfalse
+ *
+ * !--- locale=En-US ---
+ * This function is effectively used only for label settings, and it can now be replaced by functions such as setGraph3DLabel and setGraph3DLabelX, Y, or Z.
+ * Because that is more readable, it is recommended to use that form from now on unless there is a specific reason not to.
+ * <br />
+ * <br />
+ * Sets a menu item of the graph. The item names depend on the implementation. Representative menu item names are as follows:
+ * <dl>
+ * <dt>SET_LABEL_X</dt>
+ * <dd>The X-axis label</dd>
+ * <dt>SET_LABEL_Y</dt>
+ * <dd>The Y-axis label</dd>
+ * <dt>SET_LABEL_Z</dt>
+ * <dd>The Z-axis label</dd>
+ * </dl>
+ *
+ * @param graphID The ID of the target graph.
+ * @param option The name of the menu item.
+ * @param value The value to set for the menu item.
  */
 void setGraph3DMenu( int graphID, string option, string value ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DMenu( graphID, option, value );
@@ -800,6 +1319,7 @@ void setGraph3DMenu( int graphID, string option, string value ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフのアニメーションを有効化または無効化します。利用可能なアニメーションモードは処理系に依存します。代表的なアニメーションモードは以下の通りです：
  *  <dl>
  *   <dt>TRACE</dt>
@@ -819,10 +1339,35 @@ void setGraph3DMenu( int graphID, string option, string value ){
  *   <dt>RANGE-Z</dt>
  *     <dd>プロット範囲をZ方向にスライドさせる</dd>
  * </dl>
- * 
+ *
  * @param graphID 対象グラフのID
  * @param mode アニメーションモード
  * @param state アニメーションを有効化するならtrue、無効化するならfalse
+ *
+ * !--- locale=En-US ---
+ * Enables or disables graph animation. The available animation modes depend on the implementation. Representative animation modes are as follows:
+ * <dl>
+ * <dt>TRACE</dt>
+ * <dd>Animate points while leaving trajectories</dd>
+ * <dt>INDEX</dt>
+ * <dd>Animate points</dd>
+ * <dt>INDEX-SERIES</dt>
+ * <dd>Animate series</dd>
+ * <dt>INDEX-X</dt>
+ * <dd>Animate lines in the X direction of mesh data</dd>
+ * <dt>INDEX-Y</dt>
+ * <dd>Animate lines in the Y direction of mesh data</dd>
+ * <dt>RANGE-X</dt>
+ * <dd>Slide the plot range in the X direction</dd>
+ * <dt>RANGE-Y</dt>
+ * <dd>Slide the plot range in the Y direction</dd>
+ * <dt>RANGE-Z</dt>
+ * <dd>Slide the plot range in the Z direction</dd>
+ * </dl>
+ *
+ * @param graphID The ID of the target graph.
+ * @param mode The animation mode.
+ * @param state True to enable animation, or false to disable it.
  */
 void setGraph3DAnimation( int graphID, string option, bool state ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_setGraph3DAnimation( graphID, option, state );
@@ -830,23 +1375,40 @@ void setGraph3DAnimation( int graphID, string option, bool state ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフを画像に出力します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param filename 出力ファイル名またはパス
  * @param 形式（ "PNG" または "JPEG" ）
+ *
+ * !--- locale=En-US ---
+ * Outputs the graph as an image.
+ *
+ * @param graphID The ID of the target graph.
+ * @param filename The output file name or path.
+ * @param format The format, either "PNG" or "JPEG".
  */
 void exportGraph3D( int graphID, string filename, string format ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_exportGraph3D( graphID, filename, format, 100.0 );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフを画像に出力します。
- * 
+ *
  * @param graphID 対象グラフのID
  * @param filename 出力ファイル名またはパス
  * @param 形式（ "PNG" または "JPEG" ）
  * @param quality 品質（ 0.0 ~ 100.0 ）
+ *
+ * !--- locale=En-US ---
+ * Outputs the graph as an image.
+ *
+ * @param graphID The ID of the target graph.
+ * @param filename The output file name or path.
+ * @param format The format, either "PNG" or "JPEG".
+ * @param quality The quality, from 0.0 to 100.0.
  */
 void exportGraph3D( int graphID, string filename, string format, float quality ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_exportGraph3D( graphID, filename, format, quality );
@@ -857,5 +1419,4 @@ void exportGraph3D( int graphID, string filename, string format, float quality )
 void exportGraph3DData( int graphID, string filename, string format ){
   SYSTEM_PROCESS_DRIVER_GRAPH3D_exportGraph3DData( graphID, filename, format );
 }
-
 

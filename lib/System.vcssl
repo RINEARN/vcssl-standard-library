@@ -20,6 +20,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * VCSSL System ライブラリ は、一般的な用途において必須となるような基盤機能を提供する標準ライブラリです。
  * </p>
@@ -54,7 +55,45 @@ coding UTF-8;
  * しかし System ライブラリにおいては、英単語を短縮してタイプ数を削り、必要に応じてプレフィックスやサフィックスで意味付けの補間をするような、略記的な識別子名称が多く採用されています。
  * </p>
  * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * The VCSSL System library is a standard library providing fundamental functions that are essential for general use.
+ * </p>
+ * 
+ * <p>
+ * The System library is automatically loaded by the implementation before the target VCSSL program itself is loaded.
+ * For this reason, the System library can exceptionally be used without import.
+ * <p>
+ * 
+ * </p>
+ * The reason why this exceptional treatment is applied is that
+ * the functions provided by the System library are used far more frequently than those of the other standard libraries.
+ * The System library does not collect functions for a specific field in the way other standard libraries do.
+ * Instead, it collects functions that are expected to be used particularly frequently in general usage regardless of field.
+ * Probably, the functions provided by the System library are essential in almost all VCSSL programs.
+ * Conversely, VCSSL is designed so that even only the functions provided by the System library, that is, without explicitly importing other standard libraries,
+ * can cover a certain practical range as a simple scripting language.
+ * <p>
+ * 
+ * <p>
+ * Specific examples of functions in the System library include basic operations and conversions for variables and arrays,
+ * input and output with the user, file input and output, simple interaction with the file system,
+ * and execution of operating-system commands.
+ * Some of these also have more advanced and complex counterparts provided by standard libraries specialized for each field.
+ * The design concept of standard libraries in VCSSL assumes that, for simple uses, the functions of the System library are used by default,
+ * and when those are insufficient, specialized libraries are imported and used as needed.
+ * </p>
+ * 
+ * <p>
+ * In the System library, the naming rules of identifiers are also somewhat different from those of the other standard libraries, as an exception prioritizing convenience in simple use cases.
+ * In principle, identifiers in VCSSL standard libraries are named in lower camel case without abbreviating English words.
+ * However, in the System library, many abbreviated identifier names are adopted, shortening English words to reduce typing and supplementing meaning with prefixes or suffixes when necessary.
+ * </p>
+ * 
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -62,195 +101,498 @@ coding UTF-8;
 
 
 
-/** エラーメッセージ、ファイルが見つからなかった場合。 */
-private const string ERROR_FILE_NOT_FOUND = "ファイルが見つかりません: ";
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、ファイルが見つからなかった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when a file is not found.
+ */
+private const string ERROR_FILE_NOT_FOUND = "File not found. ファイルが見つかりません: ";
 
-/** エラーメッセージ、ファイルパスが空文字だった場合。 */
-private const string ERROR_EMPTY_FILE_PATH = "ファイルのパスに、空の文字列が指定されました。";
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、ファイルパスが空文字だった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when an empty string is specified as a file path.
+ */
+private const string ERROR_EMPTY_FILE_PATH = "The specified file path is empty. ファイルのパスに、空の文字列が指定されました。";
 
-/** エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。 */
-private const string ERROR_FILE_IS_DIRECTORY = "このファイルはディレクトリであり、読み込みや書き込みは行えません： ";
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、アクセス対象のファイルがディレクトリだった場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when the target file is a directory.
+ */
+private const string ERROR_FILE_IS_DIRECTORY = "The specified file is a directory, so can't read/write contents from/to it. このファイルはディレクトリであり、読み込みや書き込みは行えません： ";
 
-/** エラーメッセージ、verfloat/vercomplex 型のデフォルト丸め処理に未対応の丸めモードを用いた場合。 */
-private const string ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT = "指定された丸めモードは、varfloat/varcomplex型のデフォルト丸め処理には使用できません： ";
+/**
+ * !--- locale=Ja-JP ---
+ * エラーメッセージ、verfloat/vercomplex 型のデフォルト丸め処理に未対応の丸めモードを用いた場合。
+ *
+ * !--- locale=En-US ---
+ * The error message used when an unsupported rounding mode is used for the default rounding of varfloat/varcomplex types.
+ */
+private const string ERROR_NOT_SUPPORTED_ROUNDING_MODE_VARFLOAT = "The specified rouding mode is not available for varfloat/varcomplex values. 指定された丸めモードは、varfloat/varcomplex型のデフォルト丸め処理には使用できません： ";
 
 
-/** 処理系が対応する、VCSSLのバージョンコードを表します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 処理系が対応する、VCSSLのバージョンコードを表します。
+ *
+ * !--- locale=En-US ---
+ * Represents the VCSSL version code supported by the implementation.
+ */
 public const string VER = ___VER;
 
-/** 処理系の開発リビジョンコードを表します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 処理系の開発リビジョンコードを表します。
+ *
+ * !--- locale=En-US ---
+ * Represents the development revision code of the implementation.
+ */
 public const string REV = ___REV;
 
-/** complex 型の虚数単位です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * complex 型の虚数単位です。
+ *
+ * !--- locale=En-US ---
+ * The imaginary unit of the complex type.
+ */
 public const complex I = ___I;
 
-/** varcomplex 型の虚数単位です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * varcomplex 型の虚数単位です。
+ *
+ * !--- locale=En-US ---
+ * The imaginary unit of the varcomplex type.
+ */
 public const varcomplex VCI = ___VCI;
 
-/** float 型の Inf （無限大） です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * float 型の Inf （無限大） です。
+ *
+ * !--- locale=En-US ---
+ * The Inf, that is, infinity, value of the float type.
+ */
 public const float INF = ___INF;
 
-/** float 型の NaN (非数) です。なお、NaN はあらゆる値と等しくありません。つまり、value == NAN といった比較で、変数 value が NaN であるかどうかを判定する事はできません。NaN の判定には <a href="#nan">nan</a> 関数を使用してください。 */
+/**
+ * !--- locale=Ja-JP ---
+ * float 型の NaN (非数) です。なお、NaN はあらゆる値と等しくありません。つまり、value == NAN といった比較で、変数 value が NaN であるかどうかを判定する事はできません。NaN の判定には <a href="#nan">nan</a> 関数を使用してください。
+ *
+ * !--- locale=En-US ---
+ * The NaN, that is, not-a-number, value of the float type. Note that NaN is not equal to any value. In other words, comparisons such as value == NAN cannot be used to determine whether a variable value is NaN. To test for NaN, use the <a href="#nan">nan</a> function.
+ */
 public const float NAN = ___NAN;
 
-/** float 型の最大値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * float 型の最大値です。
+ *
+ * !--- locale=En-US ---
+ * The maximum value of the float type.
+ */
 public const float FLOAT_MAX = ___FLOAT_MAX;
 
-/** 正規化数の範囲内において、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 正規化数の範囲内において、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。
+ *
+ * !--- locale=En-US ---
+ * The smallest non-zero positive value representable by the float type within the range of normalized numbers.
+ */
 public const float FLOAT_MIN_ABS_NORMAL = ___FLOAT_MIN_ABS_NORMAL;
 
-/** 非正規化数の範囲を含めて、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 非正規化数の範囲を含めて、float 型で表現可能な、最も絶対値が小さい値（正の値、0 以外）です。
+ *
+ * !--- locale=En-US ---
+ * The smallest non-zero positive value representable by the float type including the range of denormalized numbers.
+ */
 public const float FLOAT_MIN_ABS_DENORMAL = ___FLOAT_MIN_ABS_DENORMAL;
 
 /**
+ * !--- locale=Ja-JP ---
  * <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> と同様です。
  * 名称が短い代わりに、意味や仕様についてやや曖昧な名称であるため、基本的には
  * より明示的な名称の <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> または 
  * <a href="#FLOAT_MIN_ABS_NORMAL">FLOAT_MIN_ABS_NORMAL</a> の使用が推奨されます。
+ *
+ * !--- locale=En-US ---
+ * Equivalent to <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a>.
+ * Because this shorter name is somewhat ambiguous in meaning and specification, use of the more explicit names
+ * <a href="#FLOAT_MIN_ABS_DENORMAL">FLOAT_MIN_ABS_DENORMAL</a> or
+ * <a href="#FLOAT_MIN_ABS_NORMAL">FLOAT_MIN_ABS_NORMAL</a> is generally recommended.
  */
 public const float FLOAT_MIN = ___FLOAT_MIN_ABS_DENORMAL;
 
-/** int 型の最大値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * int 型の最大値です。
+ *
+ * !--- locale=En-US ---
+ * The maximum value of the int type.
+ */
 public const int INT_MAX = ___INT_MAX;
 
-/** int 型の最小値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * int 型の最小値です。
+ *
+ * !--- locale=En-US ---
+ * The minimum value of the int type.
+ */
 public const int INT_MIN = ___INT_MIN;
 
-/** 環境依存の改行コードです。CR, LF, CR+LF などの中から、実行中の環境に適した値を保持しています。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 環境依存の改行コードです。CR, LF, CR+LF などの中から、実行中の環境に適した値を保持しています。
+ *
+ * !--- locale=En-US ---
+ * The environment-dependent newline code. It stores the value appropriate for the current environment, such as CR, LF, or CR+LF.
+ */
 public const string EOL = ___EOL;
 
-/** 改行コード CR (0x0D) です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 改行コード CR (0x0D) です。
+ *
+ * !--- locale=En-US ---
+ * The newline code CR, that is, 0x0D.
+ */
 public const string CR = ___CR;
 
-/** 改行コード LF (0x0A) です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 改行コード LF (0x0A) です。
+ *
+ * !--- locale=En-US ---
+ * The newline code LF, that is, 0x0A.
+ */
 public const string LF = ___LF;
 
-/** 実行環境のオペレーティングシステムの種類や世代を大まかに区別するための文字列で、通常はOS名です。製品ブランディング上の世代を表す数字部も、バージョンではなく、このOS名に含まれる事がよくある点に留意が必要です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 実行環境のオペレーティングシステムの種類や世代を大まかに区別するための文字列で、通常はOS名です。製品ブランディング上の世代を表す数字部も、バージョンではなく、このOS名に含まれる事がよくある点に留意が必要です。
+ *
+ * !--- locale=En-US ---
+ * A string for roughly distinguishing the type or generation of the operating system in the execution environment, usually the OS name. Note that numbers representing generations in product branding are often included in this OS name rather than treated as version numbers.
+ */
 public const string OS = ___OS;
 
-/** 実行環境のオペレーティングシステムの世代を区別する際の参考になる文字列で、具体的にはOSの開発用/内部バージョン情報などです。一般層向けの製品情報で用いられているバージョンとは異なる場合がある点に留意が必要です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 実行環境のオペレーティングシステムの世代を区別する際の参考になる文字列で、具体的にはOSの開発用/内部バージョン情報などです。一般層向けの製品情報で用いられているバージョンとは異なる場合がある点に留意が必要です。
+ *
+ * !--- locale=En-US ---
+ * A string useful as a reference when distinguishing the generation of the operating system in the execution environment, specifically information such as the OS development or internal version. Note that it may differ from the version used in product information for general users.
+ */
 public const string OSVER = ___OSVER;
 
 
-/** 「読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for reading. It is used by the <a href="#open">open</a> function.
+ */
 public const string READ = "r";
 
-/** 「書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string WRITE = "w";
 
-/** 「追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for append writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string APPEND = "a";
 
-/** 「TSV読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「TSV読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for TSV reading. It is used by the <a href="#open">open</a> function.
+ */
 public const string READ_TSV = "rtsv";
 
-/** 「TSV書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「TSV書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for TSV writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string WRITE_TSV = "wtsv";
 
-/** 「TSV追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「TSV追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for TSV append writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string APPEND_TSV = "atsv";
 
-/** 「CSV読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「CSV読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for CSV reading. It is used by the <a href="#open">open</a> function.
+ */
 public const string READ_CSV = "rcsv";
 
-/** 「CSV書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「CSV書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for CSV writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string WRITE_CSV = "wcsv";
 
-/** 「CSV追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「CSV追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for CSV append writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string APPEND_CSV = "acsv";
 
-/** 「バイナリ読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「バイナリ読み込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for binary reading. It is used by the <a href="#open">open</a> function.
+ */
 public const string READ_BINARY = "rb";
 
-/** 「バイナリ書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「バイナリ書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for binary writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string WRITE_BINARY = "wb";
 
-/** 「バイナリ追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 「バイナリ追記書き込み」を行うファイル入出力モードです。<a href="#open">open</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * The file input/output mode for binary append writing. It is used by the <a href="#open">open</a> function.
+ */
 public const string APPEND_BINARY = "ab";
 
-/** 標準入力に対してファイル入出力関数を使用するための、特別なファイルパスです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 標準入力に対してファイル入出力関数を使用するための、特別なファイルパスです。
+ *
+ * !--- locale=En-US ---
+ * A special file path for using file input/output functions with standard input.
+ */
 public const string STDIN = "???//<SYSTEM_PROCESS_IO>::___STDIN___";
 
-/** 標準出力に対してファイル入出力関数を使用するための、特別なファイルパスです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 標準出力に対してファイル入出力関数を使用するための、特別なファイルパスです。
+ *
+ * !--- locale=En-US ---
+ * A special file path for using file input/output functions with standard output.
+ */
 public const string STDOUT = "???//<SYSTEM_PROCESS_IO>::___STDOUT___";
 
-/** 標準エラー出力に対してファイル入出力関数を使用するための、特別なファイルパスです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 標準エラー出力に対してファイル入出力関数を使用するための、特別なファイルパスです。
+ *
+ * !--- locale=En-US ---
+ * A special file path for using file input/output functions with standard error output.
+ */
 public const string STDERR = "???//<SYSTEM_PROCESS_IO>::___STDERR___";
 
 
 
-/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs upward rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href="#round">round</a> function.
+ */
 const int UP = 21;
 
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 UP 」として試験導入されていたものです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 有効数字の部分( いわゆる Significand part )の桁数を指定して、「 切り上げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 UP 」として試験導入されていたものです。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs upward rounding by specifying the number of digits in the significant part. It is used by the <a href="#round">round</a> function. This mode had been introduced experimentally as "UP" before VCSSL 3.3.
+ */
 const int UP_SIGNIF = 1;
 
 
-/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs downward rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href="#round">round</a> function.
+ */
 const int DOWN = 22;
 
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 DOWN 」として試験導入されていたものです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 切り下げ 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 DOWN 」として試験導入されていたものです。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs downward rounding by specifying the number of digits in the significant part. It is used by the <a href="#round">round</a> function. This mode had been introduced experimentally as "DOWN" before VCSSL 3.3.
+ */
 const int DOWN_SIGNIF = 2;
 
 
-/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs half-up rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href="#round">round</a> function.
+ */
 const int HALF_UP = 23;
 
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_UP 」として試験導入されていたものです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half up 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_UP 」として試験導入されていたものです。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs half-up rounding by specifying the number of digits in the significant part. It is used by the <a href="#round">round</a> function. This mode had been introduced experimentally as "HALF_UP" before VCSSL 3.3.
+ */
 const int HALF_UP_SIGNIF = 3;
 
 
-/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs half-down rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href="#round">round</a> function.
+ */
 const int HALF_DOWN = 24;
 
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_DOWN 」として試験導入されていたものです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half down 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_DOWN 」として試験導入されていたものです。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs half-down rounding by specifying the number of digits in the significant part. It is used by the <a href="#round">round</a> function. This mode had been introduced experimentally as "HALF_DOWN" before VCSSL 3.3.
+ */
 const int HALF_DOWN_SIGNIF = 4;
 
 
-/** ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ゼロを基準とする小数点以下の部分( いわゆる Decimal part )の桁数を指定して、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs half-to-even rounding by specifying the number of digits in the fractional part relative to zero, that is, the decimal part. It is used by the <a href="#round">round</a> function.
+ */
 const int HALF_TO_EVEN = 25;
 
-/** 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_EVEN 」として試験導入されていたものです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 有効数字の部分( いわゆる Significand part )の桁数を指定として、「 half to even 丸め 」を行う丸めモードです。<a href="#round">round</a> 関数で使用します。このモードは、VCSSL 3.3 以前において「 HALF_EVEN 」として試験導入されていたものです。
+ *
+ * !--- locale=En-US ---
+ * A rounding mode that performs half-to-even rounding by specifying the number of digits in the significant part. It is used by the <a href="#round">round</a> function. This mode had been introduced experimentally as "HALF_EVEN" before VCSSL 3.3.
+ */
 const int HALF_TO_EVEN_SIGNIF = 5;
 
 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * コンソールに文字列を出力します。引数は任意型であり、自動的に文字列型に変換されます。
  * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
  * 恐らく通常は、空白区切りで出力されます。
  * 
  * @param ... (任意型、可変長引数)出力内容
+ *
+ * !--- locale=En-US ---
+ * Outputs strings to the console. The arguments may be of any type and are automatically converted to strings.
+ * If multiple arguments are specified, how they are formatted in the output depends on the implementation.
+ * Normally, they will probably be output separated by spaces.
+ * 
+ * @param ... The contents to be output, as variable-length arguments of arbitrary types.
  */
 public macro print(...){
 	___print(...);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * コンソールに文字列を出力し、改行します。引数は任意型であり、自動的に文字列型に変換されます。
  * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
  * 恐らく通常は、空白区切りで出力されます。
  * 
  * @param ... (任意型、可変長引数)出力内容
+ *
+ * !--- locale=En-US ---
+ * Outputs strings to the console and then outputs a newline. The arguments may be of any type and are automatically converted to strings.
+ * If multiple arguments are specified, how they are formatted in the output depends on the implementation.
+ * Normally, they will probably be output separated by spaces.
+ * 
+ * @param ... The contents to be output, as variable-length arguments of arbitrary types.
  */
 public macro println(...){
 	___println(...);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * プログラムの処理結果を表示するための領域に、文字列を出力します。
  * 引数は任意型であり、自動的に文字列型に変換されます。
  * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
  * 恐らく通常は、空白区切りで出力されます。
  * 
  * @param ... (任意型、可変長引数)出力内容
+ *
+ * !--- locale=En-US ---
+ * Outputs strings to the area for displaying the processing result of the program.
+ * The arguments may be of any type and are automatically converted to strings.
+ * If multiple arguments are specified, how they are formatted in the output depends on the implementation.
+ * Normally, they will probably be output separated by spaces.
+ * 
+ * @param ... The contents to be output, as variable-length arguments of arbitrary types.
  */
 public macro output(...){
 	___output(...);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ユーザーから、任意文字列の入力を受け付けます。
  * 引数は任意型であり、自動的に文字列型に変換され、入力項目のメッセージとして表示されます。
  * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
@@ -259,17 +601,35 @@ public macro output(...){
  * 
  * @param ... (任意型、可変長引数)入力項目のメッセージ(最後の引数はデフォルト値)
  * @return (string)ユーザーの入力値
+ *
+ * !--- locale=En-US ---
+ * Accepts an arbitrary string input from the user.
+ * The arguments may be of any type and are automatically converted to strings and displayed as the message of the input field.
+ * If multiple arguments are specified, how they are displayed depends on the implementation.
+ * Normally, they will probably be displayed separated by newlines.
+ * Note that the last argument is used as the default value of the input field.
+ * 
+ * @param ... The message of the input field as variable-length arguments of arbitrary types. The last argument is the default value.
+ * @return The input value entered by the user.
  */
 public macro input(...){
 	___input(...);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ユーザに選択肢を提示し、選択された項目を取得します。
  * 引数は任意型であり、自動的に文字列型に変換され、選択肢として表示されます。
  * 
  * @param ... (任意型、可変長引数)選択肢
  * @return (string)選択された値
+ *
+ * !--- locale=En-US ---
+ * Presents choices to the user and obtains the selected item.
+ * The arguments may be of any type and are automatically converted to strings and displayed as the choices.
+ * 
+ * @param ... The choices as variable-length arguments of arbitrary types.
+ * @return The selected value.
  */
 public macro select(...){
 	___select(...);
@@ -277,13 +637,23 @@ public macro select(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。
  * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
  * 恐らく通常は、改行区切りで出力されます。
- * なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href="#pop">pop</a> 関数が利用できます。
+ * なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href="#popup">popup</a> 関数が利用できます。
  * 今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。
  * 
  * @param ... (任意型、可変長引数)メッセージの内容
+ *
+ * !--- locale=En-US ---
+ * Outputs a message to an alert window and waits until the user acknowledges it.
+ * If multiple arguments are specified, how they are displayed depends on the implementation.
+ * Normally, they will probably be displayed separated by newlines.
+ * For output of messages without a warning intention, the <a href="#popup">popup</a> function with nearly the same function is available since VCSSL 3.4.
+ * From now on, alert is recommended for messages intended as warnings.
+ * 
+ * @param ... The contents of the message as variable-length arguments of arbitrary types.
  */
 public macro alert(...){
 	___alert(...);
@@ -291,6 +661,7 @@ public macro alert(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ポップアップウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。
  * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
  * 恐らく通常は、改行区切りで出力されます。
@@ -299,6 +670,16 @@ public macro alert(...){
  * 将来的には、ウィンドウ上の表示アイコンなどが alert と違うものになる可能性もあります。
  * 
  * @param ... (任意型、可変長引数)メッセージの内容
+ *
+ * !--- locale=En-US ---
+ * Outputs a message to a popup window and waits until the user acknowledges it.
+ * If multiple arguments are specified, how they are displayed depends on the implementation.
+ * Normally, they will probably be displayed separated by newlines.
+ * At present, this function behaves exactly the same as <a href="#alert">alert</a>, but it was newly supported since VCSSL 3.4 for outputting messages without a warning intention.
+ * By distinguishing it from alert, it becomes clear in code whether the displayed message is intended as a warning or as a normal message.
+ * In the future, the display icon on the window and so on may become different from alert.
+ * 
+ * @param ... The contents of the message as variable-length arguments of arbitrary types.
  */
 public macro popup(...){
 	___alert(...);
@@ -306,6 +687,7 @@ public macro popup(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * popup 関数と同じものです。
  * この関数は、data.Stack ライブラリの pop 関数と同一名称であったため、
  * どちらを呼び出しているかをコード上でわかりやすくしたい場合のため、後に同機能の popup 関数が追加されました。
@@ -313,6 +695,15 @@ public macro popup(...){
  * この関数とシグネチャが競合する可能性は、少なくとも現時点ではありません。
  * この関数は互換目的でサポートされており、今後も引き続き使用できますが、
  * 混乱をなるべく避けるため、特に事情がなければ今後は popup 関数を優先的に使用する事が推奨されます。
+ *
+ * !--- locale=En-US ---
+ * Equivalent to the popup function.
+ * This function had the same name as the pop function of the data.Stack library,
+ * so the popup function with the same behavior was added later for cases where it is desirable to make it easier to see in code which one is being called.
+ * Note that the pop function of the Stack library has type parameters, and in current VCSSL those type parameters cannot be omitted,
+ * so there is at least currently no possibility of a signature conflict with this function.
+ * This function is supported for compatibility and can continue to be used,
+ * but to avoid confusion as much as possible, it is recommended to prefer popup unless there is a special reason not to.
  */
 public macro pop(...){
 	___alert(...);
@@ -320,12 +711,21 @@ public macro pop(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * メッセージを出力し、ユーザーに 了承 / 拒否 の二択を提示します。
  * 引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。
  * 恐らく通常は、改行区切りで出力されます。
  * 
  * @param ... (任意型、可変長引数)メッセージの内容
  * @return (bool)ユーザーに了承されれば true, 拒否されれば false
+ *
+ * !--- locale=En-US ---
+ * Outputs a message and presents the user with the two choices of acceptance or rejection.
+ * If multiple arguments are specified, how they are displayed depends on the implementation.
+ * Normally, they will probably be displayed separated by newlines.
+ * 
+ * @param ... The contents of the message as variable-length arguments of arbitrary types.
+ * @return Returns true if the user accepts, or false if the user rejects.
  */
 public macro confirm(...){
 	___confirm(...);
@@ -333,30 +733,51 @@ public macro confirm(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ユーザーにファイルを選択画面を提示し、選択されるまでプログラムの実行を待機します。
  * 
  * @return 選択されたファイルのパス
+ *
+ * !--- locale=En-US ---
+ * Presents the user with a file selection dialog and waits until a file is selected.
+ * 
+ * @return The path of the selected file.
  */
 public string[] choose(){
 	return ___choose();
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ユーザーにファイルを選択画面を提示し、選択されるまでプログラムの実行を待機します。
  * 
  * @param message ファイル選択画面のメッセージ
  * @return 選択されたファイルのパス
+ *
+ * !--- locale=En-US ---
+ * Presents the user with a file selection dialog and waits until a file is selected.
+ * 
+ * @param message The message of the file selection dialog.
+ * @return The path of the selected file.
  */
 public string[] choose(string message){
 	return ___choose(message);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ユーザーにファイルを選択画面を提示し、選択されるまでプログラムの実行を待機します。
  * 
  * @param message ファイル選択画面のメッセージ
  * @param directory ファイル選択画面が開かれた時の表示ディレクトリ
  * @return 選択されたファイルのパス
+ *
+ * !--- locale=En-US ---
+ * Presents the user with a file selection dialog and waits until a file is selected.
+ * 
+ * @param message The message of the file selection dialog.
+ * @param directory The displayed directory when the file selection dialog is opened.
+ * @return The path of the selected file.
  */
 public string[] choose(string message, string directory){
 	return ___choose(message, directory);
@@ -364,8 +785,13 @@ public string[] choose(string message, string directory){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ビープ音を鳴らします。ただし、実際に鳴らせるかどうかは環境に依存します。
  * 場合によっては、ビープ音でない音（オペレーティングシステムの警告音など）が鳴る事もあります。
+ *
+ * !--- locale=En-US ---
+ * Sounds a beep. However, whether it can actually be sounded depends on the environment.
+ * In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.
  */
 public void beep(){
 	___beep(1);
@@ -373,21 +799,36 @@ public void beep(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ビープ音を鳴らします。ただし、実際に鳴らせるかどうかは環境に依存します。
  * 場合によっては、ビープ音でない音（オペレーティングシステムの警告音など）が鳴る事もあります。
  * 
  * @param repeat 鳴らす回数
+ *
+ * !--- locale=En-US ---
+ * Sounds a beep. However, whether it can actually be sounded depends on the environment.
+ * In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.
+ * 
+ * @param repeat The number of times to sound it.
  */
 public void beep(int repeat){
 	___beep(repeat);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ビープ音を鳴らします。ただし、実際に鳴らせるかどうかは環境に依存します。
  * 場合によっては、ビープ音でない音（オペレーティングシステムの警告音など）が鳴る事もあります。
  * 
  * @param repeat 鳴らす回数
  * @param wait 鳴らす間隔(ミリ秒)
+ *
+ * !--- locale=En-US ---
+ * Sounds a beep. However, whether it can actually be sounded depends on the environment.
+ * In some cases, a sound other than a beep, such as an operating-system warning sound, may be played.
+ * 
+ * @param repeat The number of times to sound it.
+ * @param wait The interval between beeps in milliseconds.
  */
 public void beep(int repeat, int wait){
 	___beep(repeat, wait);
@@ -395,27 +836,45 @@ public void beep(int repeat, int wait){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * コンソールの内容をクリアします。ただし、この関数の挙動は処理系依存です。
  * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
  * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
+ *
+ * !--- locale=En-US ---
+ * Clears the contents of the console. However, the behavior of this function depends on the implementation.
+ * For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.
+ * However, in an implementation based only on standard input and output without a console window, it will probably do nothing.
  */
 public void clear(){
 	___clear();
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * コンソールを非表示にします。ただし、この関数の挙動は処理系依存です。
  * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
  * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
+ *
+ * !--- locale=En-US ---
+ * Hides the console. However, the behavior of this function depends on the implementation.
+ * For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.
+ * However, in an implementation based only on standard input and output without a console window, it will probably do nothing.
  */
 public void hide(){
 	___hide();
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * コンソールが非表示にされている場合、表示します。ただし、この関数の挙動は処理系依存です。
  * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
  * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
+ *
+ * !--- locale=En-US ---
+ * Shows the console if it has been hidden. However, the behavior of this function depends on the implementation.
+ * For example, when console contents are displayed in a window attached to the implementation, the result will probably be as expected.
+ * However, in an implementation based only on standard input and output without a console window, it will probably do nothing.
  */
 public void show(){
 	___show();
@@ -426,9 +885,15 @@ public void show(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プログラム実行開始からの経過時間を、ミリ秒単位で返します。
  * 
  * @return プログラム実行開始からの経過時間（ミリ秒）
+ *
+ * !--- locale=En-US ---
+ * Returns the elapsed time since the start of program execution, in milliseconds.
+ * 
+ * @return The elapsed time since the start of program execution, in milliseconds.
  */
 int time(){
   return SYSTEM_PROCESS_CLOCK_millisecond();
@@ -436,9 +901,15 @@ int time(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プログラムの実行を一時停止します。
  * 
  * @param milliSecond 一時停止する時間(ミリ秒)
+ *
+ * !--- locale=En-US ---
+ * Suspends execution of the program temporarily.
+ * 
+ * @param milliSecond The time to suspend, in milliseconds.
  */
 public macro sleep(int milliSecond){
 	___sleep(milliSecond);
@@ -448,18 +919,28 @@ public macro sleep(int milliSecond){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * プログラムの実行を終了します。
  * なお、この関数は、処理系にプログラムの終了をリクエストするものであり、必ずしも即時的に実行が終了される事が保証されるものではありません。
  * この関数をコールするには、全てのループや分岐を抜けた後のプログラム最終行など、処理系がアイドリング状態となっているタイミングが理想的です。
  * 処理系が高速に処理を行っているタイミングでこの関数をコールすると、強制終了に近い状態となります。
  * 詳細は処理系の実装や最適化の方針などに依存しますが、処理系は、この関数がコールされた時点で、即時的に中断できないような一連の演算処理を行っている最中かもしれません。
  * その場合はタイムラグが生じ、コール後も少しの間、実行が継続される場合があります。
+ *
+ * !--- locale=En-US ---
+ * Ends execution of the program.
+ * Note that this function requests termination of the program to the implementation, and it does not necessarily guarantee that execution will end immediately.
+ * The ideal timing for calling this function is when the implementation is in an idle state, such as at the final line of the program after leaving all loops and branches.
+ * If this function is called while the implementation is performing high-speed processing, it can become close to a forced termination.
+ * Details depend on the implementation and its optimization policy, but when this function is called, the implementation may be in the middle of a sequence of operations that cannot be interrupted immediately.
+ * In that case, a time lag may occur and execution may continue for a short while even after the call.
  */
 public void exit(){
 	___exit();
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 終了ステータスコードを指定して、プログラムの実行を終了します。
  * なお、この関数は、処理系にプログラムの終了をリクエストするものであり、必ずしも即時的に実行が終了される事が保証されるものではありません。
  * この関数をコールするには、全てのループや分岐を抜けた後のプログラム最終行など、処理系がアイドリング状態となっているタイミングが理想的です。
@@ -468,16 +949,33 @@ public void exit(){
  * その場合はタイムラグが生じ、コール後も少しの間、実行が継続される場合があります。
  * 
  * @param code 終了ステータスコード
+ *
+ * !--- locale=En-US ---
+ * Ends execution of the program with a specified exit status code.
+ * Note that this function requests termination of the program to the implementation, and it does not necessarily guarantee that execution will end immediately.
+ * The ideal timing for calling this function is when the implementation is in an idle state, such as at the final line of the program after leaving all loops and branches.
+ * If this function is called while the implementation is performing high-speed processing, it can become close to a forced termination.
+ * Details depend on the implementation and its optimization policy, but when this function is called, the implementation may be in the middle of a sequence of operations that cannot be interrupted immediately.
+ * In that case, a time lag may occur and execution may continue for a short while even after the call.
+ * 
+ * @param code The exit status code.
  */
 public void exit(int code){
 	___exit(code);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 処理系をリセットし、別のプログラムを実行します。
  * 
  * @param programName プログラム名またはパス
  * @param args main関数に渡す引数
+ *
+ * !--- locale=En-US ---
+ * Resets the implementation and executes another program.
+ * 
+ * @param programName The program name or path.
+ * @param args The arguments passed to the main function.
  */
 public void reset(string programName, string args[]){
 	___reset(programName, args);
@@ -485,11 +983,19 @@ public void reset(string programName, string args[]){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * エラーメッセージを出力します。
  * エラーメッセージ出力後、プログラムの実行が終了されるか、継続されるかは、処理系に依存します。
  * 確実に終了させたい場合は、続けて <a href="#exit">exit</a> をコールしてください。
  * 
  * @param ... （任意型、可変長引数）エラーメッセージ
+ *
+ * !--- locale=En-US ---
+ * Outputs an error message.
+ * After outputting the error message, whether program execution ends or continues depends on the implementation.
+ * If you want to ensure termination, call <a href="#exit">exit</a> afterward.
+ * 
+ * @param ... The error message as variable-length arguments of arbitrary types.
  */
 public macro error(...){
 	___error(...);
@@ -497,10 +1003,17 @@ public macro error(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 式の値を評価し、真であれば何も行わず、偽であればエラーメッセージを出力します。
  * プログラムの実行は恐らく終了されます。この関数はテストに使用します。
  * 
  * @param expression 評価対象の式
+ *
+ * !--- locale=En-US ---
+ * Evaluates the value of an expression, does nothing if it is true, and outputs an error message if it is false.
+ * Program execution will probably be terminated. This function is used for testing.
+ * 
+ * @param expression The expression to be evaluated.
  */
 public macro assert(bool expectedCondition){
 	___assert(expectedCondition);
@@ -511,12 +1024,21 @@ public macro assert(bool expectedCondition){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * オペレーティングシステムのコマンド、または外部プログラムを、別プロセスで非同期で実行します。
  * 呼び出し元プログラムの実行は、処理の完了を待機しません。生成したプロセスと並列的に、実行を継続します。
  * 処理の実行を待機したり、標準入出力を制御したい場合は、<a href="Process.html">Process</a> ライブラリを使用してください。
  * 
  * @param (string)コマンドや外部プログラムの絶対パス, (任意型)引数1, (任意型)引数2, ...
  * @return (int)生成したプロセスの識別番号(プロセスID)
+ *
+ * !--- locale=En-US ---
+ * Executes an operating-system command or an external program asynchronously in another process.
+ * Execution of the calling program does not wait for completion of the process. It continues in parallel with the created process.
+ * If you want to wait for execution to finish or control standard input and output, use the <a href="Process.html">Process</a> library.
+ * 
+ * @param The absolute path of the command or external program as a string, followed by argument 1, argument 2, and so on as arbitrary types.
+ * @return The identifier of the created process, that is, the process ID.
  */
 public macro exec(...){
 	___exec(...);
@@ -524,11 +1046,19 @@ public macro exec(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * オペレーティングシステムのコマンド、または外部プログラムを、同期実行します。
  * 処理が完了するまで、呼び出し元プログラムの実行は待機します。
  * 
  * @param (string)コマンドや外部プログラムの絶対パス, (任意型)引数1, (任意型)引数2, ...
  * @return (int)実行したコマンドや外部プログラムの終了ステータスコード
+ *
+ * !--- locale=En-US ---
+ * Executes an operating-system command or an external program synchronously.
+ * Execution of the calling program waits until the process completes.
+ * 
+ * @param The absolute path of the command or external program as a string, followed by argument 1, argument 2, and so on as arbitrary types.
+ * @return The exit status code of the executed command or external program.
  */
 public macro system(...){
 	___system(...);
@@ -539,10 +1069,17 @@ public macro system(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 配列の要素数を変更します。
  * 変更前後で、同じインデックスの要素は、同じ値に保たれます。
  * 
  * @param (任意型)配列, (int)左端次元の要素数, (int)次の次元の要素数, ..., (int)右端次元の要素数
+ *
+ * !--- locale=En-US ---
+ * Changes the number of elements of an array.
+ * Elements at the same indices keep the same values before and after the change.
+ * 
+ * @param The array as an arbitrary type, followed by the number of elements of the leftmost dimension, the next dimension, and so on up to the rightmost dimension.
  */
 public macro alloc(...) {
 	SYSTEM_PROCESS_MMU_alloc(...);
@@ -550,9 +1087,15 @@ public macro alloc(...) {
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 配列の全次元の要素数を 0 にします。
  * 
  * @param (任意型)配列
+ *
+ * !--- locale=En-US ---
+ * Sets the number of elements of all dimensions of an array to 0.
+ * 
+ * @param The array as an arbitrary type.
  */
 public macro free(...) {
 	SYSTEM_PROCESS_MMU_free(...);
@@ -563,10 +1106,17 @@ public macro free(...) {
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルが存在するか確認します。
  * 
  * @param filePath ファイル名またはパス
  * @return ファイルが存在すれば true, 存在しなければ false
+ *
+ * !--- locale=En-US ---
+ * Checks whether a file exists.
+ * 
+ * @param filePath The file name or path.
+ * @return Returns true if the file exists, or false otherwise.
  */
 public bool exists(string filePath){
 	return ___exists(filePath);
@@ -574,9 +1124,15 @@ public bool exists(string filePath){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ディレクトリ（フォルダ）を新規生成します。ディレクトリが既に存在した場合は、何もしません。
  * 
  * @param directoryPath ディレクトリ名またはパス
+ *
+ * !--- locale=En-US ---
+ * Creates a new directory, that is, a folder. If the directory already exists, nothing is done.
+ * 
+ * @param directoryPath The directory name or path.
  */
 public void mkdir(string directoryPath){
 	___mkdir(directoryPath);
@@ -584,20 +1140,34 @@ public void mkdir(string directoryPath){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ファイルがディレクトリかどうかを確認します。
  * 
  * @param filePath 確認対象ファイルのファイル名またはパス
  * @return ディレクトリであれば true, そうでなければ false
+ *
+ * !--- locale=En-US ---
+ * Checks whether a file is a directory.
+ * 
+ * @param filePath The file name or path of the file to be checked.
+ * @return Returns true if it is a directory, or false otherwise.
  */
 public bool isdir(string filePath){
 	return ___isdir(filePath);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ディレクトリ内のファイル名一覧を返します。
  * 
  * @param directoryPath ディレクトリ名またはパス
  * @return ディレクトリ内のファイル名一覧
+ *
+ * !--- locale=En-US ---
+ * Returns the list of file names in a directory.
+ * 
+ * @param directoryPath The directory name or path.
+ * @return The list of file names in the directory.
  */
 string[] listdir(string directoryPath){
   return SYSTEM_PROCESS_DRIVER_FILE_getFileList( directoryPath );
@@ -624,11 +1194,19 @@ public void move(string fromPath. string toPath) {
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 配列の次元数を返します。
  * 例えば配列 a[11][28][32] に対して、rank(a) は 3 です。
  * 
  * @param ... (任意型)次元数を知りたい配列
  * @return (int)配列の次元数
+ *
+ * !--- locale=En-US ---
+ * Returns the number of dimensions of an array.
+ * For example, for an array a[11][28][32], rank(a) is 3.
+ * 
+ * @param ... The array whose number of dimensions is to be obtained, as variable-length arguments of arbitrary types.
+ * @return The number of dimensions of the array.
  */
 public macro rank(...){
 	___rank(...);
@@ -636,11 +1214,19 @@ public macro rank(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 配列の要素数を返します。第二引数には、要素数を知りたい次元を、左から 0, 1, 2, ... と数えたインデックスを指定します。
  * 例えば配列 a[11][28][32] に対して、length(a, 0) は 11 であり、length(a, 1) は 28 であり、 length(a, 2) は 32 です。
  * 
  * @param ... (任意型)要素数を知りたい配列, (int)次元インデックス
  * @return (int)配列の要素数
+ *
+ * !--- locale=En-US ---
+ * Returns the number of elements of an array. The second argument specifies the dimension whose element count is to be obtained, as an index counted from the left as 0, 1, 2, and so on.
+ * For example, for an array a[11][28][32], length(a, 0) is 11, length(a, 1) is 28, and length(a, 2) is 32.
+ * 
+ * @param ... The array whose element count is to be obtained and the dimension index, as variable-length arguments.
+ * @return The number of elements of the array.
  */
 public macro length(...){
 	___length(...);
@@ -648,10 +1234,17 @@ public macro length(...){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * float 型の変数または値が、NaN (非数) かどうか判定します。
  * 
  * @param value 判定したい変数または値
  * @return NaN であれば true, そうでなければ false
+ *
+ * !--- locale=En-US ---
+ * Determines whether a float variable or value is NaN, that is, not a number.
+ * 
+ * @param value The variable or value to be checked.
+ * @return Returns true if it is NaN, or false otherwise.
  */
 public bool nan( float value ){
   return SYSTEM_PROCESS_FPU_nanF( value );
@@ -659,10 +1252,17 @@ public bool nan( float value ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * float 型の変数または値が、Inf (無限大) かどうか判定します。
  * 
  * @param value 判定したい変数または値
  * @return Inf であれば true, そうでなければ false
+ *
+ * !--- locale=En-US ---
+ * Determines whether a float variable or value is Inf, that is, infinity.
+ * 
+ * @param value The variable or value to be checked.
+ * @return Returns true if it is Inf, or false otherwise.
  */
 public bool inf( float value ){
   return SYSTEM_PROCESS_FPU_infF( value );
@@ -672,30 +1272,51 @@ public bool inf( float value ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * int 型の変数または値を、2進数で表した文字列を返します。先頭には 0b のプレフィックスが付加されます。
  * 
  * @param number 2進数で表したい変数または値
  * @return 2進数で表した文字列
+ *
+ * !--- locale=En-US ---
+ * Returns a string representing an int variable or value in binary. The prefix 0b is added at the beginning.
+ * 
+ * @param number The variable or value to be represented in binary.
+ * @return The string representing it in binary.
  */
 public string bin( int number ){
   return SYSTEM_PROCESS_FPU_binary( number );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * int 型の変数または値を、8進数で表した文字列を返します。先頭には 0 のプレフィックスが付加されます。
  * 
  * @param number 8進数で表したい変数または値
  * @return 8進数で表した文字列
+ *
+ * !--- locale=En-US ---
+ * Returns a string representing an int variable or value in octal. The prefix 0 is added at the beginning.
+ * 
+ * @param number The variable or value to be represented in octal.
+ * @return The string representing it in octal.
  */
 public string oct( int number ){
   return SYSTEM_PROCESS_FPU_octal( number );
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * int 型の変数または値を、16進数で表した文字列を返します。先頭には 0x のプレフィックスが付加されます。
  * 
  * @param number 16進数で表したい変数または値
  * @return 16進数で表した文字列
+ *
+ * !--- locale=En-US ---
+ * Returns a string representing an int variable or value in hexadecimal. The prefix 0x is added at the beginning.
+ * 
+ * @param number The variable or value to be represented in hexadecimal.
+ * @return The string representing it in hexadecimal.
  */
 public string hex( int number ){
   return SYSTEM_PROCESS_FPU_hex( number );
@@ -703,18 +1324,30 @@ public string hex( int number ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * varfloat 型または varcomplex 型の演算桁数を指定します。
  * 
  * @param arg 桁数
+ *
+ * !--- locale=En-US ---
+ * Specifies the number of operation digits for the varfloat type or the varcomplex type.
+ * 
+ * @param arg The number of digits.
  */
 public macro digit(arg){
 	___digit(arg);
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * varfloat 型または varcomplex 型の演算桁数を取得します。
  * 
  * @return 桁数
+ *
+ * !--- locale=En-US ---
+ * Gets the number of operation digits for the varfloat type or the varcomplex type.
+ * 
+ * @return The number of digits.
  */
 public macro digit(){
 	___digit();
@@ -725,6 +1358,8 @@ public macro digit(){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * float型の値を、指定されたモードで、指定された桁数に丸めます。
  * ただし、float型の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。
  * 浮動小数点数の2進数と10進数の変換は、一般に有限の桁に収まらないケースがあり、微小な誤差が生じ得ます。
@@ -732,11 +1367,26 @@ public macro digit(){
  * 従って、対象値が丸め処理の切り上げ/切り下げの境界に非常に近い場合、一見すると奇妙な（しかし内部的には正しい処理の）結果となる場合があります。
  * なお、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した結果と、この関数での丸め結果との対応が一見奇妙に思える場合もありますが、
  * それは、前者においても内部で暗黙の丸め処理が行われるためです。もし、前者と同じ結果から、さらに追加で意図通り丸めた値が欲しい場合は、引数 value を string に変換した上で渡してください。
- * 
+ *
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
  * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
  * @return 丸められた値
+ *
+ * !--- locale=En-US ---
+ *
+ * Rounds a float value to the specified number of digits in the specified mode.
+ * Note that float values are stored internally as binary floating-point data, while rounding is performed on a decimal basis, so care is required regarding binary-decimal conversion errors.
+ * In general, conversions between binary and decimal floating-point numbers may not fit into a finite number of digits, and small errors may occur.
+ * Therefore, the internal data of a float value may differ slightly from the value you imagine in decimal notation.
+ * Accordingly, if the target value is very close to the rounding boundary, the result may appear strange at first glance, although it is internally correct.
+ * Also, the relationship between the result of this function and the result obtained when converting a float value to a string or displaying it with the <a href="#print">print</a> function may sometimes seem strange,
+ * but this is because implicit rounding is also performed internally in the latter case. If you want to apply additional rounding to that displayed result, convert the argument value to string before passing it.
+ *
+ * @param value The value to be rounded.
+ * @param digit The number of digits after rounding.
+ * @param mode The rounding mode ( <a href="#UP_SIGNIF">UP_SIGNIF</a>, <a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>, <a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>, <a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>, <a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>, <a href="#DOWN">DOWN</a>, <a href="#HALF_UP">HALF_UP</a>, <a href="#HALF_DOWN">HALF_DOWN</a>, <a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ).
+ * @return The rounded value.
  */
 public float round(float value, int digit, int mode) {
 	return ___fround(value, digit, mode);
@@ -744,15 +1394,29 @@ public float round(float value, int digit, int mode) {
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * string 型の値の内容を数値と見なして、指定されたモードで、指定された桁数に丸めます。
  * この関数は、float 値を文字列に変換したり <a href="#print">print</a> 関数で表示した際と同じ内容（内部で暗黙の丸め処理が行われます）を基準として、
  * さらに意図通り丸めたい場合などに使用します。float 型の値を直接丸める場合と比べて、2進/10進変換誤差の影響が少し異なる場合があります。
  * 詳細は、引数 value が float 型の場合の説明をご参照ください。
- * 
+ *
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
  * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
  * @return 丸められた値
+ *
+ * !--- locale=En-US ---
+ *
+ * Interprets the contents of a string value as a number, and rounds it to the specified number of digits in the specified mode.
+ * This function is used when you want to apply additional rounding based on the same content that is obtained when a float value is converted to a string or displayed by the <a href="#print">print</a> function,
+ * where implicit rounding is performed internally. Compared with rounding a float value directly, the effect of binary-decimal conversion errors may differ slightly.
+ * For details, refer to the description for the case where the argument value is of float type.
+ *
+ * @param value The value to be rounded.
+ * @param digit The number of digits after rounding.
+ * @param mode The rounding mode ( <a href="#UP_SIGNIF">UP_SIGNIF</a>, <a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>, <a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>, <a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>, <a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>, <a href="#DOWN">DOWN</a>, <a href="#HALF_UP">HALF_UP</a>, <a href="#HALF_DOWN">HALF_DOWN</a>, <a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ).
+ * @return The rounded value.
  */
 public string round(string value, int digit, int mode) {
 	return ___sround(value, digit, mode);
@@ -760,14 +1424,27 @@ public string round(string value, int digit, int mode) {
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * complex型の値を、指定されたモードで、指定された桁数に丸めます。
  * ただし、complex 型の実部と虚部の値は、内部では2進数の浮動小数点数のデータとして保持されており、丸め処理は10進数基準で行われるため、2進/10進変換誤差についての留意が必要です。
  * 詳細は、引数 value が float 型の場合の説明をご参照ください。
- * 
+ *
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
  * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
  * @return 丸められた値
+ *
+ * !--- locale=En-US ---
+ *
+ * Rounds a complex value to the specified number of digits in the specified mode.
+ * Note that the real and imaginary parts of a complex value are stored internally as binary floating-point data, while rounding is performed on a decimal basis, so care is required regarding binary-decimal conversion errors.
+ * For details, refer to the description for the case where the argument value is of float type.
+ *
+ * @param value The value to be rounded.
+ * @param digit The number of digits after rounding.
+ * @param mode The rounding mode ( <a href="#UP_SIGNIF">UP_SIGNIF</a>, <a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>, <a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>, <a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>, <a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>, <a href="#DOWN">DOWN</a>, <a href="#HALF_UP">HALF_UP</a>, <a href="#HALF_DOWN">HALF_DOWN</a>, <a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ).
+ * @return The rounded value.
  */
 public complex round(complex value, int digit, int mode) {
 	float realValue = SYSTEM_PROCESS_SFU_complex_real(value);
@@ -780,12 +1457,23 @@ public complex round(complex value, int digit, int mode) {
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * varfloat型の値を、指定されたモードで、指定された桁数に丸めます。
- * 
+ *
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
  * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>、<a href="#DOWN">DOWN</a>、<a href="#HALF_UP">HALF_UP</a>、<a href="#HALF_DOWN">HALF_DOWN</a>、<a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> )
  * @return 丸められた値
+ *
+ * !--- locale=En-US ---
+ *
+ * Rounds a varfloat value to the specified number of digits in the specified mode.
+ *
+ * @param value The value to be rounded.
+ * @param digit The number of digits after rounding.
+ * @param mode The rounding mode ( <a href="#UP_SIGNIF">UP_SIGNIF</a>, <a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>, <a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>, <a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>, <a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a>, <a href="#UP">UP</a>, <a href="#DOWN">DOWN</a>, <a href="#HALF_UP">HALF_UP</a>, <a href="#HALF_DOWN">HALF_DOWN</a>, <a href="#HALF_TO_EVEN">HALF_TO_EVEN</a> ).
+ * @return The rounded value.
  */
 public varfloat round(varfloat value, varint digit, int mode) {
 	return ___vfround(value, digit, mode);
@@ -793,11 +1481,21 @@ public varfloat round(varfloat value, varint digit, int mode) {
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * varcomplex型の値を、指定されたモードで、指定された桁数に丸めます。
- * 
+ *
  * @param value 丸めたい値
  * @param digit 丸めた後の桁数
  * @return 丸められた値
+ *
+ * !--- locale=En-US ---
+ *
+ * Rounds a varcomplex value to the specified number of digits in the specified mode.
+ *
+ * @param value The value to be rounded.
+ * @param digit The number of digits after rounding.
+ * @return The rounded value.
  */
 public varcomplex round(varcomplex value, varint digit, int mode) {
 	varfloat realValue = SYSTEM_PROCESS_SFU_complex_real(value);
@@ -810,13 +1508,25 @@ public varcomplex round(varcomplex value, varint digit, int mode) {
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * varfloat 型および varcomplex 型の演算における、デフォルトの丸めモードを指定します。
  * なお、varfloat 型および varcomplex 型の丸め制御と、この関数の実装は、現在は試験的に導入されているものです。
  * 現時点では、あらゆる演算において指定通りに丸め制御が行われる事は、必ずしも保証されません。
  * 使用する際には、事前に検証を行って下さい。
  * varfloat 型および varcomplex 型の丸め制御、及びこの round 関数の実装は、試験導入期間を経た上で、VCSSL 4 以降での正式導入を予定しています。
- * 
+ *
  * @param mode 丸めモード ( <a href="#UP_SIGNIF">UP_SIGNIF</a>、<a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>、<a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>、<a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>、<a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a> )
+ *
+ * !--- locale=En-US ---
+ *
+ * Specifies the default rounding mode for calculations on varfloat and varcomplex values.
+ * Note that rounding control for varfloat and varcomplex values, and the implementation of this function, are currently introduced on an experimental basis.
+ * At present, it is not always guaranteed that rounding control will be performed exactly as specified for all operations.
+ * Be sure to verify the behavior in advance before using it.
+ * Rounding control for varfloat and varcomplex values, and the implementation of this round function, are planned to be officially introduced in VCSSL 4 or later after this trial period.
+ *
+ * @param mode The rounding mode ( <a href="#UP_SIGNIF">UP_SIGNIF</a>, <a href="#DOWN_SIGNIF">DOWN_SIGNIF</a>, <a href="#HALF_UP_SIGNIF">HALF_UP_SIGNIF</a>, <a href="#HALF_DOWN_SIGNIF">HALF_DOWN_SIGNIF</a>, <a href="#HALF_TO_EVEN_SIGNIF">HALF_TO_EVEN_SIGNIF</a> ).
  */
 public void round(int mode){
 	if (mode == UP_SIGNIF || mode == DOWN_SIGNIF || mode == HALF_UP_SIGNIF || mode == HALF_DOWN_SIGNIF || mode == HALF_TO_EVEN_SIGNIF) {
@@ -828,40 +1538,76 @@ public void round(int mode){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * complex 型の実部を返します。
- * 
+ *
  * @param value 実部を取得したい変数または値
  * @return 実部
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the real part of a complex value.
+ *
+ * @param value The variable or value whose real part is to be obtained.
+ * @return The real part.
  */
 public float re( complex value ){
   return SYSTEM_PROCESS_SFU_complex_real( value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * complex 型の虚部を返します。
- * 
+ *
  * @param value 虚部を取得したい変数または値
  * @return 虚部
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the imaginary part of a complex value.
+ *
+ * @param value The variable or value whose imaginary part is to be obtained.
+ * @return The imaginary part.
  */
 public float im( complex value ){
   return SYSTEM_PROCESS_SFU_complex_imag( value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * complex 型の実部を設定します。
- * 
+ *
  * @param value 実部を設定したい変数または値
  * @param realValue 実部の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Sets the real part of a complex value.
+ *
+ * @param value The variable or value whose real part is to be set.
+ * @param realValue The value of the real part.
  */
 public void re( complex value, float realValue ){
   SYSTEM_PROCESS_SFU_complex_realSet( value, realValue );
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * complex 型の虚部を設定します。
- * 
+ *
  * @param value 虚部を設定したい変数または値
  * @param imagValue 虚部の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Sets the imaginary part of a complex value.
+ *
+ * @param value The variable or value whose imaginary part is to be set.
+ * @param imagValue The value of the imaginary part.
  */
 public void im( complex value, float imagValue ){
   SYSTEM_PROCESS_SFU_complex_imagSet( value, imagValue );
@@ -869,40 +1615,76 @@ public void im( complex value, float imagValue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * varcomplex 型の実部を返します。
- * 
+ *
  * @param value 実部を取得したい変数または値
  * @return 実部
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the real part of a varcomplex value.
+ *
+ * @param value The variable or value whose real part is to be obtained.
+ * @return The real part.
  */
 public varfloat re( varcomplex value ){
   return SYSTEM_PROCESS_SFU_complex_real( value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * varcomplex 型の虚部を返します。
- * 
+ *
  * @param value 虚部を取得したい変数または値
  * @return 虚部
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the imaginary part of a varcomplex value.
+ *
+ * @param value The variable or value whose imaginary part is to be obtained.
+ * @return The imaginary part.
  */
 public varfloat im( varcomplex value ){
   return SYSTEM_PROCESS_SFU_complex_imag( value );
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * varcomplex 型の実部を設定します。
- * 
+ *
  * @param value 実部を設定したい変数または値
  * @param realValue 実部の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Sets the real part of a varcomplex value.
+ *
+ * @param value The variable or value whose real part is to be set.
+ * @param realValue The value of the real part.
  */
 public void re( varcomplex value, varfloat realValue ){
   SYSTEM_PROCESS_SFU_complex_realSet( value, realValue );
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * varcomplex 型の虚部を設定します。
- * 
+ *
  * @param value 虚部を設定したい変数または値
  * @param imagValue 虚部の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Sets the imaginary part of a varcomplex value.
+ *
+ * @param value The variable or value whose imaginary part is to be set.
+ * @param imagValue The value of the imaginary part.
  */
 public void im( varcomplex value, varfloat imagValue ){
   SYSTEM_PROCESS_SFU_complex_imagSet( value, imagValue );
@@ -921,11 +1703,21 @@ public void im( varcomplex value, varfloat imagValue ){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルが普通に読み書き可能なものか確認します。
  * ただし、存在しないファイルを新規生成する場合もあるため、存在確認は行いません。
- * 
+ *
  * @param filePath ファイル名またはパス
- * @param 引数のファイルパスがそのまま返されます
+ * @return 引数のファイルパスがそのまま返されます
+ *
+ * !--- locale=En-US ---
+ *
+ * Checks whether the file can be read from or written to normally.
+ * Note that existence is not checked here, because a nonexistent file may be created as a new file.
+ *
+ * @param filePath The file name or path.
+ * @return The specified file path itself.
  */
 private string checkFilePath(string filePath) {
 	return SYSTEM_LIBRARY_INTERNAL_CHECK_FILE_PATH(filePath);
@@ -943,21 +1735,40 @@ string SYSTEM_LIBRARY_INTERNAL_CHECK_FILE_PATH(string filePath) {
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 簡易ファイル出力関数です。string 変数の保持する内容を、ファイルに保存します。
- * 
+ *
  * @param filePath ファイル名またはパス
  * @param content ファイルに保存する内容
+ *
+ * !--- locale=En-US ---
+ *
+ * A simple file output function. Saves the contents held by a string variable to a file.
+ *
+ * @param filePath The file name or path.
+ * @param content The content to be saved to the file.
  */
 public macro save(string filePath, content){
 	___save(SYSTEM_LIBRARY_INTERNAL_CHECK_FILE_PATH(filePath), ((string)content));
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 簡易ファイル出力関数です。現在コンソールに表示されている内容を、ファイルに保存します。ただし、この関数の挙動は処理系依存です。
  * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
  * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も行われません。
- * 
+ *
  * @param filePath ファイル名またはパス
+ *
+ * !--- locale=En-US ---
+ *
+ * A simple file output function. Saves the contents currently displayed on the console to a file. However, the behavior of this function depends on the implementation.
+ * For example, if the console contents are displayed in a window provided by the implementation, you will probably get the expected result.
+ * However, in a standard-input/output-based implementation that has no console window, this function will probably do nothing.
+ *
+ * @param filePath The file name or path.
  */
 public void save(string filePath){
 	checkFilePath(filePath);
@@ -967,10 +1778,19 @@ public void save(string filePath){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 簡易ファイル入力関数です。ファイルの内容を全て読み込み、そのまま文字列として返します。読み込み後、ファイルは自動的に閉じられます。
- * 
+ *
  * @param filePath ファイル名またはパス
  * @return 読み込んだ内容
+ *
+ * !--- locale=En-US ---
+ *
+ * A simple file input function. Reads the entire contents of a file and returns them as a string. The file is closed automatically after reading.
+ *
+ * @param filePath The file name or path.
+ * @return The loaded contents.
  */
 public string load(string filePath){
 	checkFilePath(filePath);
@@ -983,11 +1803,21 @@ public string load(string filePath){
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 簡易ファイル入力関数です。現在コンソールに表示されている内容を取得し、そのまま文字列として返します。ただし、この関数の挙動は処理系依存です。
  * 例えば、コンソールの内容が、処理系に付属したウィンドウに表示されるような場合においては、恐らく期待した通りの結果が得られます。
  * しかし、コンソールウィンドウを持たない、標準入出力ベースの処理系においては、恐らく何も得られません。
- * 
+ *
  * @return コンソールから取得した内容
+ *
+ * !--- locale=En-US ---
+ *
+ * A simple file input function. Obtains the contents currently displayed on the console and returns them as a string. However, the behavior of this function depends on the implementation.
+ * For example, if the console contents are displayed in a window provided by the implementation, you will probably get the expected result.
+ * However, in a standard-input/output-based implementation that has no console window, this function will probably obtain nothing.
+ *
+ * @return The contents obtained from the console.
  */
 public string load(){
 	return ___load();
@@ -998,13 +1828,25 @@ public string load(){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルを開き、固有の識別番号（ ファイルID ）を割り振って返します。
  * 引数 filePath には、通常はファイル名またはパスを指定しますが、
  * 代わりに <a href="#STDIN">STDIN</a> や <a href="#STDOUT">STDOUT</a>, <a href="#STDERR">STDERR</a> を指定して標準入出力に読み書きする事も可能です。
- * 
+ *
  * @param filePath ファイル名またはパス
  * @param mode ファイル入出力モード（ "r" または <a href="#READ">READ</a>、 "w" または <a href="#WRITE">WRITE</a>、 "a" または <a href="#APPEND">APPEND</a>、 "rtsv" または <a href="#READ">READ_TSV</a>、 "wtsv" または <a href="#WRITE">WRITE_TSV</a>、 "atsv" または <a href="#APPEND">APPEND_TSV</a>、 "rcsv" または <a href="#READ">READ_CSV</a>、 "rcsv" または <a href="#WRITE">WRITE_CSV</a>、 "acsv" または <a href="#APPEND">APPEND_CSV</a>、 "rb" または <a href="#READ">READ_BINARY</a>、 "wb" または <a href="#WRITE">WRITE_BINARY</a>、 "ab" または <a href="#APPEND">APPEND_BINARY</a> ）
  * @return ファイルID
+ *
+ * !--- locale=En-US ---
+ *
+ * Opens a file, assigns and returns a unique identifier for it, called a file ID.
+ * Normally, specify a file name or path for the argument filePath,
+ * but you can also specify <a href="#STDIN">STDIN</a>, <a href="#STDOUT">STDOUT</a>, or <a href="#STDERR">STDERR</a> to read from or write to the standard input/output streams instead.
+ *
+ * @param filePath The file name or path.
+ * @param mode The file I/O mode ( "r" or <a href="#READ">READ</a>, "w" or <a href="#WRITE">WRITE</a>, "a" or <a href="#APPEND">APPEND</a>, "rtsv" or <a href="#READ">READ_TSV</a>, "wtsv" or <a href="#WRITE">WRITE_TSV</a>, "atsv" or <a href="#APPEND">APPEND_TSV</a>, "rcsv" or <a href="#READ">READ_CSV</a>, "wcsv" or <a href="#WRITE">WRITE_CSV</a>, "acsv" or <a href="#APPEND">APPEND_CSV</a>, "rb" or <a href="#READ">READ_BINARY</a>, "wb" or <a href="#WRITE">WRITE_BINARY</a>, "ab" or <a href="#APPEND">APPEND_BINARY</a> ).
+ * @return The file ID.
  */
 public int open(string filePath, string mode){
 	checkFilePath(filePath);
@@ -1028,14 +1870,27 @@ public int open(string filePath, string mode){
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルを開き、固有の識別番号（ ファイルID ）を割り振って返します。
  * 引数 filePath には、通常はファイル名またはパスを指定しますが、
  * 代わりに <a href="#STDIN">STDIN</a> や <a href="#STDOUT">STDOUT</a>, <a href="#STDERR">STDERR</a> を指定して標準入出力に読み書きする事も可能です。
- * 
+ *
  * @param filePath ファイル名またはパス
  * @param mode ファイル入出力モード（ "r" または <a href="#READ">READ</a>、 "w" または <a href="#WRITE">WRITE</a>、 "a" または <a href="#APPEND">APPEND</a>、 "rtsv" または <a href="#READ">READ_TSV</a>、 "wtsv" または <a href="#WRITE">WRITE_TSV</a>、 "atsv" または <a href="#APPEND">APPEND_TSV</a>、 "rcsv" または <a href="#READ">READ_CSV</a>、 "rcsv" または <a href="#WRITE">WRITE_CSV</a>、 "acsv" または <a href="#APPEND">APPEND_CSV</a>、 "rb" または <a href="#READ">READ_BINARY</a>、 "wb" または <a href="#WRITE">WRITE_BINARY</a>、 "ab" または <a href="#APPEND">APPEND_BINARY</a> ）
  * @param textEncoding 文字コード（ "Shift_JIS"、 "UTF-8"、 "EUC-JP" ）
  * @return ファイルID
+ *
+ * !--- locale=En-US ---
+ *
+ * Opens a file, assigns and returns a unique identifier for it, called a file ID.
+ * Normally, specify a file name or path for the argument filePath,
+ * but you can also specify <a href="#STDIN">STDIN</a>, <a href="#STDOUT">STDOUT</a>, or <a href="#STDERR">STDERR</a> to read from or write to the standard input/output streams instead.
+ *
+ * @param filePath The file name or path.
+ * @param mode The file I/O mode ( "r" or <a href="#READ">READ</a>, "w" or <a href="#WRITE">WRITE</a>, "a" or <a href="#APPEND">APPEND</a>, "rtsv" or <a href="#READ">READ_TSV</a>, "wtsv" or <a href="#WRITE">WRITE_TSV</a>, "atsv" or <a href="#APPEND">APPEND_TSV</a>, "rcsv" or <a href="#READ">READ_CSV</a>, "wcsv" or <a href="#WRITE">WRITE_CSV</a>, "acsv" or <a href="#APPEND">APPEND_CSV</a>, "rb" or <a href="#READ">READ_BINARY</a>, "wb" or <a href="#WRITE">WRITE_BINARY</a>, "ab" or <a href="#APPEND">APPEND_BINARY</a> ).
+ * @param textEncoding The text encoding ( "Shift_JIS", "UTF-8", or "EUC-JP" ).
+ * @return The file ID.
  */
 public int open(string filePath, string mode, string textEncoding){
 	checkFilePath(filePath);
@@ -1064,14 +1919,26 @@ public int open(string filePath, string mode, string textEncoding){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "wtsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ *
+ * This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href="#open">open</a>( filePath, "wtsv" ). This function is supported for compatibility.
  */
 public macro openw(...) {
 	___openw(...);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "wcsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ *
+ * This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href="#open">open</a>( filePath, "wcsv" ). This function is supported for compatibility.
  */
 public macro opencsvw(...) {
 	___opencsvw(...);
@@ -1080,14 +1947,26 @@ public macro opencsvw(...) {
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "rtsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ *
+ * This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href="#open">open</a>( filePath, "rtsv" ). This function is supported for compatibility.
  */
 public macro openr(...) {
 	___openr(...);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * この関数は VCSSL 1.0 世代のものであり、<a href="#open">open</a>( filePath, "rcsv" ) と同等の機能でファイルを開きます。この関数は互換目的でサポートされています。
+ *
+ * !--- locale=En-US ---
+ *
+ * This function belongs to the VCSSL 1.0 generation, and opens a file with the same behavior as <a href="#open">open</a>( filePath, "rcsv" ). This function is supported for compatibility.
  */
 public macro opencsvr(...) {
 	___opencsvr(...);
@@ -1101,18 +1980,34 @@ public macro opencsvr(...) {
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルを閉じます。この時点で、バッファされている書き込み内容は全てフラッシュされます。
- * 
+ *
  * @param fileID ファイルID
+ *
+ * !--- locale=En-US ---
+ *
+ * Closes a file. All buffered output is flushed at that time.
+ *
+ * @param fileID The file ID.
  */
 public void close(int fileID){
 	___close(fileID);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルのバッファされている書き込み内容をフラッシュします。
- * 
+ *
  * @param fileID ファイルID
+ *
+ * !--- locale=En-US ---
+ *
+ * Flushes buffered output for a file.
+ *
+ * @param fileID The file ID.
  */
 public void flush(int fileID){
 	___flush(fileID);
@@ -1120,6 +2015,8 @@ public void flush(int fileID){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルに内容を書き込みます。書き込み内容は任意型で、書き込み時に文字列に変換されます。
  * 書き込み内容を複数指定した場合、それがどのような形で書き込まれるかは、ファイル入出力モードに依存します。
  * <dl>
@@ -1131,9 +2028,26 @@ public void flush(int fileID){
  *   <dd>書き込み内容が、カンマ文字区切りで連結されて書き込まれます。</dd>
  * </dl>
  * なおこの関数は、VCSSL2.1以前では改行されますが、2.2以降では改行されません。改行付きの機能は <a href="#writeln">writeln</a> 関数が提供します。
- * 
+ *
  * @param fileID ファイルID
  * @param ... (任意型、可変長引数)書き込み内容
+ *
+ * !--- locale=En-US ---
+ *
+ * Writes content to a file. The content may be of any type, and it is converted to a string when written.
+ * If multiple pieces of content are specified, how they are written depends on the file I/O mode.
+ * <dl>
+ *  <dt>In "w" or <a href="#WRITE">WRITE</a> mode</dt>
+ *   <dd>The written contents are concatenated as they are.</dd>
+ *  <dt>In "wtsv" or <a href="#WRITE_TSV">WRITE_TSV</a> mode</dt>
+ *   <dd>The written contents are concatenated with tab separators.</dd>
+ *  <dt>In "wcsv" or <a href="#WRITE_CSV">WRITE_CSV</a> mode</dt>
+ *   <dd>The written contents are concatenated with comma separators.</dd>
+ * </dl>
+ * Note that this function inserted a line break in VCSSL 2.1 and earlier, but does not insert one in VCSSL 2.2 and later. The behavior with a line break is provided by the <a href="#writeln">writeln</a> function.
+ *
+ * @param fileID The file ID.
+ * @param ... The content to be written (any type, variable-length arguments).
  */
 public macro write(int fileID, ...){
 	___write(fileID, ...);
@@ -1141,6 +2055,8 @@ public macro write(int fileID, ...){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルに内容を書き込み、改行します。書き込み内容は任意型で、書き込み時に文字列に変換されます。
  * 書き込み内容を複数指定した場合、それがどのような形で書き込まれるかは、ファイル入出力モードに依存します。
  * <dl>
@@ -1155,9 +2071,29 @@ public macro write(int fileID, ...){
  * もしも、<a href="#LF">LF</a> や <a href="#CR">CR</a> などの特定の改行コードを使用したい場合は、
  * この関数の代わりに <a href="#write">write</a> 関数を使用し、
  * 書き込み内容に <a href="#LF">LF</a> や <a href="#CR">CR</a> を付加して書き込んでください。
- * 
+ *
  * @param fileID ファイルID
  * @param ... (任意型、可変長引数)書き込み内容
+ *
+ * !--- locale=En-US ---
+ *
+ * Writes content to a file and then inserts a line break. The content may be of any type, and it is converted to a string when written.
+ * If multiple pieces of content are specified, how they are written depends on the file I/O mode.
+ * <dl>
+ *  <dt>In "w" or <a href="#WRITE">WRITE</a> mode</dt>
+ *   <dd>The written contents are concatenated as they are.</dd>
+ *  <dt>In "wtsv" or <a href="#WRITE_TSV">WRITE_TSV</a> mode</dt>
+ *   <dd>The written contents are concatenated with tab separators.</dd>
+ *  <dt>In "wcsv" or <a href="#WRITE_CSV">WRITE_CSV</a> mode</dt>
+ *   <dd>The written contents are concatenated with comma separators.</dd>
+ * </dl>
+ * The line break code is automatically chosen appropriately for the execution environment.
+ * If you want to use a specific line break code such as <a href="#LF">LF</a> or <a href="#CR">CR</a>,
+ * use the <a href="#write">write</a> function instead of this function,
+ * and write the content with <a href="#LF">LF</a> or <a href="#CR">CR</a> appended to it.
+ *
+ * @param fileID The file ID.
+ * @param ... The content to be written (any type, variable-length arguments).
  */
 public macro writeln(int fileID, ...){
 	___writeln(fileID, ...);
@@ -1176,6 +2112,8 @@ public macro readln(int fileID, ...){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルの内容を全て読み込みます。
  * 戻り値は string 型配列ですが、これに読み込み内容がどのように格納されるのかは、ファイル入出力モードに依存します。
  * <dl>
@@ -1189,15 +2127,36 @@ public macro readln(int fileID, ...){
  * CSV や TSV の読み込みでは、エンクロージャやデリミタの解釈は行われず、単純に区切り文字が存在する位置で区切られます。また、TSV ではタブ文字と半角空白は区別されません。
  * このあたりの挙動を、より厳密に制御したい場合は、<a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。
  * なおこの関数は、VCSSL2.1以前では行単位の読み込みでしたが、VCSSL2.2以降から全体の読み込みに変更されました。行単位の、過去と同様の機能は <a href="#readln">readln</a> 関数が提供します。
- * 
+ *
  * @param fileID ファイルID
  * @return (string[])読み込み内容
+ *
+ * !--- locale=En-US ---
+ *
+ * Reads the entire contents of a file.
+ * The return value is a string array, and how the read contents are stored in it depends on the file I/O mode.
+ * <dl>
+ *  <dt>In "r" or <a href="#READ">READ</a> mode</dt>
+ *   <dd>The entire contents of the file are returned as a string array with one element.</dd>
+ *  <dt>In "rtsv" or <a href="#READ_TSV">READ_TSV</a> mode</dt>
+ *   <dd>The contents of the file are returned in a string array separated by whitespace and line breaks. Tab characters and half-width spaces are treated as the same.</dd>
+ *  <dt>In "rcsv" or <a href="#READ_CSV">READ_CSV</a> mode</dt>
+ *   <dd>The contents of the file are returned in a string array separated by commas and line breaks.</dd>
+ * </dl>
+ * In CSV and TSV reading, enclosures and delimiters are not interpreted, and the contents are simply split at the positions where separator characters exist. Also, in TSV, tab characters and half-width spaces are not distinguished.
+ * If you want to control this behavior more strictly, use the <a href="file/TextFile.html">file.TextFile</a> library.
+ * Note that this function read data line by line in VCSSL 2.1 and earlier, but was changed in VCSSL 2.2 and later to read the entire contents. The old line-by-line behavior is provided by the <a href="#readln">readln</a> function.
+ *
+ * @param fileID The file ID.
+ * @return The loaded contents as a string array.
  */
 public string[] read(int fileID){
 	return ___read(fileID);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルから一行の内容を読み込みます。
  * 戻り値は string 型配列ですが、これに読み込み内容がどのように格納されるのかは、ファイル入出力モードに依存します。
  * <dl>
@@ -1210,29 +2169,65 @@ public string[] read(int fileID){
  * </dl>
  * なお、CSV や TSV の読み込みでは、エンクロージャやデリミタの解釈は行われず、単純に区切り文字が存在する位置で区切られます。また、TSV ではタブ文字と半角空白は区別されません。
  * このあたりの挙動を、より厳密に制御したい場合は、<a href="file/TextFile.html">file.TextFile</a> ライブラリを使用してください。
- * 
+ *
  * @param fileID ファイルID
  * @return (string[])読み込み内容
+ *
+ * !--- locale=En-US ---
+ *
+ * Reads one line of content from a file.
+ * The return value is a string array, and how the read contents are stored in it depends on the file I/O mode.
+ * <dl>
+ *  <dt>In "r" or <a href="#READ">READ</a> mode</dt>
+ *   <dd>The line contents are returned as a string array with one element.</dd>
+ *  <dt>In "rtsv" or <a href="#READ_TSV">READ_TSV</a> mode</dt>
+ *   <dd>The line contents are returned in a string array separated by whitespace. Tab characters and half-width spaces are treated as the same.</dd>
+ *  <dt>In "rcsv" or <a href="#READ_CSV">READ_CSV</a> mode</dt>
+ *   <dd>The line contents are returned in a string array separated by commas.</dd>
+ * </dl>
+ * In CSV and TSV reading, enclosures and delimiters are not interpreted, and the contents are simply split at the positions where separator characters exist. Also, in TSV, tab characters and half-width spaces are not distinguished.
+ * If you want to control this behavior more strictly, use the <a href="file/TextFile.html">file.TextFile</a> library.
+ *
+ * @param fileID The file ID.
+ * @return The loaded contents as a string array.
  */
 public string[] readln(int fileID){
 	return ___readln(fileID);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルの内容を全て読み込み、そのまま文字列として返します。
- * 
+ *
  * @param fileID ファイルID
  * @return 読み込んだ内容
+ *
+ * !--- locale=En-US ---
+ *
+ * Reads the entire contents of a file and returns them as a string.
+ *
+ * @param fileID The file ID.
+ * @return The loaded contents.
  */
 public string load(int fileID){
 	return ___load(fileID);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルから一行の内容を全て読み込み、そのまま文字列として返します。
- * 
+ *
  * @param fileID ファイルID
  * @return 読み込んだ内容
+ *
+ * !--- locale=En-US ---
+ *
+ * Reads an entire line from a file and returns it as a string.
+ *
+ * @param fileID The file ID.
+ * @return The loaded contents.
  */
 public string loadln(int fileID){
 	return ___loadln(fileID);
@@ -1240,10 +2235,19 @@ public string loadln(int fileID){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * ファイルの行数をカウントします。
- * 
+ *
  * @param fileID ファイルID
  * @return ファイル行数
+ *
+ * !--- locale=En-US ---
+ *
+ * Counts the number of lines in a file.
+ *
+ * @param fileID The file ID.
+ * @return The number of lines in the file.
  */
 public int countln(int fileID){
 	return ___countln(fileID);
@@ -1267,27 +2271,52 @@ public int countln(int fileID){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価します。レキシカルスコープで、変数や関数へのアクセスも可能です。また、代入を行う事もできます。
  * 戻り値には、式の値が string 型配列に変換されて返されます ( 式の値が非配列であった場合は、戻り値の要素数は 1 となります )。
  * string 型配列は、最も変換自由度の高い型であり、あらゆるプリミティブ型の配列と非配列に代入できます ( 非配列へは要素数が1の場合に限り可能です )。
  * 反面、繰り返し高速に評価したい場合、特に戻り値が int 型や float 型である場合においては、文字列を介する型変換がボトルネックとなります。
  * そういった場合は、評価式の中で結果を変数に代入し、戻り値を利用せずに捨てる事で、ボトルネックを回避できます。
- * 
+ *
  * @param expression 評価する式
  * @return 式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression. Variables and functions can also be accessed within lexical scope, and assignments can be performed as well.
+ * The value of the expression is returned after being converted to a string array (if the value of the expression is non-array, the returned array has one element).
+ * A string array is the type with the greatest conversion flexibility, and can be assigned to arrays and non-arrays of any primitive type (assignment to a non-array is possible only when the number of elements is one).
+ * On the other hand, if you want to evaluate expressions repeatedly at high speed, especially when the return value is of int or float type, type conversion through strings can become a bottleneck.
+ * In such cases, you can avoid that bottleneck by assigning the result to a variable within the evaluated expression and discarding the return value instead of using it.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression.
  */
 public macro eval(string expression){
 	___eval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価します。引数 1 個の eval 関数と異なるのは、式中でサフィックスが明示されていない数値リテラルを、どの型と解釈するか指定できる点です。
  * 例えば &quot;1 / 2&quot; の式は、通常は int 型同士の除算となるため、値は 0 です。これを float 型同士の除算と見なして 0.5 を得たい場合には、第二引数に float 型の値 ( 0.0 など ) を指定してください。
  * なお第二引数は、型のみが意味を持ち、値は無視されます(しかしながら、初来的に何らかの意味づけが加えられる可能性もあるため、特に理由が無ければ 0 や 0.0 を指定する事が推奨されます)。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (string[])式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression. Unlike the eval function with one argument, this version lets you specify how numeric literals without explicit suffixes are interpreted.
+ * For example, the expression &quot;1 / 2&quot; is normally treated as division between int values, so the result is 0. If you want it to be treated as division between float values and obtain 0.5, specify a float value such as 0.0 as the second argument.
+ * Note that only the type of the second argument is meaningful, and its value is ignored (however, since some meaning may be added to it in the future, it is recommended to specify 0 or 0.0 unless you have a particular reason not to).
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as a string array.
  */
 public macro eval(string expression, literalType){
 	___eval(expression, literalType);
@@ -1295,10 +2324,19 @@ public macro eval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を float 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (float)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array float.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as float.
  */
 public macro feval(string expression){
 	___feval(expression);
@@ -1306,11 +2344,21 @@ public macro feval(string expression){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を float 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (flaot)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array float.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as float.
  */
 public macro feval(string expression, literalType){
 	___feval(expression, literalType);
@@ -1318,21 +2366,40 @@ public macro feval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を int 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (int)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array int.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as int.
  */
 public macro ieval(string expression){
 	___ieval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を int 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (int)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array int.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as int.
  */
 public macro ieval(string expression, literalType){
 	___ieval(expression, literalType);
@@ -1340,21 +2407,40 @@ public macro ieval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を complex 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (complex)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array complex.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as complex.
  */
 public macro ceval(string expression){
 	___ceval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を complex 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (complex)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array complex.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as complex.
  */
 public macro ceval(string expression, literalType){
 	___ceval(expression, literalType);
@@ -1362,21 +2448,40 @@ public macro ceval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を bool 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (bool)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array bool.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as bool.
  */
 public macro beval(string expression){
 	___beval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を bool 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (bool)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array bool.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as bool.
  */
 public macro beval(string expression, literalType){
 	___beval(expression, literalType);
@@ -1384,42 +2489,80 @@ public macro beval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を string 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (string)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array string.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as string.
  */
 public macro seval(string expression){
 	___seval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を string 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (string)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array string.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as string.
  */
 public macro seval(string expression, literalType){
 	___seval(expression, literalType);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を varfloat 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (varfloat)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array varfloat.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as varfloat.
  */
 public macro vfeval(string expression){
 	___vfeval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を varfloat 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (varfloat)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array varfloat.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as varfloat.
  */
 public macro vfeval(string expression, literalType){
 	___vfeval(expression, literalType);
@@ -1427,21 +2570,40 @@ public macro vfeval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を varint 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (varint)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array varint.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as varint.
  */
 public macro vieval(string expression){
 	___vieval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を varint 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (varint)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array varint.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as varint.
  */
 public macro vieval(string expression, literalType){
 	___vieval(expression, literalType);
@@ -1449,21 +2611,40 @@ public macro vieval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を varcomplex 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
  * @return (varcomplex)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array varcomplex.
+ *
+ * @param expression The expression to be evaluated.
+ * @return The value of the expression as varcomplex.
  */
 public macro vceval(string expression){
 	___vceval(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、値を varcomplex 型の非配列で返します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (varcomplex)式の値
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns the value as a non-array varcomplex.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return The value of the expression as varcomplex.
  */
 public macro vceval(string expression, literalType){
 	___vceval(expression, literalType);
@@ -1471,23 +2652,44 @@ public macro vceval(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 式の内容が構文的に正しいかどうかを判定します。
  * eval 関数は構文解析に失敗すると処理速度が低下するため、式を高速に繰り返し評価したい場合、事前にこの関数で式の正当性を確認しておく事が推奨されます。
- * 
+ *
  * @param expression 評価する式
  * @return 式が構文的に正しければ true, そうでなければ false
+ *
+ * !--- locale=En-US ---
+ *
+ * Determines whether the contents of an expression are syntactically correct.
+ * If the eval function fails in parsing, processing speed decreases, so if you want to evaluate an expression repeatedly at high speed, it is recommended to check its validity in advance with this function.
+ *
+ * @param expression The expression to be checked.
+ * @return Returns true if the expression is syntactically correct, or false otherwise.
  */
 public macro evaluable(string expression){
 	(bool)(___evaluable(expression));
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 式の内容が構文的に正しいかどうかを判定します。
  * eval 関数は構文解析に失敗すると処理速度が低下するため、式を高速に繰り返し評価したい場合、事前にこの関数で式の正当性を確認しておく事が推奨されます。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return 式が構文的に正しければ true, そうでなければ false
+ *
+ * !--- locale=En-US ---
+ *
+ * Determines whether the contents of an expression are syntactically correct.
+ * If the eval function fails in parsing, processing speed decreases, so if you want to evaluate an expression repeatedly at high speed, it is recommended to check its validity in advance with this function.
+ *
+ * @param expression The expression to be checked.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return Returns true if the expression is syntactically correct, or false otherwise.
  */
 public macro evaluable(string expression, literalType){
 	(bool)(___evaluable(expression, literalType));
@@ -1495,38 +2697,73 @@ public macro evaluable(string expression, literalType){
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、処理系の内部処理情報を返します。内容は完全に処理系依存です。
  * なお、利用できる式には処理系依存の制約があり、必ずしも通常の式評価と整合する内容を返すとは限りません。
  * また、一般に副作用のある式には使用できません。この関数は、主に開発時やデバッグ時に使用します。
- * 
+ *
  * @param expression 評価する式
  * @return (string[])処理系の内部処理情報
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns internal processing information of the implementation. The contents are completely implementation-dependent.
+ * Note that the expressions that can be used are subject to implementation-dependent restrictions, and the returned contents do not necessarily correspond exactly to those of normal expression evaluation.
+ * In addition, this function generally cannot be used with expressions that have side effects. This function is mainly intended for development and debugging.
+ *
+ * @param expression The expression to be evaluated.
+ * @return Internal processing information of the implementation as a string array.
  */
 public macro evaltr(string expression){
 	___evaltr(expression);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 文字列を式として評価し、処理系の内部処理情報を返します。内容は完全に処理系依存です。
  * なお、利用できる式には処理系依存の制約があり、必ずしも通常の式評価と整合する内容を返すとは限りません。
  * また、一般に副作用のある式には使用できません。この関数は、主に開発時やデバッグ時に使用します。
- * 
+ *
  * @param expression 評価する式
- * @param expression サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
+ * @param literalType サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 )
  * @return (string[])処理系の内部処理情報
+ *
+ * !--- locale=En-US ---
+ *
+ * Evaluates a string as an expression, and returns internal processing information of the implementation. The contents are completely implementation-dependent.
+ * Note that the expressions that can be used are subject to implementation-dependent restrictions, and the returned contents do not necessarily correspond exactly to those of normal expression evaluation.
+ * In addition, this function generally cannot be used with expressions that have side effects. This function is mainly intended for development and debugging.
+ *
+ * @param expression The expression to be evaluated.
+ * @param literalType The type to be assigned to numeric literals without suffixes (specified by a variable of that type).
+ * @return Internal processing information of the implementation as a string array.
  */
 public macro evaltr(string expression, literalType){
 	___evaltr(expression, literalType);
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 関数の処理内容を、実行時に変更します。
  * eval 関数は、ローカル変数の宣言や、複数の文を実行できないため、そのような処理を動的評価で行いたい場合には、この関数を使用します。
  * なお、この関数でできるのは、既存の関数の処理内容を変更する事のみであり、新しい関数を宣言する事はできません。
- * 
+ *
  * @param functionName 関数名
  * @param argumentType 引数の型を文字列で記述した配列（ 例えば "int" や "float" を格納 ）
  * @param functionCode 関数の（プログラムとしての）記述内容
+ *
+ * !--- locale=En-US ---
+ *
+ * Changes the implementation of a function at runtime.
+ * Since the eval function cannot declare local variables or execute multiple statements, use this function when you want to perform such processing by dynamic evaluation.
+ * Note that this function can only change the implementation of an existing function, and cannot declare a new function.
+ *
+ * @param functionName The function name.
+ * @param argumentType An array describing the argument types as strings (for example, storing "int" or "float").
+ * @param functionCode The description of the function body as program code.
  */
 public macro override(string functionName, string argumentType[], string functionCode){
 	___override(functionName, argumentType, functionCode);
@@ -1545,30 +2782,46 @@ public macro override(string functionName, string argumentType[], string functio
 
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="#EOL">EOL</a> をそのまま改行コードとして使用できます。
  * この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="#EOL">EOL</a> の使用が推奨されます。
  * この関数は互換目的でサポートされています。
- * 
- * @param 環境依存の改行コード
+ *
+ * @return 環境依存の改行コード
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the environment-dependent line break code. In VCSSL 3 and later, the constant <a href="#EOL">EOL</a> can be used directly as the line break code.
+ * This function wastes the overhead of a function call. In new programs, using the constant <a href="#EOL">EOL</a> is recommended.
+ * This function is supported for compatibility.
+ *
+ * @return The environment-dependent line break code.
  */
 public string lf(){
 	return ___lf();
 }
 
 /**
+ * !--- locale=Ja-JP ---
+ *
  * 環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href="#EOL">EOL</a> をそのまま改行コードとして使用できます。
  * この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href="#EOL">EOL</a> の使用が推奨されます。
  * この関数は互換目的でサポートされています。
- * 
- * @param 環境依存の改行コード
+ *
+ * @return 環境依存の改行コード
+ *
+ * !--- locale=En-US ---
+ *
+ * Returns the environment-dependent line break code. In VCSSL 3 and later, the constant <a href="#EOL">EOL</a> can be used directly as the line break code.
+ * This function wastes the overhead of a function call. In new programs, using the constant <a href="#EOL">EOL</a> is recommended.
+ * This function is supported for compatibility.
+ *
+ * @return The environment-dependent line break code.
  */
 public string linefeed(){
 	return ___lf();
 }
-
-
-
-
 
 
 

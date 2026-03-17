@@ -1,0 +1,602 @@
+{
+	"libraryName": "Graphics2DFramework",
+	"libraryDescription": "<p>このライブラリ graphics2d.Graphics2DFramework は、2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。<\/p><p>VCSSLの標準ライブラリ「 Graphics2D 」や「 GUI 」だけを用いて、ゼロから2DCGプログラムを記述する場合、<br \/>ウィンドウ・レンダラー（描画エンジン）の生成や、アニメーションループ、基本的なイベントハンドラなど、いくつかの定型的な処理を、毎回記述しなければいけません。<br \/>そこで、この Graphics2DFramework では、上述のような定型処理を、雛形のようにあらかじめ用意する事によって、手軽な2DCG利用をサポートします。<\/p><p>・必要な処理の記述<\/p><p>Graphics2DFramework は、構造的には、単体で既に完成した2DCGプログラムです。実際、単体で実行する事が可能です。<br \/>ただし、単体では何の描画内容も無いため、ただ白い画面が表示されるだけです。<\/p><p>そこで実際には、自作モジュールから Graphics2DFramework を import し、3Dモデルの配置や移動など、必要な処理を記述します。<br \/>そういった処理は、いくつかの決まった名前の関数を定義し、そこに記述します。つまり、GUIなどのイベントハンドラと同じ仕組みです。<br \/>するとそれらのイベントハンドラ関数を、Graphics3DFramework が適切なタイミングで自動実行します。<\/p><p>Graphics2DFramework が自動実行するイベントハンドラ関数は、下記のものがあります。定義は必須では無いので、必要な関数だけを定義し、記述して下さい。<ul>  <li>void onStart( int renderer ) - 起動時に一度だけ実行されます。スプライトの生成・配置などの初期化処理は、ここに記述します。旧称 initialize も使用可能です。<\/li>  <li>void onExit( int renderer ) - 終了時に一度だけ実行されます。終了時に行いたい処理があれば、ここに記述します。旧称 finalize も使用可能です。<\/li>  <li>void onPaint( int renderer ) - 画面更新タイミング（毎秒数十回）で毎回実行されます。アニメーションの2DCG描き込み（直接描画）を行いたい場合などは、ここに記述します。旧称 paint も使用可能です。<\/li>  <li>void onUpdate( int renderer ) - 画面更新タイミング（毎秒数十回）の間で毎回実行されます。スプライトの移動などを行いたい場合などは、ここに記述します。旧称 update も使用可能です。<\/li>  <li>void onResize( int renderer ) - ウィンドウサイズが変更された場合に実行されます。画面に配置したGUI部品のレイアウト調整などを行いたい場合は、ここに記述します。旧称 resize も使用可能です。<\/li><\/ul>上記関数のいずれも、引数 renderer には、2DCGレンダラーのID が渡されます。これは描画やスプライトの登録などに使用します。<\/p><p>・ウィンドウのカスタマイズ<\/p><p>Graphics2DFramework では、ウィンドウ内に余白領域を設定し、そこにボタンやテキストフィールドなどのGUI部品を配置する事ができます。<br \/>余白の設定は、<a href=\"#setMarginTop\">setMarginTop<\/a> ( int margin ) 関数や <a href=\"#setMarginLeft\">setMarginLeft<\/a> ( int margin ) 関数などで行います。<br \/>そして <a href=\"#getWindow\">getWindow<\/a> ( ) 関数でウィンドウのIDを取得し、余白領域にGUI部品を自由に配置してください。<\/p><p>・フレームレート調整<\/p><p>加えて、Graphics2DFramework は、フレームレートの自動調整機構も備えています。<br \/>具体的には、Graphics2DFramework は、毎フレーム間の所要時間を計測し、常に設定された目標フレームレートに近づくよう、アニメーションループのウェイト ( 待機時間 ) を自動調整します。<br \/>目標フレームレートは <a href=\"#setFrameRate\">setFrameRate<\/a> ( float rate ) で設定します。また、実測フレームレートは <a href=\"#getCurrentFrameRate\">getCurrentFrameRate<\/a> ( ) で取得可能です。<\/p><p>・処理落ち<\/p><p>なお、実行環境の処理速度にも依存しますが、描画する画面サイズが大きかったり、描画内容が重かったりすると、<br \/>アニメーションの待機時間を最小にしても、実測フレームレートが目標フレームレートに達しなくなる現象 ―― 処理落ち ―― が生じます。<\/p><p>処理落ちが発生すると、画面の再描画処理が追いつかなくなり、画面がちらつく場合があります。<br \/>その場合は、目標フレームレートを実測フレームレートの限界よりも余裕のある値に設定する事で、画面のちらつきを抑える事ができます。<br \/>しかし、実測フレームレートは環境に大きく依存するため、代わりに <a href=\"#setAnimationWaitMin\">setAnimationWaitMin<\/a> ( int wait ) 関数でアニメーションウェイトの下限値（ミリ秒単位）を大きめに設定する事でも、<br \/>画面のちらつきを抑える事ができます（ ただしこの場合、実測フレームレートの限界は低下します ）。<\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "getGraphics",
+			"declaration": "int getGraphics()",
+			"description": "2DCGのグラフィックスIDを返します。",
+			"returnValue": "(int型) 2DCGのグラフィックスID"
+		},
+		"function1": {
+			"name": "getRenderer",
+			"declaration": "int getRenderer()",
+			"description": "2DCGのレンダラーIDを返します。",
+			"returnValue": "(int型) 2DCGのレンダラーID"
+		},
+		"function2": {
+			"name": "getImageLabel",
+			"declaration": "int getImageLabel()",
+			"description": "描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。",
+			"returnValue": "(int型) 画像ラベルのGUIコンポーネントID"
+		},
+		"function3": {
+			"name": "getGraphicsLabel",
+			"declaration": "int getGraphicsLabel()",
+			"description": "画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href=\"#getImageLabel\">getImageLabel<\/a> がサポートされています。この関数は互換目的でサポートされています。",
+			"returnValue": "(int型) 描画領域ラベルのGUIコンポーネントID"
+		},
+		"function4": {
+			"name": "getWindow",
+			"declaration": "int getWindow()",
+			"description": "ウィンドウのGUIコンポーネントIDを返します。",
+			"returnValue": "(int型) ウィンドウのGUIコンポーネントID"
+		},
+		"function5": {
+			"name": "setAnimationState",
+			"declaration": "void setAnimationState(bool enable)",
+			"description": "アニメーションモードの有効\/無効を設定します。",
+			"parameters": "(bool型) enable : アニメーションモードの有効\/無効(trueならば有効) ",
+			"returnValue": "(void型) "
+		},
+		"function6": {
+			"name": "getAnimationState",
+			"declaration": "bool getAnimationState()",
+			"description": "アニメーションの有効\/無効を取得します。",
+			"returnValue": "(bool型) アニメーションモード有効\/無効(trueならば有効)"
+		},
+		"function7": {
+			"name": "setFrameRate",
+			"declaration": "void setFrameRate(float rate)",
+			"description": "アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。",
+			"parameters": "(float型) rate : 画面更新頻度 ",
+			"returnValue": "(void型) "
+		},
+		"function8": {
+			"name": "getFrameRate",
+			"declaration": "float getFrameRate()",
+			"description": "アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。",
+			"returnValue": "(float型) 画面更新頻度(設定値)"
+		},
+		"function9": {
+			"name": "getCurrentFrameRate",
+			"declaration": "float getCurrentFrameRate()",
+			"description": "アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。",
+			"returnValue": "(float型) 画面更新頻度(実測値)"
+		},
+		"function10": {
+			"name": "getLastFrameTime",
+			"declaration": "int getLastFrameTime()",
+			"description": "アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。",
+			"returnValue": "(int型) 最終画面更新時刻(通常はミリ秒単位)"
+		},
+		"function11": {
+			"name": "setPaintGraphics2DState",
+			"declaration": "void setPaintGraphics2DState(bool b)",
+			"description": "画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。",
+			"parameters": "state : 設定した状態 ",
+			"returnValue": "(void型) "
+		},
+		"function12": {
+			"name": "getPaintGraphics2DState",
+			"declaration": "bool getPaintGraphics2DState()",
+			"description": "画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。",
+			"returnValue": "(bool型) 取得した状態"
+		},
+		"function13": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int r, int g, int b, int a)",
+			"description": "背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。",
+			"parameters": "(int型) r : 背景色(赤、0～255) \n(int型) g : 背景色(緑、0～255) \n(int型) b : 背景色(青、0～255) \n(int型) a : 背景色(α成分、0～255) ",
+			"returnValue": "(void型) "
+		},
+		"function14": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int color[ ])",
+			"description": "背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。",
+			"parameters": "(int[]型) color : 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255) ",
+			"returnValue": "(void型) "
+		},
+		"function15": {
+			"name": "getBackgroundColor",
+			"declaration": "int[ ] getBackgroundColor()",
+			"description": "背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。",
+			"returnValue": "(int[]型) 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255)"
+		},
+		"function16": {
+			"name": "setWindowTitle",
+			"declaration": "void setWindowTitle(string title)",
+			"description": "ウィンドウタイトルを設定します。",
+			"returnValue": "(void型) "
+		},
+		"function17": {
+			"name": "getWindowTitle",
+			"declaration": "string getWindowTitle()",
+			"description": "ウィンドウタイトルを取得します。",
+			"returnValue": "(string型) "
+		},
+		"function18": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int width, int height)",
+			"description": "ウィンドウサイズを設定します。",
+			"parameters": "(int型) width : 幅 \n(int型) height : 高さ ",
+			"returnValue": "(void型) "
+		},
+		"function19": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int size[ ])",
+			"description": "ウィンドウサイズを設定します。",
+			"parameters": "(int[]型) size : ウィンドウサイズ（[0]=幅、[1]=高さ） ",
+			"returnValue": "(void型) "
+		},
+		"function20": {
+			"name": "getWindowSize",
+			"declaration": "int[ ] getWindowSize()",
+			"description": "ウィンドウサイズを取得します。",
+			"returnValue": "(int[]型) ウィンドウサイズ（[0]=幅、[1]=高さ）"
+		},
+		"function21": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int x, int y)",
+			"description": "ウィンドウの位置を設定します。",
+			"parameters": "(int型) x : ウィンドウ左上のX座標 \n(int型) y : ウィンドウ左上のY座標 ",
+			"returnValue": "(void型) "
+		},
+		"function22": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int location[ ])",
+			"description": "ウィンドウの位置を設定します。",
+			"parameters": "size : ウィンドウ左上の座標（[0]=X座標、[1]=Y座標） ",
+			"returnValue": "(void型) "
+		},
+		"function23": {
+			"name": "getWindowLocation",
+			"declaration": "int[ ] getWindowLocation()",
+			"description": "ウィンドウの位置を取得します。",
+			"returnValue": "(int[]型) ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）"
+		},
+		"function24": {
+			"name": "setMarginRight",
+			"declaration": "void setMarginRight(int margin)",
+			"description": "ウィンドウ右側の余白を設定します。",
+			"parameters": "(int型) margin : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function25": {
+			"name": "getMarginRight",
+			"declaration": "int getMarginRight()",
+			"description": "ウィンドウ右側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function26": {
+			"name": "setMarginLeft",
+			"declaration": "void setMarginLeft(int margin)",
+			"description": "ウィンドウ左側の余白を設定します。",
+			"parameters": "m : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function27": {
+			"name": "getMarginLeft",
+			"declaration": "int getMarginLeft()",
+			"description": "ウィンドウ左側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function28": {
+			"name": "setMarginTop",
+			"declaration": "void setMarginTop(int margin)",
+			"description": "ウィンドウ上側の余白を設定します。",
+			"parameters": "m : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function29": {
+			"name": "getMarginTop",
+			"declaration": "int getMarginTop()",
+			"description": "ウィンドウ上側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function30": {
+			"name": "setMarginBottom",
+			"declaration": "void setMarginBottom(int margin)",
+			"description": "ウィンドウ下側の余白を設定します。",
+			"parameters": "m : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function31": {
+			"name": "getMarginBottom",
+			"declaration": "int getMarginBottom()",
+			"description": "ウィンドウ下側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function32": {
+			"name": "setAnimationWaitMin",
+			"declaration": "void setAnimationWaitMin(int wait)",
+			"description": "アニメーションウェイト（メインループのウェイト）の下限値を設定します。",
+			"returnValue": "(void型) "
+		},
+		"function33": {
+			"name": "getAnimationWaitMin",
+			"declaration": "int getAnimationWaitMin()",
+			"description": "アニメーションウェイト（メインループのウェイト）の下限値を設定します。",
+			"returnValue": "(int型) "
+		},
+		"function34": {
+			"name": "setAnimationWaitMax",
+			"declaration": "void setAnimationWaitMax(int wait)",
+			"description": "アニメーションウェイト（メインループのウェイト）の上限値を設定します。",
+			"returnValue": "(void型) "
+		},
+		"function35": {
+			"name": "getAnimationWaitMax",
+			"declaration": "int getAnimationWaitMax()",
+			"description": "アニメーションウェイト（メインループのウェイト）の上限値を設定します。",
+			"returnValue": "(int型) "
+		},
+		"function36": {
+			"name": "setMainLoopState",
+			"declaration": "void setMainLoopState(bool state)",
+			"description": "メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。",
+			"parameters": "(bool型) state : メインループの継続状態 ",
+			"returnValue": "(void型) "
+		},
+		"function37": {
+			"name": "getMainLoopState",
+			"declaration": "bool getMainLoopState()",
+			"description": "メインループの継続状態を取得します。",
+			"returnValue": "(bool型) メインループの継続状態"
+		},
+		"function38": {
+			"name": "getMainArgument",
+			"declaration": "string[ ] getMainArgument()",
+			"description": "main関数の引数を取得します。",
+			"returnValue": "(string[]型) main関数の引数"
+		},
+		"function39": {
+			"name": "export",
+			"declaration": "void export( string filePath, string format, float quality )",
+			"description": "現在の描画ラベルの内容を、画像ファイルに出力します。ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、次回の画面更新タイミングに合わせて実行されます。",
+			"parameters": "(string型) filePath : 出力ファイル名またはファイルパス \n(string型) format : ファイル形式（\"PNG\"または\"JPEG\"） \n(float型) quality : 品質 ",
+			"returnValue": "(void型) "
+		},
+		"function40": {
+			"name": "main",
+			"declaration": "void main( string args[ ] )",
+			"description": "main関数です。通常は自動で実行され、frameworkMain関数をコールします。ただし、メインプログラムでmain関数を定義する場合は、こちらは自動で実行されなくなるので、frameworkMain関数を明示的に呼ぶ必要が生じます。",
+			"parameters": "(string[]型) args : メイン引数（ getMainArgument関数で取得可能 ） ",
+			"returnValue": "(void型) "
+		},
+		"function41": {
+			"name": "frameworkMain",
+			"declaration": "void frameworkMain( string args[ ] )",
+			"description": "フレームワークのメイン処理です。通常はmain関数から自動で実行されます。ただし、メインプログラムでmain関数を定義する場合は、自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。",
+			"parameters": "(string[]型) args : メイン引数（ getMainArgument関数で取得可能 ） ",
+			"returnValue": "(void型) "
+		},
+		"function42": {
+			"name": "onWindowResize",
+			"declaration": "void onWindowResize( int id, int width, int height )",
+			"description": "ウィンドウがリサイズされた際にコールされるイベントハンドラです。",
+			"parameters": "(int型) id : ウィンドウのGUIコンポーネントID \n(int型) width : ウィンドウの幅 \n(int型) height : ウィンドウの高さ ",
+			"returnValue": "(void型) "
+		},
+		"function43": {
+			"name": "onWindowClose",
+			"declaration": "void onWindowClose( int id )",
+			"description": "ウィンドウが閉じられた際にコールされるイベントハンドラです。",
+			"parameters": "(int型) id : ウィンドウのGUIコンポーネントID ",
+			"returnValue": "(void型) "
+		},
+		"function44": {
+			"name": "paintWindow",
+			"declaration": "void paintWindow()",
+			"description": "ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。",
+			"returnValue": "(void型) "
+		},
+		"function45": {
+			"name": "render",
+			"declaration": "void render()",
+			"description": "paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。",
+			"returnValue": "(void型) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "getGraphics",
+			"declaration": "int getGraphics()",
+			"description": "2DCGのグラフィックスIDを返します。",
+			"returnValue": "(int型) 2DCGのグラフィックスID"
+		},
+		"function1": {
+			"name": "getRenderer",
+			"declaration": "int getRenderer()",
+			"description": "2DCGのレンダラーIDを返します。",
+			"returnValue": "(int型) 2DCGのレンダラーID"
+		},
+		"function2": {
+			"name": "getImageLabel",
+			"declaration": "int getImageLabel()",
+			"description": "描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。",
+			"returnValue": "(int型) 画像ラベルのGUIコンポーネントID"
+		},
+		"function3": {
+			"name": "getGraphicsLabel",
+			"declaration": "int getGraphicsLabel()",
+			"description": "画像ラベルのGUIコンポーネントIDを返します。この関数には、より新しい <a href=\"#getImageLabel\">getImageLabel<\/a> がサポートされています。この関数は互換目的でサポートされています。",
+			"returnValue": "(int型) 描画領域ラベルのGUIコンポーネントID"
+		},
+		"function4": {
+			"name": "getWindow",
+			"declaration": "int getWindow()",
+			"description": "ウィンドウのGUIコンポーネントIDを返します。",
+			"returnValue": "(int型) ウィンドウのGUIコンポーネントID"
+		},
+		"function5": {
+			"name": "setAnimationState",
+			"declaration": "void setAnimationState(bool enable)",
+			"description": "アニメーションモードの有効\/無効を設定します。",
+			"parameters": "(bool型) enable : アニメーションモードの有効\/無効(trueならば有効) ",
+			"returnValue": "(void型) "
+		},
+		"function6": {
+			"name": "getAnimationState",
+			"declaration": "bool getAnimationState()",
+			"description": "アニメーションの有効\/無効を取得します。",
+			"returnValue": "(bool型) アニメーションモード有効\/無効(trueならば有効)"
+		},
+		"function7": {
+			"name": "setFrameRate",
+			"declaration": "void setFrameRate(float rate)",
+			"description": "アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。",
+			"parameters": "(float型) rate : 画面更新頻度 ",
+			"returnValue": "(void型) "
+		},
+		"function8": {
+			"name": "getFrameRate",
+			"declaration": "float getFrameRate()",
+			"description": "アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。",
+			"returnValue": "(float型) 画面更新頻度(設定値)"
+		},
+		"function9": {
+			"name": "getCurrentFrameRate",
+			"declaration": "float getCurrentFrameRate()",
+			"description": "アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。",
+			"returnValue": "(float型) 画面更新頻度(実測値)"
+		},
+		"function10": {
+			"name": "getLastFrameTime",
+			"declaration": "int getLastFrameTime()",
+			"description": "アニメーションの最終画面更新時刻を取得します。時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。ただし単位は処理系によって異なる可能性があります。処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。",
+			"returnValue": "(int型) 最終画面更新時刻(通常はミリ秒単位)"
+		},
+		"function11": {
+			"name": "setPaintGraphics2DState",
+			"declaration": "void setPaintGraphics2DState(bool b)",
+			"description": "画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。trueを指定すると自動でコールされます。falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。",
+			"parameters": "state : 設定した状態 ",
+			"returnValue": "(void型) "
+		},
+		"function12": {
+			"name": "getPaintGraphics2DState",
+			"declaration": "bool getPaintGraphics2DState()",
+			"description": "画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。",
+			"returnValue": "(bool型) 取得した状態"
+		},
+		"function13": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int r, int g, int b, int a)",
+			"description": "背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。",
+			"parameters": "(int型) r : 背景色(赤、0～255) \n(int型) g : 背景色(緑、0～255) \n(int型) b : 背景色(青、0～255) \n(int型) a : 背景色(α成分、0～255) ",
+			"returnValue": "(void型) "
+		},
+		"function14": {
+			"name": "setBackgroundColor",
+			"declaration": "void setBackgroundColor(int color[ ])",
+			"description": "背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。",
+			"parameters": "(int[]型) color : 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255) ",
+			"returnValue": "(void型) "
+		},
+		"function15": {
+			"name": "getBackgroundColor",
+			"declaration": "int[ ] getBackgroundColor()",
+			"description": "背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。",
+			"returnValue": "(int[]型) 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255)"
+		},
+		"function16": {
+			"name": "setWindowTitle",
+			"declaration": "void setWindowTitle(string title)",
+			"description": "ウィンドウタイトルを設定します。",
+			"returnValue": "(void型) "
+		},
+		"function17": {
+			"name": "getWindowTitle",
+			"declaration": "string getWindowTitle()",
+			"description": "ウィンドウタイトルを取得します。",
+			"returnValue": "(string型) "
+		},
+		"function18": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int width, int height)",
+			"description": "ウィンドウサイズを設定します。",
+			"parameters": "(int型) width : 幅 \n(int型) height : 高さ ",
+			"returnValue": "(void型) "
+		},
+		"function19": {
+			"name": "setWindowSize",
+			"declaration": "void setWindowSize(int size[ ])",
+			"description": "ウィンドウサイズを設定します。",
+			"parameters": "(int[]型) size : ウィンドウサイズ（[0]=幅、[1]=高さ） ",
+			"returnValue": "(void型) "
+		},
+		"function20": {
+			"name": "getWindowSize",
+			"declaration": "int[ ] getWindowSize()",
+			"description": "ウィンドウサイズを取得します。",
+			"returnValue": "(int[]型) ウィンドウサイズ（[0]=幅、[1]=高さ）"
+		},
+		"function21": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int x, int y)",
+			"description": "ウィンドウの位置を設定します。",
+			"parameters": "(int型) x : ウィンドウ左上のX座標 \n(int型) y : ウィンドウ左上のY座標 ",
+			"returnValue": "(void型) "
+		},
+		"function22": {
+			"name": "setWindowLocation",
+			"declaration": "void setWindowLocation(int location[ ])",
+			"description": "ウィンドウの位置を設定します。",
+			"parameters": "size : ウィンドウ左上の座標（[0]=X座標、[1]=Y座標） ",
+			"returnValue": "(void型) "
+		},
+		"function23": {
+			"name": "getWindowLocation",
+			"declaration": "int[ ] getWindowLocation()",
+			"description": "ウィンドウの位置を取得します。",
+			"returnValue": "(int[]型) ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）"
+		},
+		"function24": {
+			"name": "setMarginRight",
+			"declaration": "void setMarginRight(int margin)",
+			"description": "ウィンドウ右側の余白を設定します。",
+			"parameters": "(int型) margin : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function25": {
+			"name": "getMarginRight",
+			"declaration": "int getMarginRight()",
+			"description": "ウィンドウ右側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function26": {
+			"name": "setMarginLeft",
+			"declaration": "void setMarginLeft(int margin)",
+			"description": "ウィンドウ左側の余白を設定します。",
+			"parameters": "m : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function27": {
+			"name": "getMarginLeft",
+			"declaration": "int getMarginLeft()",
+			"description": "ウィンドウ左側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function28": {
+			"name": "setMarginTop",
+			"declaration": "void setMarginTop(int margin)",
+			"description": "ウィンドウ上側の余白を設定します。",
+			"parameters": "m : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function29": {
+			"name": "getMarginTop",
+			"declaration": "int getMarginTop()",
+			"description": "ウィンドウ上側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function30": {
+			"name": "setMarginBottom",
+			"declaration": "void setMarginBottom(int margin)",
+			"description": "ウィンドウ下側の余白を設定します。",
+			"parameters": "m : 余白（ピクセル） ",
+			"returnValue": "(void型) "
+		},
+		"function31": {
+			"name": "getMarginBottom",
+			"declaration": "int getMarginBottom()",
+			"description": "ウィンドウ下側の余白を取得します。",
+			"returnValue": "(int型) 余白（ピクセル）"
+		},
+		"function32": {
+			"name": "setAnimationWaitMin",
+			"declaration": "void setAnimationWaitMin(int wait)",
+			"description": "アニメーションウェイト（メインループのウェイト）の下限値を設定します。",
+			"returnValue": "(void型) "
+		},
+		"function33": {
+			"name": "getAnimationWaitMin",
+			"declaration": "int getAnimationWaitMin()",
+			"description": "アニメーションウェイト（メインループのウェイト）の下限値を設定します。",
+			"returnValue": "(int型) "
+		},
+		"function34": {
+			"name": "setAnimationWaitMax",
+			"declaration": "void setAnimationWaitMax(int wait)",
+			"description": "アニメーションウェイト（メインループのウェイト）の上限値を設定します。",
+			"returnValue": "(void型) "
+		},
+		"function35": {
+			"name": "getAnimationWaitMax",
+			"declaration": "int getAnimationWaitMax()",
+			"description": "アニメーションウェイト（メインループのウェイト）の上限値を設定します。",
+			"returnValue": "(int型) "
+		},
+		"function36": {
+			"name": "setMainLoopState",
+			"declaration": "void setMainLoopState(bool state)",
+			"description": "メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。",
+			"parameters": "(bool型) state : メインループの継続状態 ",
+			"returnValue": "(void型) "
+		},
+		"function37": {
+			"name": "getMainLoopState",
+			"declaration": "bool getMainLoopState()",
+			"description": "メインループの継続状態を取得します。",
+			"returnValue": "(bool型) メインループの継続状態"
+		},
+		"function38": {
+			"name": "getMainArgument",
+			"declaration": "string[ ] getMainArgument()",
+			"description": "main関数の引数を取得します。",
+			"returnValue": "(string[]型) main関数の引数"
+		},
+		"function39": {
+			"name": "export",
+			"declaration": "void export( string filePath, string format, float quality )",
+			"description": "現在の描画ラベルの内容を、画像ファイルに出力します。ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、次回の画面更新タイミングに合わせて実行されます。",
+			"parameters": "(string型) filePath : 出力ファイル名またはファイルパス \n(string型) format : ファイル形式（\"PNG\"または\"JPEG\"） \n(float型) quality : 品質 ",
+			"returnValue": "(void型) "
+		},
+		"function40": {
+			"name": "main",
+			"declaration": "void main( string args[ ] )",
+			"description": "main関数です。通常は自動で実行され、frameworkMain関数をコールします。ただし、メインプログラムでmain関数を定義する場合は、こちらは自動で実行されなくなるので、frameworkMain関数を明示的に呼ぶ必要が生じます。",
+			"parameters": "(string[]型) args : メイン引数（ getMainArgument関数で取得可能 ） ",
+			"returnValue": "(void型) "
+		},
+		"function41": {
+			"name": "frameworkMain",
+			"declaration": "void frameworkMain( string args[ ] )",
+			"description": "フレームワークのメイン処理です。通常はmain関数から自動で実行されます。ただし、メインプログラムでmain関数を定義する場合は、自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。",
+			"parameters": "(string[]型) args : メイン引数（ getMainArgument関数で取得可能 ） ",
+			"returnValue": "(void型) "
+		},
+		"function42": {
+			"name": "onWindowResize",
+			"declaration": "void onWindowResize( int id, int width, int height )",
+			"description": "ウィンドウがリサイズされた際にコールされるイベントハンドラです。",
+			"parameters": "(int型) id : ウィンドウのGUIコンポーネントID \n(int型) width : ウィンドウの幅 \n(int型) height : ウィンドウの高さ ",
+			"returnValue": "(void型) "
+		},
+		"function43": {
+			"name": "onWindowClose",
+			"declaration": "void onWindowClose( int id )",
+			"description": "ウィンドウが閉じられた際にコールされるイベントハンドラです。",
+			"parameters": "(int型) id : ウィンドウのGUIコンポーネントID ",
+			"returnValue": "(void型) "
+		},
+		"function44": {
+			"name": "paintWindow",
+			"declaration": "void paintWindow()",
+			"description": "ウィンドウの再描画を行います。アニメーションの画面更新タイミングで自動的にコールされますが、任意のタイミングで明示的に呼び出して再描画させる事も可能です。",
+			"returnValue": "(void型) "
+		},
+		"function45": {
+			"name": "render",
+			"declaration": "void render()",
+			"description": "paint関数などをコールし、画面表示内容を描画します。通常は自動で実行されますが、アニメーションを無効にしている場合などは、画面更新時に明示的に呼び出す必要があります。",
+			"returnValue": "(void型) "
+		}
+	}
+}

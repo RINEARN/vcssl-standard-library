@@ -1,0 +1,526 @@
+{
+	"libraryName": "Graph2D",
+	"libraryDescription": "<p>The tool.Graph2D API library, hereafter the Graph2D library, is a library for controlling 2D graph software.<\/p><p>The Graph2D library is an extension library and is not included in the standard libraries defined by the VCSSL language specification. Therefore, support for the Graph2D library implementation is not guaranteed in every VCSSL implementation.<\/p><p>The specification of the Graph2D library is defined assuming control of widely used general-purpose 2D graph software from VCSSL, and it is not intended for a specific 2D graph application. In an implementation of the Graph2D library, what kind of 2D graph software is adopted as the control target depends on the implementation, the vendor of the implementation, its version, or plugins that provide communication functions with graph software. Because of these circumstances, the functions provided by the Graph2D library should not be expected to behave in exactly the same way across different implementations.<\/p><p>Even in the same implementation, because the Graph2D library is not a standard library, its implementation is not guaranteed to behave permanently in the same way. Keep in mind that the implementation of the Graph2D library is only an extension feature supported independently by the implementation. For example, if the graph software receives a major update, the behavior of the Graph2D library may also change slightly as a result.<\/p><p>In the RINEARN VCSSL Runtime and VCSSL-supported software equipped with it, such as Rinearn Processor,the Graph2D library is supported, and its implementation adopts the graph software RINRARN Graph 2D for scientific and technical fields.Since the RINRARN Graph 2D program itself, RinearnGraph2D.jar, is bundled in the distribution package of the VCSSL Runtime,nothing needs to be prepared separately.<\/p>",
+	"structs": {
+	},
+	"variables": {
+	},
+	"functions": {
+		"function0": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D()",
+			"description": "Creates a 2D graph with the default size, assigns its unique identifier, the graph ID, and returns it.",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function1": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D( int x, int y, int width, int height, string title )",
+			"description": "Creates a 2D graph with the specified size, assigns its unique identifier, the graph ID, and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. \n(string type) title : The title of the graph window. ",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function2": {
+			"name": "getGraph2D",
+			"declaration": "int getGraph2D()",
+			"description": "If there is a special graph started and allocated by the implementation, gets its graph ID. Otherwise, creates a new one.",
+			"returnValue": "(int type) The obtained or created graph ID."
+		},
+		"function3": {
+			"name": "deleteGraph2D",
+			"declaration": "void deleteGraph2D( int graphID )",
+			"description": "Destroys the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "clearGraph2D",
+			"declaration": "void clearGraph2D( int graphID )",
+			"description": "Clears the contents of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "getGraph2DGraphics",
+			"declaration": "int getGraph2DGraphics( int graphID )",
+			"description": "Converts the drawing contents held by the graph into graphics resource compatible with the Graphics library.The converted graphics resource can be processed with a 2D or 3D renderer and so on.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(int type) The graphics resource ID."
+		},
+		"function6": {
+			"name": "setGraph2DLocation",
+			"declaration": "void setGraph2DLocation( int graphID, int x, int y )",
+			"description": "Sets the location of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function7": {
+			"name": "setGraph2DSize",
+			"declaration": "void setGraph2DSize( int graphID, int width, int height )",
+			"description": "Sets the size of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function8": {
+			"name": "hideGraph2D",
+			"declaration": "void hideGraph2D( int graphID )",
+			"description": "Hides the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "showGraph2D",
+			"declaration": "void showGraph2D( int graphID )",
+			"description": "Shows the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string filePath )",
+			"description": "Loads a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filePath : The file name or path of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function11": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string file[ ] )",
+			"description": "Loads multiple files and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) file : The file name or path of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, string data )",
+			"description": "Loads text written in the same format as the contents of a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) data : The text written in the same format as the contents of a file. ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by series index and point index. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by series index and point index. ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by series index and point index. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by series index and point index. ",
+			"returnValue": "(void type) "
+		},
+		"function17": {
+			"name": "setGraph2DConfigurationFile",
+			"declaration": "void setGraph2DConfigurationFile( int graphID, string file )",
+			"description": "Loads a configuration file and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) file : The file name or path of the configuration file. ",
+			"returnValue": "(void type) "
+		},
+		"function18": {
+			"name": "setGraph2DConfigurationCode",
+			"declaration": "void setGraph2DConfigurationCode( int graphID, string code )",
+			"description": "Loads code written in the same format as a configuration file, configuration code, and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \nline : The contents of the configuration code. ",
+			"returnValue": "(void type) "
+		},
+		"function19": {
+			"name": "setGraph2DRange",
+			"declaration": "void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax )",
+			"description": "Sets the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function20": {
+			"name": "setGraph2DRangeX",
+			"declaration": "void setGraph2DRangeX( int graphID, double xMin, double xMax )",
+			"description": "Sets the plot range of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function21": {
+			"name": "setGraph2DRangeY",
+			"declaration": "void setGraph2DRangeY( int graphID, double yMin, double yMax )",
+			"description": "Sets the plot range of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "setGraph2DAutoRange",
+			"declaration": "void setGraph2DAutoRange( int graphID, bool autoX, bool autoY )",
+			"description": "Enables or disables the automatic adjustment feature for the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(bool type) autoX : True to enable automatic adjustment in the X-axis direction, or false to disable it. \n(bool type) autoY : True to enable automatic adjustment in the Y-axis direction, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function23": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "Sets the labels of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) xLabel : The label of the X axis. \n(string type) yLabel : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function24": {
+			"name": "setGraph2DLabelX",
+			"declaration": "void setGraph2DLabelX( int graphID, string label )",
+			"description": "Sets the label of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "setGraph2DLabelY",
+			"declaration": "void setGraph2DLabelY( int graphID, string label )",
+			"description": "Sets the label of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function26": {
+			"name": "setGraph2DTick",
+			"declaration": "void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] )",
+			"description": "Sets the tick marks of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) xTickCoords : The coordinate values of the tick positions on the X axis. \n(string[] type) xTickLabels : The labels of the tick marks on the X axis. \n(double[] type) yTickCoords : The coordinate values of the tick positions on the Y axis. \n(string[] type) yTickLabels : The labels of the tick marks on the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "setGraph2DTickX",
+			"declaration": "void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function28": {
+			"name": "setGraph2DTickY",
+			"declaration": "void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function29": {
+			"name": "setGraph2DOption",
+			"declaration": "void setGraph2DOption( int graphID, string option, bool value )",
+			"description": "Sets an option item of the graph. The item names depend on the implementation. Representative option item names are as follows:<dl><dt>WITH_POINTS<\/dt><dd>Point plot<\/dd><dt>WITH_LINES<\/dt><dd>Line plot<\/dd><dt>WITH_DOTS<\/dt><dd>Dot plot<\/dd><dt>WITH_GRID_LINE<\/dt><dd>Grid-line drawing<\/dd><dt>LOG_X<\/dt><dd>Display the X axis in logarithmic scale<\/dd><dt>LOG_Y<\/dt><dd>Display the Y axis in logarithmic scale<\/dd><dt>REVERSE_X<\/dt><dd>Reverse the X axis<\/dd><dt>REVERSE_Y<\/dt><dd>Reverse the Y axis<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) option : The name of the option item. \n(bool type) value : True to enable the option, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setGraph2DMenu",
+			"declaration": "void setGraph2DMenu( int graphID, string menu, string value )",
+			"description": "This function is effectively used only for label settings, and it can now be replaced by functions such as setGraph2DLabel and setGraph2DLabelX or Y.Because that is more readable, it is recommended to use that form from now on unless there is a specific reason not to.<br \/><br \/>Sets a menu item of the graph. The item name depends on the implementation.",
+			"parameters": "(int type) graphID : The ID of the target graph. \noption : The name of the menu item. \n(string type) value : True to enable the menu item, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "setGraph2DAnimation",
+			"declaration": "void setGraph2DAnimation( int graphID, string mode, bool state )",
+			"description": "Enables or disables graph animation. The available animation modes depend on the implementation. Representative animation modes are as follows:<dl><dt>TRACE<\/dt><dd>Animate points while leaving trajectories<\/dd><dt>INDEX<\/dt><dd>Animate points<\/dd><dt>INDEX-SERIES<\/dt><dd>Animate series<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) mode : The animation mode. \n(bool type) state : True to enable animation, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function32": {
+			"name": "setGraph2DTitle",
+			"declaration": "void setGraph2DTitle( int graphID, string title )",
+			"description": "Sets the title of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) title : The title. ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "Sets the axis labels of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) xLabel : The label of the X axis. \n(string type) yLabel : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function34": {
+			"name": "setGraph2DLegend",
+			"declaration": "void setGraph2DLegend( int graphID, string legend[ ] )",
+			"description": "Sets the legend of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) legend : The array storing the legends, indexed by series index. ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". ",
+			"returnValue": "(void type) "
+		},
+		"function36": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format, float quality )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". \n(float type) quality : The quality, from 0.0 to 100.0. ",
+			"returnValue": "(void type) "
+		}
+	},
+	"eventHandlers": {
+		"function0": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D()",
+			"description": "Creates a 2D graph with the default size, assigns its unique identifier, the graph ID, and returns it.",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function1": {
+			"name": "newGraph2D",
+			"declaration": "int newGraph2D( int x, int y, int width, int height, string title )",
+			"description": "Creates a 2D graph with the specified size, assigns its unique identifier, the graph ID, and returns it.",
+			"parameters": "(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. \n(string type) title : The title of the graph window. ",
+			"returnValue": "(int type) The ID of the created graph."
+		},
+		"function2": {
+			"name": "getGraph2D",
+			"declaration": "int getGraph2D()",
+			"description": "If there is a special graph started and allocated by the implementation, gets its graph ID. Otherwise, creates a new one.",
+			"returnValue": "(int type) The obtained or created graph ID."
+		},
+		"function3": {
+			"name": "deleteGraph2D",
+			"declaration": "void deleteGraph2D( int graphID )",
+			"description": "Destroys the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function4": {
+			"name": "clearGraph2D",
+			"declaration": "void clearGraph2D( int graphID )",
+			"description": "Clears the contents of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function5": {
+			"name": "getGraph2DGraphics",
+			"declaration": "int getGraph2DGraphics( int graphID )",
+			"description": "Converts the drawing contents held by the graph into graphics resource compatible with the Graphics library.The converted graphics resource can be processed with a 2D or 3D renderer and so on.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(int type) The graphics resource ID."
+		},
+		"function6": {
+			"name": "setGraph2DLocation",
+			"declaration": "void setGraph2DLocation( int graphID, int x, int y )",
+			"description": "Sets the location of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) x : The X coordinate of the top-left corner of the graph window. \n(int type) y : The Y coordinate of the top-left corner of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function7": {
+			"name": "setGraph2DSize",
+			"declaration": "void setGraph2DSize( int graphID, int width, int height )",
+			"description": "Sets the size of the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(int type) width : The width of the graph window. \n(int type) height : The height of the graph window. ",
+			"returnValue": "(void type) "
+		},
+		"function8": {
+			"name": "hideGraph2D",
+			"declaration": "void hideGraph2D( int graphID )",
+			"description": "Hides the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function9": {
+			"name": "showGraph2D",
+			"declaration": "void showGraph2D( int graphID )",
+			"description": "Shows the graph window.",
+			"parameters": "(int type) graphID : The ID of the target graph. ",
+			"returnValue": "(void type) "
+		},
+		"function10": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string filePath )",
+			"description": "Loads a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filePath : The file name or path of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function11": {
+			"name": "setGraph2DFile",
+			"declaration": "void setGraph2DFile( int graphID, string file[ ] )",
+			"description": "Loads multiple files and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) file : The file name or path of the file to plot. ",
+			"returnValue": "(void type) "
+		},
+		"function12": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, string data )",
+			"description": "Loads text written in the same format as the contents of a file and plots it on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) data : The text written in the same format as the contents of a file. ",
+			"returnValue": "(void type) "
+		},
+		"function13": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function14": {
+			"name": "setGraph2DData",
+			"declaration": "void setGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and plots them on the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by series index and point index. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by series index and point index. ",
+			"returnValue": "(void type) "
+		},
+		"function15": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ], float dataY[ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[] type) dataX : The array storing the X coordinates, indexed by point index. \n(float[] type) dataY : The array storing the Y coordinates, indexed by point index. ",
+			"returnValue": "(void type) "
+		},
+		"function16": {
+			"name": "addGraph2DData",
+			"declaration": "void addGraph2DData( int graphID, float dataX[ ][ ], float dataY[ ][ ] )",
+			"description": "Loads float arrays storing coordinate values and adds them to the graph as an additional plot.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(float[][] type) dataX : The array storing the X coordinates, indexed by series index and point index. \n(float[][] type) dataY : The array storing the Y coordinates, indexed by series index and point index. ",
+			"returnValue": "(void type) "
+		},
+		"function17": {
+			"name": "setGraph2DConfigurationFile",
+			"declaration": "void setGraph2DConfigurationFile( int graphID, string file )",
+			"description": "Loads a configuration file and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) file : The file name or path of the configuration file. ",
+			"returnValue": "(void type) "
+		},
+		"function18": {
+			"name": "setGraph2DConfigurationCode",
+			"declaration": "void setGraph2DConfigurationCode( int graphID, string code )",
+			"description": "Loads code written in the same format as a configuration file, configuration code, and applies settings to the graph automatically.",
+			"parameters": "(int type) graphID : The ID of the target graph. \nline : The contents of the configuration code. ",
+			"returnValue": "(void type) "
+		},
+		"function19": {
+			"name": "setGraph2DRange",
+			"declaration": "void setGraph2DRange( int graphID, double xMin, double xMax, double yMin, double yMax )",
+			"description": "Sets the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function20": {
+			"name": "setGraph2DRangeX",
+			"declaration": "void setGraph2DRangeX( int graphID, double xMin, double xMax )",
+			"description": "Sets the plot range of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) xMin : The minimum value of the X axis. \n(double type) xMax : The maximum value of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function21": {
+			"name": "setGraph2DRangeY",
+			"declaration": "void setGraph2DRangeY( int graphID, double yMin, double yMax )",
+			"description": "Sets the plot range of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double type) yMin : The minimum value of the Y axis. \n(double type) yMax : The maximum value of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function22": {
+			"name": "setGraph2DAutoRange",
+			"declaration": "void setGraph2DAutoRange( int graphID, bool autoX, bool autoY )",
+			"description": "Enables or disables the automatic adjustment feature for the plot range.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(bool type) autoX : True to enable automatic adjustment in the X-axis direction, or false to disable it. \n(bool type) autoY : True to enable automatic adjustment in the Y-axis direction, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function23": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "Sets the labels of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) xLabel : The label of the X axis. \n(string type) yLabel : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function24": {
+			"name": "setGraph2DLabelX",
+			"declaration": "void setGraph2DLabelX( int graphID, string label )",
+			"description": "Sets the label of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the X axis. ",
+			"returnValue": "(void type) "
+		},
+		"function25": {
+			"name": "setGraph2DLabelY",
+			"declaration": "void setGraph2DLabelY( int graphID, string label )",
+			"description": "Sets the label of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) label : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function26": {
+			"name": "setGraph2DTick",
+			"declaration": "void setGraph2DTick( int graphID, double xTickCoords[ ], string xTickLabels[ ], double yTickCoords[ ], string yTickLabels[ ] )",
+			"description": "Sets the tick marks of each axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) xTickCoords : The coordinate values of the tick positions on the X axis. \n(string[] type) xTickLabels : The labels of the tick marks on the X axis. \n(double[] type) yTickCoords : The coordinate values of the tick positions on the Y axis. \n(string[] type) yTickLabels : The labels of the tick marks on the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function27": {
+			"name": "setGraph2DTickX",
+			"declaration": "void setGraph2DTickX( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the X axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function28": {
+			"name": "setGraph2DTickY",
+			"declaration": "void setGraph2DTickY( int graphID, double tickCoords[ ], string tickLabels[ ] )",
+			"description": "Sets the tick marks of the Y axis.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(double[] type) tickCoords : The coordinate values of the tick positions. \n(string[] type) tickLabels : The labels of the tick marks. ",
+			"returnValue": "(void type) "
+		},
+		"function29": {
+			"name": "setGraph2DOption",
+			"declaration": "void setGraph2DOption( int graphID, string option, bool value )",
+			"description": "Sets an option item of the graph. The item names depend on the implementation. Representative option item names are as follows:<dl><dt>WITH_POINTS<\/dt><dd>Point plot<\/dd><dt>WITH_LINES<\/dt><dd>Line plot<\/dd><dt>WITH_DOTS<\/dt><dd>Dot plot<\/dd><dt>WITH_GRID_LINE<\/dt><dd>Grid-line drawing<\/dd><dt>LOG_X<\/dt><dd>Display the X axis in logarithmic scale<\/dd><dt>LOG_Y<\/dt><dd>Display the Y axis in logarithmic scale<\/dd><dt>REVERSE_X<\/dt><dd>Reverse the X axis<\/dd><dt>REVERSE_Y<\/dt><dd>Reverse the Y axis<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) option : The name of the option item. \n(bool type) value : True to enable the option, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function30": {
+			"name": "setGraph2DMenu",
+			"declaration": "void setGraph2DMenu( int graphID, string menu, string value )",
+			"description": "This function is effectively used only for label settings, and it can now be replaced by functions such as setGraph2DLabel and setGraph2DLabelX or Y.Because that is more readable, it is recommended to use that form from now on unless there is a specific reason not to.<br \/><br \/>Sets a menu item of the graph. The item name depends on the implementation.",
+			"parameters": "(int type) graphID : The ID of the target graph. \noption : The name of the menu item. \n(string type) value : True to enable the menu item, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function31": {
+			"name": "setGraph2DAnimation",
+			"declaration": "void setGraph2DAnimation( int graphID, string mode, bool state )",
+			"description": "Enables or disables graph animation. The available animation modes depend on the implementation. Representative animation modes are as follows:<dl><dt>TRACE<\/dt><dd>Animate points while leaving trajectories<\/dd><dt>INDEX<\/dt><dd>Animate points<\/dd><dt>INDEX-SERIES<\/dt><dd>Animate series<\/dd><\/dl>",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) mode : The animation mode. \n(bool type) state : True to enable animation, or false to disable it. ",
+			"returnValue": "(void type) "
+		},
+		"function32": {
+			"name": "setGraph2DTitle",
+			"declaration": "void setGraph2DTitle( int graphID, string title )",
+			"description": "Sets the title of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) title : The title. ",
+			"returnValue": "(void type) "
+		},
+		"function33": {
+			"name": "setGraph2DLabel",
+			"declaration": "void setGraph2DLabel( int graphID, string xLabel, string yLabel )",
+			"description": "Sets the axis labels of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) xLabel : The label of the X axis. \n(string type) yLabel : The label of the Y axis. ",
+			"returnValue": "(void type) "
+		},
+		"function34": {
+			"name": "setGraph2DLegend",
+			"declaration": "void setGraph2DLegend( int graphID, string legend[ ] )",
+			"description": "Sets the legend of the graph.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string[] type) legend : The array storing the legends, indexed by series index. ",
+			"returnValue": "(void type) "
+		},
+		"function35": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". ",
+			"returnValue": "(void type) "
+		},
+		"function36": {
+			"name": "exportGraph2D",
+			"declaration": "void exportGraph2D( int graphID, string filename, string format, float quality )",
+			"description": "Outputs the graph as an image.",
+			"parameters": "(int type) graphID : The ID of the target graph. \n(string type) filename : The output file name or path. \n(string type) format : The format, either \"PNG\" or \"JPEG\". \n(float type) quality : The quality, from 0.0 to 100.0. ",
+			"returnValue": "(void type) "
+		}
+	}
+}
