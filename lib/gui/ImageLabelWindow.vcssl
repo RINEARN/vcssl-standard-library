@@ -8,9 +8,10 @@ import GUI;
 import Graphics;
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ gui.ImageLabelWindow は、
- * GUI部品として、画像ラベルを表示するウィンドウ ―― 画像ラベルウィンドウ ―― を提供します。	
+ * GUI部品として、画像ラベルを表示するウィンドウ ―― 画像ラベルウィンドウ ―― を提供します。
  * <br />
  * 即席の描画ウィンドウや、画像ファイルの内容を表示するウィンドウなどとして使用できます。
  * </p>
@@ -26,7 +27,7 @@ import Graphics;
  * <br />
  * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
  * <br />
- * 具体的には、 <a href="#newImageLabelWindow">newImageLabelWindow</a> 関数で生成し、 
+ * 具体的には、 <a href="#newImageLabelWindow">newImageLabelWindow</a> 関数で生成し、
  * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
  * </p>
  *
@@ -35,46 +36,137 @@ import Graphics;
  * ImageLabelWindow 構造体を標準ライブラリ「 GUI 」と同様の感覚でそのまま扱えるように、
  * 標準GUIライブラリ関数のオーバーロードも提供されます。
  * <br />
- * 例えば、 
+ * 例えば、
  * <a href="#mountComponent">mountComponent</a> 関数や、
- * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentSize">setComponentSize</a> 関数、
  * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, gui.ImageLabelWindow, provides a window displaying an image label as a GUI component.
+ * <br />
+ * It can be used as a quick drawing window or as a window for displaying the contents of an image file.
+ * </p>
+ *
+ * <p>
+ * In the standard VCSSL library GUI, GUI components are handled as int IDs, but the GUI component provided by this module is handled as the
+ * <a href="#ImageLabelWindow">ImageLabelWindow</a> struct.
+ * </p>
+ *
+ * <p>
+ * The ImageLabelWindow struct internally stores resource IDs and related data, but you normally do not need to be aware of its internals because
+ * functions for creating and destroying it are provided. Direct access to its members is not recommended.
+ * <br />
+ * Specifically, create it with the <a href="#newImageLabelWindow">newImageLabelWindow</a> function and destroy it with the
+ * <a href="#deleteComponent">deleteComponent</a> function.
+ * </p>
+ *
+ * <p>
+ * This module also provides overloads of standard GUI library functions so that the ImageLabelWindow struct can be handled almost in the same
+ * way as in the standard library GUI.
+ * <br />
+ * For example, the <a href="#mountComponent">mountComponent</a>, <a href="#setComponentSize">setComponentSize</a>, and
+ * <a href="#setComponentLocation">setComponentLocation</a> functions are provided.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
-/** デフォルトのウィンドウタイトルです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウタイトルです。
+ *
+ * !--- locale=En-US ---
+ * The default window title.
+ */
 private const string DEFAULT_WINDOW_TITLE = "ImageLabelWindow";
 
-/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。
+ *
+ * !--- locale=En-US ---
+ * The default window offset value specifying the approximate difference between the window frame and the inner area.
+ */
 private const int DEFAULT_WINDOW_WIDTH_OFFSET = 16;
 
-/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。
+ *
+ * !--- locale=En-US ---
+ * The default window offset value specifying the approximate difference between the window frame and the inner area.
+ */
 private const int DEFAULT_WINDOW_HEIGHT_OFFSET = 38;
 
-/** デフォルトのウィンドウ位置(X)です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ位置(X)です。
+ *
+ * !--- locale=En-US ---
+ * The default X position of the window.
+ */
 private const int DEFAULT_WINDOW_X = 0;
 
-/** デフォルトのウィンドウ位置(Y)です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ位置(Y)です。
+ *
+ * !--- locale=En-US ---
+ * The default Y position of the window.
+ */
 private const int DEFAULT_WINDOW_Y = 0;
 
-/** デフォルトのウィンドウ内余白領域です(左)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(左)。
+ *
+ * !--- locale=En-US ---
+ * The default inner left margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_LEFT = 10;
 
-/** デフォルトのウィンドウ内余白領域です(右)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(右)。
+ *
+ * !--- locale=En-US ---
+ * The default inner right margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_RIGHT = 10;
 
-/** デフォルトのウィンドウ内余白領域です(上)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(上)。
+ *
+ * !--- locale=En-US ---
+ * The default inner top margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
 
-/** デフォルトのウィンドウ内余白領域です(下)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(下)。
+ *
+ * !--- locale=En-US ---
+ * The default inner bottom margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
 
 
-/** 画像ラベルウィンドウの構造体です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 画像ラベルウィンドウの構造体です。
+ *
+ * !--- locale=En-US ---
+ * The image label window struct.
+ */
 public struct ImageLabelWindow{
 	// ウィンドウのGUI部品IDです。
 	protected int window = NULL;
@@ -84,6 +176,7 @@ public struct ImageLabelWindow{
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像ラベルウィンドウを生成します。
  *
  * @param x ウィンドウ左上頂点のX座標
@@ -93,6 +186,17 @@ public struct ImageLabelWindow{
  * @param title ウィンドウのタイトル
  * @param graphics グラフィックスリソース
  * @return 生成したウィンドウ構造体
+ *
+ * !--- locale=En-US ---
+ * Creates an image label window.
+ *
+ * @param x The X coordinate of the top-left corner of the window.
+ * @param y The Y coordinate of the top-left corner of the window.
+ * @param width The width of the window.
+ * @param height The height of the window.
+ * @param title The title of the window.
+ * @param graphics The graphics resource.
+ * @return The created window struct.
  */
 public ImageLabelWindow newImageLabelWindow(int x, int y, int width, int height, string title, int graphics){
 	ImageLabelWindow windowInstance;
@@ -108,10 +212,17 @@ public ImageLabelWindow newImageLabelWindow(int x, int y, int width, int height,
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 自動でウィンドウサイズを決定し、画像ラベルウィンドウを生成します。
  *
  * @param graphics グラフィックスリソース
  * @return 生成したウィンドウ構造体
+ *
+ * !--- locale=En-US ---
+ * Creates an image label window with its size determined automatically.
+ *
+ * @param graphics The graphics resource.
+ * @return The created window struct.
  */
 public ImageLabelWindow newImageLabelWindow(int graphics){
 	int graphicsWidth = getGraphicsWidth(graphics);
@@ -148,9 +259,15 @@ public ImageLabelWindow newImageLabelWindow(int graphics){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像ラベルウィンドウを破棄します。
  *
  * @param windowInstance 破棄するウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Destroys an image label window.
+ *
+ * @param windowInstance The window to be destroyed.
  */
 public void deleteComponent(ImageLabelWindow &windowInstance){
 	deleteComponent(windowInstance.window);
@@ -160,10 +277,17 @@ public void deleteComponent(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのGUIコンポーネントIDを返します。
  *
  * @param windowInstance 取得対象のウィンドウ
  * @return ウィンドウのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Returns the GUI component ID of the window.
+ *
+ * @param windowInstance The target window.
+ * @return The GUI component ID of the window.
  */
 public int getWindow(ImageLabelWindow &windowInstance){
 	return windowInstance.window;
@@ -171,10 +295,17 @@ public int getWindow(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像ラベルのGUIコンポーネントIDを返します。
  *
  * @param windowInstance 取得対象のウィンドウ
  * @return 画像ラベルのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Returns the GUI component ID of the image label.
+ *
+ * @param windowInstance The target window.
+ * @return The GUI component ID of the image label.
  */
 public int getImageLabel(ImageLabelWindow &windowInstance){
 	return windowInstance.imageLabel;
@@ -198,11 +329,19 @@ public void setComponentGraphics(ImageLabelWindow &windowInstance, int graphics)
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウサイズを設定します。
  *
  * @param windowInstance 設定対象のウィンドウ
  * @param width ウィンドウの幅
  * @param height ウィンドウの高さ
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the window.
+ *
+ * @param windowInstance The target window.
+ * @param width The width of the window.
+ * @param height The height of the window.
  */
 public void setComponentSize(ImageLabelWindow &windowInstance, int width, int height){
 	setComponentSize(windowInstance.window, width, height);
@@ -211,9 +350,15 @@ public void setComponentSize(ImageLabelWindow &windowInstance, int width, int he
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの現在のサイズに合わせて、内部コンポーネントのレイアウトを自動設定します。ウインドウのサイズを外部から変更した際に使用します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Automatically adjusts the layout of the internal components to match the current window size. Use this when the window size has been changed externally.
+ *
+ * @param windowInstance The target window.
  */
 public void setComponentSize(ImageLabelWindow &windowInstance){
 
@@ -234,10 +379,17 @@ public void setComponentSize(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのサイズを返します。
  *
  * @param windowInstance 対象のウィンドウ
  * @return ウィンドウのサイズを格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the size of the window.
+ *
+ * @param windowInstance The target window.
+ * @return The array storing the size of the window.
  */
 public int[] getComponentSize(ImageLabelWindow &windowInstance){
 	return getComponentSize(windowInstance.window);
@@ -245,9 +397,15 @@ public int[] getComponentSize(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスリソースにちょうど適切なウィンドウサイズを設定します。
  *
  * @param windowInstance 設定対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Sets the window size to fit the graphics resource exactly.
+ *
+ * @param windowInstance The target window.
  */
 public void fitComponentSize(ImageLabelWindow &windowInstance){
 	int graphics = getComponentGraphics(windowInstance.imageLabel);
@@ -265,11 +423,19 @@ public void fitComponentSize(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を設定します。
  *
  * @param windowInstance 設定対象のウィンドウ
  * @param x ウィンドウ左上頂点のX座標
  * @param y ウィンドウ左上頂点のY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the location of the window.
+ *
+ * @param windowInstance The target window.
+ * @param x The X coordinate of the top-left corner of the window.
+ * @param y The Y coordinate of the top-left corner of the window.
  */
 public void setComponentLocation(ImageLabelWindow &windowInstance, int x, int y){
 	setComponentLocation(windowInstance.window, x, y);
@@ -277,10 +443,17 @@ public void setComponentLocation(ImageLabelWindow &windowInstance, int x, int y)
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を返します。
  *
  * @param windowInstance 対象のウィンドウ
  * @return ウィンドウの位置を格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the location of the window.
+ *
+ * @param windowInstance The target window.
+ * @return The array storing the location of the window.
  */
 public int[] getComponentLocation(ImageLabelWindow &windowInstance){
 	return getComponentLocation(windowInstance.window);
@@ -288,9 +461,15 @@ public int[] getComponentLocation(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを再描画します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Repaints the window.
+ *
+ * @param windowInstance The target window.
  */
 public void paintComponent(ImageLabelWindow &windowInstance){
 	paintComponent(windowInstance.imageLabel);
@@ -299,9 +478,15 @@ public void paintComponent(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを不可視化します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Hides the window.
+ *
+ * @param windowInstance The target window.
  */
 public void hideComponent(ImageLabelWindow &windowInstance){
 	hideComponent(windowInstance.window);
@@ -309,9 +494,15 @@ public void hideComponent(ImageLabelWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを可視化します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Shows the window.
+ *
+ * @param windowInstance The target window.
  */
 public void showComponent(ImageLabelWindow &windowInstance){
 	showComponent(windowInstance.window);
