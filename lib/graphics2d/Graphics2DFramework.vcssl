@@ -11,6 +11,7 @@ import Time;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ graphics2d.Graphics2DFramework は、
  * 2DCG（ 2次元グラフィックス ）を手軽に扱うための軽量フレームワークです。
@@ -91,92 +92,250 @@ import Time;
  * <br />
  * 画面のちらつきを抑える事ができます（ ただしこの場合、実測フレームレートの限界は低下します ）。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, graphics2d.Graphics2DFramework, is a lightweight framework for handling 2D computer graphics easily.
+ * </p>
+ *
+ * <p>
+ * When writing a 2D CG program from scratch using only the standard VCSSL libraries Graphics2D and GUI,
+ * <br />
+ * you need to write several fixed pieces of code every time, such as creating the window and renderer, the animation loop,
+ * and basic event handlers.
+ * <br />
+ * Graphics2DFramework supports easy 2D CG development by preparing such fixed processing in advance as a framework template.
+ * </p>
+ *
+ * <p>Required Processing</p>
+ *
+ * <p>
+ * Structurally, Graphics2DFramework is already a complete 2D CG program by itself, and it can actually run as a standalone program.
+ * <br />
+ * However, by itself it has no drawing contents, so only a white screen is displayed.
+ * </p>
+ *
+ * <p>
+ * In practice, you import Graphics2DFramework from your own module and describe the required processing, such as placing and moving sprites.
+ * <br />
+ * Such processing is written by defining functions with specific names, just like event handlers for GUI components.
+ * <br />
+ * Then Graphics2DFramework automatically executes those event handler functions at appropriate timings.
+ * </p>
+ *
+ * <p>
+ * Graphics2DFramework automatically executes the following event handler functions. Their definitions are optional, so define only the ones you need.
+ * <ul>
+ *   <li>void onStart( int renderer ) - Executed only once at startup. Write initialization processing such as creating and placing sprites here. The old name initialize is also supported.</li>
+ *   <li>void onExit( int renderer ) - Executed only once at shutdown. Write any shutdown processing here if needed. The old name finalize is also supported.</li>
+ *   <li>void onPaint( int renderer ) - Executed every time the screen is updated, usually dozens of times per second. Write processing here when you want to draw 2D CG contents directly for animation. The old name paint is also supported.</li>
+ *   <li>void onUpdate( int renderer ) - Executed every time between screen updates, usually dozens of times per second. Write processing here when you want to move sprites and so on. The old name update is also supported.</li>
+ *   <li>void onResize( int renderer ) - Executed when the window size changes. Write processing here when you want to adjust the layout of GUI components placed on the screen. The old name resize is also supported.</li>
+ * </ul>
+ * In all of the above functions, the argument renderer receives the ID of the 2D CG renderer. Use it for drawing and for registering sprites.
+ * </p>
+ *
+ * <p>Window Customization</p>
+ *
+ * <p>
+ * Graphics2DFramework allows margin areas to be set inside the window, where GUI components such as buttons and text fields can be placed.
+ * <br />
+ * Margins can be configured with functions such as <a href="#setMarginTop">setMarginTop</a> ( int margin ) and <a href="#setMarginLeft">setMarginLeft</a> ( int margin ).
+ * <br />
+ * Then obtain the window ID by <a href="#getWindow">getWindow</a> ( ) and place GUI components freely in the margin areas.
+ * </p>
+ *
+ * <p>Frame Rate Adjustment</p>
+ *
+ * <p>
+ * Graphics2DFramework also has an automatic frame rate adjustment mechanism.
+ * <br />
+ * Specifically, it measures the time required for each frame and automatically adjusts the wait time of the animation loop so that the measured frame rate approaches the configured target frame rate.
+ * <br />
+ * Set the target frame rate with <a href="#setFrameRate">setFrameRate</a> ( float rate ).
+ * The measured frame rate can be obtained with <a href="#getCurrentFrameRate">getCurrentFrameRate</a> ( ).
+ * </p>
+ *
+ * <p>Slowdown</p>
+ *
+ * <p>
+ * Depending on the processing speed of the execution environment, if the drawing area is large or the drawing contents are heavy,
+ * <br />
+ * the measured frame rate may fail to reach the target frame rate even when the animation wait time is minimized. This phenomenon is a slowdown.
+ * </p>
+ * <p>
+ * When a slowdown occurs, screen repainting may fail to keep up and the display may flicker.
+ * <br />
+ * In that case, flicker can be reduced by setting the target frame rate to a value with enough margin below the measured frame rate limit.
+ * <br />
+ * However, because the measured frame rate depends heavily on the environment,
+ * flicker can also be reduced by setting a relatively large lower limit for the animation wait time in milliseconds with <a href="#setAnimationWaitMin">setAnimationWaitMin</a> ( int wait ).
+ * <br />
+ * Note that this lowers the upper limit of the measured frame rate.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
-/** 2DCGのグラフィックスIDです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 2DCGのグラフィックスIDです。
+ *
+ * !--- locale=En-US ---
+ * The graphics ID of the 2D CG graphics.
+ */
 private int graphics = -1;
 
 /**
+ * !--- locale=Ja-JP ---
  * 2DCGのグラフィックスIDを返します。
  *
  * @return 2DCGのグラフィックスID
+ *
+ * !--- locale=En-US ---
+ * Returns the graphics ID of the 2D CG resource.
+ *
+ * @return The graphics ID of the 2D CG graphics.
  */
 public int getGraphics(){
 	return graphics;
 }
 
 
-/** 2DCGのレンダラーIDです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 2DCGのレンダラーIDです。
+ *
+ * !--- locale=En-US ---
+ * The renderer ID of the 2D CG renderer.
+ */
 private int renderer = -1;
 
 /**
+ * !--- locale=Ja-JP ---
  * 2DCGのレンダラーIDを返します。
  *
  * @return 2DCGのレンダラーID
+ *
+ * !--- locale=En-US ---
+ * Returns the renderer ID of the 2D CG renderer.
+ *
+ * @return The renderer ID of the 2D CG renderer.
  */
 public int getRenderer(){
 	return renderer;
 }
 
 
-/** 描画内容を表示する、画像ラベルのGUIコンポーネントIDです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 描画内容を表示する、画像ラベルのGUIコンポーネントIDです。
+ *
+ * !--- locale=En-US ---
+ * The GUI component ID of the image label displaying the drawing contents.
+ */
 private int imageLabel = -1;
 
 /**
+ * !--- locale=Ja-JP ---
  * 描画内容を表示する、画像ラベルのGUIコンポーネントIDを返します。
  *
  * @return 画像ラベルのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Returns the GUI component ID of the image label displaying the drawing contents.
+ *
+ * @return The GUI component ID of the image label.
  */
 public int getImageLabel(){
 	return imageLabel;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 画像ラベルのGUIコンポーネントIDを返します。
  * この関数には、より新しい <a href="#getImageLabel">getImageLabel</a> がサポートされています。
  * この関数は互換目的でサポートされています。
  *
  * @return 描画領域ラベルのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Returns the GUI component ID of the image label.
+ * The newer <a href="#getImageLabel">getImageLabel</a> function is available for this purpose.
+ * This function is supported for compatibility.
+ *
+ * @return The GUI component ID of the drawing area label.
  */
 public int getGraphicsLabel(){
 	return imageLabel;
 }
 
 
-/** ウィンドウのGUIコンポーネントIDです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウのGUIコンポーネントIDです。
+ *
+ * !--- locale=En-US ---
+ * The GUI component ID of the window.
+ */
 private int window = -1;
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのGUIコンポーネントIDを返します。
  *
  * @return ウィンドウのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Returns the GUI component ID of the window.
+ *
+ * @return The GUI component ID of the window.
  */
 public int getWindow(){
 	return window;
 }
 
 
-/** アニメーションモードの有効/無効を制御する変数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * アニメーションモードの有効/無効を制御する変数です。
+ *
+ * !--- locale=En-US ---
+ * The variable controlling whether animation mode is enabled.
+ */
 private bool animation = true;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションモードの有効/無効を設定します。
  *
  * @param enable アニメーションモードの有効/無効(trueならば有効)
+ *
+ * !--- locale=En-US ---
+ * Sets whether animation mode is enabled.
+ *
+ * @param enable Whether animation mode is enabled. It is enabled when true.
  */
 public void setAnimationState(bool enable){
 	animation = enable;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションの有効/無効を取得します。
  *
  * @return アニメーションモード有効/無効(trueならば有効)
+ *
+ * !--- locale=En-US ---
+ * Gets whether animation mode is enabled.
+ *
+ * @return Whether animation mode is enabled. It is enabled when true.
  */
 public bool getAnimationState(){
 	return animation;
@@ -184,100 +343,198 @@ public bool getAnimationState(){
 
 
 
-/** アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値です。
+ *
+ * !--- locale=En-US ---
+ * The configured screen update frequency of the animation, that is, the number of redraws per second.
+ */
 private float frameRate = 30;
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）を設定します。
  *
  * @param rate 画面更新頻度
+ *
+ * !--- locale=En-US ---
+ * Sets the screen update frequency of the animation, that is, the number of redraws per second.
+ *
+ * @param rate The screen update frequency.
  */
 public void setFrameRate(float rate){
 	frameRate = rate;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の設定値を取得します。
  *
  * @return 画面更新頻度(設定値)
+ *
+ * !--- locale=En-US ---
+ * Gets the configured screen update frequency of the animation, that is, the number of redraws per second.
+ *
+ * @return The configured screen update frequency.
  */
 public float getFrameRate(){
 	return frameRate;
 }
 
 
-/** アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値です。
+ *
+ * !--- locale=En-US ---
+ * The measured screen update frequency of the animation, that is, the number of redraws per second.
+ */
 private float currentFrameRate = frameRate;
 
-/** 
+/**
+ * !--- locale=Ja-JP ---
  * アニメーションの画面更新頻度（ 1秒間あたりの描画回数 ）の実測値を取得します。
  *
  * @return 画面更新頻度(実測値)
+ *
+ * !--- locale=En-US ---
+ * Gets the measured screen update frequency of the animation, that is, the number of redraws per second.
+ *
+ * @return The measured screen update frequency.
  */
 public float getCurrentFrameRate(){
 	return currentFrameRate;
 }
 
 
-/** アニメーションの最終画面更新時刻です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * アニメーションの最終画面更新時刻です。
+ *
+ * !--- locale=En-US ---
+ * The time of the last screen update of the animation.
+ */
 private int lastFrameTime = 0;
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションの最終画面更新時刻を取得します。
  * 時刻は、プログラム開始時刻からの経過時間を、通常はミリ秒単位で表したものが返されます。
  * ただし単位は処理系によって異なる可能性があります。
  * 処理系の依存性を完全に排除するためには、Time.millisecond関数を挟んで使用して下さい。
  *
  * @return 最終画面更新時刻(通常はミリ秒単位)
+ *
+ * !--- locale=En-US ---
+ * Gets the time of the last screen update of the animation.
+ * The returned time usually represents the elapsed time from program startup in milliseconds.
+ * However, the unit may differ depending on the implementation.
+ * To eliminate implementation dependence completely, convert it through the Time.millisecond function before using it.
+ *
+ * @return The time of the last screen update, usually in milliseconds.
  */
 public int getLastFrameTime(){
 	return lastFrameTime;
 }
 
 
-/** 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを制御する変数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを制御する変数です。
+ *
+ * !--- locale=En-US ---
+ * The variable controlling whether Graphics2D.paintGraphics2D is called automatically when the screen is drawn, before the paint call.
+ */
 private bool paintGraphics2DState = true;
 
 /**
+ * !--- locale=Ja-JP ---
  * 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを設定します。
  * trueを指定すると自動でコールされます。
  * falseに設定すると自動でコールされないので、paintイベントハンドラなどで明示的にコールする必要があります。
  *
  * @param state 設定した状態
+ *
+ * !--- locale=En-US ---
+ * Sets whether Graphics2D.paintGraphics2D is called automatically when the screen is drawn, before the paint call.
+ * If true is specified, it is called automatically.
+ * If false is set, it is not called automatically, so it needs to be called explicitly in the paint event handler or elsewhere.
+ *
+ * @param state The state to set.
  */
 public void setPaintGraphics2DState(bool b){
 	paintGraphics2DState = b;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 画面描画時（paintコール前）に、自動でGraphics2D.paintGraphics2Dをコールするかどうかを取得します。
  *
  * @return 取得した状態
+ *
+ * !--- locale=En-US ---
+ * Gets whether Graphics2D.paintGraphics2D is called automatically when the screen is drawn, before the paint call.
+ *
+ * @return The obtained state.
  */
 public bool getPaintGraphics2DState(){
 	return paintGraphics2DState;
 }
 
 
-/** 背景色の赤成分です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 背景色の赤成分です。
+ *
+ * !--- locale=En-US ---
+ * The red component of the background color.
+ */
 private int backgroundRed = 255;
 
-/** 背景色の緑成分です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 背景色の緑成分です。
+ *
+ * !--- locale=En-US ---
+ * The green component of the background color.
+ */
 private int backgroundGreen = 255;
 
-/** 背景色の青成分です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 背景色の青成分です。
+ *
+ * !--- locale=En-US ---
+ * The blue component of the background color.
+ */
 private int backgroundBlue = 255;
 
-/** 背景色のα成分です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 背景色のα成分です。
+ *
+ * !--- locale=En-US ---
+ * The alpha component of the background color.
+ */
 private int backgroundAlpha = 255;
 
 /**
+ * !--- locale=Ja-JP ---
  * 背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で指定します。
  *
  * @param r 背景色(赤、0～255)
  * @param g 背景色(緑、0～255)
  * @param b 背景色(青、0～255)
  * @param a 背景色(α成分、0～255)
+ *
+ * !--- locale=En-US ---
+ * Sets the background color. Specify the red, green, blue, and alpha components of the background color in the range from 0 to 255.
+ *
+ * @param r The red component of the background color, from 0 to 255.
+ * @param g The green component of the background color, from 0 to 255.
+ * @param b The blue component of the background color, from 0 to 255.
+ * @param a The alpha component of the background color, from 0 to 255.
  */
 public void setBackgroundColor(int r, int g, int b, int a){
 	backgroundRed = r;
@@ -290,9 +547,15 @@ public void setBackgroundColor(int r, int g, int b, int a){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 背景色を設定します。引数には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列を指定します。
  *
  * @param color 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255)
+ *
+ * !--- locale=En-US ---
+ * Sets the background color. Specify an array storing the red, green, blue, and alpha components of the background color in the range from 0 to 255.
+ *
+ * @param color The background color array, where [0]=red, [1]=green, [2]=blue, and [3]=alpha, each in the range from 0 to 255.
  */
 public void setBackgroundColor(int color[]){
 	backgroundRed = color[0];
@@ -305,9 +568,15 @@ public void setBackgroundColor(int color[]){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 背景色を取得します。戻り値には、背景色の 赤,緑,青,α成分 を、0～255の範囲で格納した配列が返されます。
  *
  * @return 背景色配列([0]=赤、[1]=緑、[2]=青、[3]=α成分、各0～255)
+ *
+ * !--- locale=En-US ---
+ * Gets the background color. The returned value is an array storing the red, green, blue, and alpha components of the background color in the range from 0 to 255.
+ *
+ * @return The background color array, where [0]=red, [1]=green, [2]=blue, and [3]=alpha, each in the range from 0 to 255.
  */
 public int[] getBackgroundColor(){
 	int color[] = {backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha};
@@ -316,10 +585,22 @@ public int[] getBackgroundColor(){
 
 
 
-/** ウィンドウタイトルです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウタイトルです。
+ *
+ * !--- locale=En-US ---
+ * The window title.
+ */
 private string windowTitle = "Graphics2D Window";
 
-/** ウィンドウタイトルを設定します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウタイトルを設定します。
+ *
+ * !--- locale=En-US ---
+ * Sets the window title.
+ */
 public void setWindowTitle(string title){
 	windowTitle = title;
 	if(window != NULL){
@@ -327,29 +608,66 @@ public void setWindowTitle(string title){
 	}
 }
 
-/** ウィンドウタイトルを取得します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウタイトルを取得します。
+ *
+ * !--- locale=En-US ---
+ * Gets the window title.
+ */
 public string getWindowTitle(){
 	return windowTitle;
 }
 
 
-/** ウィンドウの幅です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウの幅です。
+ *
+ * !--- locale=En-US ---
+ * The width of the window.
+ */
 private int windowWidth = 800;
 
-/** ウィンドウの高さです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウの高さです。
+ *
+ * !--- locale=En-US ---
+ * The height of the window.
+ */
 private int windowHeight = 600;
 
-/** ウィンドウのX位置です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウのX位置です。
+ *
+ * !--- locale=En-US ---
+ * The X position of the window.
+ */
 private int windowX = 0;
 
-/** ウィンドウのY位置です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウのY位置です。
+ *
+ * !--- locale=En-US ---
+ * The Y position of the window.
+ */
 private int windowY = 0;
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウサイズを設定します。
  *
  * @param width 幅
  * @param height 高さ
+ *
+ * !--- locale=En-US ---
+ * Sets the window size.
+ *
+ * @param width The width.
+ * @param height The height.
  */
 public void setWindowSize(int width, int height){
 	windowWidth = width;
@@ -362,9 +680,15 @@ public void setWindowSize(int width, int height){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウサイズを設定します。
  *
  * @param size ウィンドウサイズ（[0]=幅、[1]=高さ）
+ *
+ * !--- locale=En-US ---
+ * Sets the window size.
+ *
+ * @param size The window size, where [0]=width and [1]=height.
  */
 public void setWindowSize(int size[]){
 	windowWidth = size[0];
@@ -376,9 +700,15 @@ public void setWindowSize(int size[]){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウサイズを取得します。
  *
  * @return ウィンドウサイズ（[0]=幅、[1]=高さ）
+ *
+ * !--- locale=En-US ---
+ * Gets the window size.
+ *
+ * @return The window size, where [0]=width and [1]=height.
  */
 public int[] getWindowSize(){
 	int size[] = {windowWidth, windowHeight};
@@ -387,10 +717,17 @@ public int[] getWindowSize(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を設定します。
  *
  * @param x ウィンドウ左上のX座標
  * @param y ウィンドウ左上のY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the window location.
+ *
+ * @param x The X coordinate of the top-left corner of the window.
+ * @param y The Y coordinate of the top-left corner of the window.
  */
 public void setWindowLocation(int x, int y){
 	windowX = x;
@@ -401,9 +738,15 @@ public void setWindowLocation(int x, int y){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を設定します。
  *
  * @param size ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）
+ *
+ * !--- locale=En-US ---
+ * Sets the window location.
+ *
+ * @param size The coordinates of the top-left corner of the window, where [0]=X and [1]=Y.
  */
 public void setWindowLocation(int location[]){
 	windowX = location[0];
@@ -414,9 +757,15 @@ public void setWindowLocation(int location[]){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を取得します。
  *
  * @return ウィンドウ左上の座標（[0]=X座標、[1]=Y座標）
+ *
+ * !--- locale=En-US ---
+ * Gets the window location.
+ *
+ * @return The coordinates of the top-left corner of the window, where [0]=X and [1]=Y.
  */
 public int[] getWindowLocation(){
 	int location[] = {windowX, windowY};
@@ -424,22 +773,52 @@ public int[] getWindowLocation(){
 }
 
 
-/** ウィンドウ上側の余白です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウ上側の余白です。
+ *
+ * !--- locale=En-US ---
+ * The top margin of the window.
+ */
 private int marginTop = 0;
 
-/** ウィンドウ右側の余白です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウ右側の余白です。
+ *
+ * !--- locale=En-US ---
+ * The right margin of the window.
+ */
 private int marginRight = 0;
 
-/** ウィンドウ下側の余白です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウ下側の余白です。
+ *
+ * !--- locale=En-US ---
+ * The bottom margin of the window.
+ */
 private int marginBottom = 0;
 
-/** ウィンドウ左側の余白です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウ左側の余白です。
+ *
+ * !--- locale=En-US ---
+ * The left margin of the window.
+ */
 private int marginLeft = 0;
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ右側の余白を設定します。
  *
  * @param margin 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Sets the right margin of the window.
+ *
+ * @param margin The margin in pixels.
  */
 public void setMarginRight(int margin){
 	marginRight = margin;
@@ -449,18 +828,30 @@ public void setMarginRight(int margin){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ右側の余白を取得します。
  *
  * @return 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Gets the right margin of the window.
+ *
+ * @return The margin in pixels.
  */
 public int getMarginRight(){
 	return marginRight;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ左側の余白を設定します。
  *
  * @param m 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Sets the left margin of the window.
+ *
+ * @param m The margin in pixels.
  */
 public void setMarginLeft(int margin){
 	marginLeft = margin;
@@ -470,18 +861,30 @@ public void setMarginLeft(int margin){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ左側の余白を取得します。
  *
  * @return 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Gets the left margin of the window.
+ *
+ * @return The margin in pixels.
  */
 public int getMarginLeft(){
 	return marginLeft;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ上側の余白を設定します。
  *
  * @param m 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Sets the top margin of the window.
+ *
+ * @param m The margin in pixels.
  */
 public void setMarginTop(int margin){
 	marginTop = margin;
@@ -491,18 +894,30 @@ public void setMarginTop(int margin){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ上側の余白を取得します。
  *
  * @return 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Gets the top margin of the window.
+ *
+ * @return The margin in pixels.
  */
 public int getMarginTop(){
 	return marginTop;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ下側の余白を設定します。
  *
  * @param m 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Sets the bottom margin of the window.
+ *
+ * @param m The margin in pixels.
  */
 public void setMarginBottom(int margin){
 	marginBottom = margin;
@@ -512,107 +927,214 @@ public void setMarginBottom(int margin){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ下側の余白を取得します。
  *
  * @return 余白（ピクセル）
+ *
+ * !--- locale=En-US ---
+ * Gets the bottom margin of the window.
+ *
+ * @return The margin in pixels.
  */
 public int getMarginBottom(){
 	return marginBottom;
 }
 
 
-/** メインループの継続状態を制御する変数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * メインループの継続状態を制御する変数です。
+ *
+ * !--- locale=En-US ---
+ * The variable controlling whether the main loop continues.
+ */
 private bool mainLoopState = true;
 
-/** メインループウェイトです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * メインループウェイトです。
+ *
+ * !--- locale=En-US ---
+ * The main loop wait time.
+ */
 private int mainLoopWait;
 
-/** メインループウェイトの下限値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * メインループウェイトの下限値です。
+ *
+ * !--- locale=En-US ---
+ * The lower limit of the main loop wait time.
+ */
 private int mainLoopWaitMin = 15;
 
-/** メインループウェイトの上限値です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * メインループウェイトの上限値です。
+ *
+ * !--- locale=En-US ---
+ * The upper limit of the main loop wait time.
+ */
 private int mainLoopWaitMax = 1000;
 
-/** ウィンドウリサイズ後の待機時間 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウリサイズ後の待機時間
+ *
+ * !--- locale=En-US ---
+ * The wait time after the window is resized.
+ */
 private int windowResizeWait = 100;
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションウェイト（メインループのウェイト）の下限値を設定します。
+ *
+ * !--- locale=En-US ---
+ * Sets the lower limit of the animation wait time, that is, the wait time of the main loop.
  */
 public void setAnimationWaitMin(int wait){
 	mainLoopWaitMin = wait;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションウェイト（メインループのウェイト）の下限値を設定します。
+ *
+ * !--- locale=En-US ---
+ * Sets the lower limit of the animation wait time, that is, the wait time of the main loop.
  */
 public int getAnimationWaitMin(){
 	return mainLoopWaitMin;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションウェイト（メインループのウェイト）の上限値を設定します。
+ *
+ * !--- locale=En-US ---
+ * Sets the upper limit of the animation wait time, that is, the wait time of the main loop.
  */
 public void setAnimationWaitMax(int wait){
 	mainLoopWaitMax = wait;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * アニメーションウェイト（メインループのウェイト）の上限値を設定します。
+ *
+ * !--- locale=En-US ---
+ * Sets the upper limit of the animation wait time, that is, the wait time of the main loop.
  */
 public int getAnimationWaitMax(){
 	return mainLoopWaitMax;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * メインループの継続状態を設定します。falseに設定するとアニメーションのメインループを脱出し、プログラムを終了します。
  *
  * @param state メインループの継続状態
+ *
+ * !--- locale=En-US ---
+ * Sets whether the main loop continues. If it is set to false, the animation main loop exits and the program ends.
+ *
+ * @param state Whether the main loop continues.
  */
 public void setMainLoopState(bool state){
 	mainLoopState = state;
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * メインループの継続状態を取得します。
  *
  * @return メインループの継続状態
+ *
+ * !--- locale=En-US ---
+ * Gets whether the main loop continues.
+ *
+ * @return Whether the main loop continues.
  */
 public bool getMainLoopState(){
 	return mainLoopState;
 }
 
 
-/** main関数の引数を保持する変数です。 */
-private string mainArguments[];
-
-/** main関数の引数を保持する変数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * main関数の引数を保持する変数です。
+ *
+ * !--- locale=En-US ---
+ * The variable storing the arguments of the main function.
+ */
 private string mainArguments[];
 
 /**
+ * !--- locale=Ja-JP ---
+ * main関数の引数を保持する変数です。
+ *
+ * !--- locale=En-US ---
+ * The variable storing the arguments of the main function.
+ */
+private string mainArguments[];
+
+/**
+ * !--- locale=Ja-JP ---
  * main関数の引数を取得します。
  *
  * @return main関数の引数
- **/
+ *
+ * !--- locale=En-US ---
+ * Gets the arguments of the main function.
+ *
+ * @return The arguments of the main function.
+ */
 public string[] getMainArgument(){
 	return mainArguments;
 }
 
 
 
-/** 画像ファイルの出力要求です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 画像ファイルの出力要求です。
+ *
+ * !--- locale=En-US ---
+ * The output request for an image file.
+ */
 private bool exportRequested = false;
 
-/** 画像ファイルの出力ファイルパスを保持です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 画像ファイルの出力ファイルパスを保持です。
+ *
+ * !--- locale=En-US ---
+ * The stored output file path of the image file.
+ */
 private string exportFilePath = NULL;
 
-/** 画像ファイルの出力ファイルフォーマットです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 画像ファイルの出力ファイルフォーマットです。
+ *
+ * !--- locale=En-US ---
+ * The output file format of the image file.
+ */
 private string exportFormat = NULL;
 
-/** 画像ファイルの出力品質です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 画像ファイルの出力品質です。
+ *
+ * !--- locale=En-US ---
+ * The output quality of the image file.
+ */
 private float exportQuality = 0.0;
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画ラベルの内容を、画像ファイルに出力します。
  * ファイルの出力は、この関数をコールした瞬間に行われるわけでは無く、
  * 次回の画面更新タイミングに合わせて実行されます。
@@ -620,6 +1142,15 @@ private float exportQuality = 0.0;
  * @param filePath 出力ファイル名またはファイルパス
  * @param format ファイル形式（"PNG"または"JPEG"）
  * @param quality 品質
+ *
+ * !--- locale=En-US ---
+ * Outputs the current contents of the drawing label as an image file.
+ * File output is not performed at the moment this function is called.
+ * It is executed at the next screen update timing.
+ *
+ * @param filePath The output file name or file path.
+ * @param format The file format, either "PNG" or "JPEG".
+ * @param quality The quality.
  */
 public void export( string filePath, string format, float quality ){
 	if(animation){
@@ -633,9 +1164,13 @@ public void export( string filePath, string format, float quality ){
 }
 
 /**
+ * !--- locale=Ja-JP ---
  * 現在の描画ラベルの内容を、画像ファイルに出力します。
  * 適切なタイミングで、メインループから実行されます。
  *
+ * !--- locale=En-US ---
+ * Outputs the current contents of the drawing label as an image file.
+ * It is executed from the main loop at an appropriate timing.
  */
 private void export(){
 	exportGraphics( graphics, exportFilePath, exportFormat, exportQuality );
@@ -643,12 +1178,21 @@ private void export(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * main関数です。通常は自動で実行され、frameworkMain関数をコールします。
  * ただし、メインプログラムでmain関数を定義する場合は、
  * こちらは自動で実行されなくなるので、
- * 下記のframeworkMainを明示的に呼ぶ必要があります。
+ * frameworkMain関数を明示的に呼ぶ必要が生じます。
  *
  * @param args メイン引数（ getMainArgument関数で取得可能 ）
+ *
+ * !--- locale=En-US ---
+ * The main function. It is normally executed automatically and calls the frameworkMain function.
+ * However, if the main program defines the main function,
+ * this function is no longer executed automatically, so
+ * the frameworkMain function below needs to be called explicitly.
+ *
+ * @param args The main arguments, which can also be obtained with the getMainArgument function.
  */
 public void main( string args[] ){
 
@@ -657,24 +1201,58 @@ public void main( string args[] ){
 }
 
 
-/** onPaint関数が定義されているかどうかを保持します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * onPaint関数が定義されているかどうかを保持します。
+ *
+ * !--- locale=En-US ---
+ * Stores whether the onPaint function is defined.
+ */
 private bool existsOnPaint = false;
 
-/** onUpdate関数が定義されているかどうかを保持します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * onUpdate関数が定義されているかどうかを保持します。
+ *
+ * !--- locale=En-US ---
+ * Stores whether the onUpdate function is defined.
+ */
 private bool existsOnUpdate = false;
 
-/** onStart関数が定義されているかどうかを保持します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * onStart関数が定義されているかどうかを保持します。
+ *
+ * !--- locale=En-US ---
+ * Stores whether the onStart function is defined.
+ */
 private bool existsOnStart = false;
 
-/** onExit関数が定義されているかどうかを保持します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * onExit関数が定義されているかどうかを保持します。
+ *
+ * !--- locale=En-US ---
+ * Stores whether the onExit function is defined.
+ */
 private bool existsOnExit = false;
 
-/** onResize関数が定義されているかどうかを保持します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * onResize関数が定義されているかどうかを保持します。
+ *
+ * !--- locale=En-US ---
+ * Stores whether the onResize function is defined.
+ */
 private bool existsOnResize = false;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 各種コールバック関数が定義されているかを検証します。
+ *
+ * !--- locale=En-US ---
+ * Verifies whether the callback functions are defined.
  */
 private void checkCallback(){
 	existsOnPaint = evaluable("onPaint(renderer)");
@@ -686,12 +1264,21 @@ private void checkCallback(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * フレームワークのリソースを初期化する処理です。
  * この関数は、このフレームワークのプログラムの末尾、
  * グローバル領域においてコールされます。
- * 従って、このフレームワークを 
+ * 従って、このフレームワークを
  * import しているプログラムのグローバル領域実行時には、
  * すでにリソースが確保されている事が保証されます。
+ *
+ * !--- locale=En-US ---
+ * Initializes the framework resources.
+ * This function is called at the end of this framework program,
+ * in the global scope.
+ * Therefore, when a program importing this framework
+ * executes its global scope,
+ * the resources are already guaranteed to have been allocated.
  */
 private void frameworkInitialize() {
 	initializeWindow();
@@ -702,11 +1289,19 @@ private void frameworkInitialize() {
 
 
 /**
+ * !--- locale=Ja-JP ---
  * フレームワークのメイン処理です。通常はmain関数から自動で実行されます。
  * ただし、メインプログラムでmain関数を定義する場合は、
  * 自動で実行されなくなるので、適当なタイミングで呼ぶ必要があります。
  *
  * @param args メイン引数（ getMainArgument関数で取得可能 ）
+ *
+ * !--- locale=En-US ---
+ * The main processing of the framework. It is normally executed automatically from the main function.
+ * However, if the main program defines the main function,
+ * it is no longer executed automatically, so it needs to be called at an appropriate timing.
+ *
+ * @param args The main arguments, which can also be obtained with the getMainArgument function.
  */
 public void frameworkMain( string args[] ){
 
@@ -740,15 +1335,29 @@ public void frameworkMain( string args[] ){
 }
 
 
-/** ウィンドウがリサイズされた事をメインループに通知する変数です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * ウィンドウがリサイズされた事をメインループに通知する変数です。
+ *
+ * !--- locale=En-US ---
+ * The variable notifying the main loop that the window has been resized.
+ */
 private bool windowResized = false;
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウがリサイズされた際にコールされるイベントハンドラです。
  *
  * @param id ウィンドウのGUIコンポーネントID
  * @param width ウィンドウの幅
  * @param height ウィンドウの高さ
+ *
+ * !--- locale=En-US ---
+ * The event handler called when the window is resized.
+ *
+ * @param id The GUI component ID of the window.
+ * @param width The width of the window.
+ * @param height The height of the window.
  */
 public void onWindowResize( int id, int width, int height ){
 	if( id == window ){
@@ -762,9 +1371,15 @@ public void onWindowResize( int id, int width, int height ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウが閉じられた際にコールされるイベントハンドラです。
  *
  * @param id ウィンドウのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * The event handler called when the window is closed.
+ *
+ * @param id The GUI component ID of the window.
  */
 public void onWindowClose( int id ){
 	if( id == window ){
@@ -774,7 +1389,11 @@ public void onWindowClose( int id ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * メインループです。
+ *
+ * !--- locale=En-US ---
+ * The main loop.
  */
 private void mainLoop(){
 
@@ -820,9 +1439,15 @@ private void mainLoop(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの再描画を行います。
  * アニメーションの画面更新タイミングで自動的にコールされますが、
  * 任意のタイミングで明示的に呼び出して再描画させる事も可能です。
+ *
+ * !--- locale=En-US ---
+ * Repaints the window.
+ * It is called automatically at the screen update timing of the animation, but
+ * it can also be called explicitly at any timing to force a repaint.
  */
 public void paintWindow(){
 	paintComponent( imageLabel );
@@ -831,9 +1456,15 @@ public void paintWindow(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * paint関数などをコールし、画面表示内容を描画します。
  * 通常は自動で実行されますが、アニメーションを無効にしている場合などは、
  * 画面更新時に明示的に呼び出す必要があります。
+ *
+ * !--- locale=En-US ---
+ * Calls the paint function and related processing to render the screen contents.
+ * It is normally executed automatically, but when animation is disabled and in similar cases,
+ * it needs to be called explicitly when the screen is updated.
  */
 public void render(){
 	if( paintGraphics2DState ){
@@ -847,8 +1478,13 @@ public void render(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 目標フレームレート、実測フレームレート、
  * 現在のループウェイトなどから、次フレームでの最適なループウェイトを計算して返します。
+ *
+ * !--- locale=En-US ---
+ * The target frame rate, the measured frame rate,
+ * Calculates and returns the optimal loop wait time for the next frame from the current loop wait time and related values.
  */
 private int getLoopWait( float targetFrameRate, float currentFrameRate, int currentLoopWait, int limitMin, int limitMax ){
 	if( targetFrameRate > currentFrameRate ){
@@ -869,7 +1505,11 @@ private int getLoopWait( float targetFrameRate, float currentFrameRate, int curr
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの生成と初期化を行います。
+ *
+ * !--- locale=En-US ---
+ * Creates and initializes the window.
  */
 private void initializeWindow(){
 	window = newWindow( windowX, windowY, windowWidth, windowHeight, windowTitle );
@@ -878,7 +1518,11 @@ private void initializeWindow(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * グラフィックスリソース関連の確保と初期化を行います。
+ *
+ * !--- locale=En-US ---
+ * Allocates and initializes graphics-related resources.
  */
 private void initializeGraphics(){
 	int labelWidth = getPreferredScreenWidth();
@@ -890,7 +1534,11 @@ private void initializeGraphics(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * GUIコンポーネント関連の確保と初期化を行います。
+ *
+ * !--- locale=En-US ---
+ * Allocates and initializes GUI-related components.
  */
 private void initializeComponent(){
 	int labelWidth = getPreferredScreenWidth();
@@ -901,7 +1549,11 @@ private void initializeComponent(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * レイアウトを再計算してGUI配置を調整します。
+ *
+ * !--- locale=En-US ---
+ * Recalculates the layout and adjusts the GUI arrangement.
  */
 private void setLayout(){
 	int labelWidth = getPreferredScreenWidth();
@@ -917,7 +1569,11 @@ private void setLayout(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 適切な描画領域の幅を返します。
+ *
+ * !--- locale=En-US ---
+ * Returns the appropriate width of the drawing area.
  */
 private int getPreferredScreenWidth(){
 	int innerSize[] = getComponentSize(window, GUI.INNER);
@@ -927,7 +1583,11 @@ private int getPreferredScreenWidth(){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 適切な描画領域の高さを返します。
+ *
+ * !--- locale=En-US ---
+ * Returns the appropriate height of the drawing area.
  */
 private void getPreferredScreenHeight(){
 	int innerSize[] = getComponentSize(window, GUI.INNER);
