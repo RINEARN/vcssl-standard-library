@@ -7,9 +7,10 @@ coding UTF-8;
 import GUI;
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ gui.TextFieldPanel は、
- * GUI部品として、テキストフィールドが並ぶパネル ―― テキストフィールドパネル ―― を提供します。	
+ * GUI部品として、テキストフィールドが並ぶパネル ―― テキストフィールドパネル ―― を提供します。
  * </p>
  *
  * <p>
@@ -23,7 +24,7 @@ import GUI;
  * <br />
  * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
  * <br />
- * 具体的には、 <a href="#newTextFieldPanel">newTextFieldPanel</a> 関数で生成し、 
+ * 具体的には、 <a href="#newTextFieldPanel">newTextFieldPanel</a> 関数で生成し、
  * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
  * </p>
  *
@@ -32,25 +33,72 @@ import GUI;
  * TextFieldPanel 構造体を標準ライブラリ「 GUI 」とほぼ同様の感覚でそのまま扱えるように、
  * 標準GUIライブラリ関数のオーバーロードも提供されます。
  * <br />
- * 例えば、 
+ * 例えば、
  * <a href="#mountComponent">mountComponent</a> 関数や、
- * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentSize">setComponentSize</a> 関数、
  * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, gui.TextFieldPanel, provides a panel containing arranged text fields as a GUI component.
+ * </p>
+ *
+ * <p>
+ * In the standard VCSSL library GUI, GUI components are handled as int IDs, but the GUI component provided by this module is handled as the
+ * <a href="#TextFieldPanel">TextFieldPanel</a> struct.
+ * </p>
+ *
+ * <p>
+ * The TextFieldPanel struct internally stores resource IDs and related data, but you normally do not need to be aware of its internals because
+ * functions for creating and destroying it are provided. Direct access to its members is not recommended.
+ * <br />
+ * Specifically, create it with the <a href="#newTextFieldPanel">newTextFieldPanel</a> function and destroy it with the
+ * <a href="#deleteComponent">deleteComponent</a> function.
+ * </p>
+ *
+ * <p>
+ * This module also provides overloads of standard GUI library functions so that the TextFieldPanel struct can be handled almost in the same
+ * way as in the standard library GUI.
+ * <br />
+ * For example, the <a href="#mountComponent">mountComponent</a>, <a href="#setComponentSize">setComponentSize</a>, and
+ * <a href="#setComponentLocation">setComponentLocation</a> functions are provided.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
-/** デフォルトのパネルタイトルです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのパネルタイトルです。
+ *
+ * !--- locale=En-US ---
+ * The default panel title.
+ */
 private const string DEFAULT_PANEL_TITLE = "TextFieldPanel";
 
-/** 指定されたラベルが見つからなかった場合のエラーメッセージです。 */
-private const string ERROR_LABEL_NOT_FOUND = "このラベルは存在しません：";
+/**
+ * !--- locale=Ja-JP ---
+ * 指定されたラベルが見つからなかった場合のエラーメッセージです。
+ *
+ * !--- locale=En-US ---
+ * The error message used when the specified label is not found.
+ */
+private const string ERROR_LABEL_NOT_FOUND = "The specified label does not exist - このラベルは存在しません：";
 
 
-/** テキストフィールドパネルの構造体です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * テキストフィールドパネルの構造体です。
+ *
+ * !--- locale=En-US ---
+ * The text field panel struct.
+ */
 public struct TextFieldPanel{
 	// パネルのGUI部品IDです。
 	protected int panel = NULL;
@@ -68,6 +116,7 @@ public struct TextFieldPanel{
 
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストフィールドパネルを生成します。
  *
  * @param x パネルのX座標
@@ -78,6 +127,18 @@ public struct TextFieldPanel{
  * @param labelWidth ラベル部分の幅
  * @param defaultText テキストフィールドの初期値文字列を格納する配列
  * @return 生成したテキストフィールドパネル構造体
+ *
+ * !--- locale=En-US ---
+ * Creates a text field panel.
+ *
+ * @param x The X coordinate of the panel.
+ * @param y The Y coordinate of the panel.
+ * @param width The width of the panel.
+ * @param height The height of the panel.
+ * @param labelText The array storing the label text.
+ * @param labelWidth The width of the label area.
+ * @param defaultText The array storing the initial strings of the text fields.
+ * @return The created text field panel struct.
  */
 public TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, string labelText[], string defaultText[]){
 
@@ -120,9 +181,15 @@ public TextFieldPanel newTextFieldPanel(int x, int y, int width, int height, str
 
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストフィールドパネルを破棄します。
  *
  * @param panelInstance 破棄するテキストフィールドパネル
+ *
+ * !--- locale=En-US ---
+ * Destroys a text field panel.
+ *
+ * @param panelInstance The text field panel to be destroyed.
  */
 public void deleteComponent(TextFieldPanel &panelInstance){
 	int n = length(panelInstance.textLabel, 0);
@@ -142,9 +209,15 @@ public void deleteComponent(TextFieldPanel &panelInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストフィールドパネルを再描画します。
  *
  * @param panelInstance 再描画するテキストフィールドパネル
+ *
+ * !--- locale=En-US ---
+ * Repaints a text field panel.
+ *
+ * @param panelInstance The text field panel to be repainted.
  */
 public void paintComponent(TextFieldPanel &panelInstance){
 	int n = length(panelInstance.textLabel, 0);
@@ -159,10 +232,17 @@ public void paintComponent(TextFieldPanel &panelInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストフィールドパネルを、別のGUIコンポーネント上に配置します。
  *
  * @param panelInstance 配置するテキストフィールドパネル
  * @param componentID 配置先GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Mounts a text field panel onto another GUI component.
+ *
+ * @param panelInstance The text field panel to be mounted.
+ * @param componentID The destination GUI component ID.
  */
 public void mountComponent(TextFieldPanel &panelInstance, int componentID){
 	mountComponent(panelInstance.panel, componentID);
@@ -170,10 +250,17 @@ public void mountComponent(TextFieldPanel &panelInstance, int componentID){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * テキストパネルを、別のGUIコンポーネントから配置解除します。
  *
  * @param panelInstance 配置解除するテキストフィールドパネル
  * @param componentID 配置先GUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Demounts a text field panel from another GUI component.
+ *
+ * @param panelInstance The text field panel to be demounted.
+ * @param componentID The destination GUI component ID.
  */
 public void demountComponent(TextFieldPanel &panelInstance, int componentID){
 	demountComponent(panelInstance.panel, componentID);
@@ -181,11 +268,19 @@ public void demountComponent(TextFieldPanel &panelInstance, int componentID){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * （この関数は互換目的でサポートされています。getTextLabelWidth を使用して下さい。）
  * ラベル部分の幅を設定します。
  *
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @param labelWidth ラベル部分の幅
+ *
+ * !--- locale=En-US ---
+ * This function is supported for compatibility. Use getTextLabelWidth.
+ * Sets the width of the label area.
+ *
+ * @param panelInstance The target text field panel.
+ * @param labelWidth The width of the label area.
  */
 public void setLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 	setTextLabelWidth(panelInstance, labelWidth);
@@ -193,10 +288,17 @@ public void setLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ラベル部分の幅を設定します。
  *
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @param labelWidth ラベル部分の幅
+ *
+ * !--- locale=En-US ---
+ * Sets the width of the label area.
+ *
+ * @param panelInstance The target text field panel.
+ * @param labelWidth The width of the label area.
  */
 public void setTextLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 	int panelSize[] = getComponentSize(panelInstance.panel);
@@ -211,10 +313,17 @@ public void setTextLabelWidth(TextFieldPanel &panelInstance, int labelWidth){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * パネルのコンポーネントIDを返します。
  *
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @return パネルのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Returns the component ID of the panel.
+ *
+ * @param panelInstance The target text field panel.
+ * @return The GUI component ID of the panel.
  */
 public int getPanel(TextFieldPanel &panelInstance){
 	return panelInstance.panel;
@@ -222,11 +331,19 @@ public int getPanel(TextFieldPanel &panelInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定されたラベルに対応するテキストフィールドを取得します。
  *
  * @param panelInstance 対象のテキストフィールドパネル
  * @param labelText 取得対象のテキストフィールドに対応するラベル文字列
  * @return テキストフィールドのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the text field corresponding to the specified label.
+ *
+ * @param panelInstance The target text field panel.
+ * @param labelText The label text corresponding to the text field to get.
+ * @return The GUI component ID of the text field.
  */
 public int getTextField(TextFieldPanel &panelInstance, string labelText){
 	int index = labelIndexOf(panelInstance, labelText);
@@ -238,11 +355,19 @@ public int getTextField(TextFieldPanel &panelInstance, string labelText){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定されたインデックスのテキストフィールドを取得します。
  *
  * @param panelInstance 対象のテキストフィールドパネル
  * @param index テキストフィールドのインデックス
  * @return テキストフィールドのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the text field at the specified index.
+ *
+ * @param panelInstance The target text field panel.
+ * @param index The index of the text field.
+ * @return The GUI component ID of the text field.
  */
 public int getTextField(TextFieldPanel &panelInstance, int index){
 	return panelInstance.textField[index];
@@ -314,11 +439,19 @@ public string getComponentString(TextFieldPanel &panelInstance, string labelText
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ラベル文字列に対応する、テキストフィールドのインデックスを返します。
  *
  * @param panelInstance 取得対象のテキストフィールドパネル
  * @param labelText 検索するラベル文字列
  * @return テキストフィールドのインデックス
+ *
+ * !--- locale=En-US ---
+ * Returns the index of the text field corresponding to the label text.
+ *
+ * @param panelInstance The target text field panel.
+ * @param labelText The label text to search for.
+ * @return The index of the text field.
  */
 private int labelIndexOf(TextFieldPanel &panelInstance, string labelText){
 	int n = length(panelInstance.textLabelString, 0);
@@ -332,10 +465,17 @@ private int labelIndexOf(TextFieldPanel &panelInstance, string labelText){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * パネルのサイズを返します。
  *
  * @param panelInstance 対象のテキストフィールドパネル
  * @return パネルのサイズを格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the size of the panel.
+ *
+ * @param panelInstance The target text field panel.
+ * @return The array storing the size of the panel.
  */
 public int[] getComponentSize(TextFieldPanel &panelInstance){
 	return getComponentSize(panelInstance.panel);
@@ -343,11 +483,19 @@ public int[] getComponentSize(TextFieldPanel &panelInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * パネルのサイズを設定します。
  *
  * @param panelInstance 対象のテキストフィールドパネル
  * @param width パネルの幅
  * @param height パネルの高さ
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the panel.
+ *
+ * @param panelInstance The target text field panel.
+ * @param width The width of the panel.
+ * @param height The height of the panel.
  */
 public void setComponentSize(TextFieldPanel &panelInstance, int width, int height){
 	setComponentSize(panelInstance.panel, width, height);
@@ -356,9 +504,15 @@ public void setComponentSize(TextFieldPanel &panelInstance, int width, int heigh
 
 
 /**
+ * !--- locale=Ja-JP ---
  * パネルの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。パネルのサイズを外部から変更した際に使用します。
  *
  * @param panelInstance 対象のテキストフィールドパネル
+ *
+ * !--- locale=En-US ---
+ * Automatically adjusts the sizes of the internal components to match the current panel size. Use this when the panel size has been changed externally.
+ *
+ * @param panelInstance The target text field panel.
  */
 public void setComponentSize(TextFieldPanel &panelInstance){
 	int panelSize[] = getComponentSize(panelInstance.panel);
@@ -369,10 +523,17 @@ public void setComponentSize(TextFieldPanel &panelInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * パネルの位置を返します。
  *
  * @param panelInstance 対象のテキストフィールドパネル
  * @return パネルの位置を格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the location of the panel.
+ *
+ * @param panelInstance The target text field panel.
+ * @return The array storing the location of the panel.
  */
 public int[] getComponentLocation(TextFieldPanel &panelInstance){
 	return getComponentLocation(panelInstance.panel);
@@ -380,11 +541,19 @@ public int[] getComponentLocation(TextFieldPanel &panelInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * パネルの位置を設定します。
  *
  * @param panelInstance 対象のスライダーパネル
  * @param x ウィンドウのX座標
  * @param y ウィンドウのY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the location of the panel.
+ *
+ * @param panelInstance The target slider panel.
+ * @param x The X coordinate of the window.
+ * @param y The Y coordinate of the window.
  */
 public void setComponentLocation(TextFieldPanel &panelInstance, int x, int y){
 	setComponentLocation(panelInstance.panel, x, y);
