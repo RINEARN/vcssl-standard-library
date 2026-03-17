@@ -1,6 +1,6 @@
 {
 	"libraryName": "Graphics",
-	"libraryDescription": "<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。<\/p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br \/>その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。<\/p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br \/>いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br \/>つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。<\/p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br \/>例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class=\"code\">int g1 = newGraphics(\"input.png\");  \/\/ 画像ファイルからグラフィックスデータ g1 を生成<br \/>int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  \/\/ g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br \/>exportGraphics(g2, \"output.png\", \"PNG\");  \/\/ g2 を画像ファイルに出力<br \/>deleteGraphics(g1);  \/\/ g1 を破棄<br \/>deleteGraphics(g2);  \/\/ g2 を破棄<\/div><\/p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br \/>より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。<\/p>",
+	"libraryDescription": "<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。<\/p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br \/>その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。<\/p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br \/>いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br \/>つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。<\/p><p> （※ 「 グラフィックスデータ 」は、英語版での呼称は「グラフィックスリソース」で、そちらの方が本来の意味にマッチします。しかし日本語版のドキュメントでは、語感の易しさを最優先して、リソースではなくデータと呼んでいます。どちらで呼んでも間違いではありません。）<\/p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br \/>例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class=\"code\">int g1 = newGraphics(\"input.png\");  \/\/ 画像ファイルからグラフィックスデータ g1 を生成<br \/>int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  \/\/ g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br \/>exportGraphics(g2, \"output.png\", \"PNG\");  \/\/ g2 を画像ファイルに出力<br \/>deleteGraphics(g1);  \/\/ g1 を破棄<br \/>deleteGraphics(g2);  \/\/ g2 を破棄<\/div><\/p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br \/>より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。<\/p>",
 	"structs": {
 	},
 	"variables": {
@@ -51,14 +51,14 @@
 			"name": "newGraphics",
 			"declaration": "int newGraphics ( int baseGraphics, int width, int height, bool antialiasing )",
 			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータを拡大・縮小した内容があらかじめ描き込まれています。",
-			"parameters": "(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int型) width : 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小） \n(int型) height : 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小） \n(bool型) antialiasing : 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。 ",
+			"parameters": "(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int型) width : 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小）。 \n(int型) height : 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小）。 \n(bool型) antialiasing : 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。 ",
 			"returnValue": "(int型) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
 		},
 		"function7": {
 			"name": "newGraphics",
 			"declaration": "int newGraphics ( int baseGraphics, int cropX, int cropY, int cropWidth, int cropHeight )",
 			"description": "グラフィックスデータを生成し、それに固有の識別番号である「グラフィックスデータID」を割り振って返します。<br \/>この関数で生成したグラフィックスデータは、別のグラフィックスデータの一部を抜き出した内容があらかじめ描き込まれています。",
-			"parameters": "(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int型) cropX : 元の画像から抜き出す領域の左上頂点X座標 \n(int型) cropY : 元の画像から抜き出す領域の左上頂点Y座標 \n(int型) cropWidth : 元の画像から抜き出す領域の幅 \n(int型) cropHeight : 元の画像から抜き出す領域の高さ ",
+			"parameters": "(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 \n(int型) cropX : 元の画像から抜き出す領域の左上頂点X座標。 \n(int型) cropY : 元の画像から抜き出す領域の左上頂点Y座標。 \n(int型) cropWidth : 元の画像から抜き出す領域の幅。 \n(int型) cropHeight : 元の画像から抜き出す領域の高さ。 ",
 			"returnValue": "(int型) 生成したグラフィックスデータに割り振られたグラフィックスデータID（識別番号）。"
 		},
 		"function8": {
@@ -72,27 +72,27 @@
 			"name": "getGraphicsWidth",
 			"declaration": "int getGraphicsWidth( int id )",
 			"description": "グラフィックスデータが保持するイメージの幅（ピクセル数）を返します。",
-			"parameters": "(int型) id : 対象グラフィックスデータのID。 \n対象グラフィックスデータの幅（ピクセル数）。 : ",
-			"returnValue": "(int型) "
+			"parameters": "(int型) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(int型) 対象グラフィックスデータの幅（ピクセル数）。"
 		},
 		"function10": {
 			"name": "getGraphicsHeight",
 			"declaration": "int getGraphicsHeight( int id )",
 			"description": "グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。",
-			"parameters": "(int型) id : 対象グラフィックスデータのID。 \n対象グラフィックスデータの高さ（ピクセル数）。 : ",
-			"returnValue": "(int型) "
+			"parameters": "(int型) id : 対象グラフィックスデータのID。 ",
+			"returnValue": "(int型) 対象グラフィックスデータの高さ（ピクセル数）。"
 		},
 		"function11": {
 			"name": "exportGraphics",
 			"declaration": "void exportGraphics( int id, string name, string format )",
-			"description": "グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。",
+			"description": "グラフィックスデータが保持するイメージを、画像ファイルとして出力します。",
 			"parameters": "(int型) id : 対象グラフィックスデータのID。 \n(string型) name : 出力ファイル名。 \n(string型) format : 出力ファイルの形式。\"JPEG\" または \"PNG\"、もしくは \"BMP\" を指定します。 ",
 			"returnValue": "(void型) "
 		},
 		"function12": {
 			"name": "exportGraphics",
 			"declaration": "void exportGraphics( int id, string name, string format, double quality )",
-			"description": "グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。",
+			"description": "グラフィックスデータが保持するイメージを、画像ファイルとして出力します。",
 			"parameters": "(int型) id : 対象グラフィックスデータのID。 \n(string型) name : 出力ファイル名。 \n(string型) format : 出力ファイルの形式。\"JPEG\" または \"PNG\"、もしくは \"BMP\" を指定します。 \n(double型) quality : 画質（0.0 ~ 100.0）。JPEG の場合に有効です。大きいほど高画質です。 ",
 			"returnValue": "(void型) "
 		},

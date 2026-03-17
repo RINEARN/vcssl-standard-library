@@ -251,7 +251,7 @@
 		"function5": {
 			"name": "alert",
 			"declaration": "macro alert(...)",
-			"description": "警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href=\"#pop\">pop<\/a> 関数が利用できます。今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。",
+			"description": "警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href=\"#popup\">popup<\/a> 関数が利用できます。今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。",
 			"parameters": "(型) ... : (任意型、可変長引数)メッセージの内容 "
 		},
 		"function6": {
@@ -719,7 +719,7 @@
 			"name": "eval",
 			"declaration": "macro eval(string expression, literalType)",
 			"description": "文字列を式として評価します。引数 1 個の eval 関数と異なるのは、式中でサフィックスが明示されていない数値リテラルを、どの型と解釈するか指定できる点です。例えば &quot;1 \/ 2&quot; の式は、通常は int 型同士の除算となるため、値は 0 です。これを float 型同士の除算と見なして 0.5 を得たい場合には、第二引数に float 型の値 ( 0.0 など ) を指定してください。なお第二引数は、型のみが意味を持ち、値は無視されます(しかしながら、初来的に何らかの意味づけが加えられる可能性もあるため、特に理由が無ければ 0 や 0.0 を指定する事が推奨されます)。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(string[]型)式の値"
 		},
 		"function77": {
@@ -733,7 +733,7 @@
 			"name": "feval",
 			"declaration": "macro feval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を float 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(flaot型)式の値"
 		},
 		"function79": {
@@ -747,7 +747,7 @@
 			"name": "ieval",
 			"declaration": "macro ieval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を int 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(int型)式の値"
 		},
 		"function81": {
@@ -761,7 +761,7 @@
 			"name": "ceval",
 			"declaration": "macro ceval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を complex 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(complex型)式の値"
 		},
 		"function83": {
@@ -775,7 +775,7 @@
 			"name": "beval",
 			"declaration": "macro beval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を bool 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(bool型)式の値"
 		},
 		"function85": {
@@ -789,7 +789,7 @@
 			"name": "seval",
 			"declaration": "macro seval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を string 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(string型)式の値"
 		},
 		"function87": {
@@ -803,7 +803,7 @@
 			"name": "vfeval",
 			"declaration": "macro vfeval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を varfloat 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(varfloat型)式の値"
 		},
 		"function89": {
@@ -817,7 +817,7 @@
 			"name": "vieval",
 			"declaration": "macro vieval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を varint 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(varint型)式の値"
 		},
 		"function91": {
@@ -831,7 +831,7 @@
 			"name": "vceval",
 			"declaration": "macro vceval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を varcomplex 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(varcomplex型)式の値"
 		},
 		"function93": {
@@ -845,7 +845,7 @@
 			"name": "evaluable",
 			"declaration": "macro evaluable(string expression, literalType)",
 			"description": "式の内容が構文的に正しいかどうかを判定します。eval 関数は構文解析に失敗すると処理速度が低下するため、式を高速に繰り返し評価したい場合、事前にこの関数で式の正当性を確認しておく事が推奨されます。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "式が構文的に正しければ true, そうでなければ false"
 		},
 		"function95": {
@@ -859,7 +859,7 @@
 			"name": "evaltr",
 			"declaration": "macro evaltr(string expression, literalType)",
 			"description": "文字列を式として評価し、処理系の内部処理情報を返します。内容は完全に処理系依存です。なお、利用できる式には処理系依存の制約があり、必ずしも通常の式評価と整合する内容を返すとは限りません。また、一般に副作用のある式には使用できません。この関数は、主に開発時やデバッグ時に使用します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(string[]型)処理系の内部処理情報"
 		},
 		"function97": {
@@ -872,15 +872,13 @@
 			"name": "lf",
 			"declaration": "string lf()",
 			"description": "環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href=\"#EOL\">EOL<\/a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href=\"#EOL\">EOL<\/a> の使用が推奨されます。この関数は互換目的でサポートされています。",
-			"parameters": "環境依存の改行コード : ",
-			"returnValue": "(string型) "
+			"returnValue": "(string型) 環境依存の改行コード"
 		},
 		"function99": {
 			"name": "linefeed",
 			"declaration": "string linefeed()",
 			"description": "環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href=\"#EOL\">EOL<\/a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href=\"#EOL\">EOL<\/a> の使用が推奨されます。この関数は互換目的でサポートされています。",
-			"parameters": "環境依存の改行コード : ",
-			"returnValue": "(string型) "
+			"returnValue": "(string型) 環境依存の改行コード"
 		}
 	},
 	"eventHandlers": {
@@ -919,7 +917,7 @@
 		"function5": {
 			"name": "alert",
 			"declaration": "macro alert(...)",
-			"description": "警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href=\"#pop\">pop<\/a> 関数が利用できます。今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。",
+			"description": "警告ウィンドウにメッセージを出力し、ユーザーがそれを了承するまで、プログラムの実行を待機します。引数を複数指定した場合、それがどのような形で出力されるかは処理系依存です。恐らく通常は、改行区切りで出力されます。なお、警告の意図のないメッセージの出力には、VCSSL 3.4以降からほぼ同機能の <a href=\"#popup\">popup<\/a> 関数が利用できます。今後、alert は警告の意図があるメッセージに対して使用する事が推奨されます。",
 			"parameters": "(型) ... : (任意型、可変長引数)メッセージの内容 "
 		},
 		"function6": {
@@ -1387,7 +1385,7 @@
 			"name": "eval",
 			"declaration": "macro eval(string expression, literalType)",
 			"description": "文字列を式として評価します。引数 1 個の eval 関数と異なるのは、式中でサフィックスが明示されていない数値リテラルを、どの型と解釈するか指定できる点です。例えば &quot;1 \/ 2&quot; の式は、通常は int 型同士の除算となるため、値は 0 です。これを float 型同士の除算と見なして 0.5 を得たい場合には、第二引数に float 型の値 ( 0.0 など ) を指定してください。なお第二引数は、型のみが意味を持ち、値は無視されます(しかしながら、初来的に何らかの意味づけが加えられる可能性もあるため、特に理由が無ければ 0 や 0.0 を指定する事が推奨されます)。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(string[]型)式の値"
 		},
 		"function77": {
@@ -1401,7 +1399,7 @@
 			"name": "feval",
 			"declaration": "macro feval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を float 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(flaot型)式の値"
 		},
 		"function79": {
@@ -1415,7 +1413,7 @@
 			"name": "ieval",
 			"declaration": "macro ieval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を int 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(int型)式の値"
 		},
 		"function81": {
@@ -1429,7 +1427,7 @@
 			"name": "ceval",
 			"declaration": "macro ceval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を complex 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(complex型)式の値"
 		},
 		"function83": {
@@ -1443,7 +1441,7 @@
 			"name": "beval",
 			"declaration": "macro beval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を bool 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(bool型)式の値"
 		},
 		"function85": {
@@ -1457,7 +1455,7 @@
 			"name": "seval",
 			"declaration": "macro seval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を string 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(string型)式の値"
 		},
 		"function87": {
@@ -1471,7 +1469,7 @@
 			"name": "vfeval",
 			"declaration": "macro vfeval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を varfloat 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(varfloat型)式の値"
 		},
 		"function89": {
@@ -1485,7 +1483,7 @@
 			"name": "vieval",
 			"declaration": "macro vieval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を varint 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(varint型)式の値"
 		},
 		"function91": {
@@ -1499,7 +1497,7 @@
 			"name": "vceval",
 			"declaration": "macro vceval(string expression, literalType)",
 			"description": "文字列を式として評価し、値を varcomplex 型の非配列で返します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(varcomplex型)式の値"
 		},
 		"function93": {
@@ -1513,7 +1511,7 @@
 			"name": "evaluable",
 			"declaration": "macro evaluable(string expression, literalType)",
 			"description": "式の内容が構文的に正しいかどうかを判定します。eval 関数は構文解析に失敗すると処理速度が低下するため、式を高速に繰り返し評価したい場合、事前にこの関数で式の正当性を確認しておく事が推奨されます。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "式が構文的に正しければ true, そうでなければ false"
 		},
 		"function95": {
@@ -1527,7 +1525,7 @@
 			"name": "evaltr",
 			"declaration": "macro evaltr(string expression, literalType)",
 			"description": "文字列を式として評価し、処理系の内部処理情報を返します。内容は完全に処理系依存です。なお、利用できる式には処理系依存の制約があり、必ずしも通常の式評価と整合する内容を返すとは限りません。また、一般に副作用のある式には使用できません。この関数は、主に開発時やデバッグ時に使用します。",
-			"parameters": "(string型) expression : 評価する式 \n(string型) expression : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
+			"parameters": "(string型) expression : 評価する式 \n(型) literalType : サフィックスの付いていない数値リテラルに割り当てる型 ( の変数 ) ",
 			"returnValue": "(string[]型)処理系の内部処理情報"
 		},
 		"function97": {
@@ -1540,15 +1538,13 @@
 			"name": "lf",
 			"declaration": "string lf()",
 			"description": "環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href=\"#EOL\">EOL<\/a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href=\"#EOL\">EOL<\/a> の使用が推奨されます。この関数は互換目的でサポートされています。",
-			"parameters": "環境依存の改行コード : ",
-			"returnValue": "(string型) "
+			"returnValue": "(string型) 環境依存の改行コード"
 		},
 		"function99": {
 			"name": "linefeed",
 			"declaration": "string linefeed()",
 			"description": "環境依存の改行コードを返します。VCSSL 3 以降では、定数 <a href=\"#EOL\">EOL<\/a> をそのまま改行コードとして使用できます。この関数は、関数コールのオーバーヘッドを無駄に要します。新しいプログラムでは 定数 <a href=\"#EOL\">EOL<\/a> の使用が推奨されます。この関数は互換目的でサポートされています。",
-			"parameters": "環境依存の改行コード : ",
-			"returnValue": "(string型) "
+			"returnValue": "(string型) 環境依存の改行コード"
 		}
 	}
 }

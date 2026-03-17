@@ -8,7 +8,7 @@
 <h1>Graphics</h1>
 <hr />
 <h2 id="abstract">概要</h2>
-<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。<\/p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br \/>その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。<\/p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br \/>いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br \/>つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。<\/p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br \/>例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class=\"code\">int g1 = newGraphics(\"input.png\");  \/\/ 画像ファイルからグラフィックスデータ g1 を生成<br \/>int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  \/\/ g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br \/>exportGraphics(g2, \"output.png\", \"PNG\");  \/\/ g2 を画像ファイルに出力<br \/>deleteGraphics(g1);  \/\/ g1 を破棄<br \/>deleteGraphics(g2);  \/\/ g2 を破棄<\/div><\/p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br \/>より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。<\/p><hr />
+<p>VCSSL Graphics ライブラリ は、VCSSLで描画を扱うための標準ライブラリの一つです。<\/p><p>VCSSLにおける描画関連の標準ライブラリには、Graphics、Graphics2D、Graphics3D ライブラリの 3 つが存在します。<br \/>その中で、Graphics ライブラリは描画用リソースの管理機能を提供し、Graphics2D 及び Graphics3D ライブラリは実際の描画機能を提供します。<\/p><p>描画を行うためには、イメージやバッファ、ストリームなどのリソースが必要となります。<br \/>いくつかの（恐らく多くの）言語では、これらは独立なオブジェクトとして扱う事が多いですが、VCSSLではこれらを一つにまとめて「 グラフィックスデータ 」として扱います。<br \/>つまりVCSSLでは、アニメーションでリアルタイムに3DCGを描画するためのバッファ領域も、画像ファイルから読み込んだ固定的なイメージも、区別せずに「 グラフィックスデータ 」として扱います。<\/p><p> （※ 「 グラフィックスデータ 」は、英語版での呼称は「グラフィックスリソース」で、そちらの方が本来の意味にマッチします。しかし日本語版のドキュメントでは、語感の易しさを最優先して、リソースではなくデータと呼んでいます。どちらで呼んでも間違いではありません。）<\/p><p>Graphics ライブラリが提供するのは、この「 グラフィックスデータ 」の生成や破棄、入出力、及び初等的な加工などの管理機能です。<br \/>例として、画像ファイル「 input.png 」を読み込み、黒色の部分を透明にして「 output.png 」に出力するには、以下のようにします。<div class=\"code\">int g1 = newGraphics(\"input.png\");  \/\/ 画像ファイルからグラフィックスデータ g1 を生成<br \/>int g2 = newGraphics(g1, 0,0,0,255, 0,0,0,0);  \/\/ g1 の黒色を透明にしたグラフィックスデータ g2 を生成<br \/>exportGraphics(g2, \"output.png\", \"PNG\");  \/\/ g2 を画像ファイルに出力<br \/>deleteGraphics(g1);  \/\/ g1 を破棄<br \/>deleteGraphics(g2);  \/\/ g2 を破棄<\/div><\/p><p>他にも、ラスタデータ（ピクセル配列）を直接操作して、初歩的な加工や描画などを行う機能が提供されます。<br \/>より高度な描画を行うには、Graphics2D 及び Graphics3D ライブラリを併せて使用してください。<\/p><hr />
 <h2 id="abstract" style="page-break-before:always;" >目次</h2>
 <dl>
 <dt><a href="#newGraphics">int newGraphics()</a></dt>
@@ -34,9 +34,9 @@
 <dt><a href="#getGraphicsHeight">int getGraphicsHeight( int id )</a></dt>
 <dd>グラフィックスデータが保持するイメージの高さ（ピクセル数）を返します。</dd>
 <dt><a href="#exportGraphics">void exportGraphics( int id, string name, string format )</a></dt>
-<dd>グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。</dd>
+<dd>グラフィックスデータが保持するイメージを、画像ファイルとして出力します。</dd>
 <dt><a href="#exportGraphics">void exportGraphics( int id, string name, string format, double quality )</a></dt>
-<dd>グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。</dd>
+<dd>グラフィックスデータが保持するイメージを、画像ファイルとして出力します。</dd>
 <dt><a href="#setGraphicsPixel">void setGraphicsPixel( int id, int red[ ][ ], int green[ ][ ], int blue[ ][ ], int alpha[ ][ ] )</a></dt>
 <dd>グラフィックスデータの保持するイメージを、指定されたピクセル配列で描きかえます。</dd>
 <dt><a href="#setGraphicsPixel">void setGraphicsPixel( int id, int rgba[ ][ ][ ] )</a></dt>
@@ -339,7 +339,7 @@
    	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 <br />(int型) width : 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小） <br />(int型) height : 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小） <br />(bool型) antialiasing : 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。 
+   	 	(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 <br />(int型) width : 生成するグラフィックスデータの幅（元のイメージをこの幅に拡大・縮小）。 <br />(int型) height : 生成するグラフィックスデータの高さ（元のイメージをこの高さに拡大・縮小）。 <br />(bool型) antialiasing : 拡大・縮小結果を滑らかにするかどうか。true を指定すると滑らかになりますが、処理時間が増加します。 
    	 </td>
     </tr>
     <tr>
@@ -382,7 +382,7 @@
    	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 <br />(int型) cropX : 元の画像から抜き出す領域の左上頂点X座標 <br />(int型) cropY : 元の画像から抜き出す領域の左上頂点Y座標 <br />(int型) cropWidth : 元の画像から抜き出す領域の幅 <br />(int型) cropHeight : 元の画像から抜き出す領域の高さ 
+   	 	(int型) baseGraphics : 元のイメージを保持するグラフィックスデータのID。 <br />(int型) cropX : 元の画像から抜き出す領域の左上頂点X座標。 <br />(int型) cropY : 元の画像から抜き出す領域の左上頂点Y座標。 <br />(int型) cropWidth : 元の画像から抜き出す領域の幅。 <br />(int型) cropHeight : 元の画像から抜き出す領域の高さ。 
    	 </td>
     </tr>
     <tr>
@@ -468,7 +468,7 @@
    	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) id : 対象グラフィックスデータのID。 <br />対象グラフィックスデータの幅（ピクセル数）。 : 
+   	 	(int型) id : 対象グラフィックスデータのID。 
    	 </td>
     </tr>
     <tr>
@@ -476,7 +476,7 @@
    	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) 
+   	 	(int型) 対象グラフィックスデータの幅（ピクセル数）。
    	 </td>
     </tr>
 </tbody></table>
@@ -511,7 +511,7 @@
    	 	引数
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) id : 対象グラフィックスデータのID。 <br />対象グラフィックスデータの高さ（ピクセル数）。 : 
+   	 	(int型) id : 対象グラフィックスデータのID。 
    	 </td>
     </tr>
     <tr>
@@ -519,7 +519,7 @@
    	 	戻り値
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	(int型) 
+   	 	(int型) 対象グラフィックスデータの高さ（ピクセル数）。
    	 </td>
     </tr>
 </tbody></table>
@@ -546,7 +546,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
+   	 	グラフィックスデータが保持するイメージを、画像ファイルとして出力します。
    	 </td>
     </tr>
     <tr>
@@ -589,7 +589,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	グラフィックスデータが保持するイメージを、画像ファイルに変換して出力します。
+   	 	グラフィックスデータが保持するイメージを、画像ファイルとして出力します。
    	 </td>
     </tr>
     <tr>

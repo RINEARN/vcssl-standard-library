@@ -8,7 +8,7 @@
 <h1>GUI</h1>
 <hr />
 <h2 id="abstract">概要</h2>
-<p>VCSSL GUI ライブラリ は、VCSSLでグラフィカル・ユーザー・インターフェイスを扱うための標準ライブラリです。<\/p><p>GUIライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。具体的な使用方法については、「 VCSSL公式開発ガイド 」をご参照ください。<\/p><div style=\"border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;\"><div style=\"font-weight:bold;\">- 注意 -<\/div><div style=\"padding:10px;\">GUIを用いたプログラムでは、イベントハンドラの使用が必須となります。VCSSLでは、イベントハンドラの処理は独立スレッドで実行されます。現行版の RINEARN VCSSL Runtime では、マルチスレッド処理への対応が十分ではありません。 これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。 これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。 RINEARN VCSSL Runtime でイベントハンドラに処理を記述するには、この事情を把握した上で行って下さい。現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。 <\/div><div style=\"font-weight:bold;\">・同一の配列変数へ、複数スレッドから同時アクセスした場合における、インデックスの不整合<\/div><div style=\"padding:10px;\">現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。 <\/div><div style=\"font-weight:bold;\">・同一の関数への、非常に頻繁な複数スレッド同時アクセスに伴う、エンジンの緊急停止<\/div><div style=\"padding:10px;\">原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。 しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。 ※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。<\/div>以上のような不都合が生じる可能性があるため、現状の RINEARN VCSSL Runtime においてイベントハンドラ内の処理を記述する際は、上記の点を認識した上で、以下のようなガイドラインに基づいた設計を行って下さい。<br \/><div style=\"font-weight:bold;\">・イベントハンドラでは、イベント情報をグローバル変数に控える等の軽い処理に留めておき、実際の処理はなるべくメインスレッドで行う<\/div><br \/><div style=\"font-weight:bold;\">・メインスレッドで頻繁にアクセスしている配列変数に、イベントハンドラや別スレッドからアクセスしない<\/div><\/div><hr />
+<p>VCSSL GUI ライブラリは、VCSSLでグラフィカル・ユーザー・インターフェイスを扱うための標準ライブラリです。<\/p><p>GUIライブラリの規模は比較的大きいため、ここに記載されている関数仕様だけを参考にして扱うのは困難です。具体的な使用方法については、「 VCSSL GUI開発ガイド 」をご参照ください。<\/p><div style=\"border: solid 1px #000000;margin:20px 0px 0px 0px; padding:10px;\"><div style=\"font-weight:bold;\">- 注意 -<\/div><div style=\"padding:10px;\">GUIを用いたプログラムでは、イベントハンドラの使用が必須となります。VCSSLでは、イベントハンドラの処理は独立スレッドで実行されます。現行版の RINEARN VCSSL Runtime では、マルチスレッド処理への対応が十分ではありません。これは、現在のVCSSLエンジンの基本設計が、シングルスレッドのみを想定して開発された初期のVCSSLエンジンの基本設計を、部分的に踏襲している事に由来します。これにより、処理内容によっては、論理的な不整合を含む、いくつかの不都合が生じる可能性があります。RINEARN VCSSL Runtime でイベントハンドラに処理を記述するには、この事情を把握した上で行って下さい。現時点で想定可能なものとしては、以下のような不都合が生じる可能性があります。<\/div><div style=\"font-weight:bold;\">・同一の配列変数へ、複数スレッドから同時アクセスした場合における、インデックスの不整合<\/div><div style=\"padding:10px;\">現在のVCSSLエンジンにおける、配列変数の値を参照するモジュールには、シングルスレッドのみを想定した設計が残っています。これにより、同一の配列変数に、同時にアクセスした場合、正しくないインデックスの値が参照される可能性があります。<\/div><div style=\"font-weight:bold;\">・同一の関数への、非常に頻繁な複数スレッド同時アクセスに伴う、エンジンの緊急停止<\/div><div style=\"padding:10px;\">原則として、同一の関数を複数スレッドで実行する事は可能です。その場合、引数やローカル変数は、スレッド間で混同されないように、スレッドの数だけ確保されます。しかし、同時アクセスのタイミングがあまりに短い間隔に集中すると、この処理が追いつかなくなり、不整合を防ぐためにエンジンが緊急停止する場合があります。※ 関数の実行中の時間が重なる事は問題ではありません。関数をコールする瞬間（引数を渡す瞬間）が重なる事が問題となります。<\/div>以上のような不都合が生じる可能性があるため、現状の RINEARN VCSSL Runtime においてイベントハンドラ内の処理を記述する際は、上記の点を認識した上で、以下のようなガイドラインに基づいた設計を行って下さい。<br \/><div style=\"font-weight:bold;\">・イベントハンドラでは、イベント情報をグローバル変数に控える等の軽い処理に留めておき、実際の処理はなるべくメインスレッドで行う<\/div><br \/><div style=\"font-weight:bold;\">・メインスレッドで頻繁にアクセスしている配列変数に、イベントハンドラや別スレッドからアクセスしない<\/div><\/div><div style=\"padding:10px;\">ただし、「メインスレッド（起動時に自動実行される処理のスレッド）はGUIの画面構築程度の短い処理で完了し、以降はもっぱらユーザーの操作に応じて、GUIのイベントハンドラからの処理ばかりが発生する」といった場合においては、上記はあまり気にする必要はありません。<\/div><hr />
 <h2 id="abstract" style="page-break-before:always;" >目次</h2>
 <dl>
 <dt><a href="#MOUSE_LEFT">const int MOUSE_LEFT</a></dt>
@@ -319,12 +319,12 @@
 <dd>GUIコンポーネントのテキスト情報を設定します。</dd>
 <dt><a href="#setComponentImage">void setComponentImage( int componentID, int graphicsID )</a></dt>
 <dd>GUIコンポーネントの画像を設定します。</dd>
-<dt><a href="#getComponentGraphics">int getComponentGraphics( int componentID )</a></dt>
+<dt><a href="#getComponentImage">int getComponentImage( int componentID )</a></dt>
 <dd>GUIコンポーネントの画像を格納する、グラフィックスデータのIDを返します。</dd>
 <dt><a href="#showComponent">void showComponent( int componentID )</a></dt>
-<dd>GUIコンポーネントの非表示にします。</dd>
+<dd>GUIコンポーネントを非表示にします。</dd>
 <dt><a href="#hideComponent">void hideComponent( int componentID )</a></dt>
-<dd>GUIコンポーネントの表示します。</dd>
+<dd>GUIコンポーネントを表示します。</dd>
 <dt><a href="#setComponentFont">void setComponentFont( int componentID, string name )</a></dt>
 <dd>GUIコンポーネントのフォントを設定します</dd>
 <dt><a href="#setComponentFontSize">void setComponentFontSize( int componentID, int size )</a></dt>
@@ -366,7 +366,7 @@
 <dt><a href="#setComponentGraphics">void setComponentGraphics( int componentID, int graphicsID )</a></dt>
 <dd>GUIコンポーネントのグラフィックスデータIDを設定します。VCSSL 3.3.24 以降では、より新しい <a href="#setComponentImage">setComponentImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。</dd>
 <dt><a href="#getComponentGraphics">int getComponentGraphics( int componentID )</a></dt>
-<dd>GUIコンポーネントのグラフィックスデータIDを返します。VCSSL 3.3.24 以降では、より新しい <a href="#getComponentGraphics">getComponentGraphics</a> 関数がサポートされています。この関数は互換目的でサポートされています。</dd>
+<dd>GUIコンポーネントのグラフィックスデータIDを返します。VCSSL 3.3.24 以降では、より新しい <a href="#getComponentGraphics">getComponentImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。</dd>
 <dt><a href="#setComponentVisible">void setComponentVisible( int componentID, bool b )</a></dt>
 <dd>この関数の使用は推奨されません。この関数は、互換目的でサポートされています。</dd>
 <dt><a href="#getComponentVisible">bool getComponentVisible( int componentID )</a></dt>
@@ -437,7 +437,7 @@
 <dd>マウスのボタンが離された際にコールされます。</dd>
 <dt><a href="#onMouseClick">void onMouseClick( int componentID, int x, int y, int button, int count )</a></dt>
 <dd>マウスがクリックされた際にコールされます。</dd>
-<dt><a href="#onMouseClick">void onMouseClick( int componentID, int x, int y, int button, int count )</a></dt>
+<dt><a href="#onMouseDrag">void onMouseDrag( int componentID, int x, int y, int button, int count )</a></dt>
 <dd>マウスがドラッグされた際にコールされます。</dd>
 <dt><a href="#onMouseScroll">void onMouseScroll( int componentID, int degree )</a></dt>
 <dd>マウスホイールがスクロールされた際にコールされます。</dd>
@@ -5190,13 +5190,13 @@
     </tr>
 </tbody></table>
 
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getComponentGraphics"><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getComponentImage"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	getComponentGraphics
+   	 	getComponentImage
    	 </td>
     </tr>
     <tr>
@@ -5204,7 +5204,7 @@
    	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	int getComponentGraphics( int componentID )
+   	 	int getComponentImage( int componentID )
    	 </td>
     </tr>
     <tr>
@@ -5255,7 +5255,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	GUIコンポーネントの非表示にします。
+   	 	GUIコンポーネントを非表示にします。
    	 </td>
     </tr>
     <tr>
@@ -5298,7 +5298,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	GUIコンポーネントの表示します。
+   	 	GUIコンポーネントを表示します。
    	 </td>
     </tr>
     <tr>
@@ -6179,7 +6179,7 @@
     </tr>
 </tbody></table>
 
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getComponentGraphics"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	関数名
@@ -6201,7 +6201,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	GUIコンポーネントのグラフィックスデータIDを返します。VCSSL 3.3.24 以降では、より新しい <a href="#getComponentGraphics">getComponentGraphics</a> 関数がサポートされています。この関数は互換目的でサポートされています。
+   	 	GUIコンポーネントのグラフィックスデータIDを返します。VCSSL 3.3.24 以降では、より新しい <a href="#getComponentGraphics">getComponentImage</a> 関数がサポートされています。この関数は互換目的でサポートされています。
    	 </td>
     </tr>
     <tr>
@@ -7558,13 +7558,13 @@
     </tr>
 </tbody></table>
 
-<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="onMouseDrag"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
    	 	関数名
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
-   	 	onMouseClick
+   	 	onMouseDrag
    	 </td>
     </tr>
     <tr>
@@ -7572,7 +7572,7 @@
    	 	宣言形式
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	void onMouseClick( int componentID, int x, int y, int button, int count )
+   	 	void onMouseDrag( int componentID, int x, int y, int button, int count )
    	 </td>
     </tr>
     <tr>

@@ -44,7 +44,7 @@
 <dt><a href="#close">void close(TextFile &amp;textFile)</a></dt>
 <dd>テキストファイルへのアクセスを閉じます。特に書き込みアクセス後には、バッファされている内容を最後まで書き込み切るためにも、必ず呼び出す必要があります。</dd>
 <dt><a href="#getEndOfLineCode">string getEndOfLineCode(TextFile &amp;textFile)</a></dt>
-<dd>ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, CR, LF の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, CR, LF の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href="#setEndOfLineCode">setEndOfLineCode</a> 関数で改行コードを明示指定した後は、その指定値が返されます。</dd>
+<dd>ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, LF, CR の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, LF, CR の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href="#setEndOfLineCode">setEndOfLineCode</a> 関数で改行コードを明示指定した後は、その指定値が返されます。</dd>
 <dt><a href="#setEndOfLineCode">void setEndOfLineCode(TextFile &amp;textFile, string endOfLineCode)</a></dt>
 <dd>ファイル入出力に使用する改行コードを指定します。改行コードの指定には、System ライブラリに定義されている、以下の定数を使用する事が推奨されます。    LF :    文字コードで 0x0A, 一般的なエスケープシーケンスで \n に対応する改行コードです。 ,    CR :    文字コードで 0x0D, 一般的なエスケープシーケンスで \r に対応する改行コードです。 ,    CR+LF :    文字コードで 0x0D 0x0A, 一般的なエスケープシーケンスで \r\n に対応する改行コードです。（これは1つの定数では無く、CRとLFを加算した式です。） ,    EOL :    実行環境におけるデフォルトの文字コードを表します。通常は CR, LF, CR+LF のいずれかが使用されます。 ,  </dd>
 <dt><a href="#setCommentLineCode">void setCommentLineCode(TextFile &amp;textFile, string commentLineCode)</a></dt>
@@ -54,7 +54,7 @@
 <dt><a href="#isReadable">bool isReadable(TextFile &amp;textFile)</a></dt>
 <dd>ファイルが読み込み可能な状態であるか確認します。</dd>
 <dt><a href="#isWritable">bool isWritable(TextFile &amp;textFile)</a></dt>
-<dd>ファイルが読み込み可能な状態であるか確認します。</dd>
+<dd>ファイルが書き込み可能な状態であるか確認します。</dd>
 <dt><a href="#setDelimiter">void setDelimiter(TextFile &amp;textFile, string delimiter)</a></dt>
 <dd>値の区切り文字（デリミタ）を設定します。区切り文字を設定すると、 <a href="#read">read</a> 関数や<a href="#readln">readln</a> 関数が、値を区切って配列として返すようになります。一般的によく用いられる区切り文字は、以下のようなものがあります。また、<a href="#write">write</a> 関数や<a href="#writeln">writeln</a>が、書き込み時に値を区切り文字で区切るようになります。    "," (カンマ記号) :    CSVファイルに用いられます。 ,    "	" (タブ記号) :    TSVファイルに用いられます。 ,    "&nbsp" (半角スペース記号) :    SSVファイルに用いられます。 ,    ";" (セミコロン記号) :    一部の設定ファイルに用いられます。 ,  なお、読み込みモードの場合、この関数をコールした時点で、どこまでファイルを読み込んだかの情報は初期化されます。</dd>
 <dt><a href="#setEnclosure">void setEnclosure(TextFile &amp;textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption)</a></dt>
@@ -585,7 +585,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, CR, LF の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, CR, LF の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href="#setEndOfLineCode">setEndOfLineCode</a> 関数で改行コードを明示指定した後は、その指定値が返されます。
+   	 	ファイル入出力に使用する改行コードを取得します。読み込みモードでは、ファイルに使用されている改行コードを解析し、CR+LF, LF, CR の3つから適切と思われるものを返します。複数の改行コードが混在している場合は、優先度の高いほうから CR+LF, LF, CR の順番で判定します。それらのどれにも該当しない場合は NULL を返します。なお、<a href="#setEndOfLineCode">setEndOfLineCode</a> 関数で改行コードを明示指定した後は、その指定値が返されます。
    	 </td>
     </tr>
     <tr>
@@ -800,7 +800,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ファイルが読み込み可能な状態であるか確認します。
+   	 	ファイルが書き込み可能な状態であるか確認します。
    	 </td>
     </tr>
     <tr>

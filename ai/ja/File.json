@@ -86,26 +86,26 @@
 			"declaration": "string getFileName( string path )",
 			"description": "ファイルパスから、ファイル名の部分を取得します。",
 			"parameters": "(string型) path : 対象ファイルのパス。 ",
-			"returnValue": "(string型) ファイル名"
+			"returnValue": "(string型) ファイル名。"
 		},
 		"function6": {
 			"name": "removeFile",
 			"declaration": "void removeFile( string pathOrName )",
 			"description": "ファイルを削除します。<br \/>対象がディレクトリの場合、中身が空でなければ削除できないため、先に中身を削除する必要があります。",
-			"parameters": "path : 対象ファイルの名称またはパス。 ",
+			"parameters": "(string型) pathOrName : 対象ファイルの名称またはパス。 ",
 			"returnValue": "(void型) "
 		},
 		"function7": {
 			"name": "moveFile",
 			"declaration": "void moveFile( string pathOrName, string newName )",
-			"description": "ファイルの移動や、ファイル名の変更を行います。引数が、共にファイル名のみの場合や、共に同じディレクトリ内のファイルパスである場合には、処理内容はファイル名の変更になります。引数が、互いに異なるディレクトリ内のファイルパスである場合には、処理内容はファイルの移動になります。ファイルは移動されます。ドライブをまたぐ移動はできない場合があります。",
+			"description": "ファイルの移動や、ファイル名の変更を行います。<br \/>引数が、共にファイル名のみの場合や、共に同じディレクトリ内のファイルパスである場合には、処理内容はファイル名の変更になります。引数が、互いに異なるディレクトリ内のファイルパスである場合には、処理内容はファイルの移動になります。ドライブをまたぐ移動はできない場合があります。",
 			"parameters": "(string型) pathOrName : 対象ファイルの名称またはパス。 \n(string型) newName : 変更後の名称またはパス。 ",
 			"returnValue": "(void型) "
 		},
 		"function8": {
 			"name": "renameFile",
 			"declaration": "void renameFile( string pathOrName, string newName )",
-			"description": "ファイル名を変更します。変更先にファイル名ではなくパスを指定した場合、ファイルは移動されます。ただし環境によっては、ドライブをまたぐ移動はできない場合があります。<br \/><div style=\"font-weight:bold;\">※ このAPIの使用は推奨されません。このAPIの動作は処理系やバージョンに依存します。VCSSL 3.3 以降では、代わりに同機能の <a href=\"#moveFile\">moveFile<\/a> を使用してください。やむを得ずこの API を使用する必要があり、依存性を回避したい場合には、変更後のファイルパス newPath を絶対パスで指定してください。相対パスやファイル名のみを指定した場合の挙動は、処理系やバージョンに依存します。現在の標準VCSSLランタイムでは、newPath にファイル名や相対パスを指定した場合、実行プログラムの場所を基準とするものと解釈されますが、VCSSL 3.2 以前の古いバージョンなどでは、処理系の場所を基準として解釈される場合があります。絶対パスを指定すればバージョンへの依存性を回避できます。 例えば、renameFile(\"Test1.txt\", \"Test2.txt\"); と記述した場合、現在の標準VCSSLランタイムでは、同じディレクトリ内で Test1.txt のファイルが Test2.txt に名称変更されます。しかし古いバージョンでは、\"Test2.txt\" は処理系からみた相対パスと解釈されるため、ファイルは処理系のディレクトリ（ VCSSL.jar のある場所 ）に移動されます。古いバージョンにおいても、同じディレクトリ内における名称変更を行いたい場合は、 renameFile(\"hoge1.txt\", getFilePath(\"hoge2.txt\", getFilePath(\".\")) ); などと記述します。<\/div>",
+			"description": "ファイル名を変更します。<br \/>変更先にファイル名ではなくパスを指定した場合、ファイルは移動されます。ただし環境によっては、ドライブをまたぐ移動はできない場合があります。<br \/><div style=\"font-weight:bold;\">※ このAPIの使用は推奨されません。このAPIの動作は処理系やバージョンに依存します。VCSSL 3.3 以降では、代わりに同機能の <a href=\"#moveFile\">moveFile<\/a> を使用してください。やむを得ずこの API を使用する必要があり、依存性を回避したい場合には、変更後のファイルパス newPath を絶対パスで指定してください。相対パスやファイル名のみを指定した場合の挙動は、処理系やバージョンに依存します。現在の標準VCSSLランタイムでは、newPath にファイル名や相対パスを指定した場合、実行プログラムの場所を基準とするものと解釈されますが、VCSSL 3.2 以前の古いバージョンなどでは、処理系の場所を基準として解釈される場合があります。絶対パスを指定すればバージョンへの依存性を回避できます。 例えば、renameFile(\"Test1.txt\", \"Test2.txt\"); と記述した場合、現在の標準VCSSLランタイムでは、同じディレクトリ内で Test1.txt のファイルが Test2.txt に名称変更されます。しかし古いバージョンでは、\"Test2.txt\" は処理系からみた相対パスと解釈されるため、ファイルは処理系のディレクトリ（ VCSSL.jar のある場所 ）に移動されます。古いバージョンにおいても、同じディレクトリ内における名称変更を行いたい場合は、 renameFile(\"hoge1.txt\", getFilePath(\"hoge2.txt\", getFilePath(\".\")) ); などと記述します。<\/div>",
 			"parameters": "(string型) pathOrName : 対象ファイルの名称またはパス。 \n(string型) newName : 変更後の名称またはパス。古いバージョンや処理系への依存性を回避するため、絶対パスでの指定が推奨されます。 ",
 			"returnValue": "(void型) "
 		},
@@ -113,15 +113,15 @@
 			"name": "copyFile",
 			"declaration": "void copyFile( string inputPath, string outputPath )",
 			"description": "ファイルをコピーします。",
-			"parameters": "pathOrName : コピー元ファイルの名称またはパス。 \nnewName : コピー先ファイルの名称またはパス。 ",
+			"parameters": "(string型) inputPath : コピー元ファイルの名称またはパス。 \n(string型) outputPath : コピー先ファイルの名称またはパス。 ",
 			"returnValue": "(void型) "
 		},
 		"function10": {
 			"name": "getFilePath",
 			"declaration": "string getFilePath( string pathOrName )",
 			"description": "ファイル名または相対パスから、絶対パスを取得して返します。",
-			"parameters": "(string型) pathOrName : 対象ファイルの名称または相対パス。 \nnewName : 対象ファイルの絶対パス。 ",
-			"returnValue": "(string型) "
+			"parameters": "(string型) pathOrName : 対象ファイルの名称または相対パス。 ",
+			"returnValue": "(string型) 対象ファイルの絶対パス。"
 		},
 		"function11": {
 			"name": "getFilePath",
@@ -134,8 +134,8 @@
 			"name": "getFilePath",
 			"declaration": "string getFilePath( string pathOrName, string directory )",
 			"description": "指定された基準ディレクトリから見たファイル名または相対パスを、絶対パスに変換取得して返します。",
-			"parameters": "(string型) pathOrName : 基準ディレクトリから見た、対象ファイルの名称または相対パス。 \n(string型) directory : 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。 \nnewName : 対象ファイルの絶対パス。 ",
-			"returnValue": "(string型) "
+			"parameters": "(string型) pathOrName : 基準ディレクトリから見た、対象ファイルの名称または相対パス。 \n(string型) directory : 相対パスの基準ディレクトリ。実行プログラムを基準とした名称または相対パス、もしくは絶対パスで指定します。 ",
+			"returnValue": "(string型) 対象ファイルの絶対パス。"
 		},
 		"function13": {
 			"name": "getFilePath",
@@ -147,8 +147,8 @@
 		"function14": {
 			"name": "getFilePath",
 			"declaration": "string[ ] getFilePath( int target )",
-			"description": "実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。 それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。",
-			"parameters": "(int型) target : 取得する特別な場所の種類。<a href=\"#HOME\">HOME<\/a> または <a href=\"#ROOT\">ROOT<\/a> または <a href=\"#TMP\">TMP<\/a> を指定します。 ",
+			"description": "実行環境やオペレーティングシステムにおける特別な場所のパスを取得します。",
+			"parameters": "(int型) target : 取得する特別な場所の種類。<a href=\"#HOME\">HOME<\/a> または <a href=\"#ROOT\">ROOT<\/a> または <a href=\"#TMP\">TMP<\/a> を指定します。それぞれルートディレクトリ、ユーザーのホームディレクトリ、およびコンピュータ側で用意されている一時ファイル用ディレクトリを意味します。 ",
 			"returnValue": "(string[]型) 特別な場所のパス。場所は引数 target で指定します。target に <a href=\"#ROOT\">ROOT<\/a> を取得した場合の挙動はオペレーティングシステムに依存します。単一のルートが存在しないオペレーティングシステムでは、恐らくドライブ名が配列で返されます。"
 		},
 		"function15": {
@@ -179,16 +179,16 @@
 		"function19": {
 			"name": "getFileRelativePath",
 			"declaration": "string getFileRelativePath( string pathOrName, string directory )",
-			"description": "指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。<br \/>現在は <a href=\"#getFilePath\">getFilePath<\/a>( pathOrName, directory, <a href=\"#RELATIVE\">RELARIVE<\/a> ) で取得できます。この関数は互換目的でサポートされています。",
+			"description": "指定ディレクトリから見た相対パスを、（実行プログラムから見た）相対パスに変換して返します。<br \/>現在は <a href=\"#getFilePath\">getFilePath<\/a>( pathOrName, directory, <a href=\"#RELATIVE\">RELATIVE<\/a> ) で取得できます。この関数は互換目的でサポートされています。",
 			"parameters": "(string型) pathOrName : 対象ファイルの名称またはパス。 \n(string型) directory : 基準ディレクトリのパス。 ",
-			"returnValue": "(string型) 親階層のパス。"
+			"returnValue": "(string型) 相対パス。"
 		},
 		"function20": {
 			"name": "getFileList",
 			"declaration": "string[ ] getFileList( string pathOrName )",
-			"description": "指定ディレクトリ直下のファイル名一覧を取得します。<br \/>現在は <a href=\"#getFilePath\">listFile<\/a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。<br \/>この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href=\"#getFilePath\">listFile<\/a>( pathOrName ) は整列オプションを指定できます。",
+			"description": "指定ディレクトリ直下のファイル名一覧を取得します。<br \/>現在は <a href=\"#listDirectory\">listDirectory<\/a>( pathOrName ) で取得できます。この関数は互換目的でサポートされています。<br \/>この関数では、ファイル名の整列順序は環境やオペレーティングシステムに依存します。特定の順序である事を前提とした処理は推奨されません。新しい <a href=\"#listDirectory\">listDirectory<\/a>( pathOrName ) は整列オプションを指定できます。",
 			"parameters": "(string型) pathOrName : 対象ディレクトリの名称またはパス。 ",
-			"returnValue": "(string[]型) 指定ディレクトリ直下のファイル名一覧（順序は環境依存）"
+			"returnValue": "(string[]型) 指定ディレクトリ直下のファイル名一覧（順序は環境依存）。"
 		}
 	}
 }

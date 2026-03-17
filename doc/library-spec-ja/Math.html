@@ -15,6 +15,16 @@
 <dd>float精度における、円周率の値です。多倍長精度の varfloat 値を得るには <a href="#pi">pi</a>() を使用してください。</dd>
 <dt><a href="#E">const float E</a></dt>
 <dd>float精度における、ネイピア数（自然対数の底）の値です。多倍長精度の varfloat 値を得るには <a href="#exp">exp</a>( 1.0vf ) で計算してください。</dd>
+<dt><a href="#nan">macro nan( float arg )</a></dt>
+<dd>float値が NaN かどうか判定します。</dd>
+<dt><a href="#inf">macro inf( float arg )</a></dt>
+<dd>float値が Inf かどうか判定します。</dd>
+<dt><a href="#and">macro and( int number1, int number2 )</a></dt>
+<dd>int値に対して、ビットごとのAND（論理積）演算を計算します。</dd>
+<dt><a href="#or">macro or( int number1, int number2 )</a></dt>
+<dd>int値に対して、ビットごとのOR（論理和）演算を計算します。</dd>
+<dt><a href="#xor">macro xor( int number1, int number2 )</a></dt>
+<dd>int値に対して、ビットごとのXOR（排他的論理和）演算を計算します。</dd>
 <dt><a href="#random">macro random()</a></dt>
 <dd>0.0以上1.0未満の値を返します。なお、VCSSL3.0.20以前のドキュメントにおいて「0.0 から 1.0 までの乱数値を返します。」と記載されていましたが、この表現は曖昧であり、実際には1.0に完全に一致する値が返される事はありません。</dd>
 <dt><a href="#rand">macro rand()</a></dt>
@@ -120,9 +130,9 @@
 <dt><a href="#cosh">varfloat cosh( varfloat arg )</a></dt>
 <dd>ハイパボリックコサイン関数を計算します。内部では、元の桁数の2.1倍の桁数で、「 sinh(x) = ( exp(x) + exp(-x) ) / 2 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。</dd>
 <dt><a href="#tanh">macro tanh( float arg )</a></dt>
-<dd>ハイパボリックコタンジェント関数を計算します。</dd>
+<dd>ハイパボリックタンジェント関数を計算します。</dd>
 <dt><a href="#tanh">varfloat tanh( varfloat arg )</a></dt>
-<dd>ハイパボリックコタンジェント関数を計算します。内部では、元の桁数の2.8倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / ( exp(x) + exp(-x) ) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。</dd>
+<dd>ハイパボリックタンジェント関数を計算します。内部では、元の桁数の2.8倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / ( exp(x) + exp(-x) ) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。</dd>
 <dt><a href="#asinh">macro asinh( float arg )</a></dt>
 <dd>ハイパボリックサインの逆関数を計算します。</dd>
 <dt><a href="#asinh">varfloat asinh( varfloat arg )</a></dt>
@@ -204,6 +214,237 @@
 
 <hr />
 <h2 id="function" style="page-break-before:always;" >関数</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="nan"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	nan
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	宣言形式
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	macro nan( float arg )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	説明
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float値が NaN かどうか判定します。
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float型) arg : 判定対象の値。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(bool型) NaN であれば true 、そうでなければ false 。
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float x = 0.0/0.0;<br />bool isNaN = nan(x);<br />print(&quot;isNaN=&quot; + isNaN);
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="inf"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	inf
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	宣言形式
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	macro inf( float arg )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	説明
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float値が Inf かどうか判定します。
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float型) arg : 判定対象の値。 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	戻り値
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(bool型) Inf であれば true 、そうでなければ false 。
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float x = 1.0/0.0;<br />bool isInf = inf(x);<br />print(&quot;isInf=&quot; + isInf);
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="and"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	and
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	宣言形式
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	macro and( int number1, int number2 )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	説明
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int値に対して、ビットごとのAND（論理積）演算を計算します。
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) number1 : 演算対象の値 <br />(int型) number2 : 演算対象の値 <br />(int) : 計算結果の値 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int a = 0b01010101;<br />int b = 0b11110000;<br />int c = and(a, b);<br />print( bin(c) ); // 0b1010000
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="or"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	or
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	宣言形式
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	macro or( int number1, int number2 )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	説明
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int値に対して、ビットごとのOR（論理和）演算を計算します。
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) number1 : 演算対象の値 <br />(int型) number2 : 演算対象の値 <br />(int) : 計算結果の値 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int a = 0b01010101;<br />int b = 0b11110000;<br />int c = or(a, b);<br />print( bin(c) ); // 0b11110101
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="xor"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	関数名
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	xor
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	宣言形式
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	macro xor( int number1, int number2 )
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	説明
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int値に対して、ビットごとのXOR（排他的論理和）演算を計算します。
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	引数
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int型) number1 : 演算対象の値 <br />(int型) number2 : 演算対象の値 <br />(int) : 計算結果の値 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	使用例
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int a = 0b01010101;<br />int b = 0b11110000;<br />int c = xor(a, b);<br />print( bin(c) ); // 0b10100101
+   	 </td>
+    </tr>
+</tbody></table>
+
 <table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="random"><tbody>
     <tr>
    	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
@@ -2646,7 +2887,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ハイパボリックコタンジェント関数を計算します。
+   	 	ハイパボリックタンジェント関数を計算します。
    	 </td>
     </tr>
     <tr>
@@ -2689,7 +2930,7 @@
    	 	説明
    	 </td>
    	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
-   	 	ハイパボリックコタンジェント関数を計算します。<br />内部では、元の桁数の2.8倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / ( exp(x) + exp(-x) ) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
+   	 	ハイパボリックタンジェント関数を計算します。<br />内部では、元の桁数の2.8倍の桁数で、「 sinh(x) = ( exp(x) - exp(-x) ) / ( exp(x) + exp(-x) ) 」によって計算されます。ただし 10 桁以下では、「 元の桁数 + 4桁 」の桁数で計算されます。この余剰桁数は、将来的に（ 恐らくより高精度な方向に ）変更される可能性があります。
    	 </td>
     </tr>
     <tr>
