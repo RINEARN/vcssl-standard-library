@@ -8,9 +8,10 @@ import GUI;
 import gui.ButtonPanel;
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ gui.ButtonWindow は、
- * GUI部品として、ボタンが並ぶウィンドウ ―― ボタンウィンドウ ―― を提供します。	
+ * GUI部品として、ボタンが並ぶウィンドウ ―― ボタンウィンドウ ―― を提供します。
  * </p>
  *
  * <p>
@@ -24,7 +25,7 @@ import gui.ButtonPanel;
  * <br />
  * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
  * <br />
- * 具体的には、 <a href="#newButtonWindow">newButtonWindow</a> 関数で生成し、 
+ * 具体的には、 <a href="#newButtonWindow">newButtonWindow</a> 関数で生成し、
  * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
  * </p>
  *
@@ -33,53 +34,152 @@ import gui.ButtonPanel;
  * ButtonWindow 構造体を標準ライブラリ「 GUI 」と同様の感覚でそのまま扱えるように、
  * 標準GUIライブラリ関数のオーバーロードも提供されます。
  * <br />
- * 例えば、 
+ * 例えば、
  * <a href="#mountComponent">mountComponent</a> 関数や、
- * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentSize">setComponentSize</a> 関数、
  * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, gui.ButtonWindow, provides a window containing arranged buttons as a GUI component.
+ * </p>
+ *
+ * <p>
+ * In the standard VCSSL library GUI, GUI components are handled as int IDs, but the GUI component provided by this module is handled as the
+ * <a href="#ButtonWindow">ButtonWindow</a> struct.
+ * </p>
+ *
+ * <p>
+ * The ButtonWindow struct internally stores resource IDs and related data, but you normally do not need to be aware of its internals because
+ * functions for creating and destroying it are provided. Direct access to its members is not recommended.
+ * <br />
+ * Specifically, create it with the <a href="#newButtonWindow">newButtonWindow</a> function and destroy it with the
+ * <a href="#deleteComponent">deleteComponent</a> function.
+ * </p>
+ *
+ * <p>
+ * This module also provides overloads of standard GUI library functions so that the ButtonWindow struct can be handled almost in the same
+ * way as in the standard library GUI.
+ * <br />
+ * For example, the <a href="#mountComponent">mountComponent</a>, <a href="#setComponentSize">setComponentSize</a>, and
+ * <a href="#setComponentLocation">setComponentLocation</a> functions are provided.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
-/** デフォルトのウィンドウタイトルです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウタイトルです。
+ *
+ * !--- locale=En-US ---
+ * The default window title.
+ */
 private const string DEFAULT_WINDOW_TITLE = "ButtonWindow";
 
-/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。
+ *
+ * !--- locale=En-US ---
+ * The default window offset value specifying the approximate difference between the window frame and the inner area.
+ */
 private const int DEFAULT_WINDOW_WIDTH_OFFSET = 16;
 
-/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。
+ *
+ * !--- locale=En-US ---
+ * The default window offset value specifying the approximate difference between the window frame and the inner area.
+ */
 private const int DEFAULT_WINDOW_HEIGHT_OFFSET = 38;
 
-/** デフォルトのウィンドウ位置(X)です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ位置(X)です。
+ *
+ * !--- locale=En-US ---
+ * The default X position of the window.
+ */
 private const int DEFAULT_WINDOW_X = 0;
 
-/** デフォルトのウィンドウ位置(Y)です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ位置(Y)です。
+ *
+ * !--- locale=En-US ---
+ * The default Y position of the window.
+ */
 private const int DEFAULT_WINDOW_Y = 0;
 
-/** デフォルトのウィンドウ幅です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ幅です。
+ *
+ * !--- locale=En-US ---
+ * The default window width.
+ */
 private const int DEFAULT_WINDOW_WIDTH = 300;
 
-/** デフォルトのウィンドウ高さです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ高さです。
+ *
+ * !--- locale=En-US ---
+ * The default window height.
+ */
 private const int DEFAULT_GRID_HEIGHT = 30;
 
-/** デフォルトのウィンドウ内余白領域です(左)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(左)。
+ *
+ * !--- locale=En-US ---
+ * The default inner left margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_LEFT = 10;
 
-/** デフォルトのウィンドウ内余白領域です(右)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(右)。
+ *
+ * !--- locale=En-US ---
+ * The default inner right margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_RIGHT = 10;
 
-/** デフォルトのウィンドウ内余白領域です(上)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(上)。
+ *
+ * !--- locale=En-US ---
+ * The default inner top margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
 
-/** デフォルトのウィンドウ内余白領域です(下)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(下)。
+ *
+ * !--- locale=En-US ---
+ * The default inner bottom margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ボタンウィンドウの構造体です。
+ *
+ * !--- locale=En-US ---
+ * The button window struct.
  */
 public struct ButtonWindow{
 	// ウィンドウのGUI部品IDです。
@@ -90,6 +190,7 @@ public struct ButtonWindow{
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ボタンウィンドウを生成します。
  *
  * @param x ウィンドウ左上頂点のX座標
@@ -99,6 +200,17 @@ public struct ButtonWindow{
  * @param title ウィンドウのタイトル
  * @param labelText 全ボタンのラベル文字列を格納する配列
  * @return 生成したボタンウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Creates a button window.
+ *
+ * @param x The X coordinate of the top-left corner of the window.
+ * @param y The Y coordinate of the top-left corner of the window.
+ * @param width The width of the window.
+ * @param height The height of the window.
+ * @param title The title of the window.
+ * @param labelText The array storing the label text of all buttons.
+ * @return The created button window.
  */
 public ButtonWindow newButtonWindow(int x, int y, int width, int height, string title, string labelText[]){
 	ButtonWindow windowInstance;
@@ -119,10 +231,17 @@ public ButtonWindow newButtonWindow(int x, int y, int width, int height, string 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 自動でウィンドウサイズを決定し、ボタンウィンドウを生成します。
  *
  * @param labelText 全ボタンのラベル文字列を格納する配列
  * @return 生成したボタンウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Creates a button window with its size determined automatically.
+ *
+ * @param labelText The array storing the label text of all buttons.
+ * @return The created button window.
  */
 public ButtonWindow newButtonWindow(string labelText[]){
 	int n = length(labelText, 0);
@@ -140,9 +259,15 @@ public ButtonWindow newButtonWindow(string labelText[]){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ボタンウィンドウを破棄します。
  *
  * @param windowInstance 破棄するウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Destroys a button window.
+ *
+ * @param windowInstance The window to be destroyed.
  */
 public void deleteComponent(ButtonWindow &windowInstance){
 	demountComponent(windowInstance.buttonPanel, windowInstance.window);
@@ -153,10 +278,17 @@ public void deleteComponent(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのGUIコンポーネントIDを取得します。
  *
  * @param windowInstance 対象のウィンドウ
  * @return ウィンドウのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the GUI component ID of the window.
+ *
+ * @param windowInstance The target window.
+ * @return The GUI component ID of the window.
  */
 public int getWindow(ButtonWindow &windowInstance){
 	return windowInstance.window;
@@ -164,11 +296,19 @@ public int getWindow(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定されたラベルに対応するボタンを取得します。
  *
  * @param windowInstance 対象のボタンウィンドウ
  * @param labelText 取得対象のボタンに対応するラベル文字列
  * @return ボタンのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the button corresponding to the specified label.
+ *
+ * @param windowInstance The target button window.
+ * @param labelText The label text corresponding to the button to get.
+ * @return The GUI component ID of the button.
  */
 public int getButton(ButtonWindow &windowInstance, string labelText){
 	return getButton(windowInstance.buttonPanel, labelText);
@@ -176,11 +316,19 @@ public int getButton(ButtonWindow &windowInstance, string labelText){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定されたインデックスのボタンを取得します。
  *
  * @param windowInstance 対象のボタンウィンドウ
  * @param index ボタンのインデックス
  * @return ボタンのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the button at the specified index.
+ *
+ * @param windowInstance The target button window.
+ * @param index The index of the button.
+ * @return The GUI component ID of the button.
  */
 public int getButton(ButtonWindow &windowInstance, int index){
 	return getButton(windowInstance.buttonPanel, index);
@@ -201,12 +349,21 @@ public ButtonPanel getButtonPanel(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのサイズを設定します。
  *
  * @param windowInstance 対象のボタンウィンドウ
  * @param width 幅
  * @param width 高さ
  * @return ウィンドウのサイズを格納する配列
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the window.
+ *
+ * @param windowInstance The target button window.
+ * @param width The width.
+ * @param width The height.
+ * @return The array storing the size of the window.
  */
 public void setComponentSize(ButtonWindow &windowInstance, int width, int height){
 	setComponentSize(windowInstance.window, width, height);
@@ -215,9 +372,15 @@ public void setComponentSize(ButtonWindow &windowInstance, int width, int height
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Automatically adjusts the sizes of the internal components to match the current window size. Use this when the window size has been changed externally.
+ *
+ * @param windowInstance The target window.
  */
 public void setComponentSize(ButtonWindow &windowInstance){
 	int windowSize[] = getComponentSize(windowInstance.window);
@@ -233,10 +396,17 @@ public void setComponentSize(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのサイズを返します。
  *
  * @param windowInstance 対象のボタンウィンドウ
  * @return ウィンドウのサイズを格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the size of the window.
+ *
+ * @param windowInstance The target button window.
+ * @return The array storing the size of the window.
  */
 public int[] getComponentSize(ButtonWindow &windowInstance){
 	return getComponentSize(windowInstance.window);
@@ -244,10 +414,17 @@ public int[] getComponentSize(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を返します。
  *
  * @param windowInstance 対象のボタンウィンドウ
  * @return ウィンドウの位置を格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the location of the window.
+ *
+ * @param windowInstance The target button window.
+ * @return The array storing the location of the window.
  */
 public int[] getComponentLocation(ButtonWindow &windowInstance){
 	return getComponentLocation(windowInstance.window);
@@ -255,11 +432,19 @@ public int[] getComponentLocation(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を設定します。
  *
  * @param windowInstance 対象のボタンウィンドウ
  * @param x ウィンドウのX座標
  * @param y ウィンドウのY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the location of the window.
+ *
+ * @param windowInstance The target button window.
+ * @param x The X coordinate of the window.
+ * @param y The Y coordinate of the window.
  */
 public void setComponentLocation(ButtonWindow &windowInstance, int x, int y){
 	setComponentLocation(windowInstance.window, x, y);
@@ -267,9 +452,15 @@ public void setComponentLocation(ButtonWindow &windowInstance, int x, int y){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを再描画します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Repaints the window.
+ *
+ * @param windowInstance The target window.
  */
 public void paintComponent(ButtonWindow &windowInstance){
 	paintComponent(windowInstance.buttonPanel);
@@ -278,9 +469,15 @@ public void paintComponent(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを不可視化します。
  *
  * @param windowInstance 対象のボタンウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Hides the window.
+ *
+ * @param windowInstance The target button window.
  */
 public void hideComponent(ButtonWindow &windowInstance){
 	hideComponent(windowInstance.window);
@@ -288,9 +485,15 @@ public void hideComponent(ButtonWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを可視化します。
  *
  * @param windowInstance 対象のボタンウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Shows the window.
+ *
+ * @param windowInstance The target button window.
  */
 public void showComponent(ButtonWindow &windowInstance){
 	showComponent(windowInstance.window);
