@@ -7,6 +7,7 @@ coding UTF-8;
 import Math;
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ math.StatisticalFunction は、
  * 平均や標準偏差などの統計関数を提供します。
@@ -34,17 +35,52 @@ import Math;
  * 必要な桁数よりも、十分に大きな桁数で関数を呼び出し、
  * 得られた結果から不要な（誤差を含む）部分を切り捨てて下さい。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, math.StatisticalFunction, provides statistical functions such as the mean and the standard deviation.
+ * </p>
+ *
+ * <p>
+ * This module also provides arbitrary-precision functions such as those for the varfloat type.
+ * <br />
+ * However, only the algorithms themselves are implemented, and no special measures are taken against the accumulation of calculation errors or loss of significance.
+ * </p>
+ *
+ * <p>
+ * In other words, the returned value is not guaranteed to be correct to the last digit,
+ * and the tail of the result always contains an incorrect part caused by accumulated errors.
+ * <br />
+ * The length of this erroneous part varies depending on the algorithm used and on differences such as loss of significance and other effects caused by the arguments.
+ * </p>
+ *
+ * <p>
+ * Therefore, when using arbitrary-precision functions such as those for the varfloat type,
+ * <br />
+ * call the function with a sufficiently larger number of digits than actually required,
+ * and discard the unnecessary part containing errors from the obtained result.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 和を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the sum.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 float sum( ... float args[] ){
 	int n = length( args, 0 );
@@ -57,10 +93,17 @@ float sum( ... float args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 和を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the sum.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 varfloat sum( ... varfloat args[] ){
 	int n = length( args, (int)0v );
@@ -73,10 +116,17 @@ varfloat sum( ... varfloat args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 平均値を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the mean value.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 float mean( ... float args[] ){
 	int n = length( args, 0 );
@@ -86,10 +136,17 @@ float mean( ... float args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 平均値を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the mean value.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 varfloat mean( ... varfloat args[] ){
 	int n = length( args, (int)0v );
@@ -99,10 +156,17 @@ varfloat mean( ... varfloat args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 分散（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the variance with n in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 float van( ... float args[] ){
 	int n = length( args, 0 );
@@ -117,10 +181,17 @@ float van( ... float args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 分散（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the variance with n in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 varfloat van( ... varfloat args[] ){
 	int n = length( args, (int)0v );
@@ -135,10 +206,17 @@ varfloat van( ... varfloat args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 不偏分散（分母は n-1 ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the unbiased variance with n-1 in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 float van1( ... float args[] ){
 	int n = length( args, 0 );
@@ -153,10 +231,17 @@ float van1( ... float args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 不偏分散（分母は n-1 ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the unbiased variance with n-1 in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 varfloat van1( ... varfloat args[] ){
 	int n = length( args, (int)0v );
@@ -172,10 +257,17 @@ varfloat van1( ... varfloat args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 標準偏差（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the standard deviation with n in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 float sdn( ... float args[] ){
 	float value = sqrt( van(args) );
@@ -184,10 +276,17 @@ float sdn( ... float args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 標準偏差（分母は n ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the standard deviation with n in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 varfloat sdn( ... varfloat args[] ){
 	varfloat value = sqrt( van(args) );
@@ -196,10 +295,17 @@ varfloat sdn( ... varfloat args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 不偏標準偏差（分母は n-1 ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the unbiased standard deviation with n-1 in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 float sdn1( ... float args[] ){
 	float value = sqrt( van1(args) );
@@ -208,10 +314,17 @@ float sdn1( ... float args[] ){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 不偏標準偏差（分母は n-1 ）を計算します。
  *
  * @param args 計算のもとになる値です。可変長引数なので、配列による一括指定のほかに、複数の引数として指定する事もできます。
  * @return 計算結果です。
+ *
+ * !--- locale=En-US ---
+ * Calculates the unbiased standard deviation with n-1 in the denominator.
+ *
+ * @param args The values used for the calculation. Because this is a variable-length argument, they can be specified either as an array or as multiple arguments.
+ * @return The calculation result.
  */
 varfloat sdn1( ... varfloat args[] ){
 	varfloat value = sqrt( van1(args) );
