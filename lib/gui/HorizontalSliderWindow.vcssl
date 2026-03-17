@@ -10,9 +10,10 @@ import GUI;
 
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ gui.HorizontalSliderWindow は、
- * GUI部品として、水平スライダーが並ぶウィンドウ ―― スライダーウィンドウ ―― を提供します。	
+ * GUI部品として、水平スライダーが並ぶウィンドウ ―― スライダーウィンドウ ―― を提供します。
  * </p>
  *
  * <p>
@@ -26,7 +27,7 @@ import GUI;
  * <br />
  * 生成・破棄のための関数が提供されるため、その中身を特に意識する必要はありません（ むしろメンバへの直接的なアクセスは推奨されません ）。
  * <br />
- * 具体的には、 <a href="#newHorizontalSliderWindow">newHorizontalSliderWindow</a> 関数で生成し、 
+ * 具体的には、 <a href="#newHorizontalSliderWindow">newHorizontalSliderWindow</a> 関数で生成し、
  * <a href="#deleteComponent">deleteComponent</a> 関数で破棄します。
  * </p>
  *
@@ -35,58 +36,171 @@ import GUI;
  * HorizontalSliderWindow 構造体を標準ライブラリ「 GUI 」と同様の感覚でそのまま扱えるように、
  * 標準GUIライブラリ関数のオーバーロードも提供されます。
  * <br />
- * 例えば、 
+ * 例えば、
  * <a href="#mountComponent">mountComponent</a> 関数や、
- * <a href="#setComponentSize">setComponentSize</a> 関数、 
+ * <a href="#setComponentSize">setComponentSize</a> 関数、
  * <a href="#setComponentLocation">setComponentLocation</a> 関数などが提供されます。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, gui.HorizontalSliderWindow, provides a window containing arranged horizontal sliders as a GUI component.
+ * </p>
+ *
+ * <p>
+ * In the standard VCSSL library GUI, GUI components are handled as int IDs, but the GUI component provided by this module is handled as the
+ * <a href="#HorizontalSliderWindow">HorizontalSliderWindow</a> struct.
+ * </p>
+ *
+ * <p>
+ * The HorizontalSliderWindow struct internally stores resource IDs and related data, but you normally do not need to be aware of its internals because
+ * functions for creating and destroying it are provided. Direct access to its members is not recommended.
+ * <br />
+ * Specifically, create it with the <a href="#newHorizontalSliderWindow">newHorizontalSliderWindow</a> function and destroy it with the
+ * <a href="#deleteComponent">deleteComponent</a> function.
+ * </p>
+ *
+ * <p>
+ * This module also provides overloads of standard GUI library functions so that the HorizontalSliderWindow struct can be handled almost in the same
+ * way as in the standard library GUI.
+ * <br />
+ * For example, the <a href="#mountComponent">mountComponent</a>, <a href="#setComponentSize">setComponentSize</a>, and
+ * <a href="#setComponentLocation">setComponentLocation</a> functions are provided.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
-/** デフォルトのウィンドウタイトルです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウタイトルです。
+ *
+ * !--- locale=En-US ---
+ * The default window title.
+ */
 private const string DEFAULT_WINDOW_TITLE = "HorizontalSliderWindow";
 
-/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。
+ *
+ * !--- locale=En-US ---
+ * The default window offset value specifying the approximate difference between the window frame and the inner area.
+ */
 private const int DEFAULT_WINDOW_WIDTH_OFFSET = 16;
 
-/** デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウオフセット値です。ウィンドウ外周と内部の高さのおおまかな差を指定します。
+ *
+ * !--- locale=En-US ---
+ * The default window offset value specifying the approximate difference between the window frame and the inner area.
+ */
 private const int DEFAULT_WINDOW_HEIGHT_OFFSET = 38;
 
-/** デフォルトのウィンドウ位置(X)です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ位置(X)です。
+ *
+ * !--- locale=En-US ---
+ * The default X position of the window.
+ */
 private const int DEFAULT_WINDOW_X = 0;
 
-/** デフォルトのウィンドウ位置(Y)です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ位置(Y)です。
+ *
+ * !--- locale=En-US ---
+ * The default Y position of the window.
+ */
 private const int DEFAULT_WINDOW_Y = 0;
 
-/** デフォルトのウィンドウ幅です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ幅です。
+ *
+ * !--- locale=En-US ---
+ * The default window width.
+ */
 private const int DEFAULT_WINDOW_WIDTH = 300;
 
-/** デフォルトのウィンドウ高さです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ高さです。
+ *
+ * !--- locale=En-US ---
+ * The default window height.
+ */
 private const int DEFAULT_GRID_HEIGHT = 25;
 
-/** デフォルトのボタン高さです。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのボタン高さです。
+ *
+ * !--- locale=En-US ---
+ * The default button height.
+ */
 private const int DEFAULT_BUTTON_HEIGHT = 30;
 
-/** デフォルトのボタン間余白です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのボタン間余白です。
+ *
+ * !--- locale=En-US ---
+ * The default margin between buttons.
+ */
 private const int DEFAULT_BUTTON_MARGIN_TOP = 5;
 
-/** デフォルトのウィンドウ内余白領域です(左)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(左)。
+ *
+ * !--- locale=En-US ---
+ * The default inner left margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_LEFT = 10;
 
-/** デフォルトのウィンドウ内余白領域です(右)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(右)。
+ *
+ * !--- locale=En-US ---
+ * The default inner right margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_RIGHT = 10;
 
-/** デフォルトのウィンドウ内余白領域です(上)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(上)。
+ *
+ * !--- locale=En-US ---
+ * The default inner top margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_TOP = 10;
 
-/** デフォルトのウィンドウ内余白領域です(下)。 */
+/**
+ * !--- locale=Ja-JP ---
+ * デフォルトのウィンドウ内余白領域です(下)。
+ *
+ * !--- locale=En-US ---
+ * The default inner bottom margin of the window.
+ */
 private const int DEFAULT_WINDOW_MARGIN_BOTTOM = 10;
 
 
-/** スライダーウィンドウの構造体です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * スライダーウィンドウの構造体です。
+ *
+ * !--- locale=En-US ---
+ * The slider window struct.
+ */
 public struct HorizontalSliderWindow{
 	// ウィンドウのGUI部品IDです。
 	protected int window = NULL;
@@ -98,6 +212,7 @@ public struct HorizontalSliderWindow{
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スライダーウィンドウを生成します。
  *
  * @param x ウィンドウ左上頂点のX座標
@@ -110,6 +225,20 @@ public struct HorizontalSliderWindow{
  * @param minValue 全スライダーの最小値を格納する配列
  * @param maxValue 全スライダーの最大値を格納する配列
  * @return 生成したテキストフィールドウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Creates a slider window.
+ *
+ * @param x The X coordinate of the top-left corner of the window.
+ * @param y The Y coordinate of the top-left corner of the window.
+ * @param width The width of the window.
+ * @param height The height of the window.
+ * @param title The title of the window.
+ * @param labelText The array storing the label text of all sliders.
+ * @param defaultValue The array storing the default values of all sliders.
+ * @param minValue The array storing the minimum values of all sliders.
+ * @param maxValue The array storing the maximum values of all sliders.
+ * @return The created slider window.
  */
 public HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width, int height, string title, string labelText[], float defaultValue[], float minValue[], float maxValue[]){
 	HorizontalSliderWindow windowInstance;
@@ -135,6 +264,7 @@ public HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width,
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 自動でウィンドウサイズを決定し、スライダーウィンドウを生成します。
  *
  * @param labelText 全スライダーのラベル文字列を格納する配列
@@ -142,6 +272,15 @@ public HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width,
  * @param minValue 全スライダーの最小値を格納する配列
  * @param maxValue 全スライダーの最大値を格納する配列
  * @return 生成したテキストフィールドウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Creates a slider window with its size determined automatically.
+ *
+ * @param labelText The array storing the label text of all sliders.
+ * @param defaultValue The array storing the default values of all sliders.
+ * @param minValue The array storing the minimum values of all sliders.
+ * @param maxValue The array storing the maximum values of all sliders.
+ * @return The created slider window.
  */
 public HorizontalSliderWindow newHorizontalSliderWindow(string labelText[], float defaultValue[], float minValue[], float maxValue[]){
 	int n = length(labelText, 0);
@@ -162,6 +301,7 @@ public HorizontalSliderWindow newHorizontalSliderWindow(string labelText[], floa
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スライダーウィンドウを生成します。
  *
  * @param x ウィンドウ左上頂点のX座標
@@ -174,6 +314,20 @@ public HorizontalSliderWindow newHorizontalSliderWindow(string labelText[], floa
  * @param minValue 全スライダーの最小値を格納する配列
  * @param maxValue 全スライダーの最大値を格納する配列
  * @return 生成したテキストフィールドウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Creates a slider window.
+ *
+ * @param x The X coordinate of the top-left corner of the window.
+ * @param y The Y coordinate of the top-left corner of the window.
+ * @param width The width of the window.
+ * @param height The height of the window.
+ * @param title The title of the window.
+ * @param labelText The array storing the label text of all sliders.
+ * @param defaultValue The array storing the default values of all sliders.
+ * @param minValue The array storing the minimum values of all sliders.
+ * @param maxValue The array storing the maximum values of all sliders.
+ * @return The created slider window.
  */
 public HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width, int height, string title, string labelText[], int defaultValue[], int minValue[], int maxValue[]){
 	HorizontalSliderWindow windowInstance;
@@ -199,6 +353,7 @@ public HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width,
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 自動でウィンドウサイズを決定し、スライダーウィンドウを生成します。
  *
  * @param labelText 全スライダーのラベル文字列を格納する配列
@@ -206,6 +361,15 @@ public HorizontalSliderWindow newHorizontalSliderWindow(int x, int y, int width,
  * @param minValue 全スライダーの最小値を格納する配列
  * @param maxValue 全スライダーの最大値を格納する配列
  * @return 生成したテキストフィールドウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Creates a slider window with its size determined automatically.
+ *
+ * @param labelText The array storing the label text of all sliders.
+ * @param defaultValue The array storing the default values of all sliders.
+ * @param minValue The array storing the minimum values of all sliders.
+ * @param maxValue The array storing the maximum values of all sliders.
+ * @return The created slider window.
  */
 public HorizontalSliderWindow newHorizontalSliderWindow(string labelText[], int defaultValue[], int minValue[], int maxValue[]){
 	int n = length(labelText, 0);
@@ -226,9 +390,15 @@ public HorizontalSliderWindow newHorizontalSliderWindow(string labelText[], int 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * スライダーウィンドウを破棄します。
  *
  * @param windowInstance 破棄するウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Destroys a slider window.
+ *
+ * @param windowInstance The window to be destroyed.
  */
 public void deleteComponent(HorizontalSliderWindow &windowInstance){
 	demountComponent(windowInstance.horizontalSliderPanel, windowInstance.window);
@@ -239,10 +409,17 @@ public void deleteComponent(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ラベル部分の幅を設定します。
  *
- * @param windowInstance 取得対象のスライダーウィンドウ
+ * @param windowInstance The target slider window.
  * @param labelWidth ラベル幅
+ *
+ * !--- locale=En-US ---
+ * Sets the width of the label area.
+ *
+ * @param windowInstance The target slider window.
+ * @param labelWidth The width of the label area.
  */
 public void setTextLabelWidth(HorizontalSliderWindow &windowInstance, int labelWidth){
 	setTextLabelWidth(windowInstance.horizontalSliderPanel, labelWidth);
@@ -250,10 +427,17 @@ public void setTextLabelWidth(HorizontalSliderWindow &windowInstance, int labelW
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウ下部に、決定ボタンを出現させます。
  *
  * @param windowInstance 対象のウィンドウ
  * @param 決定ボタンのラベル文字列
+ *
+ * !--- locale=En-US ---
+ * Displays a button at the bottom of the window.
+ *
+ * @param windowInstance The target window.
+ * @param label The label text of the button.
  */
 public void setButton(HorizontalSliderWindow &windowInstance, string label){
 	if(windowInstance.button == NULL){
@@ -276,10 +460,17 @@ public void setButton(HorizontalSliderWindow &windowInstance, string label){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 決定ボタンのGUIコンポーネントIDを取得します。
  *
  * @param windowInstance 対象のウィンドウ
  * @return 決定ボタンのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the GUI component ID of the button.
+ *
+ * @param windowInstance The target window.
+ * @return The GUI component ID of the button.
  */
 public int getButton(HorizontalSliderWindow &windowInstance){
 	return windowInstance.button;
@@ -287,10 +478,17 @@ public int getButton(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのGUIコンポーネントIDを取得します。
  *
  * @param windowInstance 対象のウィンドウ
  * @return ウィンドウのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the GUI component ID of the window.
+ *
+ * @param windowInstance The target window.
+ * @return The GUI component ID of the window.
  */
 public int getWindow(HorizontalSliderWindow &windowInstance){
 	return windowInstance.window;
@@ -298,11 +496,19 @@ public int getWindow(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定されたラベルに対応するスライダーを取得します。
  *
  * @param windowInstance 対象のウィンドウ
  * @param labelText 取得対象のスライダーに対応するラベル文字列
  * @return スライダーのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the slider corresponding to the specified label.
+ *
+ * @param windowInstance The target window.
+ * @param labelText The label text corresponding to the slider to get.
+ * @return The GUI component ID of the slider.
  */
 public int getHorizontalSlider(HorizontalSliderWindow &windowInstance, string labelText){
 	return getHorizontalSlider(windowInstance.horizontalSliderPanel, labelText);
@@ -310,11 +516,19 @@ public int getHorizontalSlider(HorizontalSliderWindow &windowInstance, string la
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 指定されたインデックスのスライダーを取得します。
  *
  * @param windowInstance 対象のウィンドウ
  * @param index スライダーのインデックス
  * @return スライダーのGUIコンポーネントID
+ *
+ * !--- locale=En-US ---
+ * Gets the slider at the specified index.
+ *
+ * @param windowInstance The target window.
+ * @param index The index of the slider.
+ * @return The GUI component ID of the slider.
  */
 public int getHorizontalSlider(HorizontalSliderWindow &windowInstance, int index){
 	return getHorizontalSlider(windowInstance.horizontalSliderPanel, index);
@@ -391,10 +605,17 @@ public float getComponentFloat(HorizontalSliderWindow &windowInstance, string la
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのサイズを返します。
  *
  * @param windowInstance 対象のウィンドウ
  * @return ウィンドウのサイズを格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the size of the window.
+ *
+ * @param windowInstance The target window.
+ * @return The array storing the size of the window.
  */
 public int[] getComponentSize(HorizontalSliderWindow &windowInstance){
 	return getComponentSize(windowInstance.window);
@@ -402,12 +623,21 @@ public int[] getComponentSize(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウのサイズを設定します。
  *
  * @param windowInstance 対象のウィンドウ
  * @param width 幅
  * @param width 高さ
  * @return ウィンドウのサイズを格納する配列
+ *
+ * !--- locale=En-US ---
+ * Sets the size of the window.
+ *
+ * @param windowInstance The target window.
+ * @param width The width.
+ * @param width The height.
+ * @return The array storing the size of the window.
  */
 public void setComponentSize(HorizontalSliderWindow &windowInstance, int width, int height){
 	setComponentSize(windowInstance.window, width, height);
@@ -416,9 +646,15 @@ public void setComponentSize(HorizontalSliderWindow &windowInstance, int width, 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの現在のサイズに合わせて、内部コンポーネントのサイズを自動設定します。ウィンドウのサイズを外部から変更した際に使用します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Automatically adjusts the sizes of the internal components to match the current window size. Use this when the window size has been changed externally.
+ *
+ * @param windowInstance The target window.
  */
 public void setComponentSize(HorizontalSliderWindow &windowInstance){
 	int windowSize[] = getComponentSize(windowInstance.window);
@@ -444,10 +680,17 @@ public void setComponentSize(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を返します。
  *
  * @param windowInstance 対象のウィンドウ
  * @return ウィンドウの位置を格納する配列
+ *
+ * !--- locale=En-US ---
+ * Returns the location of the window.
+ *
+ * @param windowInstance The target window.
+ * @return The array storing the location of the window.
  */
 public int[] getComponentLocation(HorizontalSliderWindow &windowInstance){
 	return getComponentLocation(windowInstance.window);
@@ -455,11 +698,19 @@ public int[] getComponentLocation(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を設定します。
  *
  * @param windowInstance 設定対象のウィンドウ
  * @param x ウィンドウ左上頂点のX座標
  * @param y ウィンドウ左上頂点のY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the location of the window.
+ *
+ * @param windowInstance The target window.
+ * @param x The X coordinate of the top-left corner of the window.
+ * @param y The Y coordinate of the top-left corner of the window.
  */
 public void setComponentLocation(HorizontalSliderWindow &windowInstance, int x, int y){
 	setComponentLocation(windowInstance.window, x, y);
@@ -467,11 +718,19 @@ public void setComponentLocation(HorizontalSliderWindow &windowInstance, int x, 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウの位置を設定します。
  *
  * @param windowInstance 対象のウィンドウ
  * @param x ウィンドウのX座標
  * @param y ウィンドウのY座標
+ *
+ * !--- locale=En-US ---
+ * Sets the location of the window.
+ *
+ * @param windowInstance The target window.
+ * @param x The X coordinate of the window.
+ * @param y The Y coordinate of the window.
  */
 public void setComponentLocation(HorizontalSliderWindow &windowInstance, int x, int y){
 	setComponentLocation(windowInstance.window, x, y);
@@ -479,9 +738,15 @@ public void setComponentLocation(HorizontalSliderWindow &windowInstance, int x, 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを再描画します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Repaints the window.
+ *
+ * @param windowInstance The target window.
  */
 public void paintComponent(HorizontalSliderWindow &windowInstance){
 	paintComponent(windowInstance.horizontalSliderPanel);
@@ -493,9 +758,15 @@ public void paintComponent(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを不可視化します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Hides the window.
+ *
+ * @param windowInstance The target window.
  */
 public void hideComponent(HorizontalSliderWindow &windowInstance){
 	hideComponent(windowInstance.window);
@@ -503,9 +774,15 @@ public void hideComponent(HorizontalSliderWindow &windowInstance){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * ウィンドウを可視化します。
  *
  * @param windowInstance 対象のウィンドウ
+ *
+ * !--- locale=En-US ---
+ * Shows the window.
+ *
+ * @param windowInstance The target window.
  */
 public void showComponent(HorizontalSliderWindow &windowInstance){
 	showComponent(windowInstance.window);
