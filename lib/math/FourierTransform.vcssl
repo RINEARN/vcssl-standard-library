@@ -5,6 +5,7 @@ coding UTF-8;
 # PRAGMA END
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ math.FourierTransform は、
  * 離散フーリエ変換(DFT)の処理を提供します。
@@ -37,8 +38,41 @@ coding UTF-8;
  * 必要な桁数よりも、十分に大きな桁数で関数を呼び出し、
  * 得られた結果から不要な（誤差を含む）部分を切り捨てて下さい。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, math.FourierTransform, provides processing for discrete Fourier transforms, or DFTs.
+ * </p>
+ *
+ * <p>
+ * At present, the fast Fourier transform, FFT, is not implemented,
+ * and only a simple DFT with computational order N^2 is implemented.
+ * </p>
+ *
+ * <p>
+ * This module also provides arbitrary-precision discrete Fourier transform processing with the varcomplex type.
+ * <br />
+ * However, only the algorithms themselves are implemented, and no special measures are taken against the accumulation of calculation errors or loss of significance.
+ * </p>
+ *
+ * <p>
+ * In other words, the returned value is not guaranteed to be correct to the last digit,
+ * and the tail of the result always contains an incorrect part caused by accumulated errors.
+ * <br />
+ * The length of this erroneous part varies depending on the algorithm used and on differences such as loss of significance and other effects caused by the arguments.
+ * </p>
+ *
+ * <p>
+ * Therefore, when using the arbitrary-precision DFT with the varcomplex type,
+ * <br />
+ * call the function with a sufficiently larger number of digits than actually required,
+ * and discard the unnecessary part containing errors from the obtained result.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
@@ -48,21 +82,42 @@ import System;
 import math.ElementaryFunction;
 
 
-/** 順変換となるフーリエ変換の指数部符号です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 順変換となるフーリエ変換の指数部符号です。
+ *
+ * !--- locale=En-US ---
+ * The exponent sign of the Fourier transform for forward transformation.
+ */
 public const int FORWARD = -1;
 
-/** 逆変換となるフーリエ変換の指数部符号です。 */
+/**
+ * !--- locale=Ja-JP ---
+ * 逆変換となるフーリエ変換の指数部符号です。
+ *
+ * !--- locale=En-US ---
+ * The exponent sign of the Fourier transform for backward transformation.
+ */
 public const int BACKWARD = 1;
 
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 離散フーリエ変換を行います。
  * 定義域は 0～2π で、変換後の規格化は行いません。
  *
  * @param arg 離散フーリエ変換したいデータを入力します。
  * @param sgn フーリエ変換の指数部符号です。-1で順変換、1で逆変換となります。通常は定数 FourierTransform.FORWARD （順変換）または FourierTransform.BACKWARD (逆変換) を用いて指定します。
  * @return 引数を離散フーリエ変換した値です。
+ *
+ * !--- locale=En-US ---
+ * Performs a discrete Fourier transform.
+ * The definition domain is from 0 to 2pi, and no normalization is performed after the transformation.
+ *
+ * @param arg The data to be transformed by the discrete Fourier transform.
+ * @param sgn The exponent sign of the Fourier transform. Use -1 for the forward transform and 1 for the inverse transform. Normally specify the constant FourierTransform.FORWARD for the forward transform or FourierTransform.BACKWARD for the inverse transform.
+ * @return The value obtained by applying the discrete Fourier transform to the argument.
  */
 public complex[] dft(complex arg[], int sgn){
 
@@ -85,12 +140,21 @@ public complex[] dft(complex arg[], int sgn){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 離散フーリエ変換を行います。
  * 定義域は 0～2π で、変換後の規格化は行いません。
  *
  * @param arg 離散フーリエ変換したいデータを入力します。
  * @param sgn フーリエ変換の指数部符号です。-1で順変換、1で逆変換となります。通常は定数 FourierTransform.FORWARD （順変換）または FourierTransform.BACKWARD (逆変換) を用いて指定します。
  * @return 引数を離散フーリエ変換した値です。
+ *
+ * !--- locale=En-US ---
+ * Performs a discrete Fourier transform.
+ * The definition domain is from 0 to 2pi, and no normalization is performed after the transformation.
+ *
+ * @param arg The data to be transformed by the discrete Fourier transform.
+ * @param sgn The exponent sign of the Fourier transform. Use -1 for the forward transform and 1 for the inverse transform. Normally specify the constant FourierTransform.FORWARD for the forward transform or FourierTransform.BACKWARD for the inverse transform.
+ * @return The value obtained by applying the discrete Fourier transform to the argument.
  */
 public varcomplex[] dft(varcomplex arg[], int sgn){
 
