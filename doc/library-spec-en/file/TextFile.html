@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TextFile</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>TextFile</h1>
+<hr />
+<h2 id="abstract">Abstract</h2>
+<p>The file.TextFile library provides generic text file input/output functions.<br />In particular, it supports file input/output in CSV and TSV formats.</p><p>VCSSL has supported basic text file input/output functions, including CSV and TSV formats,since its earliest versions.<br />However, because early VCSSL was a language intended mainly for numerical computation,those functions were also specified on the assumption of reading and writing numeric data files,and can therefore be inconvenient for general-purpose use.<br />For example, CSV and TSV files can be opened with VCSSL's standard System.open(string filePath, string mode) function,but since that function was designed with manipulation of numeric data files in mind, its behavior is very simple.It does not perform processing such as escaping special symbols or enclosing values in double quotation marks when necessary.<br />(Instead, it operates quickly for input/output of numeric data files.)</p><p>Therefore, this module is intended to provide more general-purpose text file input/output functions,not only for numeric data files.<br />For example, when writing, if a value contains a delimiter such as a comma in CSV or a tab in TSV,the whole value is enclosed in double quotation marks.The same applies when the value contains line breaks.<br />When reading, parts enclosed in double quotation marks are also read collectively as one value,so it is not a problem even if they contain delimiters or line breaks.</p><p>Also, if a written value contains double quotation marks, they are escaped as consecutive double quotation marks.<br />Likewise, when reading, consecutive double quotation marks are treated as escaped quotation marks.</p><p>In addition, this module allows you to specify not only common CSV and TSV formats,but also delimiter and enclosure symbols explicitly.</p><hr />
+<h2 id="abstract" style="page-break-before:always;" >Index</h2>
+<dl>
+<dt><a href="#TextFile">struct TextFile</a></dt>
+<dd>The text file struct. It holds system resources such as the file ID, and information such as delimiters.</dd>
+<dt><a href="#READ">const string READ</a></dt>
+<dd>The "read" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a>.</dd>
+<dt><a href="#WRITE">const string WRITE</a></dt>
+<dd>The "write" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a>.</dd>
+<dt><a href="#APPEND">const string APPEND</a></dt>
+<dd>The "append" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a>.</dd>
+<dt><a href="#READ_TSV">const string READ_TSV</a></dt>
+<dd>The "read" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.</dd>
+<dt><a href="#WRITE_TSV">const string WRITE_TSV</a></dt>
+<dd>The "write" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.</dd>
+<dt><a href="#APPEND_TSV">const string APPEND_TSV</a></dt>
+<dd>The "append" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.</dd>
+<dt><a href="#READ_CSV">const string READ_CSV</a></dt>
+<dd>The "read" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.</dd>
+<dt><a href="#WRITE_CSV">const string WRITE_CSV</a></dt>
+<dd>The "write" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.</dd>
+<dt><a href="#APPEND_CSV">const string APPEND_CSV</a></dt>
+<dd>The "append" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.</dd>
+<dt><a href="#ENCLOSED_ALL">const int ENCLOSED_ALL</a></dt>
+<dd>The option to enclose all values in enclosure symbols.</dd>
+<dt><a href="#ENCLOSED_IF_NECESSARY">const int ENCLOSED_IF_NECESSARY</a></dt>
+<dd>The option to enclose only necessary values in enclosure symbols. This is the default setting for CSV and TSV files.</dd>
+<dt><a href="#ENCLOSED_NONE">const int ENCLOSED_NONE</a></dt>
+<dd>The option not to enclose any values in enclosure symbols. This is the default setting for generic text files.</dd>
+<dt><a href="#openTextFile">TextFile openTextFile(string filePath, string mode)</a></dt>
+<dd>Opens a text file by specifying its file name and mode.Select the mode from the constants below.    <a href="#WRITE">WRITE</a> :    The write mode for generic text files with no special settings. You can also configure settings manually. ,    <a href="#APPEND">APPEND</a> :    The append mode for generic text files with no special settings. You can also configure settings manually. ,    <a href="#READ">READ</a> :    The read mode for generic text files with no special settings. You can also configure settings manually. ,    <a href="#WRITE_CSV">WRITE_CSV</a> :    The write mode configured for CSV (comma-separated) files. ,    <a href="#APPEND_CSV">APPEND_CSV</a> :    The append mode configured for CSV (comma-separated) files. ,    <a href="#READ_CSV">READ_CSV</a> :    The read mode configured for CSV (comma-separated) files. ,    <a href="#WRITE_TSV">WRITE_TSV</a> :    The write mode configured for TSV (tab-separated) files. ,    <a href="#APPEND_TSV">APPEND_TSV</a> :    The append mode configured for TSV (tab-separated) files. ,    <a href="#READ_TSV">READ_TSV</a> :    The read mode configured for TSV (tab-separated) files. ,  </dd>
+<dt><a href="#openTextFile">TextFile openTextFile(string filePath, string mode, string textEncoding)</a></dt>
+<dd>Opens a text file by specifying its file name, mode, and text encoding.Select the mode from the constants below.    <a href="#WRITE">WRITE</a> :    The write mode for generic text files with no special settings. You can also configure settings manually. ,    <a href="#APPEND">APPEND</a> :    The append mode for generic text files with no special settings. You can also configure settings manually. ,    <a href="#READ">READ</a> :    The read mode for generic text files with no special settings. You can also configure settings manually. ,    <a href="#WRITE_CSV">WRITE_CSV</a> :    The write mode configured for CSV (comma-separated) files. ,    <a href="#APPEND_CSV">APPEND_CSV</a> :    The append mode configured for CSV (comma-separated) files. ,    <a href="#READ_CSV">READ_CSV</a> :    The read mode configured for CSV (comma-separated) files. ,    <a href="#WRITE_TSV">WRITE_TSV</a> :    The write mode configured for TSV (tab-separated) files. ,    <a href="#APPEND_TSV">APPEND_TSV</a> :    The append mode configured for TSV (tab-separated) files. ,    <a href="#READ_TSV">READ_TSV</a> :    The read mode configured for TSV (tab-separated) files. ,  Also, choose the text encoding from the following string literals.    &quotShift_JIS&quot :    Shift_JIS. Note that it uses an underscore ( _ ), not a hyphen ( - ). ,    &quotUTF-8&quot :    UTF-8. Note that it uses a hyphen ( - ), not an underscore ( _ ). ,    &quotEUC-JP&quot :    EUC-JP. Note that it uses a hyphen ( - ), not an underscore ( _ ). ,  </dd>
+<dt><a href="#close">void close(TextFile &amp;textFile)</a></dt>
+<dd>Closes access to the text file.In particular, after write access, this function must always be called in order to flush all buffered contents to the end.</dd>
+<dt><a href="#getEndOfLineCode">string getEndOfLineCode(TextFile &amp;textFile)</a></dt>
+<dd>Obtains the line break code used for file input/output.In read mode, the line break code used in the file is analyzed,and the one considered appropriate among CR+LF, LF, and CR is returned.If multiple line break codes are mixed,they are checked in the order of priority CR+LF, LF, and CR.If none of them applies, NULL is returned.After the line break code has been explicitly specified with the <a href="#setEndOfLineCode">setEndOfLineCode</a> function,that specified value is returned.</dd>
+<dt><a href="#setEndOfLineCode">void setEndOfLineCode(TextFile &amp;textFile, string endOfLineCode)</a></dt>
+<dd>Specifies the line break code used for file input/output.To specify the line break code, it is recommended to use the following constants defined in the System library.    LF :    A line break code with character code 0x0A, corresponding to \n in common escape sequences. ,    CR :    A line break code with character code 0x0D, corresponding to \r in common escape sequences. ,    CR+LF :    A line break code with character codes 0x0D 0x0A, corresponding to \r\n in common escape sequences. (This is not a single constant but an expression adding CR and LF.) ,    EOL :    Represents the default line break code in the execution environment. Usually CR, LF, or CR+LF is used. ,  </dd>
+<dt><a href="#setCommentLineCode">void setCommentLineCode(TextFile &amp;textFile, string commentLineCode)</a></dt>
+<dd>Specifies the line-start string representing a comment line.Lines starting with the string specified here are ignored when reading.Also, when outputting a comment line with the <a href="#commentln">commentln</a> function,the string specified here is used.In read mode, when this function is called,the information about how far the file has been read is reset.This item is not set by default,so it must be set explicitly when comment lines need to be taken into account.Commonly used line-start strings include the following.    "#" (number sign) :    Often used in CSV/TSV files and scripts. ,    ":" (colon) :    Used in some configuration files and scripts. ,    ";" (semicolon) :    Used in some configuration files and scripts. ,    "//" (double slash) :    Used in some programming languages. ,  </dd>
+<dt><a href="#getCommentLineCode">string getCommentLineCode(TextFile &amp;textFile)</a></dt>
+<dd>Returns the line-start string representing a comment line.</dd>
+<dt><a href="#isReadable">bool isReadable(TextFile &amp;textFile)</a></dt>
+<dd>Checks whether the file is in a readable state.</dd>
+<dt><a href="#isWritable">bool isWritable(TextFile &amp;textFile)</a></dt>
+<dd>Checks whether the file is in a writable state.</dd>
+<dt><a href="#setDelimiter">void setDelimiter(TextFile &amp;textFile, string delimiter)</a></dt>
+<dd>Sets the delimiter used to separate values.When a delimiter is set, the <a href="#read">read</a> function andthe <a href="#readln">readln</a> function return values separated by that delimiter as an array.Also, the <a href="#write">write</a> and<a href="#writeln">writeln</a> functions separate values with the delimiter when writing.Commonly used delimiters include the following.    "," (comma) :    Used in CSV files. ,    "	" (tab) :    Used in TSV files. ,    "&nbsp" (space) :    Used in SSV files. ,    ";" (semicolon) :    Used in some configuration files. ,  In read mode, when this function is called,the information about how far the file has been read is reset.</dd>
+<dt><a href="#setEnclosure">void setEnclosure(TextFile &amp;textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption)</a></dt>
+<dd>Sets the enclosure symbol used to surround values.When an enclosure symbol is set, the <a href="#write">write</a> and<a href="#writeln">writeln</a> functions surround values with the enclosure symbol when writing.Also, the <a href="#read">read</a> and<a href="#readln">readln</a> functions interpret enclosure symbols when reading.The enclosure symbol is specified by the enclosure argument. Commonly used enclosure symbols include the following.    &quot\&quot&quot (double quotation mark) :    This is the &quot symbol. It is commonly used in CSV and TSV files.    In VCSSL, double quotation marks have a special meaning,    so they are specified with a literal such as &quot\&quot&quot. ,    &quot'&quot (single quotation mark) :    Used in some files. ,  Whether values should always be enclosed, or enclosed only when necessary,is specified by the enclosingOption argument.Choose this option from the following constants.    <a href="#ENCLOSED_ALL">ENCLOSED_ALL</a> :    A format in which values are always enclosed. ,    <a href="#ENCLOSED_ALL">ENCLOSED_IF_NECESSARY</a> :    A format in which values are enclosed only when necessary. "Necessary" means that the written or read contents include   any of the following: delimiter, enclosure symbol, comment-line prefix, or line break. ,    <a href="#ENCLOSED_ALL">ENCLOSED_NONE</a> :    A format in which values are never enclosed in any case. ,  If a value to be enclosed itself contains enclosure symbols,they need to be escaped with another character. This is specified by the enclosureEscapeCharacter argument.Commonly used escape characters include the following.    &quot\&quot&quot (double quotation mark) :    This is the &quot symbol. In CSV and TSV files,    it is often used when the enclosure symbol is a double quotation mark.    The escaping result becomes consecutive double quotation marks.    In VCSSL, double quotation marks have a special meaning,    so they are specified with a literal such as &quot\&quot&quot. ,    &quot\\&quot (backslash) :    This is the \ symbol. It is often used in programming languages.    In VCSSL, backslashes have a special meaning,    so they are specified with a literal such as &quot\\&quot. ,  In read mode, when this function is called,the information about how far the file has been read is reset.</dd>
+<dt><a href="#write">void write(TextFile &amp;textFile, ... string value[ ])</a></dt>
+<dd>Writes strings to a text file.If multiple contents are specified, and a delimiter is set, they are written with the delimiter inserted between them.Also, values are enclosed in quotation symbols when necessary.The setting for how values are enclosed is configured by <a href="#setEnclosure">setEnclosure</a>.Note that no delimiter is appended after the last written value.Therefore, when writing by calling this function repeatedly, it is necessary to insert delimiters with the<a href="#delimit">delimit</a> function when needed.</dd>
+<dt><a href="#writeln">void writeln(TextFile &amp;textFile, ... string value[ ])</a></dt>
+<dd>Writes strings to a text file and then inserts a line break.If multiple contents are specified, and a delimiter is set, they are written with the delimiter inserted between them.Also, values are enclosed in quotation symbols when necessary.The setting for how values are enclosed is configured by <a href="#setEnclosure">setEnclosure</a>.</dd>
+<dt><a href="#delimit">void delimit(TextFile &amp;textFile)</a></dt>
+<dd>Writes a delimiter to the text file.</dd>
+<dt><a href="#commentln">void commentln(TextFile &amp;textFile, string comment)</a></dt>
+<dd>Writes a comment line to the text file.Before calling this function, it is necessary to set the line-start string of comment lines with the<a href="#setCommentLineCode">setCommentLineCode</a> function.</dd>
+<dt><a href="#readln">string[ ] readln(TextFile &amp;textFile)</a></dt>
+<dd>Reads the contents of one line from the text file.If a delimiter is set, the contents are split by the delimiter and returned as an array.However, if an enclosure is set,delimiters and line breaks inside enclosed sections are interpreted as part of the value (except when the ENCLOSED_NONE option is used).The setting for how enclosures are interpreted is configured by <a href="#setEnclosure">setEnclosure</a>.</dd>
+<dt><a href="#read">string[ ] read(TextFile &amp;textFile)</a></dt>
+<dd>Reads all contents from the text file.If a delimiter is set, the contents are split by delimiters or line breaks and returned as an array.However, if an enclosure is set,delimiters and line breaks inside enclosed sections are interpreted as part of the value (except when the ENCLOSED_NONE option is used).The setting for how enclosures are interpreted is configured by <a href="#setEnclosure">setEnclosure</a>.</dd>
+<dt><a href="#loadln">string loadln(TextFile &amp;textFile)</a></dt>
+<dd>Reads one line from the file and returns it as is.However, if an enclosure symbol is set and there are line breaks inside enclosed sections, they are not regarded as line ends.If multiple line break codes are mixed in the file,they are normalized to the same line break code returned by the getEndOfLineCode function.Also, if a comment-line prefix is set, comment lines are skipped.</dd>
+<dt><a href="#load">string load(TextFile &amp;textFile)</a></dt>
+<dd>Reads all lines from the file and returns them as is.However, if a comment-line prefix is set, comment lines are skipped.Also, if multiple line break codes are mixed in the file, they are normalized.If multiple line break codes are mixed in the file,they are normalized to the same line break code returned by the getEndOfLineCode function.</dd>
+<dt><a href="#countln">int countln(TextFile &amp;textFile)</a></dt>
+<dd>Counts the effective number of lines in the text file.If no enclosure symbol is set, the effective number of lines is equal to the number of lines in the file.If an enclosure symbol is set, line breaks inside enclosed sections are not counted.In other words, in CSV and TSV files, line breaks contained in values are not counted.When reading CSV or TSV files with the readln function, obtain the effective number of lines with this function first.The readln function cannot be called beyond the effective line count returned by this function.</dd>
+</dl>
+<hr />
+<h2 id="struct" style="page-break-before:always;" >Structs</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="TextFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	TextFile
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	struct TextFile
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The text file struct. It holds system resources such as the file ID, and information such as delimiters.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr /><h2 id="variable">Variables</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="READ"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	READ
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string READ
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "read" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WRITE"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	WRITE
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string WRITE
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "write" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="APPEND"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	APPEND
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string APPEND
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "append" mode for generic text files.No delimiter or enclosure symbol is configured.The quotation behavior is <a href="#ENCLOSED_NONE">ENCLOSED_NONE</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="READ_TSV"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	READ_TSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string READ_TSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "read" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WRITE_TSV"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	WRITE_TSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string WRITE_TSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "write" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="APPEND_TSV"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	APPEND_TSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string APPEND_TSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "append" mode for TSV files.The delimiter is set to a tab character, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="READ_CSV"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	READ_CSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string READ_CSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "read" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="WRITE_CSV"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	WRITE_CSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string WRITE_CSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "write" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="APPEND_CSV"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	APPEND_CSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const string APPEND_CSV
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The "append" mode for CSV files.The delimiter is set to a comma, and the enclosure symbol is set to a double quotation mark.The quotation behavior is <a href="#ENCLOSED_IF_NECESSARY">ENCLOSED_IF_NECESSARY</a>.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ENCLOSED_ALL"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	ENCLOSED_ALL
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const int ENCLOSED_ALL
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The option to enclose all values in enclosure symbols.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ENCLOSED_IF_NECESSARY"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	ENCLOSED_IF_NECESSARY
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const int ENCLOSED_IF_NECESSARY
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The option to enclose only necessary values in enclosure symbols. This is the default setting for CSV and TSV files.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="ENCLOSED_NONE"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	ENCLOSED_NONE
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	const int ENCLOSED_NONE
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The option not to enclose any values in enclosure symbols. This is the default setting for generic text files.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<hr />
+<h2 id="function" style="page-break-before:always;" >Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="openTextFile"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	openTextFile
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	TextFile openTextFile(string filePath, string mode)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Opens a text file by specifying its file name and mode.Select the mode from the constants below.<dl>  <dt><a href="#WRITE">WRITE</a></dt>  <dd>The write mode for generic text files with no special settings. You can also configure settings manually.</dd>  <dt><a href="#APPEND">APPEND</a></dt>  <dd>The append mode for generic text files with no special settings. You can also configure settings manually.</dd>  <dt><a href="#READ">READ</a></dt>  <dd>The read mode for generic text files with no special settings. You can also configure settings manually.</dd>  <dt><a href="#WRITE_CSV">WRITE_CSV</a></dt>  <dd>The write mode configured for CSV (comma-separated) files.</dd>  <dt><a href="#APPEND_CSV">APPEND_CSV</a></dt>  <dd>The append mode configured for CSV (comma-separated) files.</dd>  <dt><a href="#READ_CSV">READ_CSV</a></dt>  <dd>The read mode configured for CSV (comma-separated) files.</dd>  <dt><a href="#WRITE_TSV">WRITE_TSV</a></dt>  <dd>The write mode configured for TSV (tab-separated) files.</dd>  <dt><a href="#APPEND_TSV">APPEND_TSV</a></dt>  <dd>The append mode configured for TSV (tab-separated) files.</dd>  <dt><a href="#READ_TSV">READ_TSV</a></dt>  <dd>The read mode configured for TSV (tab-separated) files.</dd></dl>
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string type) filePath : The file name. <br />(string type) mode : The mode. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) The TextFile struct of the opened file.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	openTextFile
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	TextFile openTextFile(string filePath, string mode, string textEncoding)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Opens a text file by specifying its file name, mode, and text encoding.Select the mode from the constants below.<dl>  <dt><a href="#WRITE">WRITE</a></dt>  <dd>The write mode for generic text files with no special settings. You can also configure settings manually.</dd>  <dt><a href="#APPEND">APPEND</a></dt>  <dd>The append mode for generic text files with no special settings. You can also configure settings manually.</dd>  <dt><a href="#READ">READ</a></dt>  <dd>The read mode for generic text files with no special settings. You can also configure settings manually.</dd>  <dt><a href="#WRITE_CSV">WRITE_CSV</a></dt>  <dd>The write mode configured for CSV (comma-separated) files.</dd>  <dt><a href="#APPEND_CSV">APPEND_CSV</a></dt>  <dd>The append mode configured for CSV (comma-separated) files.</dd>  <dt><a href="#READ_CSV">READ_CSV</a></dt>  <dd>The read mode configured for CSV (comma-separated) files.</dd>  <dt><a href="#WRITE_TSV">WRITE_TSV</a></dt>  <dd>The write mode configured for TSV (tab-separated) files.</dd>  <dt><a href="#APPEND_TSV">APPEND_TSV</a></dt>  <dd>The append mode configured for TSV (tab-separated) files.</dd>  <dt><a href="#READ_TSV">READ_TSV</a></dt>  <dd>The read mode configured for TSV (tab-separated) files.</dd></dl>Also, choose the text encoding from the following string literals.<dl>  <dt>&quotShift_JIS&quot</dt>  <dd>Shift_JIS. Note that it uses an underscore ( _ ), not a hyphen ( - ).</dd>  <dt>&quotUTF-8&quot</dt>  <dd>UTF-8. Note that it uses a hyphen ( - ), not an underscore ( _ ).</dd>  <dt>&quotEUC-JP&quot</dt>  <dd>EUC-JP. Note that it uses a hyphen ( - ), not an underscore ( _ ).</dd></dl>
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string type) filePath : The file name. <br />(string type) mode : The mode. <br />encoding : The text encoding. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) The TextFile struct of the opened file.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="close"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	close
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void close(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Closes access to the text file.In particular, after write access, this function must always be called in order to flush all buffered contents to the end.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getEndOfLineCode"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	getEndOfLineCode
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	string getEndOfLineCode(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Obtains the line break code used for file input/output.In read mode, the line break code used in the file is analyzed,and the one considered appropriate among CR+LF, LF, and CR is returned.If multiple line break codes are mixed,they are checked in the order of priority CR+LF, LF, and CR.If none of them applies, NULL is returned.After the line break code has been explicitly specified with the <a href="#setEndOfLineCode">setEndOfLineCode</a> function,that specified value is returned.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string type) The line break code.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setEndOfLineCode"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	setEndOfLineCode
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setEndOfLineCode(TextFile &amp;textFile, string endOfLineCode)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Specifies the line break code used for file input/output.To specify the line break code, it is recommended to use the following constants defined in the System library.<dl>  <dt>LF</dt>  <dd>A line break code with character code 0x0A, corresponding to \n in common escape sequences.</dd>  <dt>CR</dt>  <dd>A line break code with character code 0x0D, corresponding to \r in common escape sequences.</dd>  <dt>CR+LF</dt>  <dd>A line break code with character codes 0x0D 0x0A, corresponding to \r\n in common escape sequences. (This is not a single constant but an expression adding CR and LF.)</dd>  <dt>EOL</dt>  <dd>Represents the default line break code in the execution environment. Usually CR, LF, or CR+LF is used.</dd></dl>
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. <br />(string type) endOfLineCode : The line break code. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setCommentLineCode"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	setCommentLineCode
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setCommentLineCode(TextFile &amp;textFile, string commentLineCode)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Specifies the line-start string representing a comment line.Lines starting with the string specified here are ignored when reading.Also, when outputting a comment line with the <a href="#commentln">commentln</a> function,the string specified here is used.In read mode, when this function is called,the information about how far the file has been read is reset.<br />This item is not set by default,so it must be set explicitly when comment lines need to be taken into account.Commonly used line-start strings include the following.<dl>  <dt>"#" (number sign)</dt>  <dd>Often used in CSV/TSV files and scripts.</dd>  <dt>":" (colon)</dt>  <dd>Used in some configuration files and scripts.</dd>  <dt>";" (semicolon)</dt>  <dd>Used in some configuration files and scripts.</dd>  <dt>"//" (double slash)</dt>  <dd>Used in some programming languages.</dd></dl>
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. <br />endOfLineCode : The line-start string representing a comment line. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="getCommentLineCode"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	getCommentLineCode
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	string getCommentLineCode(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Returns the line-start string representing a comment line.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string type) The line-start string representing a comment line.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="isReadable"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	isReadable
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	bool isReadable(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Checks whether the file is in a readable state.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(bool type) Returns true if it is in a readable mode.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="isWritable"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	isWritable
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	bool isWritable(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Checks whether the file is in a writable state.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(bool type) Returns true if it is in a writable mode.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setDelimiter"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	setDelimiter
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setDelimiter(TextFile &amp;textFile, string delimiter)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Sets the delimiter used to separate values.When a delimiter is set, the <a href="#read">read</a> function andthe <a href="#readln">readln</a> function return values separated by that delimiter as an array.Also, the <a href="#write">write</a> and<a href="#writeln">writeln</a> functions separate values with the delimiter when writing.Commonly used delimiters include the following.<dl>  <dt>"," (comma)</dt>  <dd>Used in CSV files.</dd>  <dt>"	" (tab)</dt>  <dd>Used in TSV files.</dd>  <dt>"&nbsp" (space)</dt>  <dd>Used in SSV files.</dd>  <dt>";" (semicolon)</dt>  <dd>Used in some configuration files.</dd></dl>In read mode, when this function is called,the information about how far the file has been read is reset.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. <br />(string type) delimiter : The value delimiter. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="setEnclosure"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	setEnclosure
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void setEnclosure(TextFile &amp;textFile, string enclosure, string enclosureEscapeCharacter, int enclosingOption)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Sets the enclosure symbol used to surround values.When an enclosure symbol is set, the <a href="#write">write</a> and<a href="#writeln">writeln</a> functions surround values with the enclosure symbol when writing.Also, the <a href="#read">read</a> and<a href="#readln">readln</a> functions interpret enclosure symbols when reading.<br />The enclosure symbol is specified by the enclosure argument. Commonly used enclosure symbols include the following.<dl>  <dt>&quot\&quot&quot (double quotation mark)</dt>  <dd>This is the &quot symbol. It is commonly used in CSV and TSV files.    In VCSSL, double quotation marks have a special meaning,    so they are specified with a literal such as &quot\&quot&quot.</dd>  <dt>&quot'&quot (single quotation mark)</dt>  <dd>Used in some files.</dd></dl>Whether values should always be enclosed, or enclosed only when necessary,is specified by the enclosingOption argument.Choose this option from the following constants.<dl>  <dt><a href="#ENCLOSED_ALL">ENCLOSED_ALL</a></dt>  <dd>A format in which values are always enclosed.</dd>  <dt><a href="#ENCLOSED_ALL">ENCLOSED_IF_NECESSARY</a></dt>  <dd>A format in which values are enclosed only when necessary. "Necessary" means that the written or read contents include   any of the following: delimiter, enclosure symbol, comment-line prefix, or line break.</dd>  <dt><a href="#ENCLOSED_ALL">ENCLOSED_NONE</a></dt>  <dd>A format in which values are never enclosed in any case.</dd></dl>If a value to be enclosed itself contains enclosure symbols,they need to be escaped with another character. This is specified by the enclosureEscapeCharacter argument.Commonly used escape characters include the following.<dl>  <dt>&quot\&quot&quot (double quotation mark)</dt>  <dd>This is the &quot symbol. In CSV and TSV files,    it is often used when the enclosure symbol is a double quotation mark.    The escaping result becomes consecutive double quotation marks.    In VCSSL, double quotation marks have a special meaning,    so they are specified with a literal such as &quot\&quot&quot.</dd>  <dt>&quot\\&quot (backslash)</dt>  <dd>This is the \ symbol. It is often used in programming languages.    In VCSSL, backslashes have a special meaning,    so they are specified with a literal such as &quot\\&quot.</dd></dl>In read mode, when this function is called,the information about how far the file has been read is reset.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string type) enclosure : The enclosure symbol surrounding values. <br />(string type) enclosureEscapeCharacter : The character used to escape enclosure symbols contained in values. <br />(int type) enclosingOption : The enclosure option. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="write"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	write
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void write(TextFile &amp;textFile, ... string value[ ])
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Writes strings to a text file.If multiple contents are specified, and a delimiter is set, they are written with the delimiter inserted between them.Also, values are enclosed in quotation symbols when necessary.The setting for how values are enclosed is configured by <a href="#setEnclosure">setEnclosure</a>.<br />Note that no delimiter is appended after the last written value.Therefore, when writing by calling this function repeatedly, it is necessary to insert delimiters with the<a href="#delimit">delimit</a> function when needed.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. <br />(...string[] type) value : The strings to be written (multiple values can be specified because this is a variable-length argument). 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="writeln"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	writeln
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void writeln(TextFile &amp;textFile, ... string value[ ])
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Writes strings to a text file and then inserts a line break.If multiple contents are specified, and a delimiter is set, they are written with the delimiter inserted between them.Also, values are enclosed in quotation symbols when necessary.The setting for how values are enclosed is configured by <a href="#setEnclosure">setEnclosure</a>.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. <br />(...string[] type) value : The strings to be written (multiple values can be specified because this is a variable-length argument). 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="delimit"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	delimit
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void delimit(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Writes a delimiter to the text file.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="commentln"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	commentln
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	void commentln(TextFile &amp;textFile, string comment)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Writes a comment line to the text file.Before calling this function, it is necessary to set the line-start string of comment lines with the<a href="#setCommentLineCode">setCommentLineCode</a> function.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. <br />(string type) comment : The comment. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(void type) 
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="readln"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	readln
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	string[ ] readln(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Reads the contents of one line from the text file.If a delimiter is set, the contents are split by the delimiter and returned as an array.However, if an enclosure is set,delimiters and line breaks inside enclosed sections are interpreted as part of the value (except when the ENCLOSED_NONE option is used).The setting for how enclosures are interpreted is configured by <a href="#setEnclosure">setEnclosure</a>.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string[] type) The read contents.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="read"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	read
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	string[ ] read(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Reads all contents from the text file.If a delimiter is set, the contents are split by delimiters or line breaks and returned as an array.However, if an enclosure is set,delimiters and line breaks inside enclosed sections are interpreted as part of the value (except when the ENCLOSED_NONE option is used).The setting for how enclosures are interpreted is configured by <a href="#setEnclosure">setEnclosure</a>.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string[] type) The read contents.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="loadln"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	loadln
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	string loadln(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Reads one line from the file and returns it as is.However, if an enclosure symbol is set and there are line breaks inside enclosed sections, they are not regarded as line ends.If multiple line break codes are mixed in the file,they are normalized to the same line break code returned by the getEndOfLineCode function.Also, if a comment-line prefix is set, comment lines are skipped.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string type) The contents of the read line.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="load"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	load
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	string load(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Reads all lines from the file and returns them as is.However, if a comment-line prefix is set, comment lines are skipped.Also, if multiple line break codes are mixed in the file, they are normalized.If multiple line break codes are mixed in the file,they are normalized to the same line break code returned by the getEndOfLineCode function.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(string type) The contents read from the file.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="countln"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	countln
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	int countln(TextFile &amp;textFile)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	Counts the effective number of lines in the text file.If no enclosure symbol is set, the effective number of lines is equal to the number of lines in the file.If an enclosure symbol is set, line breaks inside enclosed sections are not counted.In other words, in CSV and TSV files, line breaks contained in values are not counted.When reading CSV or TSV files with the readln function, obtain the effective number of lines with this function first.The readln function cannot be called beyond the effective line count returned by this function.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(TextFile type) textFile : The target TextFile struct. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(int type) The effective number of lines in the text file.
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>

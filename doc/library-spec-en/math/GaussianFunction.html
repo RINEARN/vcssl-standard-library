@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GaussianFunction</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<h1>GaussianFunction</h1>
+<hr />
+<h2 id="abstract">Abstract</h2>
+<p>This library, math.GaussianFunction, provides Gaussian functions.<br />Two function names are provided, gauss and gaussian, and the difference between them is the coefficient in the denominator of the exponent part.<br />The former function, gauss(x,a,b,c), calculates the value of a * exp( -(x-b)**2 / c**2 ).<br />The latter function, gaussian(x,a,b,c), calculates the value of a * exp( -(x-b)**2 / (2 * c**2) ). Note that the denominator of the exponent part has the coefficient 2.</p><p>This module also provides arbitrary-precision functions such as those for the varfloat and varcomplex types.<br />However, only the algorithms themselves are implemented, and no special measures are taken against the accumulation of calculation errors or loss of significance.</p><p>In other words, the returned value is not guaranteed to be correct to the last digit,and the tail of the result always contains an incorrect part caused by accumulated errors.<br />The length of this erroneous part varies depending on the algorithm used,the convergence speed for the given arguments, the degree of loss of significance, and other conditions.<br />For example, convergence generally becomes significantly slower near singular points, and accumulated errors also increase accordingly.</p><p>Therefore, when using arbitrary-precision functions such as those for the varfloat and varcomplex types,<br />call the function with a sufficiently larger number of digits than actually required,and discard the unnecessary part containing errors from the obtained result.</p><hr />
+<h2 id="abstract" style="page-break-before:always;" >Index</h2>
+<dl>
+<dt><a href="#gauss">float gauss(float x, float a, float b, float c)</a></dt>
+<dd>The Gaussian function for real numbers.Returns the value of a * exp( -(x-b)**2 / c**2 ). The difference from the gaussian function is that the denominator of the exponent part does not have the factor 2.</dd>
+<dt><a href="#gauss">varfloat gauss(varfloat x, varfloat a, varfloat b, varfloat c)</a></dt>
+<dd>The Gaussian function for real numbers.Returns the value of a * exp( -(x-b)**2 / c**2 ). The difference from the gaussian function is that the denominator of the exponent part does not have the factor 2.</dd>
+<dt><a href="#gaussian">float gaussian(float x, float a, float b, float c)</a></dt>
+<dd>The Gaussian function for real numbers. The difference from the gauss function is that the denominator of the exponent part has the factor 2.Returns the value of a * exp( -(x-b)**2 / (2 * c**2) ).</dd>
+<dt><a href="#gaussian">varfloat gaussian(varfloat x, varfloat a, varfloat b, varfloat c)</a></dt>
+<dd>The Gaussian function for real numbers. The difference from the gauss function is that the denominator of the exponent part has the factor 2.Returns the value of a * exp( -(x-b)**2 / (2 * c**2) ).</dd>
+</dl>
+<hr />
+<h2 id="struct" style="page-break-before:always;" >Structs</h2>
+<p> - None -</p>
+<hr /><h2 id="variable">Variables</h2>
+<p> - None -</p>
+<hr />
+<h2 id="function" style="page-break-before:always;" >Functions</h2>
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="gauss"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	gauss
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float gauss(float x, float a, float b, float c)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The Gaussian function for real numbers.Returns the value of a * exp( -(x-b)**2 / c**2 ). The difference from the gaussian function is that the denominator of the exponent part does not have the factor 2.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float type) x : The coordinate variable. <br />(float type) a : The coefficient multiplied by the exponent part. <br />(float type) b : The offset value of the coordinate. <br />(float type) c : The square root of the denominator term in the exponent part. <br />d : The linear coefficient of the denominator term in the exponent part. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float type) The value of the exponential function.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	gauss
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	varfloat gauss(varfloat x, varfloat a, varfloat b, varfloat c)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The Gaussian function for real numbers.Returns the value of a * exp( -(x-b)**2 / c**2 ). The difference from the gaussian function is that the denominator of the exponent part does not have the factor 2.
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(varfloat type) x : The coordinate variable. <br />(varfloat type) a : The coefficient multiplied by the exponent part. <br />(varfloat type) b : The offset value of the coordinate. <br />(varfloat type) c : The square root of the denominator term in the exponent part. <br />d : The linear coefficient of the denominator term in the exponent part. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(varfloat type) The value of the exponential function.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; " id="gaussian"><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	gaussian
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	float gaussian(float x, float a, float b, float c)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The Gaussian function for real numbers. The difference from the gauss function is that the denominator of the exponent part has the factor 2.Returns the value of a * exp( -(x-b)**2 / (2 * c**2) ).
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float type) x : The coordinate variable. <br />(float type) a : The coefficient multiplied by the exponent part. <br />(float type) b : The offset value of the coordinate. <br />(float type) c : The square root of the denominator term in the exponent part. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(float type) The value of the exponential function.
+   	 </td>
+    </tr>
+</tbody></table>
+
+<table style="margin: 0px 0px 20px 0px; width:100%; border-width:thin; border-style:solid; border-collapse:collapse; page-break-inside:avoid; "><tbody>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Name
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; font-weight:bold; padding:3px 3px 3px 10px; ">
+   	 	gaussian
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Declaration
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	varfloat gaussian(varfloat x, varfloat a, varfloat b, varfloat c)
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Description
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	The Gaussian function for real numbers. The difference from the gauss function is that the denominator of the exponent part has the factor 2.Returns the value of a * exp( -(x-b)**2 / (2 * c**2) ).
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Parameters
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(varfloat type) x : The coordinate variable. <br />(varfloat type) a : The coefficient multiplied by the exponent part. <br />(varfloat type) b : The offset value of the coordinate. <br />(varfloat type) c : The square root of the denominator term in the exponent part. 
+   	 </td>
+    </tr>
+    <tr>
+   	 <td width="140px" style="background-color:#dddddd; font-weight:bold; padding:3px 3px 3px 5px; word-break: break-all; border-width:thin; border-style:solid; ">
+   	 	Return
+   	 </td>
+   	 <td style=" padding:3px 3px 3px 10px; line-height:135%; word-break:break-all; border-width:thin; border-style:solid; ">
+   	 	(varfloat type) The value of the exponential function.
+   	 </td>
+    </tr>
+</tbody></table>
+
+</body>
+</html>
