@@ -8,6 +8,7 @@ import Math;
 import System;
 
 /**
+ * !--- locale=Ja-JP ---
  * <p>
  * このライブラリ math.GaussianFunction は、ガウス関数を提供します。
  * <br />
@@ -42,13 +43,51 @@ import System;
  * 必要な桁数よりも、十分に大きな桁数で関数を呼び出し、
  * 得られた結果から不要な（誤差を含む）部分を切り捨てて下さい。
  * </p>
- * 
- * @author  松井文宏 - Fumihiro Matsui ( RINEARN )
+ *
+ * @author  松井文宏 ( RINEARN )
+ * @license Public domain ( CC0 )
+ *
+ * !--- locale=En-US ---
+ * <p>
+ * This library, math.GaussianFunction, provides Gaussian functions.
+ * <br />
+ * Two function names are provided, gauss and gaussian, and the difference between them is the coefficient in the denominator of the exponent part.
+ * <br />
+ * The former function, gauss(x,a,b,c), calculates the value of a * exp( -(x-b)**2 / c**2 ).
+ * <br />
+ * The latter function, gaussian(x,a,b,c), calculates the value of a * exp( -(x-b)**2 / (2 * c**2) ). Note that the denominator of the exponent part has the coefficient 2.
+ * </p>
+ *
+ * <p>
+ * This module also provides arbitrary-precision functions such as those for the varfloat and varcomplex types.
+ * <br />
+ * However, only the algorithms themselves are implemented, and no special measures are taken against the accumulation of calculation errors or loss of significance.
+ * </p>
+ *
+ * <p>
+ * In other words, the returned value is not guaranteed to be correct to the last digit,
+ * and the tail of the result always contains an incorrect part caused by accumulated errors.
+ * <br />
+ * The length of this erroneous part varies depending on the algorithm used,
+ * the convergence speed for the given arguments, the degree of loss of significance, and other conditions.
+ * <br />
+ * For example, convergence generally becomes significantly slower near singular points, and accumulated errors also increase accordingly.
+ * </p>
+ *
+ * <p>
+ * Therefore, when using arbitrary-precision functions such as those for the varfloat and varcomplex types,
+ * <br />
+ * call the function with a sufficiently larger number of digits than actually required,
+ * and discard the unnecessary part containing errors from the obtained result.
+ * </p>
+ *
+ * @author  Fumihiro Matsui ( RINEARN )
  * @license Public domain ( CC0 )
  */
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 実数のガウス関数です。
  * a * exp( -(x-b)**2 / c**2 ) の値を返します。gaussian 関数と異なるのは、指数部分母に 2 がかからない点です。
  *
@@ -58,6 +97,17 @@ import System;
  * @param c 指数部内分母の2次平方根です。
  * @param d 指数部内分母の1次係数です。
  * @return 指数関数の値です。
+ *
+ * !--- locale=En-US ---
+ * The Gaussian function for real numbers.
+ * Returns the value of a * exp( -(x-b)**2 / c**2 ). The difference from the gaussian function is that the denominator of the exponent part does not have the factor 2.
+ *
+ * @param x The coordinate variable.
+ * @param a The coefficient multiplied by the exponent part.
+ * @param b The offset value of the coordinate.
+ * @param c The square root of the denominator term in the exponent part.
+ * @param d The linear coefficient of the denominator term in the exponent part.
+ * @return The value of the exponential function.
  */
 public float gauss(float x, float a, float b, float c){
 	float expArg = - (x-b) * (x-b) / (c * c) ;
@@ -67,6 +117,7 @@ public float gauss(float x, float a, float b, float c){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 実数のガウス関数です。
  * a * exp( -(x-b)**2 / c**2 ) の値を返します。gaussian 関数と異なるのは、指数部分母に 2 がかからない点です。
  *
@@ -76,6 +127,17 @@ public float gauss(float x, float a, float b, float c){
  * @param c 指数部内分母の2次平方根です。
  * @param d 指数部内分母の1次係数です。
  * @return 指数関数の値です。
+ *
+ * !--- locale=En-US ---
+ * The Gaussian function for real numbers.
+ * Returns the value of a * exp( -(x-b)**2 / c**2 ). The difference from the gaussian function is that the denominator of the exponent part does not have the factor 2.
+ *
+ * @param x The coordinate variable.
+ * @param a The coefficient multiplied by the exponent part.
+ * @param b The offset value of the coordinate.
+ * @param c The square root of the denominator term in the exponent part.
+ * @param d The linear coefficient of the denominator term in the exponent part.
+ * @return The value of the exponential function.
  */
 public varfloat gauss(varfloat x, varfloat a, varfloat b, varfloat c){
 	varfloat expArg = - (x-b) * (x-b) / (c * c) ;
@@ -85,6 +147,7 @@ public varfloat gauss(varfloat x, varfloat a, varfloat b, varfloat c){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 実数のガウス関数です。gauss 関数と異なるのは、指数部分母に 2 がかかる点です。
  * a * exp( -(x-b)**2 / (2 * c**2) ) の値を返します。
  *
@@ -93,6 +156,16 @@ public varfloat gauss(varfloat x, varfloat a, varfloat b, varfloat c){
  * @param b 座標のオフセット値です。
  * @param c 指数部内分母の平方根です。
  * @return 指数関数の値です。
+ *
+ * !--- locale=En-US ---
+ * The Gaussian function for real numbers. The difference from the gauss function is that the denominator of the exponent part has the factor 2.
+ * Returns the value of a * exp( -(x-b)**2 / (2 * c**2) ).
+ *
+ * @param x The coordinate variable.
+ * @param a The coefficient multiplied by the exponent part.
+ * @param b The offset value of the coordinate.
+ * @param c The square root of the denominator term in the exponent part.
+ * @return The value of the exponential function.
  */
 public float gaussian(float x, float a, float b, float c){
 	float expArg = - (x-b) * (x-b) / (2.0 * c * c) ;
@@ -102,6 +175,7 @@ public float gaussian(float x, float a, float b, float c){
 
 
 /**
+ * !--- locale=Ja-JP ---
  * 実数のガウス関数です。gauss 関数と異なるのは、指数部分母に 2 がかかる点です。
  * a * exp( -(x-b)**2 / (2 * c**2) ) の値を返します。
  *
@@ -110,6 +184,16 @@ public float gaussian(float x, float a, float b, float c){
  * @param b 座標のオフセット値です。
  * @param c 指数部内分母の平方根です。
  * @return 指数関数の値です。
+ *
+ * !--- locale=En-US ---
+ * The Gaussian function for real numbers. The difference from the gauss function is that the denominator of the exponent part has the factor 2.
+ * Returns the value of a * exp( -(x-b)**2 / (2 * c**2) ).
+ *
+ * @param x The coordinate variable.
+ * @param a The coefficient multiplied by the exponent part.
+ * @param b The offset value of the coordinate.
+ * @param c The square root of the denominator term in the exponent part.
+ * @return The value of the exponential function.
  */
 public varfloat gaussian(varfloat x, varfloat a, varfloat b, varfloat c){
 	varfloat expArg = - (x-b) * (x-b) / (2.0vf * c * c) ;
